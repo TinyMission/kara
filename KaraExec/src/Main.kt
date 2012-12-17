@@ -38,6 +38,9 @@ Options:
     -i, --info   Show info log messages (default)
     -w, --warn   Shwo only warning log messages
 
+Generators:
+    project <name>    Generates a new Kara project with the given name.
+
 """
     println(s)
 }
@@ -72,6 +75,7 @@ fun main(args: Array<String>) {
                 "g", "generator" -> runGenerator = true
                 "h", "help" -> showHelp = true
                 "project" -> generatorTask = GeneratorTask.project
+                "controller" -> generatorTask = GeneratorTask.controller
                 "-d", "--debug" -> logLevel = Level.DEBUG
                 "-i", "--info" -> logLevel = Level.INFO
                 "-w", "--warn" -> logLevel = Level.WARN

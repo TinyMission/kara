@@ -11,6 +11,7 @@ import java.util.Properties
 /** Possbile named tasks that the generator can perform. */
 enum class GeneratorTask(val name : String) {
     project: GeneratorTask("project")
+    controller: GeneratorTask("controller")
     fun toString() : String {
         return name
     }
@@ -48,8 +49,22 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
         Velocity.init(velocityProps)
         context.put("gen", this)
 
+        // parse the arguments
+        parseArgs()
+
         when (task) {
-            GeneratorTask.project -> execProject()
+            GeneratorTask.project -> {
+                // ensure there's a project name
+                if (args.size == 0)
+                    throw RuntimeException("Need to provide a project name.")
+                execProject(args[0])
+            }
+            GeneratorTask.controller -> {
+                // ensure there's a controller name
+                if (args.size == 0)
+                    throw RuntimeException("Need to provide a controller name.")
+                execController(args[0])
+            }
             else -> throw RuntimeException("Unkown generator task ${task.toString()}")
         }
     }
@@ -74,13 +89,8 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
         }
     }
 
-    /** Executes the project task. */
-    fun execProject() {
-        // ensure there's a project name
-        if (args.size == 0)
-            throw RuntimeException("Need to provide a project name.")
-        val projectName = args[0]
-        parseArgs()
+    /** Executes the task to create a new project. */
+    fun execProject(val projectName : String) {
         if (appPackage.length == 0)
             appPackage = projectName
 
@@ -112,6 +122,53 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
 
         // render the templates
         renderTemplate("src.appPackage.Application.kt")
+
+        // make the default controller and view
+        execController("Home")
+    }
+
+
+    /** Executes the task to create a new controller. */
+    fun execController(var controllerName : String) {
+        controllerName = controllerName.capitalize()
+
+        val controllerSlug = controllerName.toLowerCase()
+        context.put("controllerSlug", controllerSlug)
+        val controllerClassName = "${controllerName}Controller"
+        context.put("controllerClassName", controllerClassName)
+
+        ensureDir("src/$appPackagePath/controllers")
+
+        renderTemplate("src.appPackage.controllers.Controller.kt", "src/$appPackagePath/controllers/${controllerClassName}.kt")
+        execView(controllerName, "Index")
+    }
+
+
+    /** Executes the task to create a new view. */
+    fun execView(var controllerName : String, var viewName : String) {
+        controllerName = controllerName.capitalize()
+        viewName = viewName.capitalize()
+        context.put("viewName", viewName)
+
+        val controllerSlug = controllerName.toLowerCase()
+        context.put("controllerSlug", controllerSlug)
+        val controllerClassName = "${controllerName}Controller"
+        context.put("controllerClassName", controllerClassName)
+
+        ensureDir("src/$appPackagePath/views")
+        ensureDir("src/$appPackagePath/views/$controllerSlug")
+
+        renderTemplate("src.appPackage.views.View.kt", "src/$appPackagePath/views/$controllerSlug/${viewName}.kt")
+    }
+
+
+    /** Esures the given relative directory inside the application root exists (it won't warn if it does). */
+    fun ensureDir(dir : String) {
+        val absDir = File(appRoot, dir)
+        if (!absDir.exists()) {
+            logger.info("Creating directory $absDir")
+            absDir.mkdirs()
+        }
     }
 
 
@@ -123,28 +180,34 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
         }
         else {
             logger.info("Creating directory $absDir")
-            absDir.mkdir()
+            absDir.mkdirs()
         }
     }
 
 
     /** Renders a template to the target project. */
-    fun renderTemplate(template : String) {
+    fun renderTemplate(template : String, var outPath : String = "") {
         if (!Velocity.templateExists("$template.vm"))
             throw RuntimeException("Template $template.vm doesn't exist.")
 
         // compute the output file path
-        val comps = template.split("\\.")
-        val fileName = "${comps[comps.size-2]}.${comps[comps.size-1]}"
-        val outDir = template.replace(fileName, "").replace(".", "/").replace("appPackage", appPackagePath)
-        var outFile = File(appRoot, "$outDir/$fileName")
-        if (outFile.exists()) {
-            permissions.ask("file_overwrite", "$outFile already exists and will be overwritten.")
+        if (outPath.length == 0) {
+            val comps = template.split("\\.")
+            val fileName = "${comps[comps.size-2]}.${comps[comps.size-1]}"
+            val outDir = template.replace(fileName, "").replace(".", "/").replace("appPackage", appPackagePath)
+            var outFile = File(appRoot, "$outDir/$fileName")
+            if (outFile.exists()) {
+                permissions.ask("file_overwrite", "$outFile already exists and will be overwritten.")
+            }
+            outPath = outFile.toString()
         }
-        logger.info("Creating $outFile")
+        else {
+            outPath = File(appRoot, outPath).toString()
+        }
 
         // render the template
-        val writer = FileWriter(outFile)
+        logger.info("Creating $outPath")
+        val writer = FileWriter(outPath)
         Velocity.mergeTemplate("$template.vm", context, writer)
         writer.flush()
 

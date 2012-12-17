@@ -1,0 +1,11 @@
+package ${gen.appPackage}.controllers
+
+import kara.controllers.*
+import karademo.views.$controllerSlug.*
+
+class ${controllerClassName}() : BaseController() {
+    Get("index") fun index() : ActionResult {
+        return Index()
+    }
+
+}
