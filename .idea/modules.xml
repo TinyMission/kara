@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/KaraDemo/KaraDemo.iml" filepath="$PROJECT_DIR$/KaraDemo/KaraDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KaraExec/KaraExec.iml" filepath="$PROJECT_DIR$/KaraExec/KaraExec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KaraLib/KaraLib.iml" filepath="$PROJECT_DIR$/KaraLib/KaraLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KaraTests/KaraTests.iml" filepath="$PROJECT_DIR$/KaraTests/KaraTests.iml" />
+    </modules>
+  </component>
+</project>
+

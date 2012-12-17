@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="velocity-1.7">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/velocity-1.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

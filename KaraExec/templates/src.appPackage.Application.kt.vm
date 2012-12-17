@@ -1,0 +1,16 @@
+package $gen.appPackage
+
+import kara.config.*
+
+/**
+ * This is the primary class for your application.
+ */
+public class Application() : kara.app.Application() {
+
+    /**
+     * Application-specific initialization code goes here.
+     */
+    public override fun init(config : AppConfig) {
+    }
+
+}

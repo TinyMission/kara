@@ -1,0 +1,57 @@
+package kara.views
+
+import java.util.*
+
+
+abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isEmpty) {
+    // attributes
+% @body_attrs.each do |attr|
+    public var <%= attr %> : String
+        get() = attributes["<%= attr_alias(attr) %>"]!!
+        set(value) {
+            attributes["<%= attr_alias(attr) %>"] = value
+        }
+% end
+
+    // tags
+% @body_tags.each do |tag|
+	<%= tag_function(tag) %>
+% end
+
+    // view rendering
+    fun renderView(context : ActionContext, view : HtmlView) {
+        view.render(context)
+		for (tag in view.children) {
+			children.add(tag)
+		}
+    }
+}
+
+class Body() : BodyTag("body", false)
+
+% all_tags.each do |tag|
+%   tag_cap = tag.upcase
+open class <%= tag_cap %>() : BodyTag("<%= tag %>", <%= is_empty?(tag) ? 'true' : 'false' %>) {
+% child_attrs_for_tag(tag).each do |attr|
+	public var <%= attr %> : String
+		get() = attributes["<%= attr_alias(attr) %>"]!!
+		set(value) {
+			attributes["<%= attr_alias(attr) %>"] = value
+		}
+% end
+% tag_children(tag).each do |child_tag|
+	<%= tag_function(child_tag) %>
+% end
+}
+% end
+
+
+// standalone tags
+% @standalone_tags.each do |tag|
+%   tag_cap = tag.upcase
+fun <%= tag %>(init : <%= tag_cap %>.() -> Unit) : <%= tag_cap %> {
+	val tag = <%= tag_cap %>()
+	tag.init()
+	return tag
+}
+% end

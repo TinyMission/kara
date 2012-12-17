@@ -1,0 +1,31 @@
+body {
+    background-color: #f0f0f0;
+}
+#main {
+    border-radius: 5.0px;
+    width: 85.0%;
+    border-style: solid;
+    background-color: #fff;
+    border-color: #ccc;
+    margin: 0.0px auto 0.0px auto;
+    border-width: 1.0px;
+    padding: 1.0em 1.0em 1.0em 1.0em;
+}
+input[type=text], textarea {
+    width: 300.0px;
+    padding: 4.0px 4.0px 4.0px 4.0px;
+}
+textarea {
+    height: 80.0px;
+}
+table.fields {
+}
+table.fields td {
+    padding: 6.0px 3.0px 6.0px 3.0px;
+}
+table.fields td.label {
+    text-align: right;
+}
+table.fields td.label.top {
+    vertical-align: top;
+}

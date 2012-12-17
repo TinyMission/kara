@@ -1,0 +1,6 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="kara">
+    <target name="resolve" description="retrieve dependencies with ivy">
+        <ivy:retrieve />
+    </target>
+
+</project>
