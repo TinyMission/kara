@@ -7,6 +7,7 @@ import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.Velocity
 import java.io.*
 import java.util.Properties
+import kara.config.AppConfig
 
 /** Possbile named tasks that the generator can perform. */
 enum class GeneratorTask(val name : String) {
@@ -21,7 +22,7 @@ enum class GeneratorTask(val name : String) {
 /**
  * Actually performs the file and directory generation.
  */
-class Generator(val task : GeneratorTask, var appRoot : String, val args : List<String>) {
+class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : List<String>) {
     val logger = Logger.getLogger("Generator")!!
     val permissions = Permissions()
     var karaHome = ""
@@ -89,13 +90,14 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
         }
     }
 
+
     /** Executes the task to create a new project. */
     fun execProject(val projectName : String) {
         if (appPackage.length == 0)
             appPackage = projectName
 
         // create the project root directory
-        val projectRoot = File(appRoot, projectName)
+        val projectRoot = File(appConfig.appRoot, projectName)
         if (projectRoot.exists()) {
             permissions.ask("project_overwrite", "$projectRoot already exists and its contents could be overwritten.")
         }
@@ -103,7 +105,7 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
             logger.info("Creating project directory $projectRoot")
             projectRoot.mkdir()
         }
-        appRoot = projectRoot.toString()
+        val appRoot = projectRoot.toString()
 
         // setup the project directory structure
         createDir("bin")
@@ -121,6 +123,8 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
         createDir("tmp")
 
         // render the templates
+        renderTemplate("build.xml")
+        renderTemplate("appconfig.json")
         renderTemplate("src.appPackage.Application.kt")
 
         // make the default controller and view
@@ -164,7 +168,7 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
 
     /** Esures the given relative directory inside the application root exists (it won't warn if it does). */
     fun ensureDir(dir : String) {
-        val absDir = File(appRoot, dir)
+        val absDir = File(appConfig.appRoot, dir)
         if (!absDir.exists()) {
             logger.info("Creating directory $absDir")
             absDir.mkdirs()
@@ -174,7 +178,7 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
 
     /** Creates the given relative directory inside the application root. */
     fun createDir(dir : String) {
-        val absDir = File(appRoot, dir)
+        val absDir = File(appConfig.appRoot, dir)
         if (absDir.exists()) {
             permissions.ask("dir_overwrite", "$absDir already exists and its contents could be overwritten.")
         }
@@ -195,14 +199,14 @@ class Generator(val task : GeneratorTask, var appRoot : String, val args : List<
             val comps = template.split("\\.")
             val fileName = "${comps[comps.size-2]}.${comps[comps.size-1]}"
             val outDir = template.replace(fileName, "").replace(".", "/").replace("appPackage", appPackagePath)
-            var outFile = File(appRoot, "$outDir/$fileName")
+            var outFile = File(appConfig.appRoot, "$outDir/$fileName")
             if (outFile.exists()) {
                 permissions.ask("file_overwrite", "$outFile already exists and will be overwritten.")
             }
             outPath = outFile.toString()
         }
         else {
-            outPath = File(appRoot, outPath).toString()
+            outPath = File(appConfig.appRoot, outPath).toString()
         }
 
         // render the template

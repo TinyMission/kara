@@ -5,6 +5,7 @@ import java.util.HashMap
 import kara.styles.Stylesheet
 import java.util.Stack
 import java.io.PrintWriter
+import kara.config.AppConfig
 
 
 /**
@@ -33,17 +34,17 @@ class TagStack(val initial : Tag) {
 
 
 trait Element {
-    fun render(builder : StringBuilder, indent : String)
+    fun render(appConfig : AppConfig, builder : StringBuilder, indent : String)
 
-    fun toString() : String? {
+    fun toString(appConfig : AppConfig) : String? {
         val builder = StringBuilder()
-        render(builder, "")
+        render(appConfig, builder, "")
         return builder.toString()
     }
 }
 
 class TextElement(val text : String) : Element {
-    override fun render(builder : StringBuilder, indent : String) {
+    override fun render(appConfig : AppConfig, builder : StringBuilder, indent : String) {
         builder.append("$indent$text\n")
     }
 }
@@ -65,7 +66,7 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
         return tag
     }
 
-    override fun render(builder : StringBuilder, indent : String) {
+    override fun render(appConfig : AppConfig, builder : StringBuilder, indent : String) {
         if (isEmpty) {
             builder.append("$indent<$tagName${renderAttributes()}/>\n")
         }
@@ -78,7 +79,7 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
             else { // more than one text element or a tag child
                 builder.append("$indent<$tagName${renderAttributes()}>\n")
                 for (c in children) {
-                    c.render(builder, indent + "  ")
+                    c.render(appConfig, builder, indent + "  ")
                 }
                 builder.append("$indent</$tagName>\n")
             }
@@ -128,9 +129,9 @@ open class HTML() : TagWithText("html", false) {
 
     public var doctype : String = "<!DOCTYPE html>"
 
-    override fun render(builder: StringBuilder, indent: String) {
+    override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
         builder.append("$doctype\n")
-        super<TagWithText>.render(builder, indent)
+        super<TagWithText>.render(appConfig : AppConfig, builder, indent)
     }
 }
 
@@ -245,7 +246,7 @@ class STYLE(val stylesheet : Stylesheet) : TagWithText("style", false) {
         mimeType = "text/css"
     }
 
-    override fun render(builder: StringBuilder, indent: String) {
+    override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
         builder.append("$indent<$tagName${renderAttributes()}>\n")
         builder.append(stylesheet.toString())
         builder.append("$indent</$tagName>\n")
@@ -274,10 +275,10 @@ class STYLESHEETLINK(var stylesheet : Stylesheet) : TagWithText("link", true) {
     }
 
 
-    override fun render(builder: StringBuilder, indent: String) {
-        stylesheet.write()
-        href = stylesheet.relativePath
-        super<TagWithText>.render(builder, indent)
+    override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
+        stylesheet.write(appConfig)
+        href = stylesheet.relativePath(appConfig)
+        super<TagWithText>.render(appConfig, builder, indent)
     }
 }
 

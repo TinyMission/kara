@@ -33,18 +33,20 @@ class ActionInfo(val route : String, val controller : BaseController, val method
         return true
     }
 
-    public fun getParams(url : String, query : String) : RouteParams {
+    public fun getParams(url : String, query : String?) : RouteParams {
 
         val params = RouteParams()
 
         // parse the query string
-        val queryComps = query.split("\\&")
-        for (qc in queryComps) {
-            val nvp = qc.split("=")
-            if (nvp.size > 1)
-                params[nvp[0]] = nvp[1]
-            else
-                params[nvp[0]] = ""
+        if (query != null) {
+            val queryComps = query.split("\\&")
+            for (qc in queryComps) {
+                val nvp = qc.split("=")
+                if (nvp.size > 1)
+                    params[nvp[0]] = nvp[1]
+                else
+                    params[nvp[0]] = ""
+            }
         }
 
         // parse the route parameters
@@ -59,10 +61,10 @@ class ActionInfo(val route : String, val controller : BaseController, val method
         return params
     }
 
-    public fun exec(request: HttpServletRequest, response : HttpServletResponse) {
-        val params = getParams(request.getRequestURI()!!, request.getQueryString()!!)
+    public fun exec(val appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
+        val params = getParams(request.getRequestURI()!!, request.getQueryString())
         controller.beforeRequest(request, response, params)
-        val context = ActionContext(request, response, params)
+        val context = ActionContext(appConfig, request, response, params)
 
         // assemble the arguments
         val paramTypes = method.getParameterTypes()!!
@@ -71,7 +73,7 @@ class ActionInfo(val route : String, val controller : BaseController, val method
         }
         val args = Array<Any>(paramTypes.size, {i ->
             val paramString  = params[i] as String
-            AppConfig.current.paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
+            appConfig.paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
         })
 
         // execute the action

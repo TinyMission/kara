@@ -6,13 +6,13 @@ import org.reflections.Reflections
 import kara.controllers.Dispatcher
 import kara.config.AppConfig
 
-open class Servlet() : HttpServlet() {
+open class Servlet(val appConfig : AppConfig) : HttpServlet() {
 
     var dispatcher : Dispatcher? = null
 
     fun initDispatcher() {
-        dispatcher = Dispatcher(this.javaClass.getPackage()?.getName() as String)
-        dispatcher?.initWithReflection()
+        dispatcher = Dispatcher()
+        dispatcher?.initWithReflection(appConfig)
     }
 
     public override fun init() {
@@ -21,12 +21,12 @@ open class Servlet() : HttpServlet() {
     }
 
     fun doGet(request: HttpServletRequest, response : HttpServletResponse) {
-        if (AppConfig.current.isDevelopment()) {
+        if (appConfig.isDevelopment()) {
             initDispatcher()
         }
         try {
 
-            dispatcher?.dispatch(request, response)
+            dispatcher?.dispatch(appConfig, request, response)
         }
         catch (ex : Exception) {
             val out = response.getWriter()

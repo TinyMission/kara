@@ -21,11 +21,11 @@ trait AppLoadListener {
 
 /** Controls the loading and reloading of a Kara app from a directory.
  */
-class AppLoader(val appRoot : String, val appPackage : String) : FileWatchListener {
+class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
     val logger = Logger.getLogger(this.javaClass)!!
 
-    val binDir = File(appRoot, "bin")
+    val binDir = File(appConfig.appRoot, "bin")
 
     var classLoader : URLClassLoader? = null
 
@@ -38,7 +38,7 @@ class AppLoader(val appRoot : String, val appPackage : String) : FileWatchListen
 
     val listeners : MutableList<AppLoadListener> = ArrayList<AppLoadListener>()
 
-    val watcher = FileWatcher(File(appRoot, "tmp").toString(), "restart.txt")
+    val watcher = FileWatcher(File(appConfig.appRoot, "tmp").toString(), "restart.txt")
     val watchExecutor = Executors.newFixedThreadPool(1)
 
     public fun addListener(listener : AppLoadListener) {
@@ -46,7 +46,7 @@ class AppLoader(val appRoot : String, val appPackage : String) : FileWatchListen
     }
 
     override fun onFileWatch(dir: String, fileName : String) {
-        loadApp()
+        this@AppLoader.loadApp()
     }
 
     public fun init() {
@@ -60,9 +60,9 @@ class AppLoader(val appRoot : String, val appPackage : String) : FileWatchListen
         if (application == null || application?.dispatcher == null)
             throw RuntimeException("Trying to load controllers without a valid application or dispatcher")
         val dispatcher = application?.dispatcher as Dispatcher
-        val controllerDir = File(binDir, "${appPackage}${File.separator}controllers")
+        val controllerDir = File(binDir, "${appConfig.appPackage}${File.separator}controllers")
         if (!controllerDir.exists()) {
-            throw RuntimeException("App ${appPackage} does not have a controllers directory (should be ${controllerDir.toString()})")
+            throw RuntimeException("App ${appConfig.appPackage} does not have a controllers directory (should be ${controllerDir.toString()})")
         }
         val controllerFilter = object : FileFilter {
             public override fun accept(p0: File): Boolean {
@@ -73,7 +73,7 @@ class AppLoader(val appRoot : String, val appPackage : String) : FileWatchListen
         for (val controllerFile in controllerDir.listFiles(controllerFilter)!!) {
             val controllerName = (controllerFile.getName()).replace(".class", "")
             logger.debug("Loading controller ${controllerName}")
-            val controllerClass = classLoader?.loadClass("${appPackage}.controllers.${controllerName}")
+            val controllerClass = classLoader?.loadClass("${appConfig.appPackage}.controllers.${controllerName}")
             if (controllerClass == null)
                 throw RuntimeException("Expecting ${controllerFile} to declare ${controllerName}")
             dispatcher.parseController(controllerClass as Class<BaseController>)
@@ -92,12 +92,12 @@ class AppLoader(val appRoot : String, val appPackage : String) : FileWatchListen
             // load the application class
             val url = binDir.toURL()
             classLoader = URLClassLoader(array(url))
-            val appClassObject = classLoader?.loadClass("${appPackage}.Application")
+            val appClassObject = classLoader?.loadClass("${appConfig.appPackage}.Application")
             if (appClassObject == null)
-                throw RuntimeException("Expected class ${appPackage}.Application to be defined")
+                throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
             val appClass = appClassObject as Class<Application>
             application = appClass.newInstance()
-            application?.init(AppConfig.current)
+            application?.init(appConfig) // this breaks the runtime!!
             logger.debug("Application class: ${application.javaClass.toString()}")
 
             loadControllers()

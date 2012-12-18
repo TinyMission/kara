@@ -22,8 +22,8 @@ abstract class Stylesheet(var namespace : String = "") : Element("") {
     }
 
     /** Writes the stylesheet to its file. **/
-    fun write() {
-        val path = absolutePath
+    fun write(appConfig : AppConfig) {
+        val path = absolutePath(appConfig)
         val out = OutputStreamWriter(FileOutputStream(path))
         try {
             out.write(toString())
@@ -44,16 +44,12 @@ abstract class Stylesheet(var namespace : String = "") : Element("") {
         set(value : String) {}
 
     /** The relative (server) path to the file. */
-    var relativePath : String
-        get() {
-            return "/${AppConfig.current.stylesheetDir}/${filename}"
-        }
-        set(value : String) {}
+    fun relativePath(appConfig : AppConfig) : String {
+        return "/${appConfig.stylesheetDir}/${filename}"
+    }
 
     /** The absolute path to the file on the disk. */
-    var absolutePath : String
-        get() {
-            return "${AppConfig.current.appRoot}/${AppConfig.current.publicDir}/${relativePath}"
-        }
-        set(value : String) {}
+    fun absolutePath(appConfig : AppConfig) : String {
+        return "${appConfig.appRoot}/${appConfig.publicDir}/${relativePath(appConfig)}"
+    }
 }

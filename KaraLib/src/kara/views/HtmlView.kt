@@ -1,6 +1,7 @@
 package kara.views
 
 import kara.controllers.ActionResult
+import kara.config.AppConfig
 
 /** Base class for html views.
  */
@@ -12,20 +13,20 @@ abstract class HtmlView(var layout : HtmlLayout? = null) : BodyTag("view", false
         tagStack = TagStack(this)
         if (layout == null) {
             render(context)
-            writer.write(this.toString()!!)
+            writer.write(this.toString(context.appConfig)!!)
         }
         else {
             layout?.children?.clear()
             layout?.render(context, this)
-            writer.write(layout?.toString()!!)
+            writer.write(layout?.toString(context.appConfig)!!)
         }
         writer.flush()
     }
 
-    override fun toString(): String? {
+    override fun toString(appConfig : AppConfig): String? {
         val builder = StringBuilder()
         for (val child in children) {
-            child.render(builder, "")
+            child.render(appConfig, builder, "")
         }
         return builder.toString()
     }

@@ -10,7 +10,7 @@ import kara.config.AppConfig
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
-public class JettyRunner(val appRoot : String, val appPackage: String) : AppLoadListener {
+public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
 
     val logger = Logger.getLogger(this.javaClass)!!
 
@@ -19,7 +19,7 @@ public class JettyRunner(val appRoot : String, val appPackage: String) : AppLoad
     val resourceHandler = ResourceHandler()
     val sessionHandler = SessionHandler()
 
-    val appLoader = AppLoader(appRoot, appPackage)
+    val appLoader = AppLoader(appConfig)
 
     class Handler() : AbstractHandler() {
 
@@ -34,7 +34,7 @@ public class JettyRunner(val appRoot : String, val appPackage: String) : AppLoad
             else { // let the action handle the request
                 try {
                     logger.info("Rendering action ${actionInfo}")
-                    actionInfo.exec(p2!!, p3!!)
+                    actionInfo.exec(appConfig, p2!!, p3!!)
                 }
                 catch (ex : Exception) {
                     val out = p3?.getWriter()

@@ -10,15 +10,14 @@ import org.apache.log4j.LogManager
 import kara.generators.*
 import java.util.ArrayList
 
-fun server() {
-//    val jettyRunner = JettyRunner(AppConfig.current.appRoot, "karademo")
-    val jettyRunner = JettyRunner(System.getProperty("user.dir")!!, "karademo")
+fun server(appConfig : AppConfig) {
+    val jettyRunner = JettyRunner(appConfig)
     jettyRunner.init()
     jettyRunner.start()
 }
 
-fun generator(task : GeneratorTask, args : List<String>) {
-    var generator = Generator(task, System.getProperty("user.dir")!!, args)
+fun generator(appConfig : AppConfig, task : GeneratorTask, args : List<String>) {
+    var generator = Generator(appConfig, task, args)
     generator.exec()
 }
 
@@ -47,6 +46,8 @@ Generators:
 
 fun main(args: Array<String>) {
     BasicConfigurator.configure()
+
+    val appConfig = AppConfig(System.getProperty("user.dir")!!)
 
     val logger = Logger.getLogger("Kara.Main")!!
 
@@ -95,12 +96,12 @@ fun main(args: Array<String>) {
             help()
         }
         else if (startServer) {
-            server()
+            server(appConfig)
         }
         else if (runGenerator) {
             if (generatorTask == null)
                 throw RuntimeException("Need to specify a generator task to run. Run 'kara help' for usage.")
-            generator(generatorTask!!, generatorArgs)
+            generator(appConfig, generatorTask!!, generatorArgs)
         }
         else {
             throw RuntimeException("No valid command specified! Run 'kara help' for usage.")

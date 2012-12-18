@@ -1,0 +1,8 @@
+{
+    "kara": {
+        "package": "karademo",
+        "publicDir": "public",
+        "stylesheetDir": "stylesheets",
+        "sessionDir": "tmp/sessions"
+    }
+}

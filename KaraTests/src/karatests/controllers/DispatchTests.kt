@@ -2,12 +2,16 @@ package karatests.controllers
 
 import kara.controllers.Dispatcher
 import kotlin.test.*
+import kara.config.AppConfig
 
 /** Tests for dispatching routes to get action info. */
 fun runDispatchTests(args : Array<String>) {
 
-    val dispatcher = Dispatcher("karatests.controllers")
-    dispatcher.initWithReflection()
+    val appConfig = AppConfig("", "development")
+    appConfig["kara.appPackage"] = "karatests.controllers"
+
+    val dispatcher = Dispatcher()
+    dispatcher.initWithReflection(appConfig)
 
     var actionInfo = dispatcher.match("GET", "/")!!
     assertNotNull(actionInfo)

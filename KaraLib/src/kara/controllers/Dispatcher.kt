@@ -9,14 +9,13 @@ import java.lang.reflect.Method
 import kotlin.nullable.makeString
 import kara.exceptions.NotFoundException
 import org.apache.log4j.Logger
+import kara.config.AppConfig
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class Dispatcher(packageName : String) {
+class Dispatcher() {
 
     val logger = Logger.getLogger(this.javaClass)!!
-
-    val packageName : String = packageName
 
     val getActions : MutableList<ActionInfo> = ArrayList<ActionInfo>()
     val postActions : MutableList<ActionInfo> = ArrayList<ActionInfo>()
@@ -25,9 +24,9 @@ class Dispatcher(packageName : String) {
 
     /** Initializes the dispatcher by reflecting through the controllers in the app's package.
      */
-    public fun initWithReflection() {
-        logger.info("initializing dispatcher for package $packageName")
-        val reflections = Reflections(packageName)
+    public fun initWithReflection(appConfig: AppConfig) {
+        logger.info("initializing dispatcher for package ${appConfig.appPackage}")
+        val reflections = Reflections(appConfig.appPackage)
         val subTypes = reflections.getSubTypesOf(kara.controllers.BaseController().javaClass)!!
         for (subType in subTypes) {
             if (subType != null) {
@@ -55,14 +54,14 @@ class Dispatcher(packageName : String) {
         return null
     }
 
-    fun dispatch(request: HttpServletRequest, response : HttpServletResponse) {
+    fun dispatch(appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
         try {
             val url = request.getRequestURI() as String
             val actionInfo = match(request.getMethod() as String, url)
             if (actionInfo == null)
                 throw NotFoundException("Could not match any routes to ${url}")
             else
-                actionInfo.exec(request, response)
+                actionInfo.exec(appConfig, request, response)
         }
         catch (ex404 : NotFoundException) {
             val out = response.getWriter()
