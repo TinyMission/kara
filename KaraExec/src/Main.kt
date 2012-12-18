@@ -77,6 +77,7 @@ fun main(args: Array<String>) {
                 "h", "help" -> showHelp = true
                 "project" -> generatorTask = GeneratorTask.project
                 "controller" -> generatorTask = GeneratorTask.controller
+                "view" -> generatorTask = GeneratorTask.view
                 "-d", "--debug" -> logLevel = Level.DEBUG
                 "-i", "--info" -> logLevel = Level.INFO
                 "-w", "--warn" -> logLevel = Level.WARN

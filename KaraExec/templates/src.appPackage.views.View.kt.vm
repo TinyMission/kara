@@ -1,4 +1,4 @@
-package ${gen.appPackage}.views.$controllerSlug
+package ${appPackage}.views.$controllerSlug
 
 import kara.views.*
 

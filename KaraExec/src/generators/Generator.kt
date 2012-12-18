@@ -13,6 +13,7 @@ import kara.config.AppConfig
 enum class GeneratorTask(val name : String) {
     project: GeneratorTask("project")
     controller: GeneratorTask("controller")
+    view: GeneratorTask("view")
     fun toString() : String {
         return name
     }
@@ -29,12 +30,9 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
     val context = VelocityContext()
 
-    /** Package for the root application */
-    public var appPackage : String = ""
-
     /** The app package converted to a path. */
     val appPackagePath : String
-        get() = appPackage.replace(".", "/")
+        get() = appConfig.appPackage.replace(".", "/")
 
     /** Executes the generator task. */
     public fun exec() {
@@ -64,7 +62,14 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                 // ensure there's a controller name
                 if (args.size == 0)
                     throw RuntimeException("Need to provide a controller name.")
-                execController(args[0])
+                for (arg in args)
+                    execController(arg)
+            }
+            GeneratorTask.view -> {
+                // ensure there's a controller name and a view name
+                if (args.size != 2)
+                    throw RuntimeException("Need to provide a controller name and a view name.")
+                execView(args[0], args[1])
             }
             else -> throw RuntimeException("Unkown generator task ${task.toString()}")
         }
@@ -82,19 +87,20 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                 when (name) {
                     "package", "p" -> {
                         logger.info("Using application package $value")
-                        appPackage = value
+                        appConfig["kara.package"] = value
                     }
                     else -> throw RuntimeException("Unkown generator argument $name")
                 }
             }
         }
+        context.put("appPackage", appConfig.appPackage)
     }
 
 
     /** Executes the task to create a new project. */
     fun execProject(val projectName : String) {
-        if (appPackage.length == 0)
-            appPackage = projectName
+        if (appConfig.appPackage.length == 0)
+            appConfig["kara.appPackage"] = projectName
 
         // create the project root directory
         val projectRoot = File(appConfig.appRoot, projectName)
@@ -105,7 +111,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
             logger.info("Creating project directory $projectRoot")
             projectRoot.mkdir()
         }
-        val appRoot = projectRoot.toString()
+       appConfig["kara.appRoot"] = projectRoot.toString()
 
         // setup the project directory structure
         createDir("bin")

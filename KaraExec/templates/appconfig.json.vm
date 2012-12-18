@@ -1,3 +1,8 @@
 {
-    package: "$appPackage"
+     "kara": {
+         "package": "$appPackage",
+         "publicDir": "public",
+         "stylesheetDir": "stylesheets",
+         "sessionDir": "tmp/sessions"
+     }
 }

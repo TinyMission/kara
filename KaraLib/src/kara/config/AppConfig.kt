@@ -7,9 +7,10 @@ import java.util.HashMap
 /**
  * Store application configuration.
  */
-public class AppConfig(val appRoot : String, val environment : String = "development") : Config() {
+public class AppConfig(appRoot : String, val environment : String = "development") : Config() {
 
     {
+        this["kara.appRoot"] = appRoot
         val file = File(appRoot, "appconfig.json")
         if (file.exists())
             ConfigReader(this).read(file)
@@ -21,6 +22,9 @@ public class AppConfig(val appRoot : String, val environment : String = "develop
     fun isDevelopment() : Boolean {
         return environment == "development"
     }
+
+    public val appRoot : String
+        get() = this["kara.appRoot"]
 
     public val appPackage : String
         get() = this["kara.package"]

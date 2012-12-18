@@ -1,4 +1,4 @@
-package $gen.appPackage
+package $appPackage
 
 import kara.config.*
 
