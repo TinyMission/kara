@@ -14,7 +14,6 @@
     <orderEntry type="library" name="slf4j-api-1.6.1" level="project" />
     <orderEntry type="library" name="slf4j-log4j12-1.6.6" level="project" />
     <orderEntry type="library" name="log4j-1.2.17" level="project" />
-    <orderEntry type="library" name="velocity-1.7" level="project" />
   </component>
 </module>
 

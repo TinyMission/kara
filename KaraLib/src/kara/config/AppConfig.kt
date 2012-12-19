@@ -11,14 +11,17 @@ public class AppConfig(appRoot : String, val environment : String = "development
 
     {
         this["kara.appRoot"] = appRoot
-        val file = File(appRoot, "appconfig.json")
+
+        // read the main appconfig file and also look for an environment-specific one
+        var file = File(appRoot, "config/appconfig.json")
+        if (file.exists())
+            ConfigReader(this).read(file)
+        file = File(appRoot, "config/appconfig.${environment}.json")
         if (file.exists())
             ConfigReader(this).read(file)
     }
 
-    /** Returns true if the application is running in development mode.
-    * In this case, the application code will be reloaded for each request.
-    */
+    /** Returns true if the application is running in the development environment. */
     fun isDevelopment() : Boolean {
         return environment == "development"
     }
@@ -27,7 +30,7 @@ public class AppConfig(appRoot : String, val environment : String = "development
         get() = this["kara.appRoot"]
 
     public val appPackage : String
-        get() = this["kara.package"]
+        get() = this["kara.appPackage"]
 
     public val paramDeserializer : ParamDeserializer = ParamDeserializer()
 

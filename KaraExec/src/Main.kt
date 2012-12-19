@@ -21,6 +21,10 @@ fun generator(appConfig : AppConfig, task : GeneratorTask, args : List<String>) 
     generator.exec()
 }
 
+fun config(appCongig : AppConfig) {
+    println(appCongig.toString())
+}
+
 fun help() {
     val s = """Welcome to the Kara command line.
 
@@ -28,17 +32,24 @@ Usage:
     kara [-options] command args
 
 Commands:
+    c, config    Show the application's configuration for the current environment
     g, generate  Generates a new project or file (see below)
     h, help      Show this help message
     s, server    Run the Kara server on the current directory
 
 Options:
     -d, --debug  Show debug log messages
+    -e, --env    Specify the environment (default is --env=development)
     -i, --info   Show info log messages (default)
     -w, --warn   Shwo only warning log messages
 
 Generators:
-    project <name>    Generates a new Kara project with the given name.
+    project <name>      Generates a new Kara project with the given name.
+                        Use the --package=<package> option to specify a package
+                        that's different than the project name.
+    controller <name>   Generates a new controller with the given name.
+                        "Controller" will be automatically appended to the name)
+    view <controller> <view>  Generate a new view for the given controller.
 
 """
     println(s)
@@ -46,8 +57,6 @@ Generators:
 
 fun main(args: Array<String>) {
     BasicConfigurator.configure()
-
-    val appConfig = AppConfig(System.getProperty("user.dir")!!)
 
     val logger = Logger.getLogger("Kara.Main")!!
 
@@ -60,8 +69,10 @@ fun main(args: Array<String>) {
     var startServer = false
     var runGenerator = false
     var showHelp = false
+    var showConfig = false
     var generatorTask : GeneratorTask? = null
     val generatorArgs = ArrayList<String>()
+    var env = "development"
 
 //    var appRoot = System.getProperty("user.dir") as String
 //    AppConfig.current = AppConfig(appRoot, "development") // this breaks the runtime for some reason
@@ -70,8 +81,15 @@ fun main(args: Array<String>) {
 
     // parse command line arguments
     try {
-        for (arg in args) {
+        for (var arg in args) {
+            val comps = arg.split("=")
+            var value : String? = null
+            if (comps.size == 2) {
+                arg = comps[0]
+                value = comps[1]
+            }
             when (arg) {
+                "c", "config" -> showConfig = true
                 "s", "server" -> startServer = true
                 "g", "generator" -> runGenerator = true
                 "h", "help" -> showHelp = true
@@ -79,22 +97,37 @@ fun main(args: Array<String>) {
                 "controller" -> generatorTask = GeneratorTask.controller
                 "view" -> generatorTask = GeneratorTask.view
                 "-d", "--debug" -> logLevel = Level.DEBUG
+                "-e", "env" -> {
+                    if (value == null)
+                        throw RuntimeException("Must provide a value for the environment argument")
+                    env = value!!
+                }
                 "-i", "--info" -> logLevel = Level.INFO
                 "-w", "--warn" -> logLevel = Level.WARN
                 else -> {
-                    if (runGenerator)
-                        generatorArgs.add(arg)
+                    if (runGenerator) {
+                        if (value == null)
+                            generatorArgs.add(arg)
+                        else
+                            generatorArgs.add("$arg=$value")
+                    }
                     else
                         logger.error("Unkown argument: $arg")
                 }
             }
         }
 
+        // create the app config
+        val appConfig = AppConfig(System.getProperty("user.dir")!!, env)
+
         // set the log level
         LogManager.getRootLogger()?.setLevel(logLevel)
 
         if (showHelp) {
             help()
+        }
+        else if (showConfig) {
+            config(appConfig)
         }
         else if (startServer) {
             server(appConfig)

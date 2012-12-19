@@ -1,9 +1,0 @@
-package ${appPackage}.views.$controllerSlug
-
-import kara.views.*
-
-class ${viewName}() : HtmlView() {
-    override fun render(context: ActionContext) {
-        h2("This is a Kara view")
-    }
-}

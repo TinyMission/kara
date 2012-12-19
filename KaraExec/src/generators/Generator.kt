@@ -3,11 +3,10 @@ package kara.generators
 import org.apache.log4j.Logger
 import java.io.File
 import kara.generators.Permissions
-import org.apache.velocity.VelocityContext
-import org.apache.velocity.app.Velocity
 import java.io.*
 import java.util.Properties
 import kara.config.AppConfig
+import generators.templates.*
 
 /** Possbile named tasks that the generator can perform. */
 enum class GeneratorTask(val name : String) {
@@ -28,11 +27,22 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
     val permissions = Permissions()
     var karaHome = ""
 
-    val context = VelocityContext()
+    val appPackage : String
+        get() = appConfig.appPackage
 
     /** The app package converted to a path. */
     val appPackagePath : String
         get() = appConfig.appPackage.replace(".", "/")
+
+    /** Some strings used in various templates. */
+
+    var controllerSlug : String = ""
+
+    var controllerClassName : String = ""
+
+    var viewName : String = ""
+
+    var stylesheetName : String = ""
 
     /** Executes the generator task. */
     public fun exec() {
@@ -41,12 +51,6 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         if (home == null)
             throw RuntimeException("The KARA_HOME environment variable needs to be defined to use generators.")
         karaHome = home!!
-
-        // setup velocity
-        val velocityProps = Properties()
-        velocityProps.set("file.resource.loader.path", File(karaHome, "KaraExec/templates/").toString())
-        Velocity.init(velocityProps)
-        context.put("gen", this)
 
         // parse the arguments
         parseArgs()
@@ -87,20 +91,20 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                 when (name) {
                     "package", "p" -> {
                         logger.info("Using application package $value")
-                        appConfig["kara.package"] = value
+                        appConfig["kara.appPackage"] = value
                     }
                     else -> throw RuntimeException("Unkown generator argument $name")
                 }
             }
         }
-        context.put("appPackage", appConfig.appPackage)
+        //context.put("appPackage", appConfig.appPackage)
     }
 
 
     /** Executes the task to create a new project. */
     fun execProject(val projectName : String) {
-        if (appConfig.appPackage.length == 0)
-            appConfig["kara.appPackage"] = projectName
+        if (!appConfig.contains("kara.package"))
+            appConfig["kara.package"] = projectName
 
         // create the project root directory
         val projectRoot = File(appConfig.appRoot, projectName)
@@ -115,6 +119,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
         // setup the project directory structure
         createDir("bin")
+        createDir("config")
         createDir("public")
         createDir("public/images")
         createDir("public/javascripts")
@@ -129,9 +134,9 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         createDir("tmp")
 
         // render the templates
-        renderTemplate("build.xml")
-        renderTemplate("appconfig.json")
-        renderTemplate("src.appPackage.Application.kt")
+        renderTemplate(buildxmlTemplate(this), "build.xml")
+        renderTemplate(appconfigTemplate(this), "config/appconfig.json")
+        renderTemplate(applicationTemplate(this), "src/$appPackagePath/Application.kt")
 
         // make the default controller and view
         execController("Home")
@@ -142,33 +147,42 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
     fun execController(var controllerName : String) {
         controllerName = controllerName.capitalize()
 
-        val controllerSlug = controllerName.toLowerCase()
-        context.put("controllerSlug", controllerSlug)
-        val controllerClassName = "${controllerName}Controller"
-        context.put("controllerClassName", controllerClassName)
+        controllerSlug = controllerName.toLowerCase()
+        controllerClassName = "${controllerName}Controller"
 
         ensureDir("src/$appPackagePath/controllers")
 
-        renderTemplate("src.appPackage.controllers.Controller.kt", "src/$appPackagePath/controllers/${controllerClassName}.kt")
+        renderTemplate(controllerTemplate(this), "src/$appPackagePath/controllers/${controllerClassName}.kt")
+        execLayout("Default")
         execView(controllerName, "Index")
     }
 
 
     /** Executes the task to create a new view. */
-    fun execView(var controllerName : String, var viewName : String) {
-        controllerName = controllerName.capitalize()
-        viewName = viewName.capitalize()
-        context.put("viewName", viewName)
+    fun execLayout(var name : String) {
+        viewName = name.capitalize() + "Layout"
+        stylesheetName = name.capitalize() + "Styles"
 
-        val controllerSlug = controllerName.toLowerCase()
-        context.put("controllerSlug", controllerSlug)
-        val controllerClassName = "${controllerName}Controller"
-        context.put("controllerClassName", controllerClassName)
+        ensureDir("src/$appPackagePath/views")
+        ensureDir("src/$appPackagePath/styles")
+
+        renderTemplate(layoutTemplate(this), "src/$appPackagePath/views/${viewName}.kt")
+        renderTemplate(stylesheetTemplate(this), "src/$appPackagePath/styles/${stylesheetName}.kt")
+    }
+
+
+    /** Executes the task to create a new view. */
+    fun execView(var controllerName : String, var vName : String) {
+        controllerName = controllerName.capitalize()
+        viewName = vName.capitalize()
+
+        controllerSlug = controllerName.toLowerCase()
+        controllerClassName = "${controllerName}Controller"
 
         ensureDir("src/$appPackagePath/views")
         ensureDir("src/$appPackagePath/views/$controllerSlug")
 
-        renderTemplate("src.appPackage.views.View.kt", "src/$appPackagePath/views/$controllerSlug/${viewName}.kt")
+        renderTemplate(viewTemplate(this), "src/$appPackagePath/views/$controllerSlug/${viewName}.kt")
     }
 
 
@@ -194,32 +208,14 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         }
     }
 
-
     /** Renders a template to the target project. */
-    fun renderTemplate(template : String, var outPath : String = "") {
-        if (!Velocity.templateExists("$template.vm"))
-            throw RuntimeException("Template $template.vm doesn't exist.")
-
-        // compute the output file path
-        if (outPath.length == 0) {
-            val comps = template.split("\\.")
-            val fileName = "${comps[comps.size-2]}.${comps[comps.size-1]}"
-            val outDir = template.replace(fileName, "").replace(".", "/").replace("appPackage", appPackagePath)
-            var outFile = File(appConfig.appRoot, "$outDir/$fileName")
-            if (outFile.exists()) {
-                permissions.ask("file_overwrite", "$outFile already exists and will be overwritten.")
-            }
-            outPath = outFile.toString()
+    fun renderTemplate(template : String, var outPath : String) {
+        // write the template to the file
+        val outFile = File(appConfig.appRoot, outPath)
+        if (outFile.exists()) {
+            permissions.ask("file_overwrite", "$outPath already exists and will be overwritten.")
         }
-        else {
-            outPath = File(appConfig.appRoot, outPath).toString()
-        }
-
-        // render the template
         logger.info("Creating $outPath")
-        val writer = FileWriter(outPath)
-        Velocity.mergeTemplate("$template.vm", context, writer)
-        writer.flush()
-
+        outFile.writeText(template, "UTF-8")
     }
 }
