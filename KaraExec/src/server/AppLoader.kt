@@ -60,7 +60,7 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
         if (application == null || application?.dispatcher == null)
             throw RuntimeException("Trying to load controllers without a valid application or dispatcher")
         val dispatcher = application?.dispatcher as Dispatcher
-        val controllerDir = File(binDir, "${appConfig.appPackage}${File.separator}controllers")
+        val controllerDir = File(binDir, "${appConfig.appPackagePath}${File.separator}controllers")
         if (!controllerDir.exists()) {
             throw RuntimeException("App ${appConfig.appPackage} does not have a controllers directory (should be ${controllerDir.toString()})")
         }

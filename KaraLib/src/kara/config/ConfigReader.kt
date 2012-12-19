@@ -34,8 +34,10 @@ class ConfigReader(val config : Config) {
                 for (key in keyStack) {
                     path = "${key}." + path
                 }
-                val value = child.getTextValue()!!
-                config[path] = value
+                if (child.isInt())
+                    config[path] = child.getIntValue().toString()
+                else
+                    config[path] = child.getTextValue()!!
             }
         }
     }

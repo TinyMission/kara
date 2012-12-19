@@ -7,6 +7,7 @@ import java.io.*
 import java.util.Properties
 import kara.config.AppConfig
 import generators.templates.*
+import com.google.common.io.Files
 
 /** Possbile named tasks that the generator can perform. */
 enum class GeneratorTask(val name : String) {
@@ -97,7 +98,6 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                 }
             }
         }
-        //context.put("appPackage", appConfig.appPackage)
     }
 
 
@@ -120,6 +120,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         // setup the project directory structure
         createDir("bin")
         createDir("config")
+        createDir("lib")
         createDir("public")
         createDir("public/images")
         createDir("public/javascripts")
@@ -133,13 +134,21 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         createDir("src/$appPackagePath/views")
         createDir("tmp")
 
+        // copy the necessary libraries
+        copyFile("lib/kotlin-runtime.jar", "lib/kotlin-runtime.jar")
+        copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
+
         // render the templates
+        renderTemplate(moduleImlTemplate(this), "${appConfig.appPackage}.iml")
         renderTemplate(buildxmlTemplate(this), "build.xml")
         renderTemplate(appconfigTemplate(this), "config/appconfig.json")
+        renderTemplate(appconfigDevelopmentTemplate(this), "config/appconfig.development.json")
         renderTemplate(applicationTemplate(this), "src/$appPackagePath/Application.kt")
 
         // make the default controller and view
         execController("Home")
+
+        println("\nYour project has been created! Now you're ready to import it into your favorite IDE and start coding.")
     }
 
 
@@ -182,7 +191,9 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         ensureDir("src/$appPackagePath/views")
         ensureDir("src/$appPackagePath/views/$controllerSlug")
 
-        renderTemplate(viewTemplate(this), "src/$appPackagePath/views/$controllerSlug/${viewName}.kt")
+        val outPath = "src/$appPackagePath/views/$controllerSlug/${viewName}.kt"
+        var isLanding = controllerName == "Home" && vName == "Index"
+        renderTemplate(viewTemplate(this, outPath, isLanding), outPath)
     }
 
 
@@ -217,5 +228,14 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         }
         logger.info("Creating $outPath")
         outFile.writeText(template, "UTF-8")
+    }
+
+    /** Copies the file at srcPath to dstPath */
+    fun copyFile(srcPath : String, dstPath : String) {
+        val srcFile = File(karaHome, srcPath)
+        if (!srcFile.exists())
+            throw RuntimeException("File $srcPath does not exist in the Kara distribution")
+        val dstFile = File(appConfig.appRoot, dstPath)
+        Files.copy(srcFile, dstFile)
     }
 }

@@ -11,6 +11,7 @@ public class AppConfig(appRoot : String, val environment : String = "development
 
     {
         this["kara.appRoot"] = appRoot
+        this["kara.port"] = "8080"
 
         // read the main appconfig file and also look for an environment-specific one
         var file = File(appRoot, "config/appconfig.json")
@@ -26,11 +27,24 @@ public class AppConfig(appRoot : String, val environment : String = "development
         return environment == "development"
     }
 
+    /** Returns true if the application is running in the test environment. */
+    fun isTest() : Boolean {
+        return environment == "test"
+    }
+
+    /** Returns true if the application is running in the production environment. */
+    fun isProduction() : Boolean {
+        return environment == "production"
+    }
+
     public val appRoot : String
         get() = this["kara.appRoot"]
 
     public val appPackage : String
         get() = this["kara.appPackage"]
+
+    public val appPackagePath : String
+        get() = this.appPackage.replace(".", "/")
 
     public val paramDeserializer : ParamDeserializer = ParamDeserializer()
 
@@ -48,4 +62,10 @@ public class AppConfig(appRoot : String, val environment : String = "development
 
     public val absSessionDir : String
         get() = File(appRoot, sessionDir).toString()
+
+
+    /** The port to run the server on. */
+    public val port : String
+        get() = this["kara.port"]
+
 }

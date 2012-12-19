@@ -68,10 +68,17 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
     }
 
     public fun start() {
-        server = Server(8080)
+        var port : Int
+        try {
+            port = appConfig.port.toInt()
+        }
+        catch (ex : Exception) {
+            throw RuntimeException("${appConfig.port} is not a valid port number")
+        }
+        server = Server(port)
 
         resourceHandler.setDirectoriesListed(false)
-        resourceHandler.setResourceBase("./public")
+        resourceHandler.setResourceBase("./${appConfig.publicDir}")
         resourceHandler.setWelcomeFiles(array("index.html"))
 
         server?.setHandler(sessionHandler)

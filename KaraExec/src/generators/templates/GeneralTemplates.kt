@@ -20,6 +20,16 @@ fun appconfigTemplate(gen : Generator) : String {
 """
 }
 
+fun appconfigDevelopmentTemplate(gen : Generator) : String {
+    return """
+{
+     "kara": {
+         "port": 3000
+     }
+}
+"""
+}
+
 
 fun buildxmlTemplate(gen : Generator) : String {
     return """
@@ -62,10 +72,11 @@ fun controllerTemplate(gen : Generator) : String {
 package ${gen.appPackage}.controllers
 
 import kara.controllers.*
+import ${gen.appPackage}.views.*
 import ${gen.appPackage}.views.${gen.controllerSlug}.*
 
-class ${gen.controllerClassName}() : BaseController() {
-    Get("index") fun index() : ActionResult {
+class ${gen.controllerClassName}() : BaseController(DefaultLayout()) {
+    Get("/") fun index() : ActionResult {
         return Index()
     }
 

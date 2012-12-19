@@ -2,24 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d472f65-4e1f-4bcf-9336-59340b03091d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/gson_2_2_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/velocity_1_7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/KaraExec/templates/appconfig.json.vm" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/KaraExec/templates/build.xml.vm" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/KaraExec/templates/src.appPackage.Application.kt.vm" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/KaraExec/templates/src.appPackage.controllers.Controller.kt.vm" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/KaraExec/templates/src.appPackage.views.View.kt.vm" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraDemo/appconfig.json" afterPath="$PROJECT_DIR$/KaraDemo/config/appconfig.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraDemo/config/appconfig.development.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/guava_11_0_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_6_6.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_6_1.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt" afterPath="$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/views/Json.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/views/Json.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt" afterPath="$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/KaraExec.iml" afterPath="$PROJECT_DIR$/KaraExec/KaraExec.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/KaraLib.iml" afterPath="$PROJECT_DIR$/KaraLib/KaraLib.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/Main.kt" afterPath="$PROJECT_DIR$/KaraExec/src/Main.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ivy.xml" afterPath="$PROJECT_DIR$/ivy.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kara" afterPath="$PROJECT_DIR$/kara" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Kara.iws" />
@@ -33,94 +31,94 @@
     <file path="/MockHttpServletResponse.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352571599397" ignored="false" />
     <file path="/FooController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352574853407" ignored="false" />
     <file path="/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355786586928" ignored="false" />
-    <file path="/AppLoader.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355786101902" ignored="false" />
+    <file path="/AppLoader.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355899016243" ignored="false" />
     <file path="/Main.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355875705624" ignored="false" />
-    <file path="$USER_HOME$/Library/Application Support/IdeaIC12/Kotlin/lib/kotlin-plugin.jar!/jet/Unit.jet" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355805226358" ignored="false" />
+    <file path="$USER_HOME$/Library/Application Support/IdeaIC12/Kotlin/lib/kotlin-plugin.jar!/jet/Unit.jet" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892069849" ignored="false" />
     <file path="/FileWatcher.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354993061099" ignored="false" />
     <file path="/HomeController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355462965216" ignored="false" />
-    <file path="/JettyRunner.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355782761588" ignored="false" />
+    <file path="/JettyRunner.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355896378428" ignored="false" />
     <file path="/Index.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354990519488" ignored="false" />
     <file path="/fragment.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354852259600" ignored="false" />
     <file path="/BodyTags.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355026708640" ignored="false" />
     <file path="/Default.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355013235310" ignored="false" />
     <file path="/build.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354950901758" ignored="false" />
-    <file path="/ivy.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354983844188" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Tuple0.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function6.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function3.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/TypeCastException.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ShortIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ShortIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function19.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function8.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction10.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction4.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction1.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction3.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction20.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DoubleRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/IntIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function7.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/FloatIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ByteIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/NoPatternMatchedException.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function9.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/BooleanIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function17.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function5.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/CharIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ByteIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction8.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624272" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function16.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624457" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction5.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624457" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/FloatRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624457" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function1.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624457" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function14.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624457" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function13.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function2.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function4.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction22.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DefaultJetObject.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/IntIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ShortRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction17.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function20.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DoubleIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction11.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction7.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/CharIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/LongRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/LongIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction13.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function18.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function10.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction19.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction16.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/FloatIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function21.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction14.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction6.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function0.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function15.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/CharRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction9.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function11.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Range.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ByteRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function22.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction18.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DoubleIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/LongIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction0.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/BooleanIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624458" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction21.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/IntRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function12.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction15.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/JetObject.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction2.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction12.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355370624801" ignored="false" />
-    <file path="/DefaultLayout.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354990855033" ignored="false" />
+    <file path="/ivy.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355940288483" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Tuple0.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function6.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function3.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/TypeCastException.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ShortIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ShortIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function19.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function8.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction10.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction4.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction1.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction3.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction20.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DoubleRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/IntIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function7.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/FloatIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ByteIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/NoPatternMatchedException.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function9.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/BooleanIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function17.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function5.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/CharIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ByteIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction8.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function16.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction5.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/FloatRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function1.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function14.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function13.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function2.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function4.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction22.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DefaultJetObject.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/IntIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ShortRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction17.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function20.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DoubleIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction11.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction7.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081002" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/CharIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/LongRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/LongIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction13.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function18.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function10.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction19.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction16.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/FloatIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function21.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction14.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction6.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function0.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function15.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/CharRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction9.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function11.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Range.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ByteRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function22.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction18.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/DoubleIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/LongIterable.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction0.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/BooleanIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction21.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/IntRange.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/Function12.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction15.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/JetObject.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction2.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/ExtensionFunction12.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081003" ignored="false" />
+    <file path="/DefaultLayout.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943496668" ignored="false" />
     <file path="/FormBuilder.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355383840883" ignored="false" />
     <file path="/Forms.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355382241325" ignored="false" />
     <file path="/ActionResult.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355031321389" ignored="false" />
@@ -128,7 +126,7 @@
     <file path="/HtmlView.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355794003076" ignored="false" />
     <file path="/HtmlLayout.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355032038414" ignored="false" />
     <file path="/Rakefile" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355266401152" ignored="false" />
-    <file path="/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355378724125" ignored="false" />
+    <file path="/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355900673857" ignored="false" />
     <file path="/StringHelpers.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355282317497" ignored="false" />
     <file path="/ActionContext.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355782622492" ignored="false" />
     <file path="/Show.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355291672775" ignored="false" />
@@ -139,20 +137,20 @@
     <file path="/ErrorView.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355464388567" ignored="false" />
     <file path="/RouteParams.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355461329295" ignored="false" />
     <file path="/BaseController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355463443372" ignored="false" />
-    <file path="/AppConfig.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355860637138" ignored="false" />
-    <file path="/Generator.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355876909334" ignored="false" />
-    <file path="/kara" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355641153139" ignored="false" />
+    <file path="/AppConfig.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355898964207" ignored="false" />
+    <file path="/Generator.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961137558" ignored="false" />
+    <file path="/kara" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355897431008" ignored="false" />
     <file path="/MANIFEST.MF" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355612433887" ignored="false" />
     <file path="/CommandPermissions.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355630126267" ignored="false" />
     <file path="/Permissions.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355636517844" ignored="false" />
     <file path="/Application.vm" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355636444865" ignored="false" />
-    <file path="/Dummy.txt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355844140505" ignored="false" />
+    <file path="/Dummy.txt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892069742" ignored="false" />
     <file path="/src.appPackage.controllers.Controller.kt.vm" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355730322545" ignored="false" />
     <file path="/src.appPackage.views.View.kt.vm" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355730386405" ignored="false" />
     <file path="/appconfig.json" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355776286489" ignored="false" />
     <file path="/appconfig.json.vm" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355847434534" ignored="false" />
     <file path="/AppConfigReader.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355767088236" ignored="false" />
-    <file path="/ConfigReader.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355782396240" ignored="false" />
+    <file path="/ConfigReader.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355896570292" ignored="false" />
     <file path="/Config.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355875546288" ignored="false" />
     <file path="/Servlet.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355788085682" ignored="false" />
     <file path="/Stylesheet.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355785331005" ignored="false" />
@@ -160,9 +158,36 @@
     <file path="/DispatchTests.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355805407591" ignored="false" />
     <file path="/MockDispatch.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355806220044" ignored="false" />
     <file path="/Templates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355860908482" ignored="false" />
-    <file path="/GeneralTemplates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355875921867" ignored="false" />
+    <file path="/GeneralTemplates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355895976591" ignored="false" />
     <file path="/Json.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355863127844" ignored="false" />
-    <file path="/ViewTemplates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355876650112" ignored="false" />
+    <file path="/ViewTemplates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355960946263" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/Ranges.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081447" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetTypeDescriptor.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetMethod.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/KotlinSignature.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/Intrinsic.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetConstructor.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetValueParameter.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetClass.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetTypeParameter.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/Intrinsics.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/typeinfo/JetTypeProjection.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/ArrayIterator.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$PROJECT_DIR$/lib/kotlin-runtime.jar!/src/jet/runtime/SharedVar.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355892081448" ignored="false" />
+    <file path="$USER_HOME$/tmp/test/src/com/example/controllers/HomeController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355899893362" ignored="false" />
+    <file path="$USER_HOME$/tmp/test/src/com/example/views/DefaultLayout.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355898840663" ignored="false" />
+    <file path="/appconfig.development.json" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355899339826" ignored="false" />
+    <file path="$USER_HOME$/tmp/test/src/com/example/styles/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355900796603" ignored="false" />
+    <file path="$USER_HOME$/tmp/test/.idea/workspace.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355942490401" ignored="false" />
+    <file path="$USER_HOME$/tmp/test/pom.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355937339015" ignored="false" />
+    <file path="/pom.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355937336044" ignored="false" />
+    <file path="/ProjectTemplates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355941674460" ignored="false" />
+    <file path="$USER_HOME$/tmp/karaexample/com.karaexample.iml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
+    <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/views/DefaultLayout.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
+    <file path="$USER_HOME$/tmp/karaexample/.idea/workspace.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943808160" ignored="false" />
+    <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/styles/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
+    <file path="$USER_HOME$/tmp/karaexample/.idea/ant.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943788020" ignored="false" />
+    <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +202,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <breakpoint_rules default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -213,6 +237,7 @@
       </breakpoint>
     </breakpoint_any>
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_rules default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -223,10 +248,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="ivy.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ivy.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="16" selection-start="100" selection-end="100" vertical-scroll-proportion="-1.25">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Main.kt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/Main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="43" selection-start="3269" selection-end="3269" vertical-scroll-proportion="0.0">
+            <state line="106" column="24" selection-start="3705" selection-end="3705" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -235,7 +269,7 @@
       <file leaf-file-name="Generator.kt" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="185" column="5" selection-start="6464" selection-end="6464" vertical-scroll-proportion="0.23264311">
+            <state line="152" column="0" selection-start="5376" selection-end="5376" vertical-scroll-proportion="0.54198474">
               <folding />
             </state>
           </provider>
@@ -244,8 +278,10 @@
       <file leaf-file-name="GeneralTemplates.kt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="30" selection-start="939" selection-end="939" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="70" column="13" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0">
+              <folding>
+                <marker date="1355902688000" expanded="true" signature="434:504" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -253,7 +289,16 @@
       <file leaf-file-name="ViewTemplates.kt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="31" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0">
+            <state line="33" column="1" selection-start="814" selection-end="814" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProjectTemplates.kt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="0" selection-start="142" selection-end="142" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -262,16 +307,7 @@
       <file leaf-file-name="AppConfig.kt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="32" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Config.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="33" selection-start="1179" selection-end="1179" vertical-scroll-proportion="0.0">
+            <state line="46" column="49" selection-start="1418" selection-end="1418" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -302,22 +338,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" />
-        <option value="$PROJECT_DIR$/KaraExec/templates/appconfig.json.vm" />
-        <option value="$PROJECT_DIR$/KaraExec/templates/src.appPackage.Application.kt.vm" />
-        <option value="$PROJECT_DIR$/KaraExec/templates/src.appPackage.controllers.Controller.kt.vm" />
-        <option value="$PROJECT_DIR$/KaraExec/templates/src.appPackage.views.View.kt.vm" />
-        <option value="$PROJECT_DIR$/KaraExec/src/generators/Templates.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/Templates.kt" />
         <option value="$PROJECT_DIR$/KaraLib/src/kara/views/Json.kt" />
-        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" />
         <option value="$PROJECT_DIR$/KaraDemo/config/appconfig.json" />
         <option value="$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/Main.kt" />
+        <option value="$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt" />
+        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" />
+        <option value="$PROJECT_DIR$/kara" />
+        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" />
+        <option value="$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt" />
+        <option value="$PROJECT_DIR$/KaraDemo/config/appconfig.development.json" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" />
+        <option value="$PROJECT_DIR$/ivy.xml" />
+        <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
-        <option value="$PROJECT_DIR$/ivy.xml" />
       </list>
     </option>
   </component>
@@ -383,6 +419,16 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kara" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -397,16 +443,6 @@
             <PATH_ELEMENT USER_OBJECT="Root">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kara" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -427,34 +463,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="Kara" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kara" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="KaraTests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kara" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="KaraTests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="karatests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -856,19 +864,19 @@
     <property name="options.lastSelected" value="appearance" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/jackson-core-asl-1.9.9.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/guava-11.0.2.jar!/" />
     <property name="project.structure.side.proportion" value="0.1946387" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="dynamic.classpath" value="false" />
     <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -985,6 +993,19 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1010,19 +1031,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1141,7 +1149,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="212" y="22" width="1468" height="969" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.66431093" order="3" side_tool="false" content_ui="tabs" />
@@ -1152,7 +1160,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Kotlin" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20253165" sideWeight="0.69729096" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19552414" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19552414" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979977" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1728142" sideWeight="0.16843346" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.7632509" order="3" side_tool="false" content_ui="tabs" />
@@ -1238,45 +1246,54 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/app/Application.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="70" selection-start="190" selection-end="190" vertical-scroll-proportion="0.14240506">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/views/BaseTags.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="248" column="82" selection-start="6762" selection-end="6762" vertical-scroll-proportion="0.03816794">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="27" selection-start="401" selection-end="401" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/views/Json.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="34" selection-start="91" selection-end="91" vertical-scroll-proportion="0.06870229">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/config/appconfig.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="19" selection-start="35" selection-end="35" vertical-scroll-proportion="0.045801528">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="32" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
+        <state line="46" column="49" selection-start="1418" selection-end="1418" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="44" selection-start="313" selection-end="313" vertical-scroll-proportion="0.32315978">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/PostsController.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="45" selection-start="331" selection-end="331" vertical-scroll-proportion="0.35008976">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraDemo/config/appconfig.development.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="1" selection-start="44" selection-end="44" vertical-scroll-proportion="0.10771993">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="40" selection-start="2540" selection-end="2540" vertical-scroll-proportion="0.20811288">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="0" selection-start="2297" selection-end="2297" vertical-scroll-proportion="0.3810345">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="13" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1355902688000" expanded="true" signature="434:504" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1287,51 +1304,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/kara">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="0" selection-start="577" selection-end="577" vertical-scroll-proportion="0.6465517">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/KaraExec/src/Main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="43" selection-start="3269" selection-end="3269" vertical-scroll-proportion="0.0">
+        <state line="106" column="24" selection-start="3705" selection-end="3705" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt">
+    <entry file="file://$PROJECT_DIR$/KaraDemo/KaraDemo.iml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="30" selection-start="939" selection-end="939" vertical-scroll-proportion="0.0">
+        <state line="7" column="73" selection-start="401" selection-end="401" vertical-scroll-proportion="0.16613925">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/styles/DefaultStyles.kt">
+    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="143" selection-end="143" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/views/DefaultLayout.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="36" selection-start="80" selection-end="80" vertical-scroll-proportion="0.06870229">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="31" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0">
+        <state line="6" column="0" selection-start="184" selection-end="184" vertical-scroll-proportion="0.14263074">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ivy.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="60" selection-start="376" selection-end="376" vertical-scroll-proportion="0.14263074">
+        <state line="2" column="16" selection-start="100" selection-end="100" vertical-scroll-proportion="-1.25">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="142" selection-end="142" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="1" selection-start="814" selection-end="814" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="185" column="5" selection-start="6464" selection-end="6464" vertical-scroll-proportion="0.23264311">
+        <state line="152" column="0" selection-start="5376" selection-end="5376" vertical-scroll-proportion="0.54198474">
           <folding />
         </state>
       </provider>
@@ -1419,7 +1443,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>slf4j-log4j12-1.6.6</last-edited>
+          <last-edited>guava-11.0.2</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
