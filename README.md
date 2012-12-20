@@ -29,6 +29,15 @@ There are several features that are **not planned** for Kara, since we feel they
 * Support for different Javascript wrappers (Coffeescript, TypeScript, Dart, etc.)
 * A database integration library. There are plenty of good ORM's for the JVM, and while there's a chance that Kotlin could be used to do some interesting things with mapping databases, this can be developed independently of Kara
 
+### Philosophy
+
+Kara is not intended to be everything to ever one. There are slews of excellent web frameworks out there that meet a wide range of needs for developers.
+If you're looking for something that lets you use a dynamic language with really simple syntax, or use proper HTML markup that a designer can edit, you'd be better served by something like Rails or Django.
+
+Kara's specific goal is to make a web framework that focuses on developer productivity while maintaining a safe yet powerful syntax for defining markup.
+The HTML view DSL is more concise than most markup languages used today, yet maintains strong type safety to help avoid common pitfalls that you'd experince in dynamic languages.
+Plus, Kotlin is an excellent language to develop with - letting you easily express complex ideas through simple code that leverages the power of the JVM.
+
 
 ## Installation
 
@@ -127,7 +136,7 @@ Here's the general structure of a Kara project:
 
 ## Views
 
-HTML views in Kara are created directly using Kotlin code. Each view inherits from kara.view.HtmlView and looks like this:
+HTML views in Kara are created using a custom Kotlin DSL. Each view inherits from kara.view.HtmlView and looks like this:
 
     class Index() : HtmlView() {
         override fun render(context: ActionContext) {
@@ -179,7 +188,101 @@ Kara has a special form builder tag that allows you to generate form markup dire
     }
 
 In this case, the view itself accepts an argument for a model object - book - which is used during the rendering process.
-The formFor method generates the form tag and binds all contained form methods to that form. In this case, we generate labels, a text field, and a check box.
+The formFor method generates the form tag and binds all contained form methods to that form.
+In this case, we generate labels, a text field, and a check box.
+The values for those fields will be automatically populated with the corresponding properties from the model object.
+
+
+## Stylesheets
+
+Like HTML views, CSS stylesheets are also defined with a Kotlin DSL. A stylesheet inherits from kara.styles.Stylesheet, and looks like this:
+
+    class DefaultStyles() : Stylesheet() {
+        override fun render() {
+            s("body") {
+                backgroundColor = c("#f0f0f0")
+            }
+            s("#main") {
+                width = 85.percent
+                backgroundColor = c("#fff")
+                margin = box(0.px, auto)
+                padding = box(1.em)
+                border = "1px solid #ccc"
+                borderRadius = 5.px
+            }
+
+            s("input[type=text], textarea") {
+                padding = box(4.px)
+                width = 300.px
+            }
+            s("textarea") {
+                height = 80.px
+            }
+
+            s("table.fields") {
+                s("td") {
+                    padding = box(6.px, 3.px)
+                }
+                s("td.label") {
+                    textAlign = TextAlign.right
+                }
+                s("td.label.top") {
+                    verticalAlign = VerticalAlign.top
+                }
+            }
+        }
+    }
+
+Each selector is declared with the s() function, and it's attributes are set inside a function literal.
+All possible CSS attributes are mapped to properties on the selector, and strongly-typed enums are used for attributes with a predefined set of possible values.
+Selector nesting is automatically handled by nesting s() calls and generates the appropriate compound selectors.
+
+Note that special value types exist for dimensional and color attributes. These include:
+
+* Linear dimensions (like width, height, borderRadius, etc.) - created using extension functions on numeric values (i.e. 1.5.em, 3.px, 25.percent)
+* Box dimensions (like padding and margin) - created using the box() function, which accepts 1-4 linear dimenions using the same logic as their CSS counterparts
+* Colors - created using the c() function and passing a string defining the color
+
+Because the CSS markup is defined using Kotlin itself, the DSL renders CSS preprocessing libraries like SASS and LESS obselete.
+Variable and macros can be defined right in code, either inside the style class or as separate functions to share amongst several styles.
+
+
+## Controllers
+
+The business logic for a Kara app is contained inside the controllers.
+Each controller is a class that inherits from kara.controllers.BaseController, and defines one or more action methods.
+An action method handles a specific request to the app, defined by the routing parameters associated with it, and returns an ActionResult.
+
+    class HomeController() : BaseController(DefaultLayout()) {
+        Get("/") fun index() : ActionResult {
+            return Index()
+        }
+
+        Get("/test") fun test() : ActionResult {
+            return TextResult("This is a simple text action")
+        }
+
+        Post("/updatebook") fun update() : ActionResult {
+            return RedirectResult("/forms")
+        }
+    }
+
+The controller above has three actions (index, test, and update). The first two respond to GET requests at / and /test, respectively.
+The update action responds to POST requests at /updatebook.
+
+The routing mechanism allows for more complex routes, like:
+
+    Get("complex/*/list/:id") fun complex() : ActionResult {
+        return TextResult("complex: ${params[0]} id = ${params["id"]}")
+    }
+
+In this case, the asterisk acts as a wildcard (matching any value at that location), and :id acts as a named route parameter.
+The parameter values are available inside the request through the controllers RouteParams object:
+
+    this.params[0] // wildcard param
+    this.params["id"] // named :id param
+
+The most common ActionResult is an HtmlView, but you can also return raw text with TextResult(), JSON objects with JsonResult(), and redirects with RedirectRestul().
 
 
 ## Authors
