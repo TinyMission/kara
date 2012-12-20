@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d472f65-4e1f-4bcf-9336-59340b03091d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <ignored path="Kara.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -174,7 +172,7 @@
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/styles/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/.idea/ant.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943788020" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
-    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355963680277" ignored="false" />
+    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355977625436" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -265,7 +263,7 @@
       <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="47" selection-start="1347" selection-end="1347" vertical-scroll-proportion="0.39252338">
+            <state line="21" column="36" selection-start="1252" selection-end="1252" vertical-scroll-proportion="-1.5934579">
               <folding />
             </state>
           </provider>
@@ -1351,7 +1349,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="47" selection-start="1347" selection-end="1347" vertical-scroll-proportion="0.39252338">
+        <state line="21" column="36" selection-start="1252" selection-end="1252" vertical-scroll-proportion="-1.5934579">
           <folding />
         </state>
       </provider>
