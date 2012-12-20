@@ -148,7 +148,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         // make the default controller and view
         execController("Home")
 
-        println("\nYour project has been created! Now you're ready to import it into your favorite IDE and start coding.")
+        println("\nYour project has been created! Now you're ready to import it into your favorite IDE and start coding.\n")
     }
 
 

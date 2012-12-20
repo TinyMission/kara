@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d472f65-4e1f-4bcf-9336-59340b03091d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/KotlinRuntime.xml" afterPath="$PROJECT_DIR$/.idea/libraries/KotlinRuntime.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Kara.iws" />
@@ -124,7 +124,7 @@
     <file path="/RouteParams.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355461329295" ignored="false" />
     <file path="/BaseController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355463443372" ignored="false" />
     <file path="/AppConfig.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355898964207" ignored="false" />
-    <file path="/Generator.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961137558" ignored="false" />
+    <file path="/Generator.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961724992" ignored="false" />
     <file path="/kara" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355897431008" ignored="false" />
     <file path="/MANIFEST.MF" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355612433887" ignored="false" />
     <file path="/CommandPermissions.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355630126267" ignored="false" />
@@ -174,6 +174,7 @@
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/styles/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/.idea/ant.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943788020" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
+    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355963680277" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,10 +253,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Generator.kt" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Generator.kt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="147" column="35" selection-start="5202" selection-end="5202" vertical-scroll-proportion="0.4274809">
+            <state line="138" column="45" selection-start="4722" selection-end="4722" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="47" selection-start="1347" selection-end="1347" vertical-scroll-proportion="0.39252338">
               <folding />
             </state>
           </provider>
@@ -324,7 +334,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/Templates.kt" />
         <option value="$PROJECT_DIR$/KaraLib/src/kara/views/Json.kt" />
         <option value="$PROJECT_DIR$/KaraDemo/config/appconfig.json" />
         <option value="$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt" />
@@ -340,6 +349,7 @@
         <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -1135,7 +1145,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="212" y="22" width="1468" height="969" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.66431093" order="3" side_tool="false" content_ui="tabs" />
@@ -1146,7 +1156,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Kotlin" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20253165" sideWeight="0.69729096" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19552414" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19552414" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979977" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1728142" sideWeight="0.16843346" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.7632509" order="3" side_tool="false" content_ui="tabs" />
@@ -1232,13 +1242,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="49" selection-start="1418" selection-end="1418" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="44" selection-start="313" selection-end="313" vertical-scroll-proportion="0.32315978">
@@ -1263,13 +1266,6 @@
     <entry file="file://$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="69" column="40" selection-start="2540" selection-end="2540" vertical-scroll-proportion="0.20811288">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="0" selection-start="2297" selection-end="2297" vertical-scroll-proportion="0.3810345">
           <folding />
         </state>
       </provider>
@@ -1339,9 +1335,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="0" selection-start="2297" selection-end="2297" vertical-scroll-proportion="1.5572519">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="35" selection-start="5202" selection-end="5202" vertical-scroll-proportion="0.4274809">
+        <state line="138" column="45" selection-start="4722" selection-end="4722" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="47" selection-start="1347" selection-end="1347" vertical-scroll-proportion="0.39252338">
           <folding />
         </state>
       </provider>
