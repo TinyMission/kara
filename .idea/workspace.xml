@@ -2,22 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d472f65-4e1f-4bcf-9336-59340b03091d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraDemo/config/appconfig.development.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/guava_11_0_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_6_6.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_6_1.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt" afterPath="$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt" afterPath="$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/KaraExec.iml" afterPath="$PROJECT_DIR$/KaraExec/KaraExec.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/KaraLib.iml" afterPath="$PROJECT_DIR$/KaraLib/KaraLib.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ivy.xml" afterPath="$PROJECT_DIR$/ivy.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kara" afterPath="$PROJECT_DIR$/kara" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/KotlinRuntime.xml" afterPath="$PROJECT_DIR$/.idea/libraries/KotlinRuntime.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Kara.iws" />
@@ -269,7 +255,7 @@
       <file leaf-file-name="Generator.kt" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="152" column="0" selection-start="5376" selection-end="5376" vertical-scroll-proportion="0.54198474">
+            <state line="147" column="35" selection-start="5202" selection-end="5202" vertical-scroll-proportion="0.4274809">
               <folding />
             </state>
           </provider>
@@ -1149,7 +1135,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="212" y="22" width="1468" height="969" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.66431093" order="3" side_tool="false" content_ui="tabs" />
@@ -1160,7 +1146,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Kotlin" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20253165" sideWeight="0.69729096" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19552414" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19552414" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979977" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1728142" sideWeight="0.16843346" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.7632509" order="3" side_tool="false" content_ui="tabs" />
@@ -1355,7 +1341,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="152" column="0" selection-start="5376" selection-end="5376" vertical-scroll-proportion="0.54198474">
+        <state line="147" column="35" selection-start="5202" selection-end="5202" vertical-scroll-proportion="0.4274809">
           <folding />
         </state>
       </provider>
