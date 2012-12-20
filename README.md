@@ -13,6 +13,7 @@ Kara is still atan alpha stage, but it contains the following feature set:
 * A Jetty-based embedded web server that automatically reloads the application when it's rebuilt
 * A flexible JSON-based configuration system
 * A project and file generator system to aid in setting up your code
+* An environment system for different runtime environments
 
 As a project in heavy development, there are still a number of **planned** features that **have yet to be implemented**:
 
@@ -77,7 +78,7 @@ To create a Kara project, navigate to the directory you'd like the new project i
 
 This will create a new project in MyKaraApp with the package com.example. At this point, the project is just a set of directories and some boilerplate code.
 
-To import the project into IDEA, follow the steps before. **Note, this is quite crude and we would benefit from some guidance from JetBrains as to how to smooth this out.**
+To import the project into IDEA, follow the steps before. **NOTE: this is quite crude and we would benefit from some guidance from JetBrains as to how to smooth this out.**
 
 * Open IDEA and select *File -> Import Project* and select your project's directory
 * Select *File -> Project Structure* and choose a JDK from the dropdown. Either 6 or 7 should work
@@ -90,6 +91,20 @@ That should be it. You should now be able to build the project.
 Once the project is built, it can be run in the development server by simply running:
 
     kara server
+
+### Other Generators
+
+To create a new controller in your existing project, simply run something like:
+
+    kara generate controller Blog
+
+which will create a controller called BlogController.
+
+To create a new view in your existing project, run something like:
+
+    kara generate view Blog List
+
+which will generate a view called List that belongs to the BlogController.
 
 
 ## Project Structure
@@ -109,6 +124,62 @@ Here's the general structure of a Kara project:
     /src/<package>/views            HTML view sources
     /tmp                            Temporary files, like sessions
 
+
+## Views
+
+HTML views in Kara are created directly using Kotlin code. Each view inherits from kara.view.HtmlView and looks like this:
+
+    class Index() : HtmlView() {
+        override fun render(context: ActionContext) {
+            h2("Welcome to Kara")
+            p("Your app is up and running, now it's time to make something!")
+            p("Start by editing this file here: src/com/karaexample/views/home/Index.kt")
+        }
+    }
+
+As you can see, the actual view markup is placed in the overriden render() method. The render() method accepts one argument, the action context. This context hold references to the action's request, response, session, and parameters.
+
+Some more complex view markup might look like this:
+
+    ol {
+        li("List Item 1")
+        li("List Item 2")
+    }
+    fieldset() {
+        label("Text Input")
+        input(inputType="text", value="Text")
+    }
+    p {
+        + "Some text"
+        + "Some more text"
+    }
+
+Each function represents a single HTML tag, and accepts arguments for the tag's attributes. The last argument is an optional function literal that can be used to populate the tag's children (as with the ol and fieldset tags above). Text content can either be passed directly to the tag function, or added inside its body with the + operator.
+
+This flexible markup mechanism highlights the power of the Kotlin syntax, and can't be acheived in languages like Java or even Scala.
+
+### Forms
+
+Kara has a special form builder tag that allows you to generate form markup directly from a model object using reflection. For example:
+
+    class BookForm(val book : Book) : HtmlView() {
+        override fun render(context: ActionContext) {
+            h2("Book Form")
+            formFor(book, "/updatebook", FormMethod.Post) {
+                p {
+                    labelFor("title")
+                    textFieldFor("title")
+                }
+                p {
+                    labelFor("isPublished", "Is Published?")
+                    checkBoxFor("isPublished")
+                }
+            }
+        }
+    }
+
+In this case, the view itself accepts an argument for a model object - book - which is used during the rendering process.
+The formFor method generates the form tag and binds all contained form methods to that form. In this case, we generate labels, a text field, and a check box.
 
 
 ## Authors
