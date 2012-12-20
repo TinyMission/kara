@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2d472f65-4e1f-4bcf-9336-59340b03091d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Kara.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -172,7 +173,7 @@
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/styles/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/.idea/ant.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943788020" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
-    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355984084218" ignored="false" />
+    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355988305514" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,63 +264,7 @@
       <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="153" selection-start="2780" selection-end="2780" vertical-scroll-proportion="0.3634895">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FooController.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/FooController.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="36" selection-start="139" selection-end="139" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HomeController.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="5" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DefaultStyles.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/styles/DefaultStyles.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="104" selection-end="965" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Forms.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/views/home/Forms.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="78" selection-end="965" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GeneralTemplates.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="13" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0">
-              <folding>
-                <marker date="1355902688000" expanded="true" signature="434:504" placeholder="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ViewTemplates.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="49" selection-start="723" selection-end="723" vertical-scroll-proportion="0.0">
+            <state line="353" column="124" selection-start="15891" selection-end="15891" vertical-scroll-proportion="0.78971964">
               <folding />
             </state>
           </provider>
@@ -1317,20 +1262,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="33" selection-start="1179" selection-end="1179" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/kara">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="0" selection-start="577" selection-end="577" vertical-scroll-proportion="0.6465517">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/KaraExec/src/Main.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="106" column="24" selection-start="3705" selection-end="3705" vertical-scroll-proportion="0.0">
@@ -1422,9 +1353,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="13" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1355902688000" expanded="true" signature="-1:-1" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="49" selection-start="1418" selection-end="1418" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="153" selection-start="2780" selection-end="2780" vertical-scroll-proportion="0.3634895">
+        <state line="353" column="124" selection-start="15891" selection-end="15891" vertical-scroll-proportion="0.78971964">
           <folding />
         </state>
       </provider>
