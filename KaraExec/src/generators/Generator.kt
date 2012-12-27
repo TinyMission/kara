@@ -143,6 +143,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         renderTemplate(appconfigTemplate(this), "config/appconfig.json")
         renderTemplate(appconfigDevelopmentTemplate(this), "config/appconfig.development.json")
         renderTemplate(applicationTemplate(this), "src/$appPackagePath/Application.kt")
+        renderTemplate("", "tmp/restart.txt")
 
         // make the default controller and view
         execController("Home")
