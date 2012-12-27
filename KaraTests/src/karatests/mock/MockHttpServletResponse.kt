@@ -38,7 +38,7 @@ class MockHttpServletResponse() : HttpServletResponse {
     public override fun encodeURL(p0 : String?) : String? {
         throw UnsupportedOperationException()
     }
-    public override fun getHeaderNames() : MutableCollection<String>? {
+    public override fun getHeaderNames() : MutableCollection<String?>? {
         throw UnsupportedOperationException()
     }
     public override fun encodeUrl(p0 : String?) : String? {
@@ -83,7 +83,7 @@ class MockHttpServletResponse() : HttpServletResponse {
     public override fun addIntHeader(p0 : String?, p1 : Int) {
         throw UnsupportedOperationException()
     }
-    public override fun getHeaders(p0 : String?) : MutableCollection<String>? {
+    public override fun getHeaders(p0 : String?) : MutableCollection<String?>? {
         throw UnsupportedOperationException()
     }
     public override fun setDateHeader(p0 : String?, p1 : Long) {

@@ -30,7 +30,7 @@ class ConfigReader(val config : Config) {
                 keyStack.pop()
             }
             else if (child.isValueNode()) {
-                var path = name
+                var path = name!!
                 for (key in keyStack) {
                     path = "${key}." + path
                 }

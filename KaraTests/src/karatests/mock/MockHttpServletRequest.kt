@@ -47,7 +47,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getServletContext() : javax.servlet.ServletContext? {
         throw UnsupportedOperationException()
     }
-    public override fun getParts() :MutableCollection<javax.servlet.http.Part>? {
+    public override fun getParts() :MutableCollection<javax.servlet.http.Part?>? {
         throw UnsupportedOperationException()
     }
 
@@ -63,13 +63,13 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getSession(p0 : Boolean) : HttpSession? {
         throw UnsupportedOperationException()
     }
-    public override fun getHeaders(p0 : String?) : Enumeration<String>? {
+    public override fun getHeaders(p0 : String?) : Enumeration<String?>? {
         throw UnsupportedOperationException()
     }
     public override fun isRequestedSessionIdFromCookie() : Boolean {
         throw UnsupportedOperationException()
     }
-    public override fun getHeaderNames() : Enumeration<String>? {
+    public override fun getHeaderNames() : Enumeration<String?>? {
         throw UnsupportedOperationException()
     }
     public override fun getRemoteUser() : String? {
@@ -87,7 +87,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun isUserInRole(p0 : String?) : Boolean {
         throw UnsupportedOperationException()
     }
-    public override fun getCookies() : Array<Cookie>? {
+    public override fun getCookies() : Array<Cookie?>? {
         throw UnsupportedOperationException()
     }
     public override fun getRequestURI() : String? {
@@ -144,10 +144,10 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getRemoteHost() : String? {
         throw UnsupportedOperationException()
     }
-    public override fun getAttributeNames() : Enumeration<String>? {
+    public override fun getAttributeNames() : Enumeration<String?>? {
         throw UnsupportedOperationException()
     }
-    public override fun getParameterNames() : Enumeration<String>? {
+    public override fun getParameterNames() : Enumeration<String?>? {
         throw UnsupportedOperationException()
     }
     public override fun setAttribute(p0 : String?, p1 : Any?) {
@@ -180,7 +180,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getRealPath(p0 : String?) : String? {
         throw UnsupportedOperationException()
     }
-    public override fun getParameterMap() : MutableMap<String, Array<String>?>? {
+    public override fun getParameterMap() : MutableMap<String?, Array<String?>?>? {
         throw UnsupportedOperationException()
     }
     public override fun getInputStream() : ServletInputStream? {
@@ -198,7 +198,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getRemoteAddr() : String? {
         throw UnsupportedOperationException()
     }
-    public override fun getLocales() : Enumeration<Locale>? {
+    public override fun getLocales() : Enumeration<Locale?>? {
         throw UnsupportedOperationException()
     }
     public override fun getLocale() : Locale? {
@@ -210,7 +210,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getRemotePort() : Int {
         throw UnsupportedOperationException()
     }
-    public override fun getParameterValues(p0 : String?) : Array<String>? {
+    public override fun getParameterValues(p0 : String?) : Array<String?>? {
         throw UnsupportedOperationException()
     }
     public override fun getReader() : BufferedReader? {
