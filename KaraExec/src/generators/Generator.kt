@@ -28,12 +28,11 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
     val permissions = Permissions()
     var karaHome = ""
 
-    val appPackage : String
-        get() = appConfig.appPackage
+    val appPackage : String = args[args.indexOf("--package") + 1]
 
     /** The app package converted to a path. */
     val appPackagePath : String
-        get() = appConfig.appPackage.replace(".", "/")
+        get() = appPackage.replace(".", "/")
 
     /** Some strings used in various templates. */
 
@@ -139,7 +138,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
 
         // render the templates
-        renderTemplate(moduleImlTemplate(this), "${appConfig.appPackage}.iml")
+        renderTemplate(moduleImlTemplate(this), "${appPackage}.iml")
         renderTemplate(buildxmlTemplate(this), "build.xml")
         renderTemplate(appconfigTemplate(this), "config/appconfig.json")
         renderTemplate(appconfigDevelopmentTemplate(this), "config/appconfig.development.json")
