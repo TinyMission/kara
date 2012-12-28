@@ -35,6 +35,7 @@ Commands:
     c, config    Show the application's configuration for the current environment
     g, generate  Generates a new project or file (see below)
     h, help      Show this help message
+    u, update    Updates the application's Kara dependency to the latest version
     s, server    Run the Kara server on the current directory
 
 Options:
@@ -74,9 +75,6 @@ fun main(args: Array<String>) {
     val generatorArgs = ArrayList<String>()
     var env = "development"
 
-//    var appRoot = System.getProperty("user.dir") as String
-//    AppConfig.current = AppConfig(appRoot, "development") // this breaks the runtime for some reason
-
     var logLevel = Level.INFO
 
     // parse command line arguments
@@ -93,6 +91,7 @@ fun main(args: Array<String>) {
                 "s", "server" -> startServer = true
                 "g", "generator" -> runGenerator = true
                 "h", "help" -> showHelp = true
+                "update" -> generatorTask = GeneratorTask.update
                 "project" -> generatorTask = GeneratorTask.project
                 "controller" -> generatorTask = GeneratorTask.controller
                 "view" -> generatorTask = GeneratorTask.view

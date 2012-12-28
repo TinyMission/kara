@@ -13,6 +13,7 @@ import com.google.common.io.Files
 enum class GeneratorTask(val name : String) {
     project: GeneratorTask("project")
     controller: GeneratorTask("controller")
+    update: GeneratorTask("update")
     view: GeneratorTask("view")
     fun toString() : String {
         return name
@@ -69,6 +70,9 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                     throw RuntimeException("Need to provide a controller name.")
                 for (arg in args)
                     execController(arg)
+            }
+            GeneratorTask.update -> {
+                execUpdate()
             }
             GeneratorTask.view -> {
                 // ensure there's a controller name and a view name
@@ -197,6 +201,12 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
     }
 
 
+    /** Updates the target project's Kara dependency to the latest version. */
+    fun execUpdate() {
+        copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
+    }
+
+
     /** Esures the given relative directory inside the application root exists (it won't warn if it does). */
     fun ensureDir(dir : String) {
         val absDir = File(appConfig.appRoot, dir)
@@ -236,6 +246,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         if (!srcFile.exists())
             throw RuntimeException("File $srcPath does not exist in the Kara distribution")
         val dstFile = File(appConfig.appRoot, dstPath)
+        logger.info("Copying file ${srcFile} to ${dstFile}")
         Files.copy(srcFile, dstFile)
     }
 }
