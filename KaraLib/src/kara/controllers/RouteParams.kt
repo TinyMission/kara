@@ -40,6 +40,21 @@ class RouteParams() {
         return _list.size()
     }
 
+    /** Gets a hash with the nested values of the given name. */
+    fun getHash(name : String) : HashMap<String,String> {
+        val map = HashMap<String,String>()
+        val prefix = name + "["
+        for (key in _map.keySet()) {
+            if (key.startsWith(prefix)) {
+                var subkey = key.replace(prefix, "")
+                subkey = subkey.substring(0, subkey.length()-1)
+                val value = _map[key]!!
+                map[subkey] = value
+            }
+        }
+        return map
+    }
+
     public fun toString() : String {
         val pairs = _map.iterator().map { it ->
             "${it.getKey()}: ${it.getValue()}"

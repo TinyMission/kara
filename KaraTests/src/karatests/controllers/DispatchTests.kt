@@ -3,9 +3,10 @@ package karatests.controllers
 import kara.controllers.Dispatcher
 import kotlin.test.*
 import kara.config.AppConfig
+import karatests.mock.mockRequest
 
 /** Tests for dispatching routes to get action info. */
-fun runDispatchTests(args : Array<String>) {
+fun runDispatchTests() {
 
     val appConfig = AppConfig("", "development")
     appConfig["kara.appPackage"] = "karatests.controllers"
@@ -27,33 +28,39 @@ fun runDispatchTests(args : Array<String>) {
 
     dispatcher.match("GET", "/foo/foobar") // default action name
 
-    actionInfo = dispatcher.match("GET", "/foo/bar/list")!! // unnamed param
-    var params = actionInfo.getParams("/foo/bar/list", "")
+    var request = mockRequest("GET", "/foo/bar/list")
+    actionInfo = dispatcher.match("GET", request.getRequestURI()!!)!! // unnamed param
+    var params = actionInfo.getParams(request)
     assertEquals("bar", params[0])
 
-    actionInfo = dispatcher.match("GET", "/foo/complex/bar/list/42")!! // named and unnamed params
-    params = actionInfo.getParams("/foo/complex/bar/list/42", "")
+    request = mockRequest("GET", "/foo/complex/bar/list/42")
+    actionInfo = dispatcher.match("GET", request.getRequestURI()!!)!! // named and unnamed params
+    params = actionInfo.getParams(request)
     assertEquals("bar", params[0])
     assertEquals("42", params["id"])
     assertEquals(2, params.size())
 
     // crud controller
-    actionInfo = dispatcher.match("GET", "/crud?name=value")!! // empty route with parameters
+    request = mockRequest("GET", "/crud?name=value")
+    actionInfo = dispatcher.match("GET", request.getRequestURI()!!)!! // empty route with parameters
     assertEquals(CrudController().javaClass, actionInfo.controller.javaClass)
-    params = actionInfo.getParams("/crud?name=value", "")
+    params = actionInfo.getParams(request)
     assertEquals("value", params["name"])
 
-    actionInfo = dispatcher.match("GET", "/crud/42")!! // named parameter
-    params = actionInfo.getParams("/crud/42", "")
+    request = mockRequest("GET", "/crud/42")
+    actionInfo = dispatcher.match("GET", request.getRequestURI()!!)!! // named parameter
+    params = actionInfo.getParams(request)
     assertEquals("42", params["id"])
 
     dispatcher.match("POST", "/crud") // models
 
-    actionInfo = dispatcher.match("PUT", "/crud/42")!! // put
-    params = actionInfo.getParams("/crud/42", "")
+    request = mockRequest("PUT", "/crud/42")
+    actionInfo = dispatcher.match("PUT", request.getRequestURI()!!)!! // put
+    params = actionInfo.getParams(request)
     assertEquals("42", params["id"])
 
-    actionInfo = dispatcher.match("DELETE", "/crud/42")!! // delete
-    params = actionInfo.getParams("/crud/42", "")
+    request = mockRequest("DELETE", "/crud/42")
+    actionInfo = dispatcher.match("DELETE", request.getRequestURI()!!)!! // delete
+    params = actionInfo.getParams(request)
     assertEquals("42", params["id"])
 }

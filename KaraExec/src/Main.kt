@@ -35,7 +35,6 @@ Commands:
     c, config    Show the application's configuration for the current environment
     g, generate  Generates a new project or file (see below)
     h, help      Show this help message
-    u, update    Updates the application's Kara dependency to the latest version
     s, server    Run the Kara server on the current directory
 
 Options:
@@ -48,6 +47,7 @@ Generators:
     project <name>      Generates a new Kara project with the given name.
                         Use the --package=<package> option to specify a package
                         that's different than the project name.
+    update              Updates the application's Kara dependency to the latest version
     controller <name>   Generates a new controller with the given name.
                         "Controller" will be automatically appended to the name)
     view <controller> <view>  Generate a new view for the given controller.

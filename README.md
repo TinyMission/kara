@@ -75,6 +75,7 @@ Here's an overview of the Kara command line usage:
         project <name>      Generates a new Kara project with the given name.
                             Use the --package=<package> option to specify a package
                             that's different than the project name.
+        update              Updates the application's Kara dependency to the latest version
         controller <name>   Generates a new controller with the given name.
                             "Controller" will be automatically appended to the name)
         view <controller> <view>  Generate a new view for the given controller.
@@ -126,6 +127,11 @@ To create a new view in your existing project, run something like:
 
 which will generate a view called List that belongs to the BlogController.
 
+Since the Kara library is shipped with the Kara installation and changes frequently, it's often necessary to update the KaraLib.jar file in your application's lib folder.
+Running the *update* generator will do just that:
+
+    kara generate update
+
 
 ## Project Structure
 
@@ -157,7 +163,9 @@ HTML views in Kara are created using a custom Kotlin DSL. Each view inherits fro
         }
     }
 
-As you can see, the actual view markup is placed in the overriden render() method. The render() method accepts one argument, the action context. This context hold references to the action's request, response, session, and parameters.
+As you can see, the actual view markup is placed in the overriden render() method.
+The render() method accepts one argument, the action context.
+This context hold references to the action's request, response, session, and parameters.
 
 Some more complex view markup might look like this:
 
@@ -174,9 +182,40 @@ Some more complex view markup might look like this:
         + "Some more text"
     }
 
-Each function represents a single HTML tag, and accepts arguments for the tag's attributes. The last argument is an optional function literal that can be used to populate the tag's children (as with the ol and fieldset tags above). Text content can either be passed directly to the tag function, or added inside its body with the + operator.
+Each function represents a single HTML tag, and accepts arguments for the tag's attributes.
+The last argument is an optional function literal that can be used to populate the tag's children (as with the ol and fieldset tags above).
+Text content can either be passed directly to the tag function, or added inside its body with the + operator.
 
 This flexible markup mechanism highlights the power of the Kotlin syntax, and can't be acheived in languages like Java or even Scala.
+
+### Layouts
+
+Applications generally contain HTML markup that's shared between views.
+In Kara (as well as many other web frameworks) these are called layouts.
+By convention, layout files are placed in the root of the app's views directory.
+Each layout inherits from the *HtmlLayout* class. Consider the following example:
+
+    class DefaultLayout() : HtmlLayout() {
+        override fun render(context: ActionContext, mainView: HtmlView) {
+            head {
+                title("Kara Demo Title")
+                stylesheet(DefaultStyles())
+            }
+            body {
+                h1("Kara Demo Site")
+                div(id="main") {
+                    renderView(context, mainView)
+                }
+                a(text="Kara is developed by Tiny Mission", href="http://tinymission.com")
+            }
+        }
+    }
+
+As with views, a layout's markup is placed in the render() method, which accepts the current action context, as well as the main view to render.
+The mainView is rendered with the renderView() function.
+
+At this point, the layout used to render each view is specified at the controller level (either passed to the constructor, or specified later inside an action).
+
 
 ### Forms
 
@@ -281,6 +320,28 @@ An action method handles a specific request to the app, defined by the routing p
 The controller above has three actions (index, test, and update). The first two respond to GET requests at / and /test, respectively.
 The update action responds to POST requests at /updatebook.
 
+If the route doesn't start with /, it's relative to the current controller.
+The lowercase name of the controller, minus *controller*, is used as the first component of the route.
+Any pound signs are replaced with the name of the action method.
+
+    class FooController() : BaseController(DefaultLayout()) {
+        Get("") fun index() : ActionResult {
+            // maps to /foo
+        }
+
+        Get("bar") fun bar() : ActionResult {
+            // maps to /foo/bar
+        }
+
+        Get("#") fun blank() : ActionResult {
+            // maps to /foo/blank
+        }
+
+        Get(":id/#") fun edit(id : Int) : ActionResult {
+            // maps to /foo/3/edit
+        }
+    }
+
 The routing mechanism allows for more complex routes, like:
 
     Get("complex/*/list/:id") fun complex() : ActionResult {
@@ -292,6 +353,11 @@ The parameter values are available inside the request through the controllers Ro
 
     this.params[0] // wildcard param
     this.params["id"] // named :id param
+
+When compound objects are passed as form parameters, they can be retrieved as a hash:
+
+    // if form contains: book[title]=Foundation&book[author]=Isaac%20Asimov
+    this.params.getHash("book") // will return a has with {title="Foundation", author="Isaac Asimov"}
 
 The most common ActionResult is an HtmlView, but you can also return raw text with TextResult(), JSON objects with JsonResult(), and redirects with RedirectRestul().
 

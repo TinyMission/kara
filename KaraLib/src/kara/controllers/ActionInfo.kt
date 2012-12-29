@@ -33,8 +33,9 @@ class ActionInfo(val route : String, val controller : BaseController, val method
         return true
     }
 
-    public fun getParams(url : String, query : String?) : RouteParams {
-
+    public fun getParams(request : HttpServletRequest) : RouteParams {
+        val url = request.getRequestURI()!!
+        val query = request.getQueryString()
         val params = RouteParams()
 
         // parse the query string
@@ -58,11 +59,19 @@ class ActionInfo(val route : String, val controller : BaseController, val method
             val routeComp = routeComps[i]
             routeComp.getParam(params, comp)
         }
+
+        // parse the form parameters
+        for (name in request.getParameterNames()) {
+            val value = request.getParameter(name)!!
+            params[name] = value
+        }
+
         return params
     }
 
+    /** Execute the action based on the given request and populate the response. */
     public fun exec(val appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
-        val params = getParams(request.getRequestURI()!!, request.getQueryString())
+        val params = getParams(request)
         controller.beforeRequest(request, response, params)
         val context = ActionContext(appConfig, request, response, params)
 

@@ -82,13 +82,16 @@ class Dispatcher() {
     fun parseAction(annString : String, controller : BaseController, method : Method) {
         // get the route based on the annotation and the controller
         var route = annString.substring(annString.indexOf('=')+1, annString.indexOf(')'))
-        if (!annString.contains("=") || route == "[default]") {
-            route = method.getName()?.toLowerCase() as String
-        }
+//        if (!annString.contains("=") || route.length() == 0) {
+//            route = method.getName()?.toLowerCase() as String
+//        }
+        route = route.replace("#", method.getName()?.toLowerCase()!!)
         val root = controller.root
         if (!route.startsWith("/")) {
             route = root + route
         }
+        if (route.length() > 1 && route.endsWith("/"))
+            route = route.substring(0, route.length()-1)
 
         val actionInfo = ActionInfo(route, controller, method)
         logger.debug("adding action: " + actionInfo.toString());

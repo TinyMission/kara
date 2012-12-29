@@ -9,7 +9,7 @@ import kara.config.AppConfig
 
 
 /** Tests for executing actions */
-fun runActionTests(args : Array<String>) {
+fun runActionTests() {
 
     initMockDispatchWithReflection()
 
@@ -17,6 +17,9 @@ fun runActionTests(args : Array<String>) {
     var output = response.stringOutput()
     assertTrue(output?.contains("Default Layout") as Boolean, "Home view contains layout")
     assertTrue(output?.contains("Welcome Home") as Boolean, "Home view contains view")
+
+    response = mockDispatch("GET", "/foo/blank")
+    assertEquals("blank", response.stringOutput())
 
     response = mockDispatch("GET", "/foo/bar")
     assertEquals("bar", response.stringOutput())

@@ -2,27 +2,40 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d472f65-4e1f-4bcf-9336-59340b03091d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/kotlin-runtime.jar" afterPath="$PROJECT_DIR$/lib/kotlin-runtime.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" afterPath="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockHttpSession.kt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/javassist_3_12_1_GA.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/controllers/ActionInfo.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/controllers/ActionInfo.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/ActionTests.kt" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/ActionTests.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/controllers/Annotations.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/controllers/Annotations.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/DispatchTests.kt" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/DispatchTests.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/controllers/Dispatcher.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/controllers/Dispatcher.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/FooController.kt" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/FooController.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt" afterPath="$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/KaraTests.iml" afterPath="$PROJECT_DIR$/KaraTests/KaraTests.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraExec/src/Main.kt" afterPath="$PROJECT_DIR$/KaraExec/src/Main.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/Main.kt" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/controllers/Main.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockDispatch.kt" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockDispatch.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockHttpServletRequest.kt" afterPath="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockHttpServletRequest.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraLib/src/kara/controllers/RouteParams.kt" afterPath="$PROJECT_DIR$/KaraLib/src/kara/controllers/RouteParams.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Kara.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dimensions.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352565087547" ignored="false" />
     <file path="/a.dummy" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352565409553" ignored="false" />
-    <file path="/Dispatcher.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355785029397" ignored="false" />
+    <file path="/Dispatcher.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356759341306" ignored="false" />
     <file path="/BaseTags.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355785526099" ignored="false" />
     <file path="/Enums.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352569691890" ignored="false" />
     <file path="/Element.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355435684785" ignored="false" />
     <file path="/MockHttpServletResponse.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352571599397" ignored="false" />
-    <file path="/FooController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1352574853407" ignored="false" />
+    <file path="/FooController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356756115012" ignored="false" />
     <file path="/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355786586928" ignored="false" />
     <file path="/AppLoader.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355899016243" ignored="false" />
     <file path="/Main.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356733173848" ignored="false" />
     <file path="$USER_HOME$/Library/Application Support/IdeaIC12/Kotlin/lib/kotlin-plugin.jar!/jet/Unit.jet" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356732799951" ignored="false" />
     <file path="/FileWatcher.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354993061099" ignored="false" />
-    <file path="/HomeController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355462965216" ignored="false" />
+    <file path="/HomeController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356736561555" ignored="false" />
     <file path="/JettyRunner.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355896378428" ignored="false" />
     <file path="/Index.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354990519488" ignored="false" />
     <file path="/fragment.java" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1354852259600" ignored="false" />
@@ -119,10 +132,10 @@
     <file path="/Show.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355291672775" ignored="false" />
     <file path="/Exceptions.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355627624427" ignored="false" />
     <file path="/Error.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355428502830" ignored="false" />
-    <file path="/ActionInfo.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355785186368" ignored="false" />
+    <file path="/ActionInfo.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356755296782" ignored="false" />
     <file path="/Util.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355460410532" ignored="false" />
     <file path="/ErrorView.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355464388567" ignored="false" />
-    <file path="/RouteParams.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355461329295" ignored="false" />
+    <file path="/RouteParams.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356736392377" ignored="false" />
     <file path="/BaseController.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355463443372" ignored="false" />
     <file path="/AppConfig.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355898964207" ignored="false" />
     <file path="/Generator.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356734885202" ignored="false" />
@@ -142,8 +155,8 @@
     <file path="/Servlet.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355788085682" ignored="false" />
     <file path="/Stylesheet.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355785331005" ignored="false" />
     <file path="/a.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355804316991" ignored="false" />
-    <file path="/DispatchTests.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355805407591" ignored="false" />
-    <file path="/MockDispatch.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355806220044" ignored="false" />
+    <file path="/DispatchTests.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356752507487" ignored="false" />
+    <file path="/MockDispatch.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356752592438" ignored="false" />
     <file path="/Templates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355860908482" ignored="false" />
     <file path="/GeneralTemplates.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355895976591" ignored="false" />
     <file path="/Json.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355863127844" ignored="false" />
@@ -175,7 +188,11 @@
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/styles/DefaultStyles.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/.idea/ant.xml" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355943788020" ignored="false" />
     <file path="$USER_HOME$/tmp/karaexample/src/com/karaexample/Application.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355961191801" ignored="false" />
-    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1355988305514" ignored="false" />
+    <file path="/README.md" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356762706749" ignored="false" />
+    <file path="/MockHttpServletRequest.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356753941172" ignored="false" />
+    <file path="/ActionTests.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356756177707" ignored="false" />
+    <file path="/MockHttpSession.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356753902745" ignored="false" />
+    <file path="/Annotations.kt" changelist="2d472f65-4e1f-4bcf-9336-59340b03091d" time="1356756350271" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -235,10 +252,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="113" column="0" selection-start="6294" selection-end="6294" vertical-scroll-proportion="0.0">
+            <state line="355" column="0" selection-start="15908" selection-end="15908" vertical-scroll-proportion="0.5840555">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DefaultLayout.kt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/views/DefaultLayout.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="27" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -247,25 +273,34 @@
       <file leaf-file-name="Main.kt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/KaraExec/src/Main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="29" selection-start="3236" selection-end="3236" vertical-scroll-proportion="0.0">
+            <state line="35" column="60" selection-start="901" selection-end="901" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Generator.kt" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
+      <file leaf-file-name="HomeController.kt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="241" column="0" selection-start="8545" selection-end="8545" vertical-scroll-proportion="0.86259544">
+            <state line="15" column="0" selection-start="375" selection-end="375" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AppConfig.kt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt">
+      <file leaf-file-name="RouteParams.kt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/RouteParams.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="49" selection-start="1418" selection-end="1418" vertical-scroll-proportion="0.0">
+            <state line="45" column="31" selection-start="1212" selection-end="1212" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActionInfo.kt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/ActionInfo.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="95" column="13" selection-start="3482" selection-end="3482" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -296,22 +331,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/KaraLib/src/kara/views/Json.kt" />
-        <option value="$PROJECT_DIR$/KaraDemo/config/appconfig.json" />
-        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/Config.kt" />
-        <option value="$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt" />
-        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/ConfigReader.kt" />
-        <option value="$PROJECT_DIR$/kara" />
-        <option value="$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt" />
-        <option value="$PROJECT_DIR$/KaraExec/src/server/AppLoader.kt" />
-        <option value="$PROJECT_DIR$/KaraDemo/config/appconfig.development.json" />
-        <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt" />
-        <option value="$PROJECT_DIR$/ivy.xml" />
-        <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/KaraExec/src/Main.kt" />
         <option value="$PROJECT_DIR$/KaraExec/src/generators/Generator.kt" />
+        <option value="$PROJECT_DIR$/KaraLib/src/kara/controllers/RouteParams.kt" />
+        <option value="$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockDispatch.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockHttpSession.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/mock/MockHttpServletRequest.kt" />
+        <option value="$PROJECT_DIR$/KaraLib/src/kara/controllers/ActionInfo.kt" />
+        <option value="$PROJECT_DIR$/KaraLib/src/kara/controllers/Annotations.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/controllers/FooController.kt" />
+        <option value="$PROJECT_DIR$/KaraLib/src/kara/controllers/Dispatcher.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/controllers/Main.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/controllers/ActionTests.kt" />
+        <option value="$PROJECT_DIR$/KaraTests/src/karatests/controllers/DispatchTests.kt" />
+        <option value="$PROJECT_DIR$/KaraExec/src/Main.kt" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -319,9 +354,9 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="212" />
+    <option name="x" value="157" />
     <option name="y" value="22" />
-    <option name="width" value="1468" />
+    <option name="width" value="1523" />
     <option name="height" value="968" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -384,16 +419,6 @@
               <option name="myItemId" value="Kara" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kara" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -420,6 +445,50 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="karatests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kara" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KaraTests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="karatests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kara" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KaraTests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="karatests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mock" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -872,7 +941,7 @@
     <property name="options.lastSelected" value="appearance" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/guava-11.0.2.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/javassist-3.12.1.GA.jar!/" />
     <property name="project.structure.side.proportion" value="0.1946387" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -898,7 +967,7 @@
       <recent name="$PROJECT_DIR$/KaraTests/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.kara demo server">
+  <component name="RunManager" selected="Kotlin.karatests.controllers">
     <configuration default="false" name="kara demo server" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true">
       <option name="MAIN_CLASS_NAME" value="kara.namespace" />
       <option name="VM_PARAMETERS" value="" />
@@ -1098,8 +1167,9 @@
       <item index="5" class="java.lang.String" itemvalue="Kotlin.karatests.views" />
     </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Kotlin.kara demo server" />
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Kotlin.karatests.controllers" />
+        <item index="1" class="java.lang.String" itemvalue="Kotlin.kara demo server" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -1156,7 +1226,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="212" y="22" width="1468" height="968" extended-state="0" />
+    <frame x="157" y="22" width="1523" height="968" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1168,13 +1238,13 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Kotlin" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20253165" sideWeight="0.69729096" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19457547" sideWeight="0.7995781" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19457547" sideWeight="0.99661475" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32979977" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1728142" sideWeight="0.16843346" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991803" sideWeight="0.7632509" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17229255" sideWeight="0.8054245" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28386337" sideWeight="0.6557377" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1943128" sideWeight="0.7287736" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2712264" sideWeight="0.6557377" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32744405" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1254,92 +1324,114 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/KaraDemo/KaraDemo.iml">
+    <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/mock/MockHttpSession.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="73" selection-start="401" selection-end="401" vertical-scroll-proportion="0.16613925" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="184" selection-end="184" vertical-scroll-proportion="0.14263074" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ivy.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="16" selection-start="100" selection-end="100" vertical-scroll-proportion="0.0">
+        <state line="52" column="31" selection-start="1656" selection-end="1656" vertical-scroll-proportion="1.4661654">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ProjectTemplates.kt">
+    <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/HomeController.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="0" selection-start="142" selection-end="142" vertical-scroll-proportion="0.0" />
+        <state line="9" column="20" selection-start="258" selection-end="258" vertical-scroll-proportion="0.22881356">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/server/JettyRunner.kt">
+    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/RouteParams.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="0" selection-start="2297" selection-end="2297" vertical-scroll-proportion="1.5572519" />
+        <state line="45" column="31" selection-start="1212" selection-end="1212" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/ViewTemplates.kt">
+    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/Annotations.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="49" selection-start="723" selection-end="723" vertical-scroll-proportion="0.0" />
+        <state line="6" column="8" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/views/home/Index.kt">
+    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/BaseController.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="25" selection-start="507" selection-end="703" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/views/home/Forms.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="78" selection-end="965" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/styles/DefaultStyles.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="104" selection-end="965" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="5" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0" />
+        <state line="17" column="15" selection-start="519" selection-end="519" vertical-scroll-proportion="0.44973546">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/FooController.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="36" selection-start="139" selection-end="139" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/templates/GeneralTemplates.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="13" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/config/AppConfig.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="49" selection-start="1418" selection-end="1418" vertical-scroll-proportion="0.0">
+        <state line="10" column="0" selection-start="186" selection-end="186" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/Main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="0" selection-start="6294" selection-end="6294" vertical-scroll-proportion="0.0">
+        <state line="7" column="33" selection-start="197" selection-end="197" vertical-scroll-proportion="0.18518518">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/DispatchTests.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="28" selection-start="115" selection-end="115" vertical-scroll-proportion="0.105820104">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/Dispatcher.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="34" selection-start="3271" selection-end="3271" vertical-scroll-proportion="0.35978836">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraLib/src/kara/controllers/ActionInfo.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="13" selection-start="3482" selection-end="3482" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/ActionTests.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="28" selection-start="168" selection-end="168" vertical-scroll-proportion="0.1779661">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraTests/src/karatests/controllers/CrudController.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="5" selection-start="367" selection-end="367" vertical-scroll-proportion="0.43220338">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/controllers/HomeController.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="375" selection-end="375" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/KaraExec/src/Main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="29" selection-start="3236" selection-end="3236" vertical-scroll-proportion="0.0">
+        <state line="35" column="60" selection-start="901" selection-end="901" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/KaraExec/src/generators/Generator.kt">
+    <entry file="file://$PROJECT_DIR$/KaraDemo/src/karademo/views/DefaultLayout.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="241" column="0" selection-start="8545" selection-end="8545" vertical-scroll-proportion="0.86259544">
+        <state line="14" column="27" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="355" column="0" selection-start="15908" selection-end="15908" vertical-scroll-proportion="0.5840555">
           <folding />
         </state>
       </provider>
@@ -1351,8 +1443,8 @@
         <settings>
           <artifact-editor>
             <show-content>
-              <type id="artifact" />
               <type id="library" />
+              <type id="artifact" />
             </show-content>
           </artifact-editor>
           <last-edited>KaraExec:jar</last-edited>
@@ -1403,7 +1495,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>KaraExec</last-edited>
+          <last-edited>KaraTests</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1427,7 +1519,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>guava-11.0.2</last-edited>
+          <last-edited>javassist-3.12.1.GA</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -9,6 +9,9 @@ import javax.servlet.ServletInputStream
 import java.util.Locale
 import java.io.BufferedReader
 import javax.servlet.http.Cookie
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.Hashtable
 
 
 class MockHttpServletRequest(method : String, url : String) : HttpServletRequest {
@@ -60,8 +63,11 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getSession() : HttpSession? {
         throw UnsupportedOperationException()
     }
+
+    val session = MockHttpSession()
+
     public override fun getSession(p0 : Boolean) : HttpSession? {
-        throw UnsupportedOperationException()
+        return session
     }
     public override fun getHeaders(p0 : String?) : Enumeration<String>? {
         throw UnsupportedOperationException()
@@ -139,7 +145,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getParameter(p0 : String?) : String? {
-        throw UnsupportedOperationException()
+        return params[p0]
     }
     public override fun getRemoteHost() : String? {
         throw UnsupportedOperationException()
@@ -147,8 +153,11 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun getAttributeNames() : Enumeration<String>? {
         throw UnsupportedOperationException()
     }
+
+    val params = Hashtable<String,String>()
+
     public override fun getParameterNames() : Enumeration<String>? {
-        throw UnsupportedOperationException()
+        return params.keys()
     }
     public override fun setAttribute(p0 : String?, p1 : Any?) {
         throw UnsupportedOperationException()

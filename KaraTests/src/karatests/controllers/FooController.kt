@@ -5,6 +5,10 @@ import kara.controllers.*
 
 class FooController() : BaseController() {
 
+    Get("#") fun blank() : ActionResult {
+        return TextResult("blank")
+    }
+
     Get("bar") fun bar() : ActionResult {
         return TextResult("bar")
     }
@@ -13,7 +17,7 @@ class FooController() : BaseController() {
         return TextResult("bar/baz")
     }
 
-    Get("[default]") fun foobar() : ActionResult {
+    Get("#") fun foobar() : ActionResult {
         return TextResult("foobar")
     }
 

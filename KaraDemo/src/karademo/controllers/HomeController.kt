@@ -15,6 +15,8 @@ class HomeController() : BaseController(DefaultLayout()) {
     }
 
     Post("/updatebook") fun update() : ActionResult {
+        println("parameters:")
+        println(params.getHash("book").toString())
         return RedirectResult("/forms")
     }
 
@@ -24,8 +26,6 @@ class HomeController() : BaseController(DefaultLayout()) {
             isPublished = true
         }
         //(this.session).setAttribute("hello", "world")
-        if (book.isPublished)
-            throw RuntimeException("This is an exception!")
         return Forms(book)
     }
 
