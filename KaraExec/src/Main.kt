@@ -137,7 +137,7 @@ fun main(args: Array<String>) {
             generator(appConfig, generatorTask!!, generatorArgs)
         }
         else {
-            throw RuntimeException("No valid command specified! Run 'kara help' for usage.")
+            println("No valid command specified! Run 'kara help' for usage.")
         }
     }
     catch (ex : Exception) {
