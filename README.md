@@ -99,15 +99,8 @@ To create a Kara project, navigate to the directory you'd like the new project i
 
 This will create a new project in MyKaraApp with the package com.example. At this point, the project is just a set of directories and some boilerplate code.
 
-To import the project into IDEA, follow the steps before. **NOTE: this is quite crude and we would benefit from some guidance from JetBrains as to how to smooth this out.**
+To import the project into the IDE, it is recommended to specify the --ide option with your IDE of choice. To import into IntelliJ IDEA, use --ide=idea and then you can just open up the project and build it in IDEA without further steps.
 
-* Open IDEA and select *File -> Import Project* and select your project's directory
-* Select *File -> Project Structure* and choose a JDK from the dropdown. Either 6 or 7 should work
-* After the project has been imported, select *File -> Import Module* and select the <package>.iml file that Kara created
-* Open a .kt file in the project (like src/<package>/Application.kt) and IDEA will prompt you to set up the module with Kotlin, select "Set up module as JVM Kotlin module"
-* Right click on lib/KaraLib.jar in the project navigator and select *Add as Library*
-
-That should be it. You should now be able to build the project.
 
 **Recommended:** you can add the build.xml file that Kara generates to IDEA's Ant tasks and set it to be executed after compilation.
 This will force the Kara server to reload the application code whenever it's rebuilt.
