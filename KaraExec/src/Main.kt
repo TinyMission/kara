@@ -41,12 +41,20 @@ Options:
     -d, --debug  Show debug log messages
     -e, --env    Specify the environment (default is --env=development)
     -i, --info   Show info log messages (default)
-    -w, --warn   Shwo only warning log messages
+    -w, --warn   Show only warning log messages
 
 Generators:
     project <name>      Generates a new Kara project with the given name.
+
                         Use the --package=<package> option to specify a package
                         that's different than the project name.
+
+
+                        Use the --ide=ide_name option to specify a package
+                        that can be opened directly in the IDE of choice.
+
+                        Currently supports: 'idea' for IntelliJ IDEA
+
     update              Updates the application's Kara dependency to the latest version
     controller <name>   Generates a new controller with the given name.
                         "Controller" will be automatically appended to the name)
@@ -74,6 +82,7 @@ fun main(args: Array<String>) {
     var generatorTask : GeneratorTask? = null
     val generatorArgs = ArrayList<String>()
     var env = "development"
+
 
     var logLevel = Level.INFO
 
