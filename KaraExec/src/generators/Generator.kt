@@ -46,6 +46,10 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
     var stylesheetName : String = ""
 
+    var ide = ""
+
+    var projectName = ""
+
     /** Executes the generator task. */
     public fun exec() {
         // get the Kara home
@@ -62,6 +66,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                 // ensure there's a project name
                 if (args.size == 0)
                     throw RuntimeException("Need to provide a project name.")
+                projectName = args[0]
                 execProject(args[0])
             }
             GeneratorTask.controller -> {
@@ -97,6 +102,13 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                     "package", "p" -> {
                         logger.info("Using application package $value")
                         appConfig["kara.appPackage"] = value
+                    }
+                    "ide", "i" -> {
+                        logger.info("Using $value for IDE files")
+                        if (value !in "idea") {
+                            throw RuntimeException("$value not supported")
+                        }
+                        ide = value
                     }
                     else -> throw RuntimeException("Unkown generator argument $name")
                 }
@@ -138,6 +150,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         createDir("src/$appPackagePath/views")
         createDir("tmp")
 
+        createIDEFiles(ide)
         // copy the necessary libraries
         copyFile("lib/kotlin-runtime.jar", "lib/kotlin-runtime.jar")
         copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
@@ -249,4 +262,34 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         logger.info("Copying file ${srcFile} to ${dstFile}")
         Files.copy(srcFile, dstFile)
     }
+
+    fun createIDEFiles(ide: String) {
+           when (ide) {
+            "idea" -> createIDEAFiles()
+            else -> {
+                throw RuntimeException("$ide not supported")
+            }
+        }
+    }
+
+    fun createIDEAFiles() {
+        // TODO: .idea works on Windows too?
+        ensureDir(".idea")
+        ensureDir(".idea/scopes")
+        ensureDir(".idea/copyright")
+        ensureDir(".idea/libraries")
+        renderTemplate(gradleTemplate(this), ".idea/gradle.xml")
+        renderTemplate(compilerTemplate(this), ".idea/compiler.xml")
+        renderTemplate(encodingsTemplate(this), ".idea/encodings.xml")
+        renderTemplate(uiDesignerTemplate(this), ".idea/uiDesigner.xml")
+        renderTemplate(vcsTemplate(this), ".idea/vcs.xml")
+        renderTemplate(miscTemplate(this), ".idea/misc.xml")
+        renderTemplate(scopeTemplate(this), ".idea/scopes/scope_settings.xml")
+        renderTemplate(nameTemplate(this), ".idea/.name")
+        renderTemplate(copyrightTemplate(this), ".idea/copyright/profile_settings.xml")
+        renderTemplate(modulesTemplate(this), ".idea/modules.xml")
+        renderTemplate(libraryKaraTemplate(this), ".idea/libraries/KaraLib.xml")
+    }
+
 }
+
