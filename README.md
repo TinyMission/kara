@@ -56,37 +56,40 @@ So far, Kara has only been tested on Mac OS X. However, the runtime is obviously
 
 Here's an overview of the Kara command line usage:
 
-Usage:
-    kara [-options] command args
 
-Commands:
-    c, config    Show the application's configuration for the current environment
-    g, generate  Generates a new project or file (see below)
-    h, help      Show this help message
-    s, server    Run the Kara server on the current directory
+    Usage:
+        kara [-options] command args
 
-Options:
-    -d, --debug  Show debug log messages
-    -e, --env    Specify the environment (default is --env=development)
-    -i, --info   Show info log messages (default)
-    -w, --warn   Show only warning log messages
+    Commands:
+        c, config    Show the application's configuration for the current environment
+        g, generate  Generates a new project or file (see below)
+        h, help      Show this help message
+        s, server    Run the Kara server on the current directory
 
-Generators:
-    project <name>      Generates a new Kara project with the given name.
+    Options:
+        -d, --debug  Show debug log messages
+        -e, --env    Specify the environment (default is --env=development)
+        -i, --info   Show info log messages (default)
+        -w, --warn   Show only warning log messages
 
-                        Use the --package=<package> option to specify a package
-                        that's different than the project name.
+    Generators:
+        project <name>      Generates a new Kara project with the given name.
+
+                            Use the --package=<package> option to specify a package
+                            that's different than the project name.
 
 
-                        Use the --ide=ide_name option to specify a package
-                        that can be opened directly in the IDE of choice.
+                            Use the --ide=ide_name option to specify a package
+                            that can be opened directly in the IDE of choice.
 
-                        Currently supports: 'idea' for IntelliJ IDEA
+                            Currently supports: 'idea' for IntelliJ IDEA
 
-    update              Updates the application's Kara dependency to the latest version
-    controller <name>   Generates a new controller with the given name.
-                        "Controller" will be automatically appended to the name)
-    view <controller> <view>  Generate a new view for the given controller.
+        update              Updates the application's Kara dependency to the latest version
+        
+        controller <name>   Generates a new controller with the given name.
+                            "Controller" will be automatically appended to the name)
+    
+        view <controller> <view>  Generate a new view for the given controller.
 
 ### Creating a Project
 
