@@ -61,6 +61,7 @@ public class AppConfig(appRoot : String, val environment : String = "development
         get() = this["kara.sessionDir"]
 
     public val absSessionDir : String
+        //Is you see error here, click "Setup Kotlin JDK Annotations"
         get() = File(appRoot, sessionDir).toString()
 
 
