@@ -1,7 +1,5 @@
 <project>
     <target name="restart">
-        <exec executable="touch">
-            <arg value="tmp/restart.txt"/>
-        </exec>
+         <touch file="tmp/restart.txt" />
     </target>
 </project>
