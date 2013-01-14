@@ -11,8 +11,6 @@ import kara.config.AppConfig
 /** Tests for executing actions */
 fun runActionTests() {
 
-    initMockDispatchWithReflection()
-
     var response = mockDispatch("GET", "/")
     var output = response.stringOutput()
     assertTrue(output?.contains("Default Layout") as Boolean, "Home view contains layout")
@@ -40,4 +38,10 @@ fun runActionTests() {
     response = mockDispatch("GET", "/foo/compute/42/3.12")
     assertEquals("compute: 42, 3.12", response.stringOutput())
 
+    assertEquals("/foo/compute/42/3.1415", Routes.Foo.Compute(42, 3.1415.toFloat()).toExternalForm())
+
+    response = mockDispatch("GET", "/foo/compute?anInt=42&aFloat=3.12")
+    assertEquals("compute: 42, 3.12", response.stringOutput())
+
+    assertEquals("/foo/compute?anInt=42&aFloat=3.1415", Routes.Foo.ComputeQuery(42, 3.1415.toFloat()).toExternalForm())
 }

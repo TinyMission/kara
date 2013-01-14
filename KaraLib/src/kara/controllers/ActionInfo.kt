@@ -9,15 +9,16 @@ import java.lang.reflect.Type
 import kara.views.ActionContext
 import kara.views.ErrorView
 import kara.views.ErrorLayout
+import jet.runtime.typeinfo.JetValueParameter
+import java.lang.reflect.Constructor
+import kara.views.HtmlLayout
+import kara.util.propertyValue
 
 
 /** Contains all the information necessary to match a route and execute an action.
 */
-class ActionInfo(val route : String, val controller : BaseController, val method : Method) {
-
-    val routeComps = route.split("/").map {
-        it -> RouteComp.create(it)
-    }
+class ActionInfo(val route : String, val requestClass: Class<Request>) {
+    private val routeComps = route.routeComps()
 
     public fun matches(url : String) : Boolean {
         val path = url.split("\\?")[0]
@@ -72,32 +73,46 @@ class ActionInfo(val route : String, val controller : BaseController, val method
     /** Execute the action based on the given request and populate the response. */
     public fun exec(val appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
         val params = getParams(request)
-        controller.beforeRequest(request, response, params)
+        val routeConstructor = requestClass.getConstructors()[0] as Constructor<Request>
+
+        val paramTypes = routeConstructor.getParameterTypes()!!
+        val annotations = routeConstructor.getParameterAnnotations()
+
+        fun find(list : Array<Annotation>) : JetValueParameter {
+            for (a in list) {
+                if (a is JetValueParameter) return a
+            }
+            throw RuntimeException("Missing Kotlin runtime annotations!");
+        }
+
+        val paramValues : Array<Any?> = Array(paramTypes.size) { i ->
+            val annotation = find(annotations[i]!!)
+            val paramName = annotation.name()!!
+            val optional = annotation.`type`()?.startsWith("?") ?: false
+            val paramString = params[paramName]
+            if (paramString == null) {
+                if (optional) {
+                    null
+                }
+                else {
+                    throw RuntimeException("Required argument $paramName is missing")
+                }
+            }
+            else {
+                appConfig.paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
+            }
+        }
+
+        val routeInstance = routeConstructor.newInstance(*paramValues)!!
+
         val context = ActionContext(appConfig, request, response, params)
 
-        // assemble the arguments
-        val paramTypes = method.getParameterTypes()!!
-        if (params.size() < paramTypes.size) {
-            throw RuntimeException("Method ${method.getName()} has more arguments (${paramTypes.size}) than route parameters (${params.size()})")
-        }
-        val args = Array<Any>(paramTypes.size, {i ->
-            val paramString  = params[i] as String
-            appConfig.paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
-        })
-
-        // execute the action
         try {
-            val result = when (args.size) {
-                0 -> method.invoke(controller) as ActionResult
-                1 -> method.invoke(controller, args[0]) as ActionResult
-                2 -> method.invoke(controller, args[0], args[1]) as ActionResult
-                3 -> method.invoke(controller, args[0], args[1], args[2]) as ActionResult
-                else -> throw RuntimeException("Unable to execute methods with ${args.size} arguments")
-            }
+            val result = routeInstance.handle(context)
 
             // set the html layout, if applicable (this is a bit of a hack, but I'm not sure how to do it better)
             if (result is HtmlView) {
-                (result as HtmlView).layout = controller.layout
+                (result as HtmlView).layout = layout()
             }
 
             // write the result to the response
@@ -114,8 +129,31 @@ class ActionInfo(val route : String, val controller : BaseController, val method
         }
     }
 
+    private fun layout() : HtmlLayout? {
+        var cur : Class<*>? = requestClass;
+        while (cur != null) {
+            val l = layout(cur!!.objectInstance())
+            if (l != null) return l
+            cur = cur!!.getEnclosingClass()
+        }
+        return null
+    }
+
+    private fun layout(instance : Any?) : HtmlLayout? {
+        if (instance == null) return null
+        try {
+            val value = instance.propertyValue("layout")
+            if (value is HtmlLayout) return value;
+        }
+        catch (e: Exception) {
+            // ignore
+        }
+
+        return null
+    }
+
     public fun toString() : String {
-        return "Action{route=$route, controller=${controller.javaClass}, method=${method.getName()}}"
+        return "Action{route=$route, handler=${requestClass}}"
     }
 
 }

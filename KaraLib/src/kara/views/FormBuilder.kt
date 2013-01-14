@@ -4,6 +4,7 @@ import java.lang.reflect.Method
 import kara.helpers.*
 import kara.exceptions.InvalidPropertyException
 import org.apache.log4j.Logger
+import kara.util.*
 
 
 /**
@@ -22,7 +23,7 @@ enum class FormMethod(val value : String) {
 /**
  * Allows forms to be built based on a model object.
  */
-class FormBuilder(val model : Any, val modelName : String = model.javaClass.getSimpleName()?.toLowerCase()!!, val formId : String = "form-${modelName}") : FORM() {
+class FormBuilder(val model : Any, val modelName : String = model.javaClass.getSimpleName().toLowerCase(), val formId : String = "form-${modelName}") : FORM() {
 
     {
         id = formId
@@ -35,16 +36,8 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
     /** If true, the form will have enctype="multipart/form-data" */
     var hasFiles : Boolean = false
 
-    fun propertyGetter(property : String) : Method {
-        val method = modelClass.getMethod("get${property.capitalize()}")
-        if (method == null)
-            throw InvalidPropertyException(modelClass, property)
-        return method
-    }
-
     fun propertyValue(property : String) : Any? {
-        val getter = propertyGetter(property)
-        return getter.invoke(model)
+        return model.propertyValue(property)
     }
 
     fun propertyName(property : String) : String {
