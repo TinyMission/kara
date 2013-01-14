@@ -10,27 +10,39 @@ import kotlin.nullable.makeString
 import kara.exceptions.NotFoundException
 import org.apache.log4j.Logger
 import kara.config.AppConfig
+import java.lang.reflect.Modifier
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class Dispatcher() {
+class Dispatcher(val routes : Any) {
+    private val logger = Logger.getLogger(this.javaClass)!!
 
-    val logger = Logger.getLogger(this.javaClass)!!
+    private val actions = Array(HttpMethod.values().size) {
+        ArrayList<ActionInfo>()
+    };
 
-    val getActions : MutableList<ActionInfo> = ArrayList<ActionInfo>()
-    val postActions : MutableList<ActionInfo> = ArrayList<ActionInfo>()
-    val putActions : MutableList<ActionInfo> = ArrayList<ActionInfo>()
-    val deleteActions : MutableList<ActionInfo> = ArrayList<ActionInfo>()
+    {
+        reset()
+    }
 
     /** Initializes the dispatcher by reflecting through the controllers in the app's package.
      */
-    public fun initWithReflection(appConfig: AppConfig) {
-        logger.info("initializing dispatcher for package ${appConfig.appPackage}")
-        val reflections = Reflections(appConfig.appPackage)
-        val subTypes = reflections.getSubTypesOf(kara.controllers.BaseController().javaClass)!!
-        for (subType in subTypes) {
-            if (subType != null) {
-                parseController(subType as Class<kara.controllers.BaseController>)
+    public fun reset() {
+        initWithReflection(routes)
+    }
+
+    private fun initWithReflection(routesObject : Any) {
+        for (innerClass in routesObject.javaClass.getDeclaredClasses()) {
+            val objectInstance = innerClass.objectInstance()
+            if (objectInstance != null) {
+                initWithReflection(objectInstance)
+            }
+            else if (javaClass<Request>().isAssignableFrom(innerClass)) {
+                for (ann in innerClass.getAnnotations()) {
+                    val requestClass = innerClass as Class<Request>
+                    val (route, method) = requestClass.route()
+                    actions[method.ordinal()].add(ActionInfo(route, requestClass))
+                }
             }
         }
     }
@@ -39,14 +51,9 @@ class Dispatcher() {
         Returns null if no match is found.
     */
     fun match(httpMethod : String, url : String) : ActionInfo? {
-        val actions = when (httpMethod) {
-            "GET" -> getActions
-            "POST" -> postActions
-            "PUT" -> putActions
-            "DELETE" -> deleteActions
-            else -> getActions
-        }
-        for (actionInfo in actions) {
+        val method = httpMethod.asHttpMethod()
+
+        for (actionInfo in actions[method.ordinal()]) {
             if (actionInfo.matches(url)) {
                 return actionInfo
             }
@@ -75,55 +82,6 @@ class Dispatcher() {
             ex.printStackTrace()
             out?.print(ex.getMessage())
             out?.flush()
-        }
-    }
-
-    /** Parses an action from a method annotation */
-    fun parseAction(annString : String, controller : BaseController, method : Method) {
-        // get the route based on the annotation and the controller
-        var route = annString.substring(annString.indexOf('=')+1, annString.indexOf(')'))
-//        if (!annString.contains("=") || route.length() == 0) {
-//            route = method.getName()?.toLowerCase() as String
-//        }
-        route = route.replace("#", method.getName()?.toLowerCase()!!)
-        val root = controller.root
-        if (!route.startsWith("/")) {
-            route = root + route
-        }
-        if (route.length() > 1 && route.endsWith("/"))
-            route = route.substring(0, route.length()-1)
-
-        val actionInfo = ActionInfo(route, controller, method)
-        logger.debug("adding action: " + actionInfo.toString());
-        if (annString.contains("@kara.controllers.Get")) {
-            getActions.add(actionInfo)
-        }
-        else if (annString.contains("@kara.controllers.Post")) {
-            postActions.add(actionInfo)
-        }
-        else if (annString.contains("@kara.controllers.Put")) {
-            putActions.add(actionInfo)
-        }
-        else if (annString.contains("@kara.controllers.Delete")) {
-            deleteActions.add(actionInfo)
-        }
-    }
-
-    /** Finds all actions in the given controller class. */
-    public fun parseController(controllerClass : Class<kara.controllers.BaseController>) {
-        // create the controller object and set its root
-        val controller = controllerClass.newInstance()
-        logger.debug("Parsing controller ${controllerClass.getName()} with root ${controller.root}");
-
-        // parse the controller methods
-        val methods = controller.javaClass.getMethods()
-        for (method in methods) {
-            for (ann in method.getAnnotations()) {
-                val annString = ann.toString()
-                if (annString.contains("@kara.controllers.")) {
-                    parseAction(annString, controller, method)
-                }
-            }
         }
     }
 }

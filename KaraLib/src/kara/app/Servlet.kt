@@ -5,28 +5,17 @@ import java.io.IOException
 import org.reflections.Reflections
 import kara.controllers.Dispatcher
 import kara.config.AppConfig
+import kara.app.Application
 
-open class Servlet(val appConfig : AppConfig) : HttpServlet() {
-
-    var dispatcher : Dispatcher? = null
-
-    fun initDispatcher() {
-        dispatcher = Dispatcher()
-        dispatcher?.initWithReflection(appConfig)
-    }
-
-    public override fun init() {
-        super<HttpServlet>.init()
-        initDispatcher()
-    }
-
+open class Servlet(val app: Application, val appConfig : AppConfig) : HttpServlet() {
     fun doGet(request: HttpServletRequest, response : HttpServletResponse) {
         if (appConfig.isDevelopment()) {
-            initDispatcher()
+            app.dispatcher.reset()
         }
+
         try {
 
-            dispatcher?.dispatch(appConfig, request, response)
+            app.dispatcher.dispatch(appConfig, request, response)
         }
         catch (ex : Exception) {
             val out = response.getWriter()
