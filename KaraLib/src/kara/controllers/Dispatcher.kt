@@ -6,7 +6,6 @@ import org.reflections.Reflections
 import kara.controllers.*
 import javax.servlet.http.*
 import java.lang.reflect.Method
-import kotlin.nullable.makeString
 import kara.exceptions.NotFoundException
 import org.apache.log4j.Logger
 import kara.config.AppConfig
