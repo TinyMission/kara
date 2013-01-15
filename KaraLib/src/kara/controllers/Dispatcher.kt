@@ -25,9 +25,13 @@ class Dispatcher(val routes : Any) {
         reset()
     }
 
-    /** Initializes the dispatcher by reflecting through the controllers in the app's package.
+    /** Initializes the dispatcher by reflecting through the route objects passed.
      */
     public fun reset() {
+        for (actionList in actions) {
+            actionList.clear()
+        }
+
         initWithReflection(routes)
     }
 
