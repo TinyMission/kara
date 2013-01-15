@@ -9,13 +9,13 @@ object Routes {
     val layout = DefaultLayout()
 
     Get("/")
-    class IndexRoute(): Request({ HomeController.index() })
+    class Index(): Request({ HomeController.index() })
 
     Get("/test")
-    class TestRoute(): Request({ HomeController.test() })
+    class Test(): Request({ HomeController.test() })
 
     Post("/update")
-    class UpdateRoute(): Request({ HomeController.update() })
+    class Update(): Request({ HomeController.update() })
 
     object Foo {
         Get("#")
