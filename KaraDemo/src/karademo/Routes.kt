@@ -11,10 +11,10 @@ object Routes {
     val layout = DefaultLayout()
 
     Get("/")
-    class IndexRoute(): Request({ HomeController.index() })
+    class Index(): Request({ HomeController.index() })
 
     Get("/test")
-    class TestRoute() : Request({
+    class Test() : Request({
         TextResult("This is a test action, yo")
     })
 
