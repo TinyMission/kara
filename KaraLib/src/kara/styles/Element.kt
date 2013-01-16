@@ -3,7 +3,6 @@ package kara.styles
 import java.util.ArrayList
 import java.util.HashMap
 import kara.styles.*
-import com.sun.javafx.scene.layout.region.BackgroundImage.BackgroundPosition
 
 /**
  * Represents a single stylesheet element.
@@ -81,8 +80,8 @@ open class Element(val selector : String) {
             attributes["background-image"] = value.toString()
         }
 
-    var backgroundPosition : BackgroundPosition?
-        get() = getAttribute<BackgroundPosition>("background-position")
+    var backgroundPosition : String?
+        get() = getAttribute<String>("background-position")
         set(value) {
             attributes["background-position"] = value.toString()
         }
