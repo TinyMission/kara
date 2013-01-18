@@ -17,7 +17,7 @@ import kara.util.propertyValue
 
 /** Contains all the information necessary to match a route and execute an action.
 */
-class ActionInfo(val route : String, val requestClass: Class<Request>) {
+class ActionInfo(val route : String, val requestClass: Class<out Request>) {
     private val routeComps = route.routeComps()
 
     public fun matches(url : String) : Boolean {

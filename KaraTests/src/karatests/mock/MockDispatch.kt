@@ -3,9 +3,10 @@ package karatests.mock
 import kara.controllers.Dispatcher
 import kara.config.AppConfig
 import karatests.controllers.Routes
+import kara.controllers.scanObjects
 
 
-val _dispatcher = Dispatcher(Routes)
+val _dispatcher = Dispatcher(scanObjects(Routes))
 val _mockAppConfig = AppConfig("", "test")
 
 /** Provides a mock dispatch of the given method and url.

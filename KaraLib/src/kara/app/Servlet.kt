@@ -10,7 +10,7 @@ import kara.app.Application
 open class Servlet(val app: Application, val appConfig : AppConfig) : HttpServlet() {
     fun doGet(request: HttpServletRequest, response : HttpServletResponse) {
         if (appConfig.isDevelopment()) {
-            app.dispatcher.reset()
+            app.resetDispatcher()
         }
 
         try {

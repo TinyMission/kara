@@ -71,8 +71,8 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
             if (appClassObject == null)
                 throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
             val appClass = appClassObject as Class<Application>
-            application = appClass.newInstance()
-            application?.init(appConfig) // this breaks the runtime!!
+            val cons = appClass.getConstructor(javaClass<AppConfig>())
+            application = cons.newInstance(appConfig)
             logger.debug("Application class: ${application.javaClass.toString()}")
 
             for (val listener in listeners) {

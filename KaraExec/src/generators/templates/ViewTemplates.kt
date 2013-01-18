@@ -23,7 +23,7 @@ p("Start by editing this file here: $filePath")
 
 fun viewTemplate(gen : Generator, filePath : String, isLanding : Boolean = false) : String {
     return """
-package ${gen.appPackage}.views.${gen.controllerSlug}
+package ${gen.appPackage}.views.${gen.routeSlug}
 
 import kara.views.*
 

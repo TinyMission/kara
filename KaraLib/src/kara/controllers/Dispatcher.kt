@@ -13,7 +13,7 @@ import java.lang.reflect.Modifier
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class Dispatcher(val routes : Any) {
+class Dispatcher(routes : List<Class<out Request>>) {
     private val logger = Logger.getLogger(this.javaClass)!!
 
     private val actions = Array(HttpMethod.values().size) {
@@ -21,34 +21,14 @@ class Dispatcher(val routes : Any) {
     };
 
     {
-        reset()
-    }
-
-    /** Initializes the dispatcher by reflecting through the route objects passed.
-     */
-    public fun reset() {
-        for (actionList in actions) {
-            actionList.clear()
-        }
-
-        initWithReflection(routes)
-    }
-
-    private fun initWithReflection(routesObject : Any) {
-        for (innerClass in routesObject.javaClass.getDeclaredClasses()) {
-            val objectInstance = innerClass.objectInstance()
-            if (objectInstance != null) {
-                initWithReflection(objectInstance)
-            }
-            else if (javaClass<Request>().isAssignableFrom(innerClass)) {
-                for (ann in innerClass.getAnnotations()) {
-                    val requestClass = innerClass as Class<Request>
-                    val (route, method) = requestClass.route()
-                    actions[method.ordinal()].add(ActionInfo(route, requestClass))
-                }
+        for (r in routes) {
+            for (ann in r.getAnnotations()) {
+                val (route, method) = r.route()
+                actions[method.ordinal()].add(ActionInfo(route, r))
             }
         }
     }
+
 
     /** Matches an http method and url to an ActionInfo object.
         Returns null if no match is found.

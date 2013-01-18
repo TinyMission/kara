@@ -56,9 +56,9 @@ Generators:
                         Currently supports: 'idea' for IntelliJ IDEA
 
     update              Updates the application's Kara dependency to the latest version
-    controller <name>   Generates a new controller with the given name.
-                        "Controller" will be automatically appended to the name)
-    view <controller> <view>  Generate a new view for the given controller.
+    route <name>        Generates a new route with the given name.
+
+    view <route> <view>  Generate a new view for the given route. ('View' will be automatically appended to the name)
 
 """
     println(s)
@@ -102,7 +102,7 @@ fun main(args: Array<String>) {
                 "h", "help" -> showHelp = true
                 "update" -> generatorTask = GeneratorTask.update
                 "project" -> generatorTask = GeneratorTask.project
-                "controller" -> generatorTask = GeneratorTask.controller
+                "route" -> generatorTask = GeneratorTask.route
                 "view" -> generatorTask = GeneratorTask.view
                 "-d", "--debug" -> logLevel = Level.DEBUG
                 "-e", "env" -> {
