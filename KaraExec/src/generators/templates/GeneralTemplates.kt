@@ -76,6 +76,7 @@ import ${gen.appPackage}.views.${gen.routeSlug}.*
 import kara.controllers.*
 
 object ${gen.routeClassName} {
+    val layout = DefaultLayout()
     Get("/") class Index() : Request({
         IndexView()
     })
