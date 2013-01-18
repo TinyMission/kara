@@ -22,4 +22,4 @@ do
 done
 
 #echo $CP_JARS
-java -DKARA_HOME="$KARA_HOME" -classpath "$CP_JARS" kara.namespace "$@"
+java -DKARA_HOME="$KARA_HOME" -classpath "$CP_JARS" kara.KaraPackage "$@"

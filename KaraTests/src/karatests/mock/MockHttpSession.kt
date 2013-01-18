@@ -42,7 +42,7 @@ class MockHttpSession : HttpSession {
         throw UnsupportedOperationException()
     }
     public override fun getAttributeNames(): Enumeration<String>? {
-        throw UnsupportedOperationException()
+        return attributes.keys()
     }
     public override fun getValueNames(): Array<String>? {
         return attributes.keySet().toArray<String>()

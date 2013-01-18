@@ -1,5 +1,10 @@
 package kara.controllers
 
+fun String.routeComps() : List<RouteComp> {
+    return this.split("/").map {
+        it -> RouteComp.create(it)
+    }
+}
 
 /** Base class for objects that represent a single component of a route. */
 abstract class RouteComp(val compString : String) {

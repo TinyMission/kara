@@ -2,16 +2,12 @@ package karatests.mock
 
 import kara.controllers.Dispatcher
 import kara.config.AppConfig
+import karatests.controllers.Routes
+import kara.controllers.scanObjects
 
 
-val _dispatcher = Dispatcher()
-
+val _dispatcher = Dispatcher(scanObjects(Routes))
 val _mockAppConfig = AppConfig("", "test")
-
-public fun initMockDispatchWithReflection() {
-    _mockAppConfig["kara.appPackage"] = "karatests.controllers"
-    _dispatcher.initWithReflection(_mockAppConfig)
-}
 
 /** Provides a mock dispatch of the given method and url.
  */
