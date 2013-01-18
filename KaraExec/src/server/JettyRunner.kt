@@ -21,7 +21,7 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
 
     val appLoader = AppLoader(appConfig)
 
-    class Handler() : AbstractHandler() {
+    inner class Handler() : AbstractHandler() {
 
         public override fun handle(p0: String?, p1: Request?, p2: HttpServletRequest?, p3: HttpServletResponse?) {
 

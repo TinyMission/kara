@@ -55,7 +55,7 @@ class ParamDeserializer() {
     }
 
     public fun deserialize(param : String, paramType : Class<Any>) : Any {
-        if (paramType.getName().equals("String")) {
+        if (paramType == javaClass<String>()) {
             return param
         }
         for (deserializer in _typeDeserializers) {

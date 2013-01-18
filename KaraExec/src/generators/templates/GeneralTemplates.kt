@@ -53,12 +53,13 @@ import kara.config.*
 /**
  * This is the primary class for your application.
  */
-public class Application() : kara.app.Application() {
+public class Application(config: AppConfig) : kara.app.Application(config) {
 
     /**
      * Application-specific initialization code goes here.
      */
-    public override fun init(config : AppConfig) {
+    {
+
     }
 
 }
@@ -66,19 +67,18 @@ public class Application() : kara.app.Application() {
 """
 }
 
-
-fun controllerTemplate(gen : Generator) : String {
+fun routeTemplate(gen : Generator) : String {
     return """
-package ${gen.appPackage}.controllers
+package ${gen.appPackage}.routes
 
-import kara.controllers.*
 import ${gen.appPackage}.views.*
-import ${gen.appPackage}.views.${gen.controllerSlug}.*
+import ${gen.appPackage}.views.${gen.routeSlug}.*
+import kara.controllers.*
 
-class ${gen.controllerClassName}() : BaseController(DefaultLayout()) {
-    Get("/") fun index() : ActionResult {
-        return Index()
-    }
+object ${gen.routeClassName} {
+    Get("/") class Index() : Request({
+        IndexView()
+    })
 
 }
 

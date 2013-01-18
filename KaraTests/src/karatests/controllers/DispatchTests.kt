@@ -4,6 +4,7 @@ import kara.controllers.Dispatcher
 import kotlin.test.*
 import kara.config.AppConfig
 import karatests.mock.mockRequest
+import kara.controllers.scanObjects
 
 /** Tests for dispatching routes to get action info. */
 fun runDispatchTests() {
@@ -11,8 +12,7 @@ fun runDispatchTests() {
     val appConfig = AppConfig("", "development")
     appConfig["kara.appPackage"] = "karatests.controllers"
 
-    val dispatcher = Dispatcher()
-    dispatcher.initWithReflection(appConfig)
+    val dispatcher = Dispatcher(scanObjects(Routes))
 
     var actionInfo = dispatcher.match("GET", "/")!!
     assertNotNull(actionInfo)
@@ -22,7 +22,7 @@ fun runDispatchTests() {
 
     // foo controller
     actionInfo = dispatcher.match("GET", "/foo/bar")!!
-    assertEquals(FooController().javaClass, actionInfo.controller.javaClass)
+    assertEquals(Routes.Foo.Bar().javaClass, actionInfo.requestClass)
 
     dispatcher.match("GET", "/foo/bar/baz")!! // nested route
 
@@ -43,7 +43,7 @@ fun runDispatchTests() {
     // crud controller
     request = mockRequest("GET", "/crud?name=value")
     actionInfo = dispatcher.match("GET", request.getRequestURI()!!)!! // empty route with parameters
-    assertEquals(CrudController().javaClass, actionInfo.controller.javaClass)
+    assertEquals(Routes.Crud.Index().javaClass, actionInfo.requestClass)
     params = actionInfo.getParams(request)
     assertEquals("value", params["name"])
 

@@ -12,7 +12,7 @@ import com.google.common.io.Files
 /** Possbile named tasks that the generator can perform. */
 enum class GeneratorTask(val name : String) {
     project: GeneratorTask("project")
-    controller: GeneratorTask("controller")
+    route: GeneratorTask("route")
     update: GeneratorTask("update")
     view: GeneratorTask("view")
     fun toString() : String {
@@ -38,9 +38,9 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
     /** Some strings used in various templates. */
 
-    var controllerSlug : String = ""
+    var routeSlug: String = ""
 
-    var controllerClassName : String = ""
+    var routeClassName: String = ""
 
     var viewName : String = ""
 
@@ -69,20 +69,20 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                 projectName = args[0]
                 execProject(args[0])
             }
-            GeneratorTask.controller -> {
-                // ensure there's a controller name
+            GeneratorTask.route -> {
+                // ensure there's a route name
                 if (args.size == 0)
-                    throw RuntimeException("Need to provide a controller name.")
+                    throw RuntimeException("Need to provide a route name.")
                 for (arg in args)
-                    execController(arg)
+                    execRoute(arg)
             }
             GeneratorTask.update -> {
                 execUpdate()
             }
             GeneratorTask.view -> {
-                // ensure there's a controller name and a view name
+                // ensure there's a route name and a view name
                 if (args.size != 2)
-                    throw RuntimeException("Need to provide a controller name and a view name.")
+                    throw RuntimeException("Need to provide a route name and a view name.")
                 execView(args[0], args[1])
             }
             else -> throw RuntimeException("Unkown generator task ${task.toString()}")
@@ -144,7 +144,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         createDir("public/system")
         createDir("src")
         createDir("src/$appPackagePath")
-        createDir("src/$appPackagePath/controllers")
+        createDir("src/$appPackagePath/routes")
         createDir("src/$appPackagePath/models")
         createDir("src/$appPackagePath/styles")
         createDir("src/$appPackagePath/views")
@@ -162,25 +162,25 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         renderTemplate(appconfigDevelopmentTemplate(this), "config/appconfig.development.json")
         renderTemplate(applicationTemplate(this), "src/$appPackagePath/Application.kt")
 
-        // make the default controller and view
-        execController("Home")
+        // make the default routes and view
+        execRoute("Home")
 
         println("\nYour project has been created! Now you're ready to import it into your favorite IDE and start coding.\n")
     }
 
 
-    /** Executes the task to create a new controller. */
-    fun execController(var controllerName : String) {
-        controllerName = controllerName.capitalize()
+    /** Executes the task to create a new route. */
+    fun execRoute(var routeName: String) {
+        routeName = routeName.capitalize()
 
-        controllerSlug = controllerName.toLowerCase()
-        controllerClassName = "${controllerName}Controller"
+        routeSlug = routeName.toLowerCase()
+        routeClassName = "${routeName}"
 
-        ensureDir("src/$appPackagePath/controllers")
+        ensureDir("src/$appPackagePath/routes")
 
-        renderTemplate(controllerTemplate(this), "src/$appPackagePath/controllers/${controllerClassName}.kt")
+        renderTemplate(routeTemplate(this), "src/$appPackagePath/routes/${routeClassName}.kt")
         execLayout("Default")
-        execView(controllerName, "Index")
+        execView(routeName, "Index")
     }
 
 
@@ -198,18 +198,18 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
 
     /** Executes the task to create a new view. */
-    fun execView(var controllerName : String, var vName : String) {
-        controllerName = controllerName.capitalize()
-        viewName = vName.capitalize()
+    fun execView(var routeName: String, var vName : String) {
+        routeName = routeName.capitalize()
+        viewName = "${vName.capitalize()}View"
 
-        controllerSlug = controllerName.toLowerCase()
-        controllerClassName = "${controllerName}Controller"
+        routeSlug = routeName.toLowerCase()
+        routeClassName = "${routeName}"
 
         ensureDir("src/$appPackagePath/views")
-        ensureDir("src/$appPackagePath/views/$controllerSlug")
+        ensureDir("src/$appPackagePath/views/$routeSlug")
 
-        val outPath = "src/$appPackagePath/views/$controllerSlug/${viewName}.kt"
-        var isLanding = controllerName == "Home" && vName == "Index"
+        val outPath = "src/$appPackagePath/views/$routeSlug/${viewName}.kt"
+        var isLanding = routeName == "Home" && vName == "Index"
         renderTemplate(viewTemplate(this, outPath, isLanding), outPath)
     }
 

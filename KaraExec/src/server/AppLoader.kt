@@ -11,6 +11,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Executor
 import kara.config.AppConfig
 import org.apache.log4j.Logger
+import java.net.URL
 
 /** Interface for object that want to listen for when an app is loaded.
  */
@@ -24,8 +25,6 @@ trait AppLoadListener {
 class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
     val logger = Logger.getLogger(this.javaClass)!!
-
-    val binDir = File(appConfig.appRoot, "bin")
 
     var classLoader : URLClassLoader? = null
 
@@ -54,31 +53,6 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
         watchExecutor.execute(watcher)
     }
 
-    /** Loads the controllers from the controllers directory into the current application's dispatcher.
-     */
-    fun loadControllers() {
-        if (application == null || application?.dispatcher == null)
-            throw RuntimeException("Trying to load controllers without a valid application or dispatcher")
-        val dispatcher = application?.dispatcher as Dispatcher
-        val controllerDir = File(binDir, "${appConfig.appPackagePath}${File.separator}controllers")
-        if (!controllerDir.exists()) {
-            throw RuntimeException("App ${appConfig.appPackage} does not have a controllers directory (should be ${controllerDir.toString()})")
-        }
-        val controllerFilter = object : FileFilter {
-            public override fun accept(p0: File): Boolean {
-                val fileName = p0.toString()
-                return fileName.endsWith(".class") && !fileName.contains("$") // the kotlin compiler has been spitting out these extra class files that aren't actually controllers
-            }
-        }
-        for (val controllerFile in controllerDir.listFiles(controllerFilter)!!) {
-            val controllerName = (controllerFile.getName()).replace(".class", "")
-            logger.debug("Loading controller ${controllerName}")
-            val controllerClass = classLoader?.loadClass("${appConfig.appPackage}.controllers.${controllerName}")
-            if (controllerClass == null)
-                throw RuntimeException("Expecting ${controllerFile} to declare ${controllerName}")
-            dispatcher.parseController(controllerClass as Class<BaseController>)
-        }
-    }
 
     /** Loads the application object from the filesystem.
      */
@@ -90,21 +64,43 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
         synchronized(appLock) {
             // load the application class
-            val url = binDir.toURL()
-            classLoader = URLClassLoader(array(url))
+            classLoader = URLClassLoader(buildClasspath())
             val appClassObject = classLoader?.loadClass("${appConfig.appPackage}.Application")
             if (appClassObject == null)
                 throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
             val appClass = appClassObject as Class<Application>
-            application = appClass.newInstance()
-            application?.init(appConfig) // this breaks the runtime!!
+            val cons = appClass.getConstructor(javaClass<AppConfig>())
+            application = cons.newInstance(appConfig)
             logger.debug("Application class: ${application.javaClass.toString()}")
-
-            loadControllers()
 
             for (val listener in listeners) {
                 listener.onAppLoaded(application as Application)
             }
         }
+    }
+
+    private fun buildClasspath() : Array<URL> {
+        val answer = ArrayList<URL>()
+        answer.add(File(appConfig.appRoot, "bin").toURI().toURL())
+
+        fun appendJars(dir: File) {
+            for (file in dir.listFiles()!!) {
+                val name = file.getName()
+                when {
+                    name == "src" || name == "sources" -> {}
+                    name.endsWith("-src.jar") || name.endsWith("-sources.jar") -> {}
+                    file.isDirectory() -> appendJars(file)
+                    name.endsWith(".jar") -> {
+                        answer.add(file.toURI().toURL())
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        appendJars(File(appConfig.appRoot, "lib"))
+
+        println(answer)
+        return Array<URL>(answer.size) {answer.get(it)}
     }
 }
