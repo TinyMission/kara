@@ -11,6 +11,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Executor
 import kara.config.AppConfig
 import org.apache.log4j.Logger
+import java.net.URL
 
 /** Interface for object that want to listen for when an app is loaded.
  */
@@ -24,8 +25,6 @@ trait AppLoadListener {
 class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
     val logger = Logger.getLogger(this.javaClass)!!
-
-    val binDir = File(appConfig.appRoot, "bin")
 
     var classLoader : URLClassLoader? = null
 
@@ -65,8 +64,7 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
         synchronized(appLock) {
             // load the application class
-            val url = binDir.toURL()
-            classLoader = URLClassLoader(array(url))
+            classLoader = URLClassLoader(buildClasspath())
             val appClassObject = classLoader?.loadClass("${appConfig.appPackage}.Application")
             if (appClassObject == null)
                 throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
@@ -79,5 +77,30 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
                 listener.onAppLoaded(application as Application)
             }
         }
+    }
+
+    private fun buildClasspath() : Array<URL> {
+        val answer = ArrayList<URL>()
+        answer.add(File(appConfig.appRoot, "bin").toURI().toURL())
+
+        fun appendJars(dir: File) {
+            for (file in dir.listFiles()!!) {
+                val name = file.getName()
+                when {
+                    name == "src" || name == "sources" -> {}
+                    name.endsWith("-src.jar") || name.endsWith("-sources.jar") -> {}
+                    file.isDirectory() -> appendJars(file)
+                    name.endsWith(".jar") -> {
+                        answer.add(file.toURI().toURL())
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        appendJars(File(appConfig.appRoot, "lib"))
+
+        println(answer)
+        return Array<URL>(answer.size) {answer.get(it)}
     }
 }
