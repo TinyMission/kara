@@ -84,7 +84,7 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
         answer.add(File(appConfig.appRoot, "bin").toURI().toURL())
 
         fun appendJars(dir: File) {
-            for (file in dir.listFiles()!!) {
+            dir.listFiles()?.forEach { file ->
                 val name = file.getName()
                 when {
                     name == "src" || name == "sources" -> {}
