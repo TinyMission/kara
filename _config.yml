@@ -1,0 +1,5 @@
+auto: true
+pygments: true
+docPageNames: [overview, commandline, configuration, controllers, stylesheets, views]
+docPageTitles: [Overview, "Command Line", Configuration, Controllers, Stylesheets, Views]
+docPageIcons: [home, align-left, check, cogs, tint, file-alt]

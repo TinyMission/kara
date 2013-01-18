@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/foundation.min.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.min.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/pygment_trac.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen" />
+
+	<script type="text/javascript" src="/javascripts/foundation.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(document).foundationTopBar() 
+		})
+	</script>
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Kara Web Framework</title>
+</head>
+
+<body>
+
+	<nav class="top-bar fixed">
+		<ul>
+			<!-- Title Area -->
+			<li class="name">
+				<h1>
+					<a href="/">
+						<img src="/images/kara-bar-logo.png" alt="logo"/>
+						Kara Web Framework
+					</a>
+				</h1>
+			</li>
+			<li class="toggle-topbar"><a href="#"></a></li>
+		</ul>
+		<section>
+			<!-- Right Nav Section -->
+			<ul class="right">
+				<li>
+					<a href="/index.html"  class="icon-home">Home</a>
+				</li>
+				<!-- <li class="divider"></li> -->
+				<li class="has-dropdown">
+					<a class="icon-book" href="/docs/overview.html">Docs</a>
+					<ul class="dropdown">
+						{% include docNav.html %}
+					</ul>
+				</li>
+				<li>
+					<a href="https://github.com/TinyMission/kara"  class="icon-github">GitHub</a>
+				</li>
+				<li>
+					<a href="/license.html" class="icon-legal">License</a>
+				</li>
+			</ul>
+		</section>
+	</nav>
+
+	<!-- Main Body -->
+	<div class="row">
+		<div class="nine columns">
+			<div id="content">
+				{{ content }}
+			</div>
+		</div>
+
+		<!-- Sidebar -->
+		<div class="three columns sidebar">
+			<a href="https://github.com/TinyMission/kara" class="radius button icon-github huge">
+				Download <br/> from Github
+			</a>
+			<h4>Documentation</h4>
+			<ul class="side-nav">
+				{% include docNav.html %}
+			</ul>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="row">
+		<div class="twelve columns">
+			<div class="row">
+				<div class="six columns">
+					<p>&copy; Copyright 2013, <a href="http://tinymission.com" >Tiny Mission LLC</a></p>
+				</div>
+				<div class="six columns">
+					<ul class="inline-list right">
+						<!-- <li><a href="#">Link 1</a></li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>
