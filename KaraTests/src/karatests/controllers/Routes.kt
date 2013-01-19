@@ -4,18 +4,19 @@ import kara.controllers.Get
 import kara.controllers.Post
 import kara.controllers.*
 import karatests.views.DefaultLayout
+import karatests.views.HomeView
 
 object Routes {
     val layout = DefaultLayout()
 
     Get("/")
-    class Index(): Request({ HomeController.index() })
+    class Index(): Request({ HomeView() })
 
     Get("/test")
-    class Test(): Request({ HomeController.test() })
+    class Test(): Request({ TextResult("This is a test action") })
 
     Post("/update")
-    class Update(): Request({ HomeController.update() })
+    class Update(): Request({ TextResult("Something's been updated!") })
 
     object Foo {
         Get("#")

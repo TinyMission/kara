@@ -16,6 +16,7 @@
     <orderEntry type="library" name="slf4j-api-1.6.6" level="project" />
     <orderEntry type="library" name="reflections-0.9.8" level="project" />
     <orderEntry type="library" name="javassist-3.12.1.GA" level="project" />
+    <orderEntry type="library" name="junit-4.10" level="project" />
   </component>
 </module>
 
