@@ -98,7 +98,7 @@ fun main(args: Array<String>) {
             when (arg) {
                 "c", "config" -> showConfig = true
                 "s", "server" -> startServer = true
-                "g", "generator" -> runGenerator = true
+                "g", "generate" -> runGenerator = true
                 "h", "help" -> showHelp = true
                 "update" -> generatorTask = GeneratorTask.update
                 "project" -> generatorTask = GeneratorTask.project
