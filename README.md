@@ -14,6 +14,10 @@ Kara is developed by [Tiny Mission](http://tinymission.com). We're a small web a
 There's plenty of work left to do to make Kara a first class framework, and we'd welcome contributions. Contact andy at tinymission.com to get involved.
 
 
+## Bugs, Suggestions and Feature Requests
+
+All issues for Kara are tracked [here](http://youtrack.codebetter.com/issues/kara)
+
 ## License
 
 Kara is Open Source and licensed under the Apache Licenses, version 2.0. It can be freely used in commercial projects.
