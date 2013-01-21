@@ -96,6 +96,10 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
         }
         return builder.toString()
     }
+
+    public fun attribute(name: String, value: String) {
+        attributes[name] = value
+    }
 }
 
 abstract class TagWithText(name : String, isEmpty : Boolean) : Tag(name, isEmpty) {
