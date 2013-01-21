@@ -213,7 +213,7 @@ class META() : TagWithText("meta", true) {
         }
 }
 
-class SCRIPT() : TagWithText("script", true) {
+class SCRIPT() : TagWithText("script", false) {
     public var src : String
         get() = attributes["src"]!!
         set(value) {
