@@ -100,6 +100,16 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
     public fun attribute(name: String, value: String) {
         attributes[name] = value
     }
+
+    public fun get(attributeName : String) : String {
+        val answer = attributes[attributeName]
+        if (answer == null) throw RuntimeException("Atrribute $attributeName is missing")
+        return answer
+    }
+
+    public fun set(attName: String, attValue: String) {
+        attributes[attName] = attValue
+    }
 }
 
 abstract class TagWithText(name : String, isEmpty : Boolean) : Tag(name, isEmpty) {
