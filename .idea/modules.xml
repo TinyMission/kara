@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/KaraDemo/KaraDemo.iml" filepath="$PROJECT_DIR$/KaraDemo/KaraDemo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/KaraExec/KaraExec.iml" filepath="$PROJECT_DIR$/KaraExec/KaraExec.iml" />
-      <module fileurl="file://$PROJECT_DIR$/KaraLib/KaraLib.iml" filepath="$PROJECT_DIR$/KaraLib/KaraLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/KaraTests/KaraTests.iml" filepath="$PROJECT_DIR$/KaraTests/KaraTests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/KaraDemo/KaraDemo.iml" filepath="$PROJECT_DIR$/samples/KaraDemo/KaraDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/KaraExec/KaraExec.iml" filepath="$PROJECT_DIR$/src/KaraExec/KaraExec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/KaraLib/KaraLib.iml" filepath="$PROJECT_DIR$/src/KaraLib/KaraLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/KaraTests/KaraTests.iml" filepath="$PROJECT_DIR$/src/KaraTests/KaraTests.iml" />
       <module fileurl="file://$PROJECT_DIR$/kara.iml" filepath="$PROJECT_DIR$/kara.iml" />
     </modules>
   </component>

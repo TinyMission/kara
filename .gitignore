@@ -12,7 +12,6 @@ out/*
 *.dotsettings.*
 ~$*
 .DS_Store/
-out/production/*
-out/test/*
+modules/*
 KaraDemo/bin/*
 .idea/workspace.xml

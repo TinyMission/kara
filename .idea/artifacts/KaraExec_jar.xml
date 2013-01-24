@@ -1,13 +1,11 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="KaraExec:jar">
-    <output-path>$PROJECT_DIR$/out/jars</output-path>
+    <output-path>$PROJECT_DIR$/modules</output-path>
     <root id="archive" name="KaraExec.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/KaraExec/src/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/KaraExec/src/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="KaraExec" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/kotlin-runtime.jar" path-in-jar="/" />
-      <element id="module-output" name="KaraLib" />
     </root>
   </artifact>
 </component>

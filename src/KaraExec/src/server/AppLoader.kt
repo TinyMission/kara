@@ -82,25 +82,22 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
     private fun buildClasspath() : Array<URL> {
         val answer = ArrayList<URL>()
         answer.add(File(appConfig.appRoot, "bin").toURI().toURL())
+        appendJars(File(appConfig.appRoot, "lib"), answer)
+        return Array<URL>(answer.size) {answer.get(it)}
+    }
 
-        fun appendJars(dir: File) {
-            dir.listFiles()?.forEach { file ->
-                val name = file.getName()
-                when {
-                    name == "src" || name == "sources" -> {}
-                    name.endsWith("-src.jar") || name.endsWith("-sources.jar") -> {}
-                    file.isDirectory() -> appendJars(file)
-                    name.endsWith(".jar") -> {
-                        answer.add(file.toURI().toURL())
-                    }
-                    else -> {}
+    private fun appendJars(dir: File, answer : MutableList<URL>) {
+        dir.listFiles()?.forEach { file ->
+            val name = file.getName()
+            when {
+                name == "src" || name == "sources" -> {}
+                name.endsWith("-src.jar") || name.endsWith("-sources.jar") -> {}
+                file.isDirectory() -> appendJars(file, answer)
+                name.endsWith(".jar") -> {
+                    answer.add(file.toURI().toURL())
                 }
+                else -> {}
             }
         }
-
-        appendJars(File(appConfig.appRoot, "lib"))
-
-        println(answer)
-        return Array<URL>(answer.size) {answer.get(it)}
     }
 }
