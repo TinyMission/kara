@@ -5,6 +5,10 @@
 
     <property name="build.number" value="SNAPSHOT"/>
     <target name="jars">
+        <delete dir="modules" failonerror="false"/>
+        <mkdir dir="modules"/>
+        <mkdir dir="modules/core"/>
+
         <jar destfile="modules/KaraExec.jar" update="false">
             <fileset dir="out/production/KaraExec">
                 <exclude name="**/script.kts"/>

@@ -60,5 +60,5 @@ fun Any.properties() : List<String> {
         }
     }
 
-    return answer
+    return answer.sort()
 }
