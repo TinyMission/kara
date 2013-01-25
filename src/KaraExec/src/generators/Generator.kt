@@ -150,7 +150,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
         // render the templates
         renderTemplate(buildxmlTemplate(), "build.xml")
-        renderTemplate(ivyTemplate(this, projectName), "ivy.xml")
+        renderTemplate(ivyTemplate(projectName), "ivy.xml")
         renderTemplate(appconfigTemplate(), "config/appconfig.json")
         renderTemplate(appconfigDevelopmentTemplate(), "config/appconfig.development.json")
         renderTemplate(applicationTemplate(), "src/$appPackagePath/Application.kt")
