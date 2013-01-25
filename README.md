@@ -13,6 +13,9 @@ Kara is developed by [Tiny Mission](http://tinymission.com). We're a small web a
 
 There's plenty of work left to do to make Kara a first class framework, and we'd welcome contributions. Contact andy at tinymission.com to get involved.
 
+## Continous integration and Downloads
+CI is set up at [TeamCity](http://teamcity.jetbrains.com/project.html?projectId=project77&tab=projectOverview).
+Download latest successful [build](/repository/download/bt432/.lastSuccessful/kara-{build.number}.zip)
 
 ## Bugs, Suggestions and Feature Requests
 
