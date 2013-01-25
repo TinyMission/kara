@@ -15,7 +15,7 @@ There's plenty of work left to do to make Kara a first class framework, and we'd
 
 ## Continous integration and Downloads
 CI is set up at [TeamCity](http://teamcity.jetbrains.com/project.html?projectId=project77&tab=projectOverview).
-Download latest successful [build](/repository/download/bt432/.lastSuccessful/kara-{build.number}.zip)
+Download latest successful [build](http://teamcity.jetbrains.com/repository/download/bt432/.lastSuccessful/kara-{build.number}.zip)
 
 ## Bugs, Suggestions and Feature Requests
 
