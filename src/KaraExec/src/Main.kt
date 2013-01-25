@@ -9,6 +9,7 @@ import org.apache.log4j.Level
 import org.apache.log4j.LogManager
 import kara.generators.*
 import java.util.ArrayList
+import dependencies.DependenciesResolver
 
 fun server(appConfig : AppConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -19,6 +20,11 @@ fun server(appConfig : AppConfig) {
 fun generator(appConfig : AppConfig, task : GeneratorTask, args : List<String>) {
     var generator = Generator(appConfig, task, args)
     generator.exec()
+}
+
+fun resolverDependencies(appConfig : AppConfig) {
+    var dependencyResolver = DependenciesResolver(appConfig)
+    dependencyResolver.exec()
 }
 
 fun config(appCongig : AppConfig) {
@@ -32,16 +38,17 @@ Usage:
     kara [-options] command args
 
 Commands:
-    c, config    Show the application's configuration for the current environment
-    g, generate  Generates a new project or file (see below)
-    h, help      Show this help message
-    s, server    Run the Kara server on the current directory
+    c, config           Show the application's configuration for the current environment
+    g, generate         Generates a new project or file (see below)
+    d, dependencies     Generates dependencies for application's ivy.xml file to application's lib folder.
+    h, help             Show this help message
+    s, server           Run the Kara server on the current directory
 
 Options:
-    -d, --debug  Show debug log messages
-    -e, --env    Specify the environment (default is --env=development)
-    -i, --info   Show info log messages (default)
-    -w, --warn   Show only warning log messages
+    -d, --debug         Show debug log messages
+    -e, --env           Specify the environment (default is --env=development)
+    -i, --info          Show info log messages (default)
+    -w, --warn          Show only warning log messages
 
 Generators:
     project <name>      Generates a new Kara project with the given name.
@@ -77,6 +84,7 @@ fun main(args: Array<String>) {
 
     var startServer = false
     var runGenerator = false
+    var resolveDependencies = false
     var showHelp = false
     var showConfig = false
     var generatorTask : GeneratorTask? = null
@@ -99,6 +107,7 @@ fun main(args: Array<String>) {
                 "c", "config" -> showConfig = true
                 "s", "server" -> startServer = true
                 "g", "generate" -> runGenerator = true
+                "d", "dependencies" -> resolveDependencies = true
                 "h", "help" -> showHelp = true
                 "update" -> generatorTask = GeneratorTask.update
                 "project" -> generatorTask = GeneratorTask.project
@@ -144,6 +153,9 @@ fun main(args: Array<String>) {
             if (generatorTask == null)
                 throw RuntimeException("Need to specify a generator task to run. Run 'kara help' for usage.")
             generator(appConfig, generatorTask!!, generatorArgs)
+        }
+        else if (resolveDependencies) {
+            resolverDependencies(appConfig)
         }
         else {
             println("No valid command specified! Run 'kara help' for usage.")

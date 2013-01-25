@@ -9,5 +9,6 @@
         <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6" conf="compile->default"/>
         <dependency org="org.eclipse.jetty.aggregate" name="jetty-all-server" rev="8.1.5.v20120716" conf="compile->default"/>
         <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.9" conf="compile->default"/>
+        <dependency org="org.apache.ivy" name="ivy" rev="2.2.0" conf="compile->default"/>
     </dependencies>
 </ivy-module>

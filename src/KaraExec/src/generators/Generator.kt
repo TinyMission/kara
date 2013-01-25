@@ -153,11 +153,12 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         createIDEFiles(ide)
         // copy the necessary libraries
         copyFile("lib/kotlin-runtime.jar", "lib/kotlin-runtime.jar")
-        copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
+        copyFile("modules/core/KaraLib.jar", "lib/KaraLib.jar")
 
         // render the templates
         renderTemplate(moduleImlTemplate(this), "${appConfig.appPackage}.iml")
         renderTemplate(buildxmlTemplate(this), "build.xml")
+        renderTemplate(ivyTemplate(this, projectName), "ivy.xml")
         renderTemplate(appconfigTemplate(this), "config/appconfig.json")
         renderTemplate(appconfigDevelopmentTemplate(this), "config/appconfig.development.json")
         renderTemplate(applicationTemplate(this), "src/$appPackagePath/Application.kt")
