@@ -7,11 +7,11 @@ import kara.generators.Generator
  */
 
 
-fun appconfigTemplate(gen : Generator) : String {
+fun Generator.appconfigTemplate() : String {
     return """
 {
      "kara": {
-         "appPackage": "${gen.appPackage}",
+         "appPackage": "${appPackage}",
          "publicDir": "public",
          "stylesheetDir": "stylesheets",
          "sessionDir": "tmp/sessions"
@@ -20,7 +20,7 @@ fun appconfigTemplate(gen : Generator) : String {
 """
 }
 
-fun appconfigDevelopmentTemplate(gen : Generator) : String {
+fun Generator.appconfigDevelopmentTemplate() : String {
     return """
 {
      "kara": {
@@ -31,7 +31,7 @@ fun appconfigDevelopmentTemplate(gen : Generator) : String {
 }
 
 
-fun buildxmlTemplate(gen : Generator) : String {
+fun Generator.buildxmlTemplate() : String {
     return """
 <project>
     <target name="restart">
@@ -44,9 +44,9 @@ fun buildxmlTemplate(gen : Generator) : String {
 }
 
 
-fun applicationTemplate(gen : Generator) : String {
+fun Generator.applicationTemplate() : String {
     return """
-package ${gen.appPackage}
+package ${appPackage}
 
 import kara.config.*
 
@@ -67,15 +67,15 @@ public class Application(config: AppConfig) : kara.app.Application(config) {
 """
 }
 
-fun routeTemplate(gen : Generator) : String {
+fun Generator.routeTemplate() : String {
     return """
-package ${gen.appPackage}.routes
+package ${appPackage}.routes
 
-import ${gen.appPackage}.views.*
-import ${gen.appPackage}.views.${gen.routeSlug}.*
+import ${appPackage}.views.*
+import ${appPackage}.views.${routeSlug}.*
 import kara.controllers.*
 
-object ${gen.routeClassName} {
+object ${routeClassName} {
     val layout = DefaultLayout()
     Get("/") class Index() : Request({
         IndexView()

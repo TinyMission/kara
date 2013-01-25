@@ -13,7 +13,6 @@ import com.google.common.io.Files
 enum class GeneratorTask(val name : String) {
     project: GeneratorTask("project")
     route: GeneratorTask("route")
-    update: GeneratorTask("update")
     view: GeneratorTask("view")
     fun toString() : String {
         return name
@@ -46,7 +45,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
     var stylesheetName : String = ""
 
-    var ide = ""
+    var ide = "default"
 
     var projectName = ""
 
@@ -75,9 +74,6 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
                     throw RuntimeException("Need to provide a route name.")
                 for (arg in args)
                     execRoute(arg)
-            }
-            GeneratorTask.update -> {
-                execUpdate()
             }
             GeneratorTask.view -> {
                 // ensure there's a route name and a view name
@@ -151,16 +147,12 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         createDir("tmp")
 
         createIDEFiles(ide)
-        // copy the necessary libraries
-        copyFile("lib/kotlin-runtime.jar", "lib/kotlin-runtime.jar")
-        copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
 
         // render the templates
-        renderTemplate(moduleImlTemplate(this), "${appConfig.appPackage}.iml")
-        renderTemplate(buildxmlTemplate(this), "build.xml")
-        renderTemplate(appconfigTemplate(this), "config/appconfig.json")
-        renderTemplate(appconfigDevelopmentTemplate(this), "config/appconfig.development.json")
-        renderTemplate(applicationTemplate(this), "src/$appPackagePath/Application.kt")
+        renderTemplate(buildxmlTemplate(), "build.xml")
+        renderTemplate(appconfigTemplate(), "config/appconfig.json")
+        renderTemplate(appconfigDevelopmentTemplate(), "config/appconfig.development.json")
+        renderTemplate(applicationTemplate(), "src/$appPackagePath/Application.kt")
 
         // make the default routes and view
         execRoute("Home")
@@ -178,7 +170,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
         ensureDir("src/$appPackagePath/routes")
 
-        renderTemplate(routeTemplate(this), "src/$appPackagePath/routes/${routeClassName}.kt")
+        renderTemplate(routeTemplate(), "src/$appPackagePath/routes/${routeClassName}.kt")
         execLayout("Default")
         execView(routeName, "Index")
     }
@@ -192,8 +184,8 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
         ensureDir("src/$appPackagePath/views")
         ensureDir("src/$appPackagePath/styles")
 
-        renderTemplate(layoutTemplate(this), "src/$appPackagePath/views/${viewName}.kt")
-        renderTemplate(stylesheetTemplate(this), "src/$appPackagePath/styles/${stylesheetName}.kt")
+        renderTemplate(layoutTemplate(), "src/$appPackagePath/views/${viewName}.kt")
+        renderTemplate(stylesheetTemplate(), "src/$appPackagePath/styles/${stylesheetName}.kt")
     }
 
 
@@ -210,13 +202,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
         val outPath = "src/$appPackagePath/views/$routeSlug/${viewName}.kt"
         var isLanding = routeName == "Home" && vName == "Index"
-        renderTemplate(viewTemplate(this, outPath, isLanding), outPath)
-    }
-
-
-    /** Updates the target project's Kara dependency to the latest version. */
-    fun execUpdate() {
-        copyFile("out/jars/KaraLib.jar", "lib/KaraLib.jar")
+        renderTemplate(viewTemplate(outPath, isLanding), outPath)
     }
 
 
@@ -265,31 +251,11 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
     fun createIDEFiles(ide: String) {
            when (ide) {
-            "idea" -> createIDEAFiles()
+            "default", "idea" -> createIDEAFiles()
             else -> {
                 throw RuntimeException("$ide not supported")
             }
         }
     }
-
-    fun createIDEAFiles() {
-        // TODO: .idea works on Windows too?
-        ensureDir(".idea")
-        ensureDir(".idea/scopes")
-        ensureDir(".idea/copyright")
-        ensureDir(".idea/libraries")
-        renderTemplate(gradleTemplate(this), ".idea/gradle.xml")
-        renderTemplate(compilerTemplate(this), ".idea/compiler.xml")
-        renderTemplate(encodingsTemplate(this), ".idea/encodings.xml")
-        renderTemplate(uiDesignerTemplate(this), ".idea/uiDesigner.xml")
-        renderTemplate(vcsTemplate(this), ".idea/vcs.xml")
-        renderTemplate(miscTemplate(this), ".idea/misc.xml")
-        renderTemplate(scopeTemplate(this), ".idea/scopes/scope_settings.xml")
-        renderTemplate(nameTemplate(this), ".idea/.name")
-        renderTemplate(copyrightTemplate(this), ".idea/copyright/profile_settings.xml")
-        renderTemplate(modulesTemplate(this), ".idea/modules.xml")
-        renderTemplate(libraryKaraTemplate(this), ".idea/libraries/KaraLib.xml")
-    }
-
 }
 

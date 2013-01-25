@@ -9,6 +9,7 @@
       <maximumHeapSize value="128" />
       <maximumStackSize value="2" />
       <properties />
+      <executeOn event="afterCompilation" target="jars" />
     </buildFile>
   </component>
 </project>

@@ -21,13 +21,13 @@ p("Start by editing this file here: $filePath")
  * Templates for generating views.
  */
 
-fun viewTemplate(gen : Generator, filePath : String, isLanding : Boolean = false) : String {
+fun Generator.viewTemplate(filePath : String, isLanding : Boolean = false) : String {
     return """
-package ${gen.appPackage}.views.${gen.routeSlug}
+package ${appPackage}.views.${routeSlug}
 
 import kara.views.*
 
-class ${gen.viewName}() : HtmlView() {
+class ${viewName}() : HtmlView() {
     override fun render(context: ActionContext) {
         ${if (isLanding) landingViewBody(filePath) else generalViewBody(filePath)}
     }
@@ -37,18 +37,18 @@ class ${gen.viewName}() : HtmlView() {
 }
 
 
-fun layoutTemplate(gen : Generator) : String {
+fun Generator.layoutTemplate() : String {
     return """
-package ${gen.appPackage}.views
+package ${appPackage}.views
 
 import kara.views.*
-import ${gen.appPackage}.styles.*
+import ${appPackage}.styles.*
 
-class ${gen.viewName}() : HtmlLayout() {
+class ${viewName}() : HtmlLayout() {
     override fun render(context: ActionContext, mainView: HtmlView) {
         head {
             title("Kara App")
-            stylesheet(${gen.stylesheetName}())
+            stylesheet(${stylesheetName}())
         }
         body {
             h1("Kara App")
@@ -63,13 +63,13 @@ class ${gen.viewName}() : HtmlLayout() {
 }
 
 
-fun stylesheetTemplate(gen : Generator) : String {
+fun Generator.stylesheetTemplate() : String {
     return """
-package ${gen.appPackage}.styles
+package ${appPackage}.styles
 
 import kara.styles.*
 
-class ${gen.stylesheetName}() : Stylesheet() {
+class ${stylesheetName}() : Stylesheet() {
     override fun render() {
         s("body") {
             backgroundColor = c("#f0f0f0")
