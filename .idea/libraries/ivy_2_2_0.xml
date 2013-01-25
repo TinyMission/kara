@@ -1,0 +1,28 @@
+<component name="libraryTable">
+  <library name="ivy-2.2.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xml-apis-1.0.b2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/test/java" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/java" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/dual/project/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/multi-project/projects/console/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/multi-project/projects/sizewhere/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/multi-project/projects/list/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/multi-project/projects/find/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/multi-project/projects/size/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/multi-project/projects/version/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/chained-resolvers/chainedresolvers-project/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/configurations/jdbc-example/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/configurations/multi-projects/filter-framework/test" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/configurations/multi-projects/filter-framework/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/configurations/multi-projects/myapp/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/dependence/dependee/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/dependence/depender/src" />
+      <root url="jar://$PROJECT_DIR$/lib/ivy-2.2.0-src.zip!/apache-ivy-2.2.0/src/example/hello-ivy/src" />
+    </SOURCES>
+  </library>
+</component>
