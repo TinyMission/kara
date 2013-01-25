@@ -16,3 +16,4 @@ modules/*
 KaraDemo/bin/*
 .idea/workspace.xml
 kara-SNAPSHOT.zip
+lib/kotlin-runtime.jar
