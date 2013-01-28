@@ -35,6 +35,7 @@
             <zipfileset dir="modules" prefix="modules"/>
             <zipfileset dir="samples" prefix="samples"/>
             <zipfileset file="kara"/>
+            <zipfileset file="kara.bat"/>
             <zipfileset file="README.md"/>
         </zip>
     </target>
