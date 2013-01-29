@@ -45,9 +45,15 @@ Plus, Kotlin is an excellent language to develop with - letting you easily expre
 
 ## Installation
 
-To install Kara, simply checkout the [repository](https://github.com/TinyMission/kara) and add the location to your system path.
+### Source
+To install from source, simply checkout the [repository](https://github.com/TinyMission/kara), build the project and add the location to your system path.
 
-You can also obtain the latest binaries from the [Build Server](http://teamcity.jetbrains.net/viewType.html?buildTypeId=bt432). Click on the Artifacts to download them.
+### Binary
+
+You can obtain the latest binaries from the [Build Server](http://teamcity.jetbrains.net/viewType.html?buildTypeId=bt432). Click on the Artifacts to download them. Add the location to your system path.
+
+Once you have the location added to your path, you can simply run kara by typing **kara** on the command line.
+
 ### Platforms and Prerequisites
 
 To run Kara, the only concrete prerequisite is a working JDK. Optionally, [Ant](http://ant.apache.org/) can be used to enable automatic server restart during development.
