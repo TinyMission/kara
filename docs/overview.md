@@ -54,15 +54,14 @@ You can obtain the latest binaries from the [Build Server](http://teamcity.jetbr
 
 #### Running Kara
 
-Once you have the location added to your path, you can simply run kara by typing **kara** on the command line.
+
+Kara is multi-platform. On OSX and Unix based system, a **kara** bash script is provided. On Windows, a **kara.bat** batch file is available. Once you have the location added to your path, you can simply run kara by typing **kara** on the command line.
 
 ### Platforms and Prerequisites
 
 To run Kara, the only concrete prerequisite is a working JDK. Optionally, [Ant](http://ant.apache.org/) can be used to enable automatic server restart during development.
 
 To develop a Kara app, it is highly recommended to use [IntelliJ IDEA](http://www.jetbrains.com/idea/) with the [Kotlin Plugin](http://confluence.jetbrains.net/display/Kotlin/Getting+Started).
-
-Kara is multi-platform. On OSX and Unix based system, a **kara** bash script is provided. On Windows, a **kara.bat** batch file is available.
 
 ## Project Structure
 
