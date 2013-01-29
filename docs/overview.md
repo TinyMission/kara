@@ -53,8 +53,7 @@ To run Kara, the only concrete prerequisite is a working JDK. Optionally, [Ant](
 
 To develop a Kara app, it is highly recommended to use [IntelliJ IDEA](http://www.jetbrains.com/idea/) with the [Kotlin Plugin](http://confluence.jetbrains.net/display/Kotlin/Getting+Started).
 
-So far, Kara has only been tested on Mac OS X. However, the runtime is obviously platform independent and the bash script should work fine on any other Unix-like environment. In order to get it to work on Windows, we'll need to develop a batch file to run it.
-
+Kara is multi-platform. On OSX and Unix based system, a **kara** bash script is provided. On Windows, a **kara.bat** batch file is available.
 
 ## Project Structure
 
