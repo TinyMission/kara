@@ -45,12 +45,14 @@ Plus, Kotlin is an excellent language to develop with - letting you easily expre
 
 ## Installation
 
-### Source
+#### From Source
 To install from source, simply checkout the [repository](https://github.com/TinyMission/kara), build the project and add the location to your system path.
 
-### Binary
+#### From Binary
 
 You can obtain the latest binaries from the [Build Server](http://teamcity.jetbrains.net/viewType.html?buildTypeId=bt432). Click on the Artifacts to download them. Add the location to your system path.
+
+#### Running Kara
 
 Once you have the location added to your path, you can simply run kara by typing **kara** on the command line.
 
