@@ -1,16 +1,18 @@
 package karademo.styles
 
 import kara.styles.*
+import karademo.styles.StyleClasses.*
 
 /** The default stylesheet for the demo application.
  */
 class DefaultStyles() : Stylesheet() {
 
     override fun render() {
-        s("body") {
+        body {
             backgroundColor = c("#f0f0f0")
         }
-        s("#main") {
+
+        id("main") {
             width = 85.percent
             backgroundColor = c("#fff")
             margin = box(0.px, auto)
@@ -19,22 +21,23 @@ class DefaultStyles() : Stylesheet() {
             borderRadius = 5.px
         }
 
-        s("input[type=text], textarea") {
+        forAny(array(input(att("type") equalTo "text"), textarea)) {
             padding = box(4.px)
             width = 300.px
         }
-        s("textarea") {
+
+        textarea {
             height = 80.px
         }
 
-        s("table.fields") {
-            s("td") {
+        table(fields) {
+            td {
                 padding = box(6.px, 3.px)
             }
-            s("td.label") {
+            td.c(cLabel) {
                 textAlign = TextAlign.right
             }
-            s("td.label.top") {
+            td(array(cLabel, top)) {
                 verticalAlign = VerticalAlign.top
             }
         }

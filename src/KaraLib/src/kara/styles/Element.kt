@@ -3,29 +3,223 @@ package kara.styles
 import java.util.ArrayList
 import java.util.HashMap
 import kara.styles.*
+import kara.util.join
+
+trait Selector {
+    fun toExternalForm() : String
+}
+
+trait SelectorTrait {
+    fun toExternalForm() : String
+}
+
+object EmptyTrait : SelectorTrait {
+    override fun toExternalForm(): String {
+        return ""
+    }
+}
+
+public trait StyleClass : SelectorTrait, Selector {
+    fun name() : String
+
+    override fun toExternalForm(): String {
+        return ".${name()}"
+    }
+}
+public enum class PseudoClass : StyleClass {
+    root firstChild lastChild firstOfType lastOfType onlyChild onlyOfType
+    empty link visited active focus hover target enabled disabled checked
+
+    override fun toExternalForm(): String {
+        return ":${name()}"
+    }
+}
 
 /**
  * Represents a single stylesheet element.
  */
-open class Element(val selector : String) {
-
-    val children : MutableList<Element> = ArrayList<Element>()
-
+open class Element() {
+    val children : MutableList<StyledElement> = ArrayList<StyledElement>()
     val attributes = HashMap<String, Any>()
+
+    public inner class IdSelector(val name : String) : SelectorTrait, Selector {
+        fun invoke(body : StyledElement.() -> Unit) {
+            any.invoke(this, body)
+        }
+
+        override fun toExternalForm(): String {
+            return "#$name"
+        }
+    }
+
+    public inner open class TagSelector(val name : String) : Selector {
+        fun id(name: String) : Selector = invoke(IdSelector(name))
+        fun id(name : String, body : StyledElement.() -> Unit) = invoke(IdSelector(name), body)
+        fun id(id : IdSelector, body : StyledElement.() -> Unit) = invoke(id, body)
+
+        // TODO: When KT-3300 is fixed, make klass a vararg to allow multiple clases
+        fun c(klass : StyleClass, body : StyledElement.() -> Unit) {
+            invoke(klass, body)
+        }
+        fun c(klass : StyleClass) : Selector = invoke(klass)
+
+        fun invoke(body : StyledElement.() -> Unit) {
+            invoke(EmptyTrait, body)
+        }
+
+        // TODO: varargs fail due to http://youtrack.jetbrains.com/issue/KT-3300
+        fun invoke(traits : Array<SelectorTrait>, body : StyledElement.() -> Unit) {
+            s(SimpleSelector(this, traits).toExternalForm(), body)
+        }
+
+        fun invoke(t: SelectorTrait, body : StyledElement.() -> Unit) {
+            invoke(array(t), body)
+        }
+
+        fun invoke(t: SelectorTrait) : Selector {
+            return invoke(array(t))
+        }
+
+        fun invoke(t: Array<SelectorTrait>) : Selector {
+            return SimpleSelector(this, t)
+        }
+
+        fun isAny() : Boolean = "*" == name
+
+        override fun toExternalForm(): String {
+            return name
+        }
+    }
+
+    val any = TagSelector("*")
+    val a = TagSelector("a")
+    val b = TagSelector("b")
+    val body = TagSelector("body")
+    val button = TagSelector("button")
+    val canvas = TagSelector("canvas")
+    val div = TagSelector("div")
+    val em = TagSelector("em")
+    val fieldset = TagSelector("fieldset")
+    val form = TagSelector("form")
+    val h1 = TagSelector("h1")
+    val h2 = TagSelector("h2")
+    val h3 = TagSelector("h3")
+    val h4 = TagSelector("h4")
+    val h5 = TagSelector("h5")
+    val img = TagSelector("img")
+    val input = TagSelector("input")
+    val label = TagSelector("label")
+    val ol = TagSelector("ol")
+    val p = TagSelector("p")
+    val select = TagSelector("select")
+    val span = TagSelector("span")
+    val strong = TagSelector("strong")
+    val table = TagSelector("table")
+    val textarea = TagSelector("textarea")
+    val ul = TagSelector("ul")
+    val li = TagSelector("li")
+    val option = TagSelector("option")
+    val optgroup = TagSelector("optgroup")
+    val tr = TagSelector("tr")
+    val tbody = TagSelector("tbody")
+    val td = TagSelector("td")
+    val th = TagSelector("th")
+
+    public fun id(name: String, body : StyledElement.() -> Unit) {
+        any.id(name, body)
+    }
+
+    //TODO: Return IdSelector instead of SelectorTrait when KT-3301 is fixed
+    public fun id(name: String) : SelectorTrait = IdSelector(name)
+
+    fun c(klass : StyleClass, body : StyledElement.() -> Unit) {
+        any.invoke(klass, body)
+    }
+
+    public fun att(name : String) : Attribute = Attribute(name, HasAttribute(name))
+
+    public class Attribute internal (val name : String, val filter : AttFilter) : SelectorTrait {
+        public fun startsWith(value : String) : Attribute {
+            return Attribute(name, StartsWith(value))
+        }
+
+        public fun equalTo(value : String) : Attribute {
+            return Attribute(name, Equals(value))
+        }
+
+        public fun endsWith(value : String) : Attribute {
+            return Attribute(name, EndsWith(value))
+        }
+
+        public fun contains(value : String) : Attribute {
+            return Attribute(name, Contains(value, AttributeValueTokenizer.Substring))
+        }
+
+        public fun containsInHypen(value : String) : Attribute {
+            return Attribute(name, Contains(value, AttributeValueTokenizer.Hypen))
+        }
+
+        public fun containsInSpaces(value : String) : Attribute {
+            return Attribute(name, Contains(value, AttributeValueTokenizer.Spaces))
+        }
+
+        override fun toExternalForm(): String {
+            return "[$name${filter.toExternalForm()}]"
+        }
+    }
+
+    class SimpleSelector(val tag : TagSelector, val traits : Array<SelectorTrait>) : Selector {
+        override fun toExternalForm() : String {
+            val answer = StringBuilder()
+
+            val isAny = tag.isAny()
+            if (!isAny) {
+                answer.append(tag.name)
+            }
+
+            for (t in traits) {
+                answer.append(t.toExternalForm())
+            }
+
+            if (answer.length == 0 && isAny) {
+                return "*"
+            }
+
+            return answer.toString()
+        }
+    }
+
+    //TODO: vararg
+    public fun forAny(selectors : Array<Selector>, body : StyledElement.() -> Unit) {
+        s(UnionSelector(selectors).toExternalForm(), body)
+    }
+
+    public fun forAny(selectors : Array<Selector>) : UnionSelector {
+        return UnionSelector(selectors)
+    }
+
+    class UnionSelector(val selectors : Array<Selector>) : Selector {
+        override fun toExternalForm(): String {
+            return selectors.map { it.toExternalForm() } join ","
+        }
+    }
 
     /**
      * Creates a new child element with the given selector and block.
      */
-    fun s(selector : String, init : Element.() -> Unit) {
-        val element = Element(selector)
+    fun s(selector : String, init : StyledElement.() -> Unit) {
+        val element = StyledElement(selector)
         element.init()
         children.add(element)
     }
+}
 
+
+class StyledElement(val selector : String) : Element() {
     /**
      * Writes the element to the builder with the given indenation.
      */
-    open fun build(builder : StringBuilder, baseSelector : String) {
+    fun build(builder : StringBuilder, baseSelector : String) {
         if (baseSelector.length() > 0)
             builder.append("$baseSelector $selector {\n")
         else

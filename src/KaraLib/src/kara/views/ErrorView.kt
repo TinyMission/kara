@@ -20,22 +20,23 @@ class ErrorLayout() : HtmlLayout() {
     override fun render(context: ActionContext, mainView: HtmlView) {
         head {
             title("Kara Error")
+
             style {
-                s("body") {
+                this.body {
                     padding = box(1.em, 2.em)
                     fontFamily = "helvetica, arial, sans-serif"
                 }
-                s("#header") {
+                id("header") {
                     padding = box(8.px, 12.px)
                     backgroundColor = c("#fff0f0")
                     border = "1px solid #fcc"
                     borderRadius = 5.px
                     marginBottom = 1.em
-                    s("h1") {
+                    h1 {
                         marginTop = 0.px
                     }
                 }
-                s("#actioninfo, #stacktrace") {
+                any(array(id("actioninfo"), id("stacktrace"))) {
                     padding = box(8.px, 12.px)
                     backgroundColor = c("#f0f0f0")
                     border = "1px solid #ccc"
@@ -47,6 +48,7 @@ class ErrorLayout() : HtmlLayout() {
                 }
             }
         }
+
         body {
             renderView(context, mainView)
         }

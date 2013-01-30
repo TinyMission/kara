@@ -4,21 +4,24 @@ import kara.styles.*
 
 /** A test stylesheet builder.
  */
+enum class StyleClasses : StyleClass { box }
 class TestStylesheet() : Stylesheet() {
     override fun render() {
-        s("body") {
+        body {
             fontFamily = "sans-serif"
             backgroundColor = c("#fa542e")
         }
-        s("#main") {
+
+        id("main") {
             clear = Clear.left
             width = 920.px
-            s("h1") {
+            h1 {
                 lineHeight = 1.4.em
                 margin = box(1.em, 0.em)
                 color = c("#ff8822").lighten(0.1)
             }
-            s(".box") {
+
+            c(StyleClasses.box) {
                 border = "1px solid #888"
             }
         }

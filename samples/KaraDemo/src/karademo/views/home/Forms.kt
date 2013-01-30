@@ -9,7 +9,7 @@ class Forms(val book : Book) : HtmlView() {
         formFor(book, "/updatebook", FormMethod.Post) {
             table(c="fields") {
                 tr {
-                    td(c="label") {
+                    td(c="cLabel") {
                         labelFor("title")
                     }
                     td {
@@ -17,7 +17,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="label") {
+                    td(c="cLabel") {
                         labelFor("author")
                     }
                     td {
@@ -25,7 +25,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="label") {
+                    td(c="cLabel") {
                         labelFor("isPublished", "Is Published?")
                     }
                     td {
@@ -41,7 +41,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="label") {
+                    td(c="cLabel") {
                         labelFor("category")
                     }
                     td {
@@ -50,7 +50,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="label") {
+                    td(c="cLabel") {
                     }
                     td {
                         submitButton("Submit")

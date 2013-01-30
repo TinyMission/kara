@@ -6,7 +6,7 @@ import java.io.FileOutputStream
 
 /** A class for programmatically generating CSS stylesheets.
  */
-abstract class Stylesheet(var namespace : String = "") : Element("") {
+abstract class Stylesheet(var namespace : String = "") : Element() {
 
     /** Subclasses should override this to actual perform the stylesheet building.
     */
