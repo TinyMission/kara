@@ -44,7 +44,7 @@ open class Element() {
 
     public inner class IdSelector(val name : String) : SelectorTrait, Selector {
         fun invoke(body : StyledElement.() -> Unit) {
-            any.invoke(this, body)
+            any.invoke(this, body = body)
         }
 
         override fun toExternalForm(): String {
@@ -54,33 +54,19 @@ open class Element() {
 
     public inner open class TagSelector(val name : String) : Selector {
         fun id(name: String) : Selector = invoke(IdSelector(name))
-        fun id(name : String, body : StyledElement.() -> Unit) = invoke(IdSelector(name), body)
-        fun id(id : IdSelector, body : StyledElement.() -> Unit) = invoke(id, body)
+        fun id(name : String, body : StyledElement.() -> Unit) = id(IdSelector(name), body)
+        fun id(id : IdSelector, body : StyledElement.() -> Unit) = invoke(id, body = body)
 
-        // TODO: When KT-3300 is fixed, make klass a vararg to allow multiple clases
-        fun c(klass : StyleClass, body : StyledElement.() -> Unit) {
-            invoke(klass, body)
+        fun c(vararg klass : StyleClass, body : StyledElement.() -> Unit) {
+            invoke(*(klass as Array<SelectorTrait>), body = body)
         }
-        fun c(klass : StyleClass) : Selector = invoke(klass)
+        fun c(vararg klass : StyleClass) : Selector = invoke(*(klass as Array<SelectorTrait>))
 
-        fun invoke(body : StyledElement.() -> Unit) {
-            invoke(EmptyTrait, body)
-        }
-
-        // TODO: varargs fail due to http://youtrack.jetbrains.com/issue/KT-3300
-        fun invoke(traits : Array<SelectorTrait>, body : StyledElement.() -> Unit) {
+        fun invoke(vararg traits : SelectorTrait, body : StyledElement.() -> Unit) {
             s(SimpleSelector(this, traits).toExternalForm(), body)
         }
 
-        fun invoke(t: SelectorTrait, body : StyledElement.() -> Unit) {
-            invoke(array(t), body)
-        }
-
-        fun invoke(t: SelectorTrait) : Selector {
-            return invoke(array(t))
-        }
-
-        fun invoke(t: Array<SelectorTrait>) : Selector {
+        fun invoke(vararg t: SelectorTrait) : Selector {
             return SimpleSelector(this, t)
         }
 
@@ -133,7 +119,7 @@ open class Element() {
     public fun id(name: String) : SelectorTrait = IdSelector(name)
 
     fun c(klass : StyleClass, body : StyledElement.() -> Unit) {
-        any.invoke(klass, body)
+        any.invoke(klass, body = body)
     }
 
     public fun att(name : String) : Attribute = Attribute(name, HasAttribute(name))
@@ -168,7 +154,7 @@ open class Element() {
         }
     }
 
-    class SimpleSelector(val tag : TagSelector, val traits : Array<SelectorTrait>) : Selector {
+    class SimpleSelector(val tag : TagSelector, val traits : Array<out SelectorTrait>) : Selector {
         override fun toExternalForm() : String {
             val answer = StringBuilder()
 
@@ -189,12 +175,11 @@ open class Element() {
         }
     }
 
-    //TODO: vararg
-    public fun forAny(selectors : Array<Selector>, body : StyledElement.() -> Unit) {
+    public fun forAny(vararg selectors : Selector, body : StyledElement.() -> Unit) {
         s(UnionSelector(selectors).toExternalForm(), body)
     }
 
-    public fun forAny(selectors : Array<Selector>) : UnionSelector {
+    public fun forAny(vararg selectors : Selector) : UnionSelector {
         return UnionSelector(selectors)
     }
 

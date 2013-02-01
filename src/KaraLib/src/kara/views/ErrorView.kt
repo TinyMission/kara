@@ -36,7 +36,7 @@ class ErrorLayout() : HtmlLayout() {
                         marginTop = 0.px
                     }
                 }
-                any(array(id("actioninfo"), id("stacktrace"))) {
+                any(id("actioninfo"), id("stacktrace")) {
                     padding = box(8.px, 12.px)
                     backgroundColor = c("#f0f0f0")
                     border = "1px solid #ccc"

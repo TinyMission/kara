@@ -21,7 +21,7 @@ class DefaultStyles() : Stylesheet() {
             borderRadius = 5.px
         }
 
-        forAny(array(input(att("type") equalTo "text"), textarea)) {
+        forAny(input(att("type") equalTo "text"), textarea) {
             padding = box(4.px)
             width = 300.px
         }
@@ -37,7 +37,7 @@ class DefaultStyles() : Stylesheet() {
             td.c(cLabel) {
                 textAlign = TextAlign.right
             }
-            td(array(cLabel, top)) {
+            td(cLabel, top) {
                 verticalAlign = VerticalAlign.top
             }
         }

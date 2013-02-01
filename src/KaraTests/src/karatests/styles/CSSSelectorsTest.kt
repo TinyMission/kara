@@ -51,12 +51,12 @@ class SelectorsTest {
 
     Test fun tagWithClasses() {
         test("div.c1", {div.c(c1) })
-        test("div.c1.c2", {div(array(c1, c2)) })
+        test("div.c1.c2", {div(c1, c2) })
     }
 
     Test fun idWithClasses() {
-        test("#id.c1", {any (array(id("id"), c1))})
-        test("#id.c1.c2", {any(array(id("id"), c1, c2))})
+        test("#id.c1", {any (id("id"), c1)})
+        test("#id.c1.c2", {any(id("id"), c1, c2)})
     }
 
     Test fun attributeFilters() {
@@ -70,6 +70,6 @@ class SelectorsTest {
     }
 
     Test fun compositeSelector() {
-        test("div#id,.c1", { forAny(array(div.id("id"), c1)) })
+        test("div#id,.c1", { forAny(div.id("id"), c1) })
     }
 }
