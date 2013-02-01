@@ -30,7 +30,7 @@ As a project in heavy development, there are still a number of **planned** featu
 
 There are several features that are **not planned** for Kara, since we feel they fall outside of the scope of the framework:
 
-* Support for different HTML template engines (JSP, FreeMaker, Velocity, Jade, etc.)
+* Support for different HTML template engines (JSP, FreeMarker, Velocity, Jade, etc.)
 * Support for different Javascript wrappers (Coffeescript, TypeScript, Dart, etc.)
 * A database integration library. There are plenty of good ORM's for the JVM, and while there's a chance that Kotlin could be used to do some interesting things with mapping databases, this can be developed independently of Kara
 
