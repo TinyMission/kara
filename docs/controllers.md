@@ -10,7 +10,7 @@ icon: cogs
 ## Kara Controllers
 
 The business logic for a Kara app is contained inside the controller classes mapped to HTTP requests with annotations (routes).
-Each controller class must inherit kara.controllers.Request and defines an action method.
+Each controller class must inherit kara.controllers.Request and define an action method.
 An action method handles a specific request to the app, defined by the routing annotation associated with it, and returns an kara.controllers.ActionResult.
 
     object Home {
