@@ -30,7 +30,7 @@ As a project in heavy development, there are still a number of **planned** featu
 
 There are several features that are **not planned** for Kara, since we feel they fall outside of the scope of the framework:
 
-* Support for different HTML template engines (JSP, FreeMaker, Velocity, Jade, etc.)
+* Support for different HTML template engines (JSP, FreeMarker, Velocity, Jade, etc.)
 * Support for different Javascript wrappers (Coffeescript, TypeScript, Dart, etc.)
 * A database integration library. There are plenty of good ORM's for the JVM, and while there's a chance that Kotlin could be used to do some interesting things with mapping databases, this can be developed independently of Kara
 
@@ -45,16 +45,23 @@ Plus, Kotlin is an excellent language to develop with - letting you easily expre
 
 ## Installation
 
-To install Kara, simply checkout the [repository](https://github.com/TinyMission/kara) and add the location to your system path.
+#### From Source
+To install from source, simply checkout the [repository](https://github.com/TinyMission/kara), build the project and add the location to your system path.
+
+#### From Binary
+
+You can obtain the latest binaries from the [Build Server](http://teamcity.jetbrains.net/viewType.html?buildTypeId=bt432). Click on the Artifacts to download them. Add the location to your system path.
+
+#### Running Kara
+
+
+Kara is multi-platform. On OSX and Unix based system, a **kara** bash script is provided. On Windows, a **kara.bat** batch file is available. Once you have the location added to your path, you can simply run kara by typing **kara** on the command line.
 
 ### Platforms and Prerequisites
 
 To run Kara, the only concrete prerequisite is a working JDK. Optionally, [Ant](http://ant.apache.org/) can be used to enable automatic server restart during development.
 
 To develop a Kara app, it is highly recommended to use [IntelliJ IDEA](http://www.jetbrains.com/idea/) with the [Kotlin Plugin](http://confluence.jetbrains.net/display/Kotlin/Getting+Started).
-
-So far, Kara has only been tested on Mac OS X. However, the runtime is obviously platform independent and the bash script should work fine on any other Unix-like environment. In order to get it to work on Windows, we'll need to develop a batch file to run it.
-
 
 ## Project Structure
 
@@ -67,10 +74,11 @@ Here's the general structure of a Kara project:
     /public/javascripts             Javascript source files
     /public/stylesheets             CSS stylesheets (third party or generated)
     /public/system                  Files that need to persist between deployments
-    /src/<package>/controllers      Application controllers
+    /src/<package>/routes           Application routes and controllers
     /src/<package>/models           Database integration
     /src/<package>/styles           Stylesheet sources
     /src/<package>/views            HTML view sources
     /tmp                            Temporary files, like sessions
+    /ivy.xml                        Application dependencies
 
 
