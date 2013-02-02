@@ -16,16 +16,17 @@ Here's an overview of the Kara command line usage:
         kara [-options] command args
 
     Commands:
-        c, config    Show the application's configuration for the current environment
-        g, generate  Generates a new project or file (see below)
-        h, help      Show this help message
-        s, server    Run the Kara server on the current directory
+        c, config           Show the application's configuration for the current environment
+        g, generate         Generates a new project or file (see below)
+        d, dependencies     Generates dependencies for application's ivy.xml file to application's lib folder.
+        h, help             Show this help message
+        s, server           Run the Kara server on the current directory
 
     Options:
-        -d, --debug  Show debug log messages
-        -e, --env    Specify the environment (default is --env=development)
-        -i, --info   Show info log messages (default)
-        -w, --warn   Show only warning log messages
+        -d, --debug         Show debug log messages
+        -e, --env           Specify the environment (default is --env=development)
+        -i, --info          Show info log messages (default)
+        -w, --warn          Show only warning log messages
 
     Generators:
         project <name>      Generates a new Kara project with the given name.
