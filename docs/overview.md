@@ -74,10 +74,11 @@ Here's the general structure of a Kara project:
     /public/javascripts             Javascript source files
     /public/stylesheets             CSS stylesheets (third party or generated)
     /public/system                  Files that need to persist between deployments
-    /src/<package>/controllers      Application controllers
+    /src/<package>/routes           Application routes and controllers
     /src/<package>/models           Database integration
     /src/<package>/styles           Stylesheet sources
     /src/<package>/views            HTML view sources
     /tmp                            Temporary files, like sessions
+    /ivy.xml                        Application dependencies
 
 
