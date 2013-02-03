@@ -3,6 +3,7 @@ package kara.config
 import kara.controllers.ParamDeserializer
 import java.io.File
 import java.util.HashMap
+import kara.middleware.MiddlewareList
 
 /**
  * Store application configuration.
@@ -46,7 +47,11 @@ public class AppConfig(appRoot : String, val environment : String = "development
     public val appPackagePath : String
         get() = this.appPackage.replace(".", "/")
 
+    /** Deserializes parameters into objects. */
     public val paramDeserializer : ParamDeserializer = ParamDeserializer()
+
+    /** Stores all middleware instances for the application. */
+    public val middleware : MiddlewareList = MiddlewareList()
 
     /** The directory where publicly available files (like stylesheets, scripts, and images) will go. */
     public val publicDir : String

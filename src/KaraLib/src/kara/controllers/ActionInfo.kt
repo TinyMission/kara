@@ -108,11 +108,29 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
         val context = ActionContext(appConfig, request, response, params)
 
         try {
+            // run middleware with beforeRequest
+            for (ref in appConfig.middleware.all) {
+                if (ref.matches(request.getRequestURI()!!)) {
+                    val keepGoing = ref.middleware.beforeRequest(context)
+                    if (!keepGoing)
+                        return
+                }
+            }
+
             val result = routeInstance.handle(context)
 
             // set the html layout, if applicable (this is a bit of a hack, but I'm not sure how to do it better)
             if (result is HtmlView) {
                 (result as HtmlView).layout = layout()
+            }
+
+            // run middleware with afterRequest
+            for (ref in appConfig.middleware.all) {
+                if (ref.matches(request.getRequestURI()!!)) {
+                    val keepGoing = ref.middleware.afterRequest(context)
+                    if (!keepGoing)
+                        return
+                }
             }
 
             // write the result to the response

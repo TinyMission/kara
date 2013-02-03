@@ -15,7 +15,7 @@ import kara.controllers.scanObjects
 
 /** The base Kara application class.
  */
-abstract class Application(private val config: AppConfig, private vararg val routes : Any) {
+abstract class Application(protected val config: AppConfig, private vararg val routes : Any) {
     private var _dispatcher : Dispatcher? = null
     public val dispatcher : Dispatcher
         get() {
