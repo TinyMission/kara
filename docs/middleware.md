@@ -37,6 +37,6 @@ Once you define a middleware class (or import one from a third party source), it
 
 	appConfig.middleware.add(MyMiddleware(), "/books")
 
-In this case, the middleware will only be exectued when the path starts with */posts*.
+In this case, the middleware will only be exectued when the path starts with */books*.
 By omitting the second argument, the middleware will be executed for all requests.
 
