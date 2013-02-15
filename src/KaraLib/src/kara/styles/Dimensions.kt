@@ -111,6 +111,6 @@ inline fun box(topBottom : LinearDimension, leftRight : LinearDimension) : BoxDi
 }
 
 /** Convenience function for making a BoxDimensions with all four dimensions. */
-inline fun box(var top : LinearDimension, var right : LinearDimension, var bottom : LinearDimension, var left : LinearDimension) : BoxDimensions {
+inline fun box(top : LinearDimension, right : LinearDimension, bottom : LinearDimension, left : LinearDimension) : BoxDimensions {
     return BoxDimensions(top, right, bottom, left)
 }

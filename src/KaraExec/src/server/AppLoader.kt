@@ -73,7 +73,7 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
             application = cons.newInstance(appConfig)
             logger.debug("Application class: ${application.javaClass.toString()}")
 
-            for (val listener in listeners) {
+            for (listener in listeners) {
                 listener.onAppLoaded(application as Application)
             }
         }

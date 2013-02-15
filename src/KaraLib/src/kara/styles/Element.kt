@@ -215,7 +215,7 @@ class StyledElement(val selector : String) : Element() {
         }
         builder.append("}\n")
         val childBaseSelector = if (baseSelector.length() > 0) "$baseSelector $selector" else selector
-        for (val child in children) {
+        for (child in children) {
             child.build(builder, childBaseSelector)
         }
     }
@@ -274,7 +274,7 @@ class StyledElement(val selector : String) : Element() {
     var border : String = ""
         set(value) {
             val tokens = value.split(' ')
-            for (val token in tokens) {
+            for (token in tokens) {
                 if (isLinearDimension(token))
                     borderWidth = LinearDimension.fromString(token)
                 else if (isColor(token))

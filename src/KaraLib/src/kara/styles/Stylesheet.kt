@@ -15,7 +15,7 @@ abstract class Stylesheet(var namespace : String = "") : Element() {
     fun toString() : String {
         render()
         val builder = StringBuilder()
-        for (val child in children) {
+        for (child in children) {
             child.build(builder, "")
         }
         return builder.toString()

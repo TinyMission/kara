@@ -71,7 +71,7 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
     }
 
     /** Execute the action based on the given request and populate the response. */
-    public fun exec(val appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
+    public fun exec(appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
         val params = getParams(request)
         val routeConstructor = requestClass.getConstructors()[0] as Constructor<Request>
 

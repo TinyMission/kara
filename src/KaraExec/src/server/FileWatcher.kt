@@ -43,9 +43,9 @@ class FileWatcher(val fullPath : String, val fileName : String) : Runnable {
             val key = watcher.take()
             if (key != null) {
                 val watchKey = key as WatchKey
-                for (var event in watchKey.pollEvents()!!) {
-                    if (event?.context().toString().equalsIgnoreCase(fileName)) {
-                        for (val listener in listeners) {
+                for (event in watchKey.pollEvents()!!) {
+                    if (event.context().toString().equalsIgnoreCase(fileName)) {
+                        for (listener in listeners) {
                             listener.onFileWatch(fullPath, fileName)
                         }
                     }

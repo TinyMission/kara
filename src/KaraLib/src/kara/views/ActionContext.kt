@@ -2,7 +2,6 @@ package kara.views
 
 import javax.servlet.http.*
 import kara.controllers.RouteParams
-import kotlin.nullable.map
 import kara.util.*
 import kara.config.AppConfig
 import kara.controllers.RedirectResult

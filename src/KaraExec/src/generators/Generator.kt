@@ -114,7 +114,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
 
     /** Executes the task to create a new project. */
-    fun execProject(val projectName : String) {
+    fun execProject(projectName : String) {
         if (!appConfig.contains("kara.package"))
             appConfig["kara.package"] = projectName
 
@@ -163,10 +163,8 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
 
     /** Executes the task to create a new route. */
-    fun execRoute(var routeName: String) {
-        routeName = routeName.capitalize()
-
-        routeSlug = routeName.toLowerCase()
+    fun execRoute(routeName: String) {
+        routeSlug = routeName.capitalize().toLowerCase()
         routeClassName = "${routeName}"
 
         ensureDir("src/$appPackagePath/routes")
@@ -178,7 +176,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
 
     /** Executes the task to create a new view. */
-    fun execLayout(var name : String) {
+    fun execLayout(name : String) {
         viewName = name.capitalize() + "Layout"
         stylesheetName = name.capitalize() + "Styles"
 
@@ -191,8 +189,8 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
 
 
     /** Executes the task to create a new view. */
-    fun execView(var routeName: String, var vName : String) {
-        routeName = routeName.capitalize()
+    fun execView(_routeName: String, vName : String) {
+        var routeName = _routeName.capitalize()
         viewName = "${vName.capitalize()}View"
 
         routeSlug = routeName.toLowerCase()
@@ -230,7 +228,7 @@ class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : 
     }
 
     /** Renders a template to the target project. */
-    fun renderTemplate(template : String, var outPath : String) {
+    fun renderTemplate(template : String, outPath : String) {
         // write the template to the file
         val outFile = File(appConfig.appRoot, outPath)
         if (outFile.exists()) {

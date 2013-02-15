@@ -66,10 +66,11 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
      *
      * @param text the text to use for the label (defaults to the property name)
      */
-    public fun labelFor(property : String, var text : String? = null, classes : String = "") {
-        if (text == null)
-            text = property.decamel().capitalize()
-        currentTag.label(text = text!!, forId=propertyId(property), c=classes)
+    public fun labelFor(property : String, text : String? = null, classes : String = "") {
+        currentTag.label(
+                text = text ?: property.decamel().capitalize(),
+                forId=propertyId(property),
+                c=classes)
     }
 
     /**

@@ -95,7 +95,8 @@ fun main(args: Array<String>) {
 
     // parse command line arguments
     try {
-        for (var arg in args) {
+        for (a in args) {
+            var arg = a
             val comps = arg.split("=")
             var value : String? = null
             if (comps.size == 2) {

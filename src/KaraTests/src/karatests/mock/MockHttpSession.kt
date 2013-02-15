@@ -45,7 +45,11 @@ class MockHttpSession : HttpSession {
         return attributes.keys()
     }
     public override fun getValueNames(): Array<String>? {
-        return attributes.keySet().toArray<String>()
+        val set = attributes.keySet()
+        val iter = set.iterator()
+        return Array<String>(set.size()) {
+            iter.next()
+        }
     }
     public override fun setAttribute(p0: String?, p1: Any?) {
         attributes[p0!!] = p1!!

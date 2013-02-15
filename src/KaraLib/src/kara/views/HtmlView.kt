@@ -25,7 +25,7 @@ abstract class HtmlView(var layout : HtmlLayout? = null) : BodyTag("view", false
 
     override fun toString(appConfig : AppConfig): String? {
         val builder = StringBuilder()
-        for (val child in children) {
+        for (child in children) {
             child.render(appConfig, builder, "")
         }
         return builder.toString()

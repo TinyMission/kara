@@ -19,13 +19,13 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     var _method : String = method
     var _url : String = url
 
-    public override fun startAsync(val p0 : javax.servlet.ServletRequest?, val p1 : javax.servlet.ServletResponse?) : javax.servlet.AsyncContext? {
+    public override fun startAsync(p0 : javax.servlet.ServletRequest?, p1 : javax.servlet.ServletResponse?) : javax.servlet.AsyncContext? {
         throw UnsupportedOperationException()
     }
     public override fun startAsync() : javax.servlet.AsyncContext? {
         throw UnsupportedOperationException()
     }
-    public override fun getPart(val p0 : jet.String?) : javax.servlet.http.Part? {
+    public override fun getPart(p0 : jet.String?) : javax.servlet.http.Part? {
         throw UnsupportedOperationException()
     }
     public override fun isAsyncSupported() : Boolean {
@@ -34,12 +34,12 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     public override fun isAsyncStarted() : Boolean {
         return false
     }
-    public override fun authenticate(val p0 : javax.servlet.http.HttpServletResponse?) : jet.Boolean {
+    public override fun authenticate(p0 : javax.servlet.http.HttpServletResponse?) : jet.Boolean {
         return false
     }
     public override fun logout() : Unit {
     }
-    public override fun login(val p0 : jet.String?, val p1 : jet.String?) : Unit {
+    public override fun login(p0 : jet.String?, p1 : jet.String?) : Unit {
     }
     public override fun getAsyncContext() : javax.servlet.AsyncContext? {
         throw UnsupportedOperationException()

@@ -137,7 +137,8 @@ class Color(var red: Double, var green : Double, var blue : Double, var alpha : 
             green = hsl.lightness
             blue = hsl.lightness
         } else {
-            fun hue2rgb(p : Double, q : Double, var t : Double) : Double {
+            fun hue2rgb(p : Double, q : Double, _t : Double) : Double {
+                var t = _t
                 if(t < 0.0)
                     t += 1.0
                 if(t > 1.0)
