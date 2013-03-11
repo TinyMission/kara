@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="kara-core">
+    <output-path>$PROJECT_DIR$/out/artifacts/kara_core</output-path>
+    <root id="root">
+      <element id="archive" name="kara-core.jar">
+        <element id="module-output" name="KaraLib" />
+      </element>
+      <element id="directory" name="src">
+        <element id="archive" name="kara-core-src.zip">
+          <element id="dir-copy" path="$PROJECT_DIR$/src/KaraLib/src" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

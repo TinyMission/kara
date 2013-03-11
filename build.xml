@@ -1,43 +1,8 @@
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="kara">
     <target name="resolve" description="retrieve dependencies with ivy">
+        <!-- this is only used for manual libs update -->
         <ivy:retrieve />
     </target>
 
     <property name="build.number" value="SNAPSHOT"/>
-    <target name="jars">
-        <delete dir="modules" failonerror="false"/>
-        <mkdir dir="modules"/>
-        <mkdir dir="modules/core"/>
-
-        <jar destfile="modules/KaraExec.jar" update="false">
-            <fileset dir="out/production/KaraExec">
-                <exclude name="**/script.kts"/>
-            </fileset>
-        </jar>
-        <zip destfile="modules/KaraExec-sources.zip" update="false">
-            <zipfileset dir="src/KaraExec/src"/>
-        </zip>
-
-        <jar destfile="modules/core/KaraLib.jar" update="false">
-            <fileset dir="out/production/KaraLib">
-                <exclude name="**/script.kts"/>
-            </fileset>
-        </jar>
-        <zip destfile="modules/core/KaraLib-sources.zip" update="false">
-            <zipfileset dir="src/KaraLib/src"/>
-        </zip>
-    </target>
-
-    <target name="dist" depends="jars" description="Binary Kara Distribution">
-        <zip destfile="${basedir}/kara-${build.number}.zip">
-            <zipfileset dir="lib" prefix="lib"/>
-            <zipfileset dir="license" prefix="license"/>
-            <zipfileset dir="modules" prefix="modules"/>
-            <zipfileset dir="samples" prefix="samples"/>
-            <zipfileset file="kara"/>
-            <zipfileset file="kara.bat"/>
-            <zipfileset file="README.md"/>
-        </zip>
-    </target>
-
 </project>

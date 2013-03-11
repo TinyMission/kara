@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="KaraLib:jar">
-    <output-path>$PROJECT_DIR$/modules/core</output-path>
-    <root id="archive" name="KaraLib.jar">
-      <element id="module-output" name="KaraLib" />
-    </root>
-  </artifact>
-</component>
