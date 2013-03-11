@@ -7,7 +7,7 @@ export KARA_HOME="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # get the jars needed for the classpath
 JARS="$KARA_HOME/lib/*.jar"
-CP_JARS="$KARA_HOME/modules/core/KaraLib.jar:$KARA_HOME/modules/KaraExec.jar"
+CP_JARS=
 for JAR in $JARS
 do
     case $JAR in
@@ -21,5 +21,4 @@ do
     esac
 done
 
-#echo $CP_JARS
 java -DKARA_HOME="$KARA_HOME" -classpath "$CP_JARS" kara.KaraPackage "$@"

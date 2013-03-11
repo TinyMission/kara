@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="kara-dist-zip">
+    <output-path>$PROJECT_DIR$/out/artifacts/kara_dist_zip</output-path>
+    <root id="root">
+      <element id="archive" name="kara.zip">
+        <element id="artifact" artifact-name="kara-dist" />
+      </element>
+    </root>
+  </artifact>
+</component>
