@@ -1,6 +1,3 @@
-bin/
-obj/
-_ReSharper.*
 out/*
 *.csproj.user
 *.resharper.user
@@ -17,3 +14,6 @@ KaraDemo/bin/*
 .idea/workspace.xml
 kara-SNAPSHOT.zip
 lib/kotlin-runtime.jar
+**/kotlin-runtime.jar
+samples/KaraDemo/bin
+
