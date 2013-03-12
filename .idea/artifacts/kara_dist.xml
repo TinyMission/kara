@@ -1,9 +1,15 @@
 <component name="ArtifactManager">
   <artifact name="kara-dist">
     <output-path>$PROJECT_DIR$/out/artifacts/kara_dist</output-path>
+    <properties id="ant-postprocessing">
+      <options enabled="true">
+        <file>file://$PROJECT_DIR$/build/build-artifacts.xml</file>
+        <target>kara-dist-post</target>
+      </options>
+    </properties>
     <root id="root">
-      <element id="file-copy" path="$PROJECT_DIR$/kara.bat" />
-      <element id="file-copy" path="$PROJECT_DIR$/kara" />
+      <element id="file-copy" path="$PROJECT_DIR$/bin/kara.bat" />
+      <element id="file-copy" path="$PROJECT_DIR$/bin/kara" />
       <element id="file-copy" path="$PROJECT_DIR$/README.md" />
       <element id="directory" name="lib">
         <element id="library" level="project" name="javax.servlet-3.0.0.v201112011016" />
