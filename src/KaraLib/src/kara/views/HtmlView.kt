@@ -9,6 +9,7 @@ abstract class HtmlView(var layout : HtmlLayout? = null) : BodyTag("view", false
 
 
     override fun writeResponse(context : ActionContext) : Unit {
+        context.response.setContentType("text/html")
         val writer = context.response.getWriter()!!
         tagStack = TagStack(this)
         if (layout == null) {
