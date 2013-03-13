@@ -148,7 +148,7 @@ fun Generator.launcherConfiguration() : String {
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
     <option name="ENABLE_SWING_INSPECTOR" value="false" />
-    <option name="ENV_VARIABLES" />
+    <option name="ENV_VARIconteABLES" />
     <option name="PASS_PARENT_ENVS" value="true" />
     <module name="Launcher" />
     <envs />
