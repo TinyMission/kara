@@ -16,6 +16,9 @@
       </element>
       <element id="directory" name="samples">
         <element id="dir-copy" path="$PROJECT_DIR$/samples/KaraDemo" />
+        <element id="directory" name="bin">
+          <element id="module-output" name="KaraDemo" />
+        </element>
       </element>
       <element id="directory" name="licenses">
         <element id="dir-copy" path="$PROJECT_DIR$/license" />
