@@ -64,7 +64,9 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
         synchronized(appLock) {
             // load the application class
-            classLoader = URLClassLoader(buildClasspath())
+            val cp = buildClasspath()
+            logger.debug("Application classpath: " + cp)
+            classLoader = URLClassLoader(cp, javaClass.getClassLoader())
             val appClassObject = classLoader?.loadClass("${appConfig.appPackage}.Application")
             if (appClassObject == null)
                 throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
