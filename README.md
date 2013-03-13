@@ -24,3 +24,12 @@ All issues for Kara are tracked [here](http://youtrack.codebetter.com/issues/kar
 ## License
 
 Kara is Open Source and licensed under the Apache Licenses, version 2.0. It can be freely used in commercial projects.
+
+
+## Running Sample Project
+
+To start sample project you need to either download kara binary package or compile kara-dist artifact. 
+Next, 
+open samples directory, 
+set KARA_HOME environment variable to point to the directory and run `../kara s` command
+You'll see Kara embedded web server running on `http://localhost:3000`
