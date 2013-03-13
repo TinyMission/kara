@@ -10,7 +10,7 @@
     <option name="PASS_PARENT_ENVS" value="true" />
     <module name="KaraExec" />
     <envs>
-      <env name="KARA_HOME" value="E:\work\kara\out\artifacts\kara_dist\samples" />
+      <env name="KARA_HOME" value="$PROJECT_DIR$/out/artifacts/kara_dist/samples" />
     </envs>
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Run" />
