@@ -70,7 +70,7 @@ Generators:
     println(s)
 }
 
-fun main(args: Array<String>) {
+fun main2(args: Array<String>) {
     BasicConfigurator.configure()
 
     val logger = Logger.getLogger("Kara.Main")!!

@@ -5,20 +5,4 @@
 # determine where Kara is installed
 export KARA_HOME="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# get the jars needed for the classpath
-JARS="$KARA_HOME/lib/*.jar"
-CP_JARS="$KARA_HOME/modules/core/kara-core.jar:$KARA_HOME/modules/exec/kara-exec.jar"
-for JAR in $JARS
-do
-    case $JAR in
-    *-sources.jar)
-        ;;
-    *-javadoc.jar)
-        ;;
-    *)
-        CP_JARS="$JAR:$CP_JARS"
-        ;;
-    esac
-done
-
-java -DKARA_HOME="$KARA_HOME" -classpath "$CP_JARS" kara.KaraPackage "$@"
+java -DKARA_HOME="$KARA_HOME" -classpath "$KARA_HOME/lib/kotlin-runtime.jar:$KARA_HOME/modules/exec/kara-exec.jar" kara.setup.SetupPackage "$@"
