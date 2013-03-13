@@ -19,7 +19,8 @@ object HomePathResolver {
         if (IDEA_DEBUG != null && File(IDEA_DEBUG).isDirectory()) {
             return File(IDEA_DEBUG)
         }
-        return File(ClassPathHelper.getClasspathEntry())
+        //jar location is <home>/modules/exec
+        return File(File(ClassPathHelper.getClasspathEntry()).getParentFile(), "../..").getCanonicalFile()
     }
 
     fun collectJars(): Array<URL> {
