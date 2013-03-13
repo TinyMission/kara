@@ -28,8 +28,22 @@ Kara is Open Source and licensed under the Apache Licenses, version 2.0. It can 
 
 ## Running Sample Project
 
-To start sample project you need to either download kara binary package or compile kara-dist artifact. 
-Next, 
-open samples directory, 
-set KARA_HOME environment variable to point to the directory and run `../kara s` command
-You'll see Kara embedded web server running on `http://localhost:3000`
+To start sample project you need:
+* either download kara binary package and unpack or compile `kara-dist` artifact in IDEA project
+* close IDEA projects
+* configure Path Variable `KARA_HOME` in IDEA to point to kara root directory or to the output of `kara-dist` artifacts, i.e. `<project home>/out/artifacts/kara_dist`
+* open samples directory
+* run `../kara s` command
+* open demo pages at embedded web server running on `http://localhost:3000`
+
+## Generating new project
+
+To start sample project you need:
+* either download kara binary package and unpack or compile `kara-dist` artifact in IDEA project
+* close IDEA projects
+* configure Path Variable `KARA_HOME` in IDEA to point to kara root directory or to the output of `kara-dist` artifacts, i.e. `<project home>/out/artifacts/kara_dist`
+* open the directory you like to start with
+* run `<path to kara home>/kara g project <project name> --package=<package name> --ide=idea` command
+* open generated project in IDEA
+* use `Server` run configuration to start/debug your application
+
