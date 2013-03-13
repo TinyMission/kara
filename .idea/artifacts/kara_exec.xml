@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/kara_exec</output-path>
     <root id="root">
       <element id="directory" name="src">
-        <element id="archive" name="kara-exex-src.zip">
+        <element id="archive" name="kara-exec-src.zip">
           <element id="dir-copy" path="$PROJECT_DIR$/src/KaraExec/src" />
         </element>
       </element>
