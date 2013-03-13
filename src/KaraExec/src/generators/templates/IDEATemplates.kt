@@ -45,11 +45,11 @@ fun Generator.libraryKaraLib(): String {
     return """<component name="libraryTable">
   <library name="KaraLib">
     <CLASSES>
-      <root url="jar://$KARA_HOME$/modules/core/KaraLib.jar!/" />
+      <root url="jar://$KARA_HOME$/modules/core/kara-core.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$KARA_HOME$/modules/core/KaraLib-sources.zip!/" />
+      <root url="jar://$KARA_HOME$/modules/core/src/kara-core-src.zip!/" />
     </SOURCES>
   </library>
 </component>
@@ -78,11 +78,11 @@ fun Generator.libraryKaraExec() : String {
   <library name="KaraExec">
     <CLASSES>
       <root url="file://$KARA_HOME$/lib" />
-      <root url="jar://$KARA_HOME$/modules/KaraExec.jar!/" />
+      <root url="jar://$KARA_HOME$/modules/exec/kara-exec.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$KARA_HOME$/modules/KaraExec-sources.zip!/" />
+      <root url="jar://$KARA_HOME$/modules/exec/src/kara-exec-src.zip!/" />
     </SOURCES>
     <jarDirectory url="file://$KARA_HOME$/lib" recursive="false" />
   </library>
@@ -141,14 +141,14 @@ fun Generator.launcherConfiguration() : String {
     return """<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Server" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <option name="MAIN_CLASS_NAME" value="kara.KaraPackage" />
+    <option name="MAIN_CLASS_NAME" value="kara.setup.SetupPackage" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="s" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
     <option name="ENABLE_SWING_INSPECTOR" value="false" />
-    <option name="ENV_VARIABLES" />
+    <option name="ENV_VARIconteABLES" />
     <option name="PASS_PARENT_ENVS" value="true" />
     <module name="Launcher" />
     <envs />
