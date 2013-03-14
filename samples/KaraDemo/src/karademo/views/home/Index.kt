@@ -2,6 +2,7 @@ package karademo.views.home
 
 import kara.views.*
 import kara.views.InputType
+import kara.styles.Color
 
 class Index() : HtmlView() {
 
@@ -17,7 +18,11 @@ class Index() : HtmlView() {
         p("Unordered List")
         ul {
             for (i in 1..5) {
-                li("List Item $i")
+                li("List Item $i") {
+                    style {
+                        backgroundColor = Color.fromRgb(200, 100, i * 50)
+                    }
+                }
             }
         }
         p("Ordered List")

@@ -9,6 +9,7 @@ import kara.views.FormMethod
 import kara.views.InputType
 import kara.views.Wrap
 import kara.controllers.Link
+import kara.styles.StyledElement
 
 val <T> empty_init : T.() -> Unit = {}
 
@@ -34,6 +35,17 @@ abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isE
         set(value) {
             this[Attributes.title] = value
         }
+
+    fun style(init : StyledElement.()->Unit) {
+        val element = StyledElement("inline")
+        element.init()
+        val builder = StringBuilder()
+        for ((k, v) in element.attributes) {
+            builder.append("$k:$v;")
+        }
+
+        this["style"] = builder.toString()
+    }
 
     // tags
 	fun a(c : StyleClass? = null, id : String? = null, text : String = "", href : Link? = null, target : String? = null, init : A.() -> Unit = empty_init) {
