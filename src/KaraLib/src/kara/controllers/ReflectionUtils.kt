@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier
 
 fun Class<*>.objectInstance() : Any? {
     try {
-        val field = getDeclaredField("\$instance")
+        val field = getDeclaredField("instance\$")
         if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
             return field.get(null)!!
         }
