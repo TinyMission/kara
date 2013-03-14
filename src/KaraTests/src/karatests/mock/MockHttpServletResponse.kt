@@ -11,6 +11,7 @@ class MockHttpServletResponse() : HttpServletResponse {
 
     val _outSteam = ByteArrayOutputStream()
     var _status = HttpServletResponse.SC_OK
+    public var _contentType : String? = null
 
     public fun stringOutput() : String? {
         _outSteam.flush()
@@ -90,7 +91,7 @@ class MockHttpServletResponse() : HttpServletResponse {
         throw UnsupportedOperationException()
     }
     public override fun setContentType(p0 : String?) {
-        throw UnsupportedOperationException()
+        _contentType = p0
     }
     public override fun getCharacterEncoding() : String? {
         throw UnsupportedOperationException()

@@ -20,6 +20,8 @@ class ActionTests() {
     Test fun basicHtmlLayout() {
         val response = mockDispatch("GET", "/")
         val output = response.stringOutput()
+        assertEquals("text/html", response._contentType, "Content type should be html")
+
         assertTrue(output?.contains("Default Layout") as Boolean, "Home view contains layout")
         assertTrue(output?.contains("Welcome Home") as Boolean, "Home view contains view")
     }
