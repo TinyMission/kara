@@ -1,6 +1,7 @@
 package karademo.views.home
 
 import kara.views.*
+import kara.views.InputType
 
 class Index() : HtmlView() {
 
@@ -15,8 +16,9 @@ class Index() : HtmlView() {
         h5("Header 5")
         p("Unordered List")
         ul {
-            li("List Item 1")
-            li("List Item 2")
+            for (i in 1..5) {
+                li("List Item $i")
+            }
         }
         p("Ordered List")
         ol {
@@ -25,7 +27,7 @@ class Index() : HtmlView() {
         }
         fieldset() {
             label("Text Input")
-            input(inputType="text", value="Text")
+            input(inputType=InputType.text, value="Text")
         }
     }
 }

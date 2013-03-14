@@ -26,6 +26,19 @@ public trait StyleClass : SelectorTrait, Selector {
         return ".${name()}"
     }
 }
+
+class CompositeStyleClass(val a : StyleClass, val b: StyleClass) : StyleClass {
+    override fun name(): String {
+        throw RuntimeException("This shall not be called")
+    }
+
+    override fun toExternalForm(): String {
+        return "${a.toExternalForm()} ${b.toExternalForm()}"
+    }
+}
+
+public fun StyleClass.plus(another: StyleClass) : StyleClass = CompositeStyleClass(this, another)
+
 public enum class PseudoClass : StyleClass {
     root firstChild lastChild firstOfType lastOfType onlyChild onlyOfType
     empty link visited active focus hover target enabled disabled checked

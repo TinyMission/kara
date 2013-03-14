@@ -6,6 +6,11 @@ import kara.styles.Stylesheet
 import java.util.Stack
 import java.io.PrintWriter
 import kara.config.AppConfig
+import kara.views.Attribute
+import kara.views.Attributes
+import kara.controllers.Request
+import kara.controllers.Link
+import kara.controllers.link
 
 
 /**
@@ -51,7 +56,7 @@ class TextElement(val text : String) : Element {
 
 abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
     val children : MutableList<Element> = ArrayList<Element>()
-    val attributes = HashMap<String, String>()
+    private val attributes = HashMap<String, String>()
 
     public var tagStack : TagStack? = null
 
@@ -99,6 +104,16 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
 
     public fun attribute(name: String, value: String) {
         attributes[name] = value
+    }
+
+    public fun get<T>(attr : Attribute<T>) : T {
+        val answer = attributes[attr.name]
+        if (answer == null) throw RuntimeException("Atrribute ${attr.name} is missing")
+        return attr.decode(answer)
+    }
+
+    public fun set<T>(attr: Attribute<T>, value : T) {
+        attributes[attr.name] = attr.encode(value)
     }
 
     public fun get(attributeName : String) : String {
@@ -157,7 +172,7 @@ class HEAD() : TagWithText("head", false) {
         tag.text = text
     }
 
-    fun link(href : String, rel : String = "stylesheet", mimeType : String = "text/javascript") {
+    fun link(href : Link, rel : String = "stylesheet", mimeType : String = "text/javascript") {
         val tag = initTag(LINK(), {})
         tag.href = href
         tag.rel = rel
@@ -170,7 +185,7 @@ class HEAD() : TagWithText("head", false) {
         tag.content = content
     }
 
-    fun script(src : String, mimeType : String = "text/javascript") {
+    fun script(src : Link, mimeType : String = "text/javascript") {
         val tag = initTag(SCRIPT(), {})
         tag.src = src
         tag.mimeType = mimeType
@@ -193,20 +208,20 @@ class HEAD() : TagWithText("head", false) {
 }
 
 class LINK() : TagWithText("link", true) {
-    public var href : String
-        get() = attributes["href"]!!
+    public var href : Link
+        get() = this[Attributes.href]
         set(value) {
-            attributes["href"] = value
+            this[Attributes.href] = value
         }
     public var rel : String
-        get() = attributes["rel"]!!
+        get() = this[Attributes.rel]
         set(value) {
-            attributes["rel"] = value
+            this[Attributes.rel] = value
         }
     public var mimeType : String
-        get() = attributes["type"]!!
+        get() = this[Attributes.mimeType]
         set(value) {
-            attributes["type"] = value
+            this[Attributes.mimeType] = value
         }
     {
         rel = "stylesheet"
@@ -216,27 +231,27 @@ class LINK() : TagWithText("link", true) {
 
 class META() : TagWithText("meta", true) {
     public var name : String
-        get() = attributes["name"]!!
+        get() = this[Attributes.name]
         set(value) {
-            attributes["name"] = value
+            this[Attributes.name] = value
         }
     public var content : String
-        get() = attributes["content"]!!
+        get() = this["content"]
         set(value) {
-            attributes["content"] = value
+            this["content"] = value
         }
 }
 
 class SCRIPT() : TagWithText("script", false) {
-    public var src : String
-        get() = attributes["src"]!!
+    public var src : Link
+        get() = this[Attributes.src]
         set(value) {
-            attributes["src"] = value
+            this[Attributes.src] = value
         }
     public var mimeType : String
-        get() = attributes["type"]!!
+        get() = this[Attributes.mimeType]
         set(value) {
-            attributes["type"] = value
+            this[Attributes.mimeType] = value
         }
     {
         mimeType = "text/javascript"
@@ -246,14 +261,14 @@ class SCRIPT() : TagWithText("script", false) {
 /** Stores a stylesheet inline */
 class STYLE(val stylesheet : Stylesheet) : TagWithText("style", false) {
     public var media : String
-        get() = attributes["media"]!!
+        get() = this["media"]
         set(value) {
-            attributes["media"] = value
+            this["media"] = value
         }
     public var mimeType : String
-        get() = attributes["type"]!!
+        get() = this[Attributes.mimeType]
         set(value) {
-            attributes["type"] = value
+            this[Attributes.mimeType] = value
         }
     {
         media = "all"
@@ -268,20 +283,20 @@ class STYLE(val stylesheet : Stylesheet) : TagWithText("style", false) {
 }
 
 class STYLESHEETLINK(var stylesheet : Stylesheet) : TagWithText("link", true) {
-    public var href : String
-        get() = attributes["href"]!!
+    public var href : Link
+        get() = this[Attributes.href]
         set(value) {
-            attributes["href"] = value
+            this[Attributes.href] = value
         }
     public var rel : String
-        get() = attributes["rel"]!!
+        get() = this[Attributes.rel]
         set(value) {
-            attributes["rel"] = value
+            this[Attributes.rel] = value
         }
     public var mimeType : String
-        get() = attributes["type"]!!
+        get() = this[Attributes.mimeType]
         set(value) {
-            attributes["type"] = value
+            this[Attributes.mimeType] = value
         }
     {
         rel = "stylesheet"
@@ -291,7 +306,7 @@ class STYLESHEETLINK(var stylesheet : Stylesheet) : TagWithText("link", true) {
 
     override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
         stylesheet.write(appConfig)
-        href = stylesheet.relativePath(appConfig)
+        href = stylesheet.relativePath(appConfig).link()
         super<TagWithText>.render(appConfig, builder, indent)
     }
 }

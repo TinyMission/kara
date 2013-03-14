@@ -13,10 +13,12 @@ import kara.util.*
 import java.util.HashSet
 import java.util.LinkedHashSet
 
-public open class Request(private val handler: ActionContext.() -> ActionResult) {
+public open class Request(private val handler: ActionContext.() -> ActionResult) : Link {
     fun handle(context : ActionContext) : ActionResult {
         return context.handler()
     }
+
+    override fun href() = toExternalForm()
 
     public fun toExternalForm() : String {
         val (route, method) = javaClass.route()

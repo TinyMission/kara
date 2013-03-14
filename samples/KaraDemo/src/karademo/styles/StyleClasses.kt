@@ -4,4 +4,5 @@ import kara.styles.StyleClass
 
 public enum class StyleClasses : StyleClass {
     fields cLabel top
+    date title body
 }

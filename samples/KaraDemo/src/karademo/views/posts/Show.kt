@@ -3,18 +3,20 @@ package karademo.views.posts
 import kara.views.HtmlView
 import kara.views.*
 import karademo.models.*
+import karademo.styles.StyleClasses.*
+import karademo.styles.StyleClasses
 
 class Show(val post : Post) : HtmlView() {
     override fun render(context: ActionContext) {
         h3 {+ "Show Post"}
-        div(c="date") {
+        div(c=date) {
             label {+ "Date:"}
             + "${post.date}"
         }
-        div(c="title") {
+        div(c=StyleClasses.title) {
             + "Title: ${post.title}"
         }
-        div(c="body") {
+        div(c=body) {
             +post.body
         }
     }

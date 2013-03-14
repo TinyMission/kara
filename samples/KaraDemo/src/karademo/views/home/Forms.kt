@@ -1,15 +1,21 @@
 package karademo.views.home
 
 import kara.views.*
+import kara.styles.*
 import karademo.models.Book
+import karademo.styles.StyleClasses.*
+import kara.views.FormMethod
+import karademo.routes.Home
+import kara.controllers.link
 
 class Forms(val book : Book) : HtmlView() {
     override fun render(context: ActionContext) {
         h2("Forms")
-        formFor(book, "/updatebook", FormMethod.Post) {
-            table(c="fields") {
+        formFor(book, Home.Update(), FormMethod.post) {
+
+            table(fields) {
                 tr {
-                    td(c="cLabel") {
+                    td(cLabel) {
                         labelFor("title")
                     }
                     td {
@@ -17,7 +23,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="cLabel") {
+                    td(cLabel) {
                         labelFor("author")
                     }
                     td {
@@ -25,7 +31,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="cLabel") {
+                    td(cLabel) {
                         labelFor("isPublished", "Is Published?")
                     }
                     td {
@@ -33,7 +39,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="label top") {
+                    td(cLabel + top) {
                         labelFor("description")
                     }
                     td {
@@ -41,7 +47,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="cLabel") {
+                    td(cLabel) {
                         labelFor("category")
                     }
                     td {
@@ -50,7 +56,7 @@ class Forms(val book : Book) : HtmlView() {
                     }
                 }
                 tr {
-                    td(c="cLabel") {
+                    td(cLabel) {
                     }
                     td {
                         submitButton("Submit")

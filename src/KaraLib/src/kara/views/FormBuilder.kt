@@ -5,20 +5,14 @@ import kara.helpers.*
 import kara.exceptions.InvalidPropertyException
 import org.apache.log4j.Logger
 import kara.util.*
+import kara.views.InputType
+import kara.views.InputType.*
+import kara.views.FormMethod
+import kara.controllers.Request
+import kara.views.EncodingType
+import kara.styles.StyleClass
+import kara.controllers.Link
 
-
-/**
- * Enumeration for form methods.
- */
-enum class FormMethod(val value : String) {
-    Get : FormMethod("get")
-    Post : FormMethod("post")
-    Put : FormMethod("put")
-    Delete : FormMethod("delete")
-    fun toString() : String {
-        return value
-    }
-}
 
 /**
  * Allows forms to be built based on a model object.
@@ -66,7 +60,7 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
      *
      * @param text the text to use for the label (defaults to the property name)
      */
-    public fun labelFor(property : String, text : String? = null, classes : String = "") {
+    public fun labelFor(property : String, text : String? = null, classes : StyleClass? = null) {
         currentTag.label(
                 text = text ?: property.decamel().capitalize(),
                 forId=propertyId(property),
@@ -78,7 +72,7 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
      * This method should not generally be used, as all valid input types are mapped to their own methods.
      * It may be convenient, however, if you're trying to assign the input type programmatically.
      */
-    public fun inputFor(inputType : String, property : String, init : INPUT.() -> Unit = {}) {
+    public fun inputFor(inputType : InputType, property : String, init : INPUT.() -> Unit = {}) {
         val value = propertyValue(property)
         var valueString = ""
         if (value != null)
@@ -101,112 +95,112 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
      * Creates a submit button for the form, with an optional name.
      */
     public fun submitButton(value : String, name : String = "submit", init : INPUT.() -> Unit = {}) {
-        currentTag.input(inputType="submit", value=value, name=name, init=init)
+        currentTag.input(inputType=InputType.submit, value=value, name=name, init=init)
     }
 
     /**
      * Creates an input of type text for the given property.
      */
     public fun textFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("text", property, init)
+        inputFor(InputType.text, property, init)
     }
 
     /**
      * Creates an input of type password for the given property.
      */
     public fun passwordFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("password", property, init)
+        inputFor(InputType.password, property, init)
     }
 
     /**
      * Creates an input of type email for the given property.
      */
     public fun emailFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("email", property, init)
+        inputFor(InputType.email, property, init)
     }
 
     /**
      * Creates an input of type tel for the given property.
      */
     public fun telFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("tel", property, init)
+        inputFor(InputType.tel, property, init)
     }
 
     /**
      * Creates an input of type date for the given property.
      */
     public fun dateFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("date", property, init)
+        inputFor(InputType.date, property, init)
     }
 
     /**
      * Creates an input of type datetime for the given property.
      */
     public fun dateTimeFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("datetime", property, init)
+        inputFor(InputType.datetime, property, init)
     }
 
     /**
      * Creates an input of type color for the given property.
      */
     public fun colorFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("color", property, init)
+        inputFor(InputType.color, property, init)
     }
 
     /**
      * Creates an input of type number for the given property.
      */
     public fun numberFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("number", property, init)
+        inputFor(InputType.number, property, init)
     }
 
     /**
      * Creates an input of type month for the given property.
      */
     public fun monthFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("month", property, init)
+        inputFor(month, property, init)
     }
 
     /**
      * Creates an input of type range for the given property.
      */
     public fun rangeFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("range", property, init)
+        inputFor(range, property, init)
     }
 
     /**
      * Creates an input of type search for the given property.
      */
     public fun searchFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("search", property, init)
+        inputFor(search, property, init)
     }
 
     /**
      * Creates an input of type time for the given property.
      */
     public fun timeFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("time", property, init)
+        inputFor(time, property, init)
     }
 
     /**
      * Creates an input of type url for the given property.
      */
     public fun urlFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("url", property, init)
+        inputFor(url, property, init)
     }
 
     /**
      * Creates an input of type week for the given property.
      */
     public fun weekFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("week", property, init)
+        inputFor(week, property, init)
     }
 
     /**
      * Creates an input of type file for the given property.
      */
     public fun fileFieldFor(property : String, init : INPUT.() -> Unit = {}) {
-        inputFor("file", property, init)
+        inputFor(file, property, init)
         if (!hasFiles) {
             hasFiles = true
             logger.debug("Setting enctype=multipart/form-data for form due to a file field")
@@ -218,10 +212,10 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
      */
     public fun radioFor(property : String, value : String, init : INPUT.() -> Unit = {}) {
         val modelValue = propertyValue(property).toString()
-        var checkedString = ""
-        if (value.equalsIgnoreCase(modelValue))
-            checkedString = "checked"
-        currentTag.input(inputType="radio", id=propertyId(property), name=propertyName(property), value=value, checked=checkedString, init=init)
+        currentTag.input(inputType=radio, id=propertyId(property), name=propertyName(property), value=value) {
+            checked = value.equalsIgnoreCase(modelValue)
+            init()
+        }
     }
 
     /**
@@ -229,10 +223,10 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
      */
     public fun checkBoxFor(property : String, init : INPUT.() -> Unit = {}) {
         val modelValue = propertyValue(property)
-        var checkedString = ""
-        if (modelValue == "true" || modelValue == true)
-            checkedString = "checked"
-        currentTag.input(inputType="checkbox", id=propertyId(property), name=propertyName(property), checked=checkedString, init=init)
+        currentTag.input(inputType=checkbox, id=propertyId(property), name=propertyName(property)) {
+            checked = modelValue == "true" || modelValue == true
+            init()
+        }
     }
 }
 
@@ -240,14 +234,14 @@ class FormBuilder(val model : Any, val modelName : String = model.javaClass.getS
 /**
  * Creates a [[FormBuilder]] for the given model object.
  */
-fun BodyTag.formFor(model : Any, action : String, formMethod : FormMethod = FormMethod.Post, init : FormBuilder.(form : FormBuilder) -> Unit) : FORM {
+fun BodyTag.formFor(model : Any, action : Link, formMethod : FormMethod = FormMethod.post, init : FormBuilder.(form : FormBuilder) -> Unit) : FORM {
     val builder = FormBuilder(model)
     builder.action = action
-    builder.method = formMethod.toString()
+    builder.method = formMethod
     builder.tagStack = this.tagStack
     builder.init(builder)
     children.add(builder)
     if (builder.hasFiles)
-        builder.enctype = "multipart/form-data"
+        builder.enctype = EncodingType.multipart
     return builder
 }

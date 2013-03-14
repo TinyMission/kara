@@ -2,6 +2,7 @@ package karademo.views
 
 import kara.views.*
 import karademo.styles.DefaultStyles
+import kara.controllers.link
 
 class DefaultLayout() : HtmlLayout() {
     override fun render(context: ActionContext, mainView: HtmlView) {
@@ -14,7 +15,7 @@ class DefaultLayout() : HtmlLayout() {
             div(id="main") {
                 renderView(context, mainView)
             }
-            a(text="Kara is developed by Tiny Mission", href="http://tinymission.com")
+            a(text="Kara is developed by Tiny Mission", href="http://tinymission.com".link())
         }
     }
 }

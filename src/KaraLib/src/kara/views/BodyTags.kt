@@ -1,344 +1,277 @@
 package kara.views
 
 import java.util.*
+import kara.views.Attributes
+import kara.styles.StyleClass
+import kara.controllers.Request
+import kara.views.EncodingType
+import kara.views.FormMethod
+import kara.views.InputType
+import kara.views.Wrap
+import kara.controllers.Link
 
+val <T> empty_init : T.() -> Unit = {}
 
 abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isEmpty) {
     // attributes
     public var id : String
-        get() = attributes["id"]!!
+        get() = this[Attributes.id]
         set(value) {
-            attributes["id"] = value
+            this[Attributes.id] = value
         }
-    public var c : String
-        get() = attributes["class"]!!
+    public var c : StyleClass
+        get() = this[Attributes.c]
         set(value) {
-            attributes["class"] = value
+            this[Attributes.c] = value
         }
     public var style : String
-        get() = attributes["style"]!!
+        get() = this["style"]
         set(value) {
-            attributes["style"] = value
+            this["style"] = value
         }
     public var title : String
-        get() = attributes["title"]!!
+        get() = this[Attributes.title]
         set(value) {
-            attributes["title"] = value
+            this[Attributes.title] = value
         }
 
     // tags
-	fun a(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", href : String = "", rel : String = "", target : String = "", init : A.() -> Unit = {}) {
-		val tag = initTag(A(), init)
+	fun a(c : StyleClass? = null, id : String? = null, text : String = "", href : Link? = null, target : String? = null, init : A.() -> Unit = empty_init) {
+		val tag = A()
+		if (id != null) tag.id = id
+		if (c != null) tag.c = c
+		if (href != null) tag.href = href
+		if (target != null) tag.target = target
+        initTag(tag, init)
+        if (tag.children.size == 0) {
+            tag.text = text
+        }
+	}
+
+	fun b(text : String = "", c : StyleClass? = null, id : String = "" , init : B.() -> Unit = empty_init) {
+		val tag = B()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		tag.href = href
-		tag.rel = rel
-		tag.target = target
+		if (c != null) tag.c = c
+
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun b(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : B.() -> Unit = {}) {
-		val tag = initTag(B(), init)
+	fun button(text : String = "", c : StyleClass? = null, id : String = "" , init : BUTTON.() -> Unit = empty_init) {
+		val tag = BUTTON()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun button(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : BUTTON.() -> Unit = {}) {
-		val tag = initTag(BUTTON(), init)
+	fun canvas(c : StyleClass? = null, id : String = "" , width : Int, height : Int, init : CANVAS.() -> Unit = empty_init) {
+		val tag = CANVAS()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
+        if (c != null) tag.c = c
 
-	fun canvas(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", width : String = "", height : String = "", init : CANVAS.() -> Unit = {}) {
-		val tag = initTag(CANVAS(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
 		tag.width = width
 		tag.height = height
+
+        initTag(tag, init)
+	}
+
+	fun div(c : StyleClass? = null, id : String = "" , init : DIV.() -> Unit = empty_init) {
+		val tag = DIV()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+	}
+
+	fun em(text : String = "", c : StyleClass? = null, id : String = "" , init : EM.() -> Unit = empty_init) {
+		val tag = EM()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun div(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : DIV.() -> Unit = {}) {
-		val tag = initTag(DIV(), init)
+	fun fieldset(c : StyleClass? = null, id : String = "" , init : FIELDSET.() -> Unit = empty_init) {
+		val tag = FIELDSET()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
-	fun em(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : EM.() -> Unit = {}) {
-		val tag = initTag(EM(), init)
+	fun form(c : StyleClass? = null, id : String = "" , action : Link, method : FormMethod = FormMethod.put, init : FORM.() -> Unit = empty_init) {
+		val tag = FORM()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun fieldset(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : FIELDSET.() -> Unit = {}) {
-		val tag = initTag(FIELDSET(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun form(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", action : String = "", enctype : String = "", method : String = "", init : FORM.() -> Unit = {}) {
-		val tag = initTag(FORM(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+		if (c != null) tag.c = c
 		tag.action = action
-		tag.enctype = enctype
 		tag.method = method
+        initTag(tag, init)
+	}
+
+	fun h1(text : String = "", c : StyleClass? = null, id : String = "" , init : H1.() -> Unit = empty_init) {
+		val tag = H1()
+		tag.id = id
+        if (c != null) tag.c = c
+
+        initTag(tag, init)
+
+		if (tag.children.size == 0) {
+			tag.text = text
+		}
+	}
+	fun h2(text : String = "", c : StyleClass? = null, id : String = "" , init : H2.() -> Unit = empty_init) {
+		val tag = H2()
+		tag.id = id
+        if (c != null) tag.c = c
+
+        initTag(tag, init)
+
+		if (tag.children.size == 0) {
+			tag.text = text
+		}
+	}
+	fun h3(text : String = "", c : StyleClass? = null, id : String = "" , init : H3.() -> Unit = empty_init) {
+		val tag = H3()
+		tag.id = id
+        if (c != null) tag.c = c
+
+        initTag(tag, init)
+
+		if (tag.children.size == 0) {
+			tag.text = text
+		}
+	}
+	fun h4(text : String = "", c : StyleClass? = null, id : String = "" , init : H4.() -> Unit = empty_init) {
+		val tag = H4()
+		tag.id = id
+        if (c != null) tag.c = c
+
+        initTag(tag, init)
+
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun h1(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : H1.() -> Unit = {}) {
-		val tag = initTag(H1(), init)
+	fun h5(text : String = "", c : StyleClass? = null, id : String = "" , init : H5.() -> Unit = empty_init) {
+		val tag = H5()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
+
+        initTag(tag, init)
+
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun h2(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : H2.() -> Unit = {}) {
-		val tag = initTag(H2(), init)
+	fun img(c : StyleClass? = null, id : String = "" , width : Int = 0, height : Int = 0, src : Link? = null, alt : String = "") {
+		val tag = IMG()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun h3(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : H3.() -> Unit = {}) {
-		val tag = initTag(H3(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun h4(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : H4.() -> Unit = {}) {
-		val tag = initTag(H4(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun h5(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : H5.() -> Unit = {}) {
-		val tag = initTag(H5(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun img(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", width : String = "", height : String = "", src : String = "", alt : String = "", init : IMG.() -> Unit = {}) {
-		val tag = initTag(IMG(), {})
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
 		tag.width = width
 		tag.height = height
-		tag.src = src
+		if (src != null) tag.src = src
 		tag.alt = alt
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+
+        initTag(tag, empty_init)
 	}
 
-	fun input(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", accept : String = "", alt : String = "", autocomplete : String = "", autofocus : String = "", checked : String = "", disabled : String = "", height : String = "", list : String = "", max : String = "", maxlength : String = "", min : String = "", multiple : String = "", inputType : String = "", name : String = "", pattern : String = "", placeholder : String = "", readonly : String = "", required : String = "", size : String = "", src : String = "", step : String = "", value : String = "", width : String = "", init : INPUT.() -> Unit = {}) {
-		val tag = initTag(INPUT(), {})
+	fun input(c : StyleClass? = null, id : String = "" , inputType : InputType, name : String = "", value : String = "", init : INPUT.() -> Unit = empty_init) {
+		val tag = INPUT()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		tag.accept = accept
-		tag.alt = alt
-		tag.autocomplete = autocomplete
-		tag.autofocus = autofocus
-		tag.checked = checked
-		tag.disabled = disabled
-		tag.height = height
-		tag.list = list
-		tag.max = max
-		tag.maxlength = maxlength
-		tag.min = min
-		tag.multiple = multiple
+        if (c != null) tag.c = c
 		tag.inputType = inputType
 		tag.name = name
-		tag.pattern = pattern
-		tag.placeholder = placeholder
-		tag.readonly = readonly
-		tag.required = required
-		tag.size = size
-		tag.src = src
-		tag.step = step
 		tag.value = value
-		tag.width = width
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        initTag(tag, init)
 	}
 
-	fun label(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", forId : String = "", init : LABEL.() -> Unit = {}) {
-		val tag = initTag(LABEL(), init)
+	fun label(text : String = "", c : StyleClass? = null, id : String = "" , forId : String = "", init : LABEL.() -> Unit = empty_init) {
+		val tag = LABEL()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
 		tag.forId = forId
+
+        initTag(LABEL(), init)
+
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun ol(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : OL.() -> Unit = {}) {
-		val tag = initTag(OL(), init)
+	fun ol(c : StyleClass? = null, id : String = "" , init : OL.() -> Unit = empty_init) {
+		val tag = OL()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
+
+        initTag(OL(), init)
+    }
+
+	fun p(text : String = "", c : StyleClass? = null, id : String = "" , init : P.() -> Unit = empty_init) {
+		val tag = P()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun p(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : P.() -> Unit = {}) {
-		val tag = initTag(P(), init)
+	fun select(c : StyleClass? = null, id : String = "" , name : String = "", init : SELECT.() -> Unit = empty_init) {
+		val tag = SELECT()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun select(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", name : String = "", size : String = "", multiple : String = "", disabled : String = "", init : SELECT.() -> Unit = {}) {
-		val tag = initTag(SELECT(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
 		tag.name = name
-		tag.size = size
-		tag.multiple = multiple
-		tag.disabled = disabled
+        initTag(tag, init)
+    }
+
+	fun span(c : StyleClass? = null, id : String = "" , init : SPAN.() -> Unit = empty_init) {
+		val tag = SPAN()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+	}
+
+	fun strong(text : String = "", c : StyleClass? = null, id : String = "" , init : STRONG.() -> Unit = empty_init) {
+		val tag = STRONG()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun span(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : SPAN.() -> Unit = {}) {
-		val tag = initTag(SPAN(), init)
+	fun table(c : StyleClass? = null, id : String = "" , init : TABLE.() -> Unit = empty_init) {
+		val tag = TABLE()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
-	fun strong(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : STRONG.() -> Unit = {}) {
-		val tag = initTag(STRONG(), init)
+	fun textarea(text : String = "", c : StyleClass? = null, id : String = "" , rows : Int = 0, cols : Int = 0, name : String = "", init : TEXTAREA.() -> Unit = empty_init) {
+		val tag = TEXTAREA()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun table(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : TABLE.() -> Unit = {}) {
-		val tag = initTag(TABLE(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
-	}
-
-	fun textarea(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", autofocus : String = "", cols : String = "", disabled : String = "", maxlength : String = "", name : String = "", placeholder : String = "", readonly : String = "", required : String = "", rows : String = "", wrap : String = "", init : TEXTAREA.() -> Unit = {}) {
-		val tag = initTag(TEXTAREA(), init)
-		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		tag.autofocus = autofocus
+        if (c != null) tag.c = c
 		tag.cols = cols
-		tag.disabled = disabled
-		tag.maxlength = maxlength
 		tag.name = name
-		tag.placeholder = placeholder
-		tag.readonly = readonly
-		tag.required = required
 		tag.rows = rows
-		tag.wrap = wrap
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
 	}
 
-	fun ul(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : UL.() -> Unit = {}) {
+	fun ul(c : StyleClass? = null, id : String = "" , init : UL.() -> Unit = empty_init) {
 		val tag = initTag(UL(), init)
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
 	}
 
 
@@ -354,20 +287,20 @@ abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isE
 class Body() : BodyTag("body", false)
 
 open class A() : BodyTag("a", false) {
-	public var href : String
-		get() = attributes["href"]!!
+	public var href : Link
+		get() = this[Attributes.href]
 		set(value) {
-			attributes["href"] = value
+			this[Attributes.href] = value
 		}
 	public var rel : String
-		get() = attributes["rel"]!!
+		get() = this[Attributes.rel]
 		set(value) {
-			attributes["rel"] = value
+			this[Attributes.rel] = value
 		}
 	public var target : String
-		get() = attributes["target"]!!
+		get() = this[Attributes.target]
 		set(value) {
-			attributes["target"] = value
+			this[Attributes.target] = value
 		}
 }
 open class B() : BodyTag("b", false) {
@@ -375,15 +308,15 @@ open class B() : BodyTag("b", false) {
 open class BUTTON() : BodyTag("button", false) {
 }
 open class CANVAS() : BodyTag("canvas", false) {
-	public var width : String
-		get() = attributes["width"]!!
+	public var width : Int
+		get() = this[Attributes.width]
 		set(value) {
-			attributes["width"] = value
+			this[Attributes.width] = value
 		}
-	public var height : String
-		get() = attributes["height"]!!
+	public var height : Int
+		get() = this[Attributes.height]
 		set(value) {
-			attributes["height"] = value
+			this[Attributes.height] = value
 		}
 }
 open class DIV() : BodyTag("div", false) {
@@ -393,20 +326,20 @@ open class EM() : BodyTag("em", false) {
 open class FIELDSET() : BodyTag("fieldset", false) {
 }
 open class FORM() : BodyTag("form", false) {
-	public var action : String
-		get() = attributes["action"]!!
+	public var action : Link
+		get() = this[Attributes.action]
 		set(value) {
-			attributes["action"] = value
+			this[Attributes.action] = value
 		}
-	public var enctype : String
-		get() = attributes["enctype"]!!
+	public var enctype : EncodingType
+		get() = this[Attributes.enctype]
 		set(value) {
-			attributes["enctype"] = value
+			this[Attributes.enctype] = value
 		}
-	public var method : String
-		get() = attributes["method"]!!
+	public var method : FormMethod
+		get() = this[Attributes.method]
 		set(value) {
-			attributes["method"] = value
+			this[Attributes.method] = value
 		}
 }
 open class H1() : BodyTag("h1", false) {
@@ -420,158 +353,165 @@ open class H4() : BodyTag("h4", false) {
 open class H5() : BodyTag("h5", false) {
 }
 open class IMG() : BodyTag("img", true) {
-	public var width : String
-		get() = attributes["width"]!!
+	public var width : Int
+		get() = this[Attributes.width]
 		set(value) {
-			attributes["width"] = value
+			this[Attributes.width] = value
 		}
-	public var height : String
-		get() = attributes["height"]!!
+	public var height : Int
+		get() = this[Attributes.height]
 		set(value) {
-			attributes["height"] = value
+			this[Attributes.height] = value
 		}
-	public var src : String
-		get() = attributes["src"]!!
+	public var src : Link
+		get() = this[Attributes.src]
 		set(value) {
-			attributes["src"] = value
+			this[Attributes.src] = value
 		}
 	public var alt : String
-		get() = attributes["alt"]!!
+		get() = this[Attributes.alt]
 		set(value) {
-			attributes["alt"] = value
+			this[Attributes.alt] = value
 		}
 }
 open class INPUT() : BodyTag("input", true) {
+/*
 	public var accept : String
-		get() = attributes["accept"]!!
+		get() = this[Attributes.accept]
 		set(value) {
-			attributes["accept"] = value
+			this[Attributes.accept] = value
 		}
+*/
 	public var alt : String
-		get() = attributes["alt"]!!
+		get() = this[Attributes.alt]
 		set(value) {
-			attributes["alt"] = value
+			this[Attributes.alt] = value
 		}
-	public var autocomplete : String
-		get() = attributes["autocomplete"]!!
+	public var autocomplete : Boolean
+		get() = this[Attributes.autocomplete]
 		set(value) {
-			attributes["autocomplete"] = value
+			this[Attributes.autocomplete] = value
 		}
-	public var autofocus : String
-		get() = attributes["autofocus"]!!
+	public var autofocus : Boolean
+		get() = this[Attributes.autofocus]
 		set(value) {
-			attributes["autofocus"] = value
+			this[Attributes.autofocus] = value
 		}
-	public var checked : String
-		get() = attributes["checked"]!!
+	public var checked : Boolean
+		get() = this[Attributes.checked]
 		set(value) {
-			attributes["checked"] = value
+			this[Attributes.checked] = value
 		}
-	public var disabled : String
-		get() = attributes["disabled"]!!
+	public var disabled : Boolean
+		get() = this[Attributes.disabled]
 		set(value) {
-			attributes["disabled"] = value
+			this[Attributes.disabled] = value
 		}
-	public var height : String
-		get() = attributes["height"]!!
+	public var height : Int
+		get() = this[Attributes.height]
 		set(value) {
-			attributes["height"] = value
+			this[Attributes.height] = value
 		}
+/*
 	public var list : String
-		get() = attributes["list"]!!
+		get() = this[Attributes.list]
 		set(value) {
-			attributes["list"] = value
+			this[Attributes.list] = value
 		}
+*/
+/*
 	public var max : String
-		get() = attributes["max"]!!
+		get() = this[Attributes.max]
 		set(value) {
-			attributes["max"] = value
+			this[Attributes.max] = value
 		}
-	public var maxlength : String
-		get() = attributes["maxlength"]!!
+*/
+	public var maxlength : Int
+		get() = this[Attributes.maxlength]
 		set(value) {
-			attributes["maxlength"] = value
+			this[Attributes.maxlength] = value
 		}
+/*
 	public var min : String
-		get() = attributes["min"]!!
+		get() = this[Attributes.min]
 		set(value) {
-			attributes["min"] = value
+			this[Attributes.min] = value
 		}
-	public var multiple : String
-		get() = attributes["multiple"]!!
+*/
+	public var multiple : Boolean
+		get() = this[Attributes.multiple]
 		set(value) {
-			attributes["multiple"] = value
+			this[Attributes.multiple] = value
 		}
-	public var inputType : String
-		get() = attributes["type"]!!
+	public var inputType : InputType
+		get() = this[Attributes.inputType]
 		set(value) {
-			attributes["type"] = value
+			this[Attributes.inputType] = value
 		}
 	public var name : String
-		get() = attributes["name"]!!
+		get() = this[Attributes.name]
 		set(value) {
-			attributes["name"] = value
+			this[Attributes.name] = value
 		}
 	public var pattern : String
-		get() = attributes["pattern"]!!
+		get() = this[Attributes.pattern]
 		set(value) {
-			attributes["pattern"] = value
+			this[Attributes.pattern] = value
 		}
 	public var placeholder : String
-		get() = attributes["placeholder"]!!
+		get() = this[Attributes.placeholder]
 		set(value) {
-			attributes["placeholder"] = value
+			this[Attributes.placeholder] = value
 		}
-	public var readonly : String
-		get() = attributes["readonly"]!!
+	public var readonly : Boolean
+		get() = this[Attributes.readonly]
 		set(value) {
-			attributes["readonly"] = value
+			this[Attributes.readonly] = value
 		}
-	public var required : String
-		get() = attributes["required"]!!
+	public var required : Boolean
+		get() = this[Attributes.required]
 		set(value) {
-			attributes["required"] = value
+			this[Attributes.required] = value
 		}
-	public var size : String
-		get() = attributes["size"]!!
+	public var size : Int
+		get() = this[Attributes.size]
 		set(value) {
-			attributes["size"] = value
+			this[Attributes.size] = value
 		}
-	public var src : String
-		get() = attributes["src"]!!
+	public var src : Link
+		get() = this[Attributes.src]
 		set(value) {
-			attributes["src"] = value
+			this[Attributes.src] = value
 		}
-	public var step : String
-		get() = attributes["step"]!!
+	public var step : Int
+		get() = this[Attributes.step]
 		set(value) {
-			attributes["step"] = value
+			this[Attributes.step] = value
 		}
 	public var value : String
-		get() = attributes["value"]!!
+		get() = this[Attributes.value]
 		set(value) {
-			attributes["value"] = value
+			this[Attributes.value] = value
 		}
-	public var width : String
-		get() = attributes["width"]!!
+	public var width : Int
+		get() = this[Attributes.width]
 		set(value) {
-			attributes["width"] = value
+			this[Attributes.width] = value
 		}
 }
 open class LABEL() : BodyTag("label", false) {
 	public var forId : String
-		get() = attributes["for"]!!
+		get() = this[Attributes.forId]
 		set(value) {
-			attributes["for"] = value
+			this[Attributes.forId] = value
 		}
 }
 open class OL() : BodyTag("ol", false) {
-	fun li(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : LI.() -> Unit = {}) {
-		val tag = initTag(LI(), init)
+	fun li(text : String = "", c : StyleClass? = null, id : String = "" , init : LI.() -> Unit = empty_init) {
+		val tag = LI()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
@@ -582,47 +522,38 @@ open class P() : BodyTag("p", false) {
 }
 open class SELECT() : BodyTag("select", false) {
 	public var name : String
-		get() = attributes["name"]!!
+		get() = this[Attributes.name]
 		set(value) {
-			attributes["name"] = value
+			this[Attributes.name] = value
 		}
-	public var size : String
-		get() = attributes["size"]!!
+	public var size : Int
+		get() = this[Attributes.size]
 		set(value) {
-			attributes["size"] = value
+			this[Attributes.size] = value
 		}
-	public var multiple : String
-		get() = attributes["multiple"]!!
+	public var multiple : Boolean
+		get() = this[Attributes.multiple]
 		set(value) {
-			attributes["multiple"] = value
+			this[Attributes.multiple] = value
 		}
-	public var disabled : String
-		get() = attributes["disabled"]!!
+	public var disabled : Boolean
+		get() = this[Attributes.disabled]
 		set(value) {
-			attributes["disabled"] = value
+			this[Attributes.disabled] = value
 		}
-	fun option(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", label : String = "", disabled : String = "", init : OPTION.() -> Unit = {}) {
-		val tag = initTag(OPTION(), init)
+	fun option(c : StyleClass? = null, value : String = "", id : String = "" , init : OPTION.() -> Unit = empty_init) {
+		val tag = OPTION()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		tag.label = label
-		tag.disabled = disabled
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        tag.value = value
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
-	fun optgroup(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : OPTGROUP.() -> Unit = {}) {
-		val tag = initTag(OPTGROUP(), init)
+	fun optgroup(c : StyleClass? = null, id : String = "" , init : OPTGROUP.() -> Unit = empty_init) {
+		val tag = OPTGROUP()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
 }
@@ -631,88 +562,79 @@ open class SPAN() : BodyTag("span", false) {
 open class STRONG() : BodyTag("strong", false) {
 }
 open class TABLE() : BodyTag("table", false) {
-	fun tr(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : TR.() -> Unit = {}) {
-		val tag = initTag(TR(), init)
+	fun tr(c : StyleClass? = null, id : String = "" , init : TR.() -> Unit = empty_init) {
+		val tag = TR()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
-	fun tbody(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : TBODY.() -> Unit = {}) {
-		val tag = initTag(TBODY(), init)
+	fun tbody(c : StyleClass? = null, id : String = "" , init : TBODY.() -> Unit = empty_init) {
+		val tag = TBODY()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
 }
 open class TEXTAREA() : BodyTag("textarea", false) {
-	public var autofocus : String
-		get() = attributes["autofocus"]!!
+	public var autofocus : Boolean
+		get() = this[Attributes.autofocus]
 		set(value) {
-			attributes["autofocus"] = value
+			this[Attributes.autofocus] = value
 		}
-	public var cols : String
-		get() = attributes["cols"]!!
+	public var cols : Int
+		get() = this[Attributes.cols]
 		set(value) {
-			attributes["cols"] = value
+			this[Attributes.cols] = value
 		}
-	public var disabled : String
-		get() = attributes["disabled"]!!
+	public var disabled : Boolean
+		get() = this[Attributes.disabled]
 		set(value) {
-			attributes["disabled"] = value
+			this[Attributes.disabled] = value
 		}
-	public var maxlength : String
-		get() = attributes["maxlength"]!!
+	public var maxlength : Int
+		get() = this[Attributes.maxlength]
 		set(value) {
-			attributes["maxlength"] = value
+			this[Attributes.maxlength] = value
 		}
 	public var name : String
-		get() = attributes["name"]!!
+		get() = this[Attributes.name]
 		set(value) {
-			attributes["name"] = value
+			this[Attributes.name] = value
 		}
 	public var placeholder : String
-		get() = attributes["placeholder"]!!
+		get() = this[Attributes.placeholder]
 		set(value) {
-			attributes["placeholder"] = value
+			this[Attributes.placeholder] = value
 		}
-	public var readonly : String
-		get() = attributes["readonly"]!!
+	public var readonly : Boolean
+		get() = this[Attributes.readonly]
 		set(value) {
-			attributes["readonly"] = value
+			this[Attributes.readonly] = value
 		}
-	public var required : String
-		get() = attributes["required"]!!
+	public var required : Boolean
+		get() = this[Attributes.required]
 		set(value) {
-			attributes["required"] = value
+			this[Attributes.required] = value
 		}
-	public var rows : String
-		get() = attributes["rows"]!!
+	public var rows : Int
+		get() = this[Attributes.rows]
 		set(value) {
-			attributes["rows"] = value
+			this[Attributes.rows] = value
 		}
-	public var wrap : String
-		get() = attributes["wrap"]!!
+	public var wrap : Wrap
+		get() = this[Attributes.wrap]
 		set(value) {
-			attributes["wrap"] = value
+			this[Attributes.wrap] = value
 		}
 }
 open class UL() : BodyTag("ul", false) {
-	fun li(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : LI.() -> Unit = {}) {
-		val tag = initTag(LI(), init)
+	fun li(text : String = "", c : StyleClass? = null, id : String = "" , init : LI.() -> Unit = empty_init) {
+		val tag = LI()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
@@ -722,37 +644,37 @@ open class UL() : BodyTag("ul", false) {
 open class LI() : BodyTag("li", false) {
 }
 open class OPTION() : BodyTag("option", false) {
-	public var label : String
-		get() = attributes["label"]!!
+	public var value : String
+		get() = this[Attributes.value]
 		set(value) {
-			attributes["label"] = value
+			this[Attributes.value] = value
 		}
-	public var disabled : String
-		get() = attributes["disabled"]!!
+	public var label : String
+		get() = this[Attributes.label]
 		set(value) {
-			attributes["disabled"] = value
+			this[Attributes.label] = value
+		}
+	public var disabled : Boolean
+		get() = this[Attributes.disabled]
+		set(value) {
+			this[Attributes.disabled] = value
 		}
 }
 open class OPTGROUP() : BodyTag("optgroup", false) {
 }
 open class TR() : BodyTag("tr", false) {
-	fun td(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : TD.() -> Unit = {}) {
-		val tag = initTag(TD(), init)
+	fun td(c :  StyleClass? = null, id : String = "", init : TD.() -> Unit = empty_init) {
+		val tag = TD()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
-		if (tag.children.size == 0) {
-			tag.text = text
-		}
+        if (c != null) tag.c = c
+        initTag(tag, init)
 	}
 
-	fun th(text : String = "", id : String = "", c : String = "", style : String = "", title : String = "", init : TH.() -> Unit = {}) {
-		val tag = initTag(TH(), init)
+	fun th(text : String = "", c : StyleClass? = null, id : String = "" , init : TH.() -> Unit = empty_init) {
+		val tag = TH()
 		tag.id = id
-		tag.c = c
-		tag.style = style
-		tag.title = title
+        if (c != null) tag.c = c
+        initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
 		}
