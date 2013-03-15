@@ -22,7 +22,6 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
 
     public fun toExternalForm() : String {
         val (route, method) = javaClass.route()
-        if (method != HttpMethod.GET) throw RuntimeException("External form only supported for GET requests")
 
         val answer = StringBuilder()
 
