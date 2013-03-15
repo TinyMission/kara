@@ -76,7 +76,7 @@ public class LinkAttribute(name: String) : Attribute<Link>(name) {
 }
 
 public trait StringEnum<T : Enum<T>> : Enum<T> {
-    open val value : String get() = name()
+    val value : String get() = name()
 }
 
 public class EnumAttribute<T : StringEnum<T>>(name: String, val klass : Class<T>) : Attribute<T>(name) {
