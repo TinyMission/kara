@@ -182,12 +182,12 @@ abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isE
 		}
 	}
 
-	fun img(c : StyleClass? = null, id : String = "" , width : Int = 0, height : Int = 0, src : Link? = null, alt : String = "") {
+	fun img(c : StyleClass? = null, id : String = "" , width : Int? = null, height : Int? = null, src : Link? = null, alt : String = "") {
 		val tag = IMG()
 		tag.id = id
         if (c != null) tag.c = c
-		tag.width = width
-		tag.height = height
+		if (width != null) tag.width = width
+		if (height != null) tag.height = height
 		if (src != null) tag.src = src
 		tag.alt = alt
 
@@ -267,13 +267,13 @@ abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isE
         initTag(tag, init)
 	}
 
-	fun textarea(text : String = "", c : StyleClass? = null, id : String = "" , rows : Int = 0, cols : Int = 0, name : String = "", init : TEXTAREA.() -> Unit = empty_init) {
+	fun textarea(text : String = "", c : StyleClass? = null, id : String = "" , rows : Int? = null, cols : Int? = null, name : String = "", init : TEXTAREA.() -> Unit = empty_init) {
 		val tag = TEXTAREA()
 		tag.id = id
         if (c != null) tag.c = c
-		tag.cols = cols
-		tag.name = name
-		tag.rows = rows
+        if (rows != null) tag.rows = rows
+        if (cols != null) tag.cols = cols
+        tag.name = name
         initTag(tag, init)
 		if (tag.children.size == 0) {
 			tag.text = text
