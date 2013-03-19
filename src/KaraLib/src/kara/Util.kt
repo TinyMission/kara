@@ -62,3 +62,7 @@ fun Any.properties() : List<String> {
 
     return answer.sort()
 }
+
+fun String.htmlEscape() : String {
+    return replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;")
+}

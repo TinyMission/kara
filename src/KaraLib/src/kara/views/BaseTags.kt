@@ -11,6 +11,7 @@ import kara.views.Attributes
 import kara.controllers.Request
 import kara.controllers.Link
 import kara.controllers.link
+import kara.util.htmlEscape
 
 
 /**
@@ -48,9 +49,15 @@ trait Element {
     }
 }
 
-class TextElement(val text : String) : Element {
+class TextElement(private val text : String) : Element {
     override fun render(appConfig : AppConfig, builder : StringBuilder, indent : String) {
-        builder.append("$indent$text\n")
+        builder.append(indent)
+        builder.append(escapedText());
+        builder.append('\n')
+    }
+
+    public fun escapedText() : String {
+        return text.htmlEscape()
     }
 }
 
@@ -78,7 +85,7 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
         else {
             if (children.count() == 1 && children[0] is TextElement) { // for single text elements, render inline
                 builder.append("$indent<$tagName${renderAttributes()}>")
-                builder.append((children[0] as TextElement).text)
+                builder.append((children[0] as TextElement).escapedText())
                 builder.append("</$tagName>\n")
             }
             else { // more than one text element or a tag child
@@ -96,7 +103,7 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
         for (a in attributes.keySet()) {
             val attr = attributes[a]!!
             if (attr.length > 0) {
-                builder.append(" $a=\"${attr}\"")
+                builder.append(" $a=\"${attr.htmlEscape()}\"")
             }
         }
         return builder.toString()

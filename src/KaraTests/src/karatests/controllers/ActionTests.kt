@@ -24,6 +24,7 @@ class ActionTests() {
 
         assertTrue(output?.contains("Default Layout") as Boolean, "Home view contains layout")
         assertTrue(output?.contains("Welcome Home") as Boolean, "Home view contains view")
+        assertTrue(output?.contains("&lt;h2&gt;MakeSureThisIsEscaped&lt;/h2&gt;") as Boolean, "Proper escaping not applied : $output")
     }
 
     Test fun runActionTests() {
