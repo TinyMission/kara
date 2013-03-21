@@ -26,8 +26,9 @@ public open class StringAttribute(name : String): Attribute<String>(name) {
 
 public class ClassAttribute(name: String): Attribute<StyleClass>(name) {
     override fun encode(t: StyleClass): String {
-        return t.toExternalForm()
+        return t.name()
     }
+
     override fun decode(s: String): StyleClass {
         // Can't really be implemented unless all classes are registered somewhere
         throw UnsupportedOperationException()
