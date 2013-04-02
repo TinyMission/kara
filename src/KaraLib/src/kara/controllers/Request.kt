@@ -41,6 +41,8 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
             }
         }).join("/"))
 
+        if (answer.length() == 0) answer.append("/")
+
         if (properties.size > 0) {
             answer.append("?")
             answer.append(properties map { "$it=${propertyValue(it)}" } join("&"))
