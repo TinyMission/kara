@@ -85,7 +85,7 @@ object HomePathResolver {
 
         private fun getClasspathEntry<T>(aClass: Class<T>): String {
             val path = classNameToResourcePath(aClass.getName());
-            return resourceUrlToClasspathEntry(aClass.getName(), aClass.getResource(path));
+            return resourceUrlToClasspathEntry(aClass.getName(), aClass.getResource(path)!!);
         }
 
         public fun getClasspathEntry(): String = getClasspathEntry(javaClass);
