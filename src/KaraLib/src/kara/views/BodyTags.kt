@@ -290,9 +290,8 @@ abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isE
     // view rendering
     fun renderView(context : ActionContext, view : HtmlView) {
         view.render(context)
-		for (tag in view.children) {
-			children.add(tag)
-		}
+        children.addAll(view.children)
+        view.children.clear()
     }
 }
 
