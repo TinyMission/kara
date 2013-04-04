@@ -10,7 +10,6 @@ abstract class HtmlView(var layout : HtmlLayout? = null) : BodyTag("view", false
 
     override fun writeResponse(context : ActionContext) : Unit {
         context.response.setContentType("text/html")
-        context.response.setCharacterEncoding("UTF-8")
 
         val writer = context.response.getWriter()!!
         tagStack = TagStack(this)
