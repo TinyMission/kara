@@ -29,7 +29,7 @@ public trait StyleClass : SelectorTrait, Selector {
 
 class CompositeStyleClass(val a : StyleClass, val b: StyleClass) : StyleClass {
     override fun name(): String {
-        throw RuntimeException("This shall not be called")
+        return "${a.name()} ${b.name()}"
     }
 
     override fun toExternalForm(): String {
