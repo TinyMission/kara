@@ -70,6 +70,6 @@ class SelectorsTest {
     }
 
     Test fun compositeSelector() {
-        test("div#id,.c1", { forAny(div.id("id"), c1) })
+        test("(div#id,.c1)", { forAny(div.id("id"), c1) })
     }
 }

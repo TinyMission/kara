@@ -198,7 +198,7 @@ open class Element() {
 
     class UnionSelector(val selectors : Array<Selector>) : Selector {
         override fun toExternalForm(): String {
-            return selectors.map { it.toExternalForm() } join ","
+            return "(${selectors.map { it.toExternalForm()} join ","})"
         }
     }
 
