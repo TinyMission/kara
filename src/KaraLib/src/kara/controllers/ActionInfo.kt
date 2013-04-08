@@ -53,7 +53,7 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
         }
 
         // parse the route parameters
-        val comps = url.split("/")
+        val comps = url.split("/") map { URLDecoder.decode(it, "UTF-8")}
         if (comps.size != routeComps.size())
             throw RuntimeException("URL has different number of components than route")
         for (i in comps.indices) {
