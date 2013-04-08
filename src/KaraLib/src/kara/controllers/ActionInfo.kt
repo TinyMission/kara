@@ -13,6 +13,7 @@ import jet.runtime.typeinfo.JetValueParameter
 import java.lang.reflect.Constructor
 import kara.views.HtmlLayout
 import kara.util.propertyValue
+import java.net.URLDecoder
 
 
 /** Contains all the information necessary to match a route and execute an action.
@@ -41,7 +42,7 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
 
         // parse the query string
         if (query != null) {
-            val queryComps = query.split("\\&")
+            val queryComps = query.split("\\&") map { URLDecoder.decode(it, "UTF-8")}
             for (qc in queryComps) {
                 val nvp = qc.split("=")
                 if (nvp.size > 1)
