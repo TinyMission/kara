@@ -1,4 +1,4 @@
-package kara.helpers
+package kara.internal
 
 import java.util.regex.Pattern
 

@@ -1,4 +1,4 @@
-package kara.styles
+package kara.internal
 
 public trait AttFilter {
     fun toExternalForm() : String

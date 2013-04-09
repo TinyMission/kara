@@ -48,12 +48,12 @@ fun Generator.applicationTemplate() : String {
     return """
 package ${appPackage}
 
-import kara.config.*
+import kara.*
 
 /**
  * This is the primary class for your application.
  */
-public class Application(config: AppConfig) : kara.app.Application(config) {
+public class Application(config: AppConfig) : kara.Application(config) {
 
     /**
      * Application-specific initialization code goes here.
@@ -73,7 +73,7 @@ package ${appPackage}.routes
 
 import ${appPackage}.views.*
 import ${appPackage}.views.${routeSlug}.*
-import kara.controllers.*
+import kara.*
 
 object ${routeClassName} {
     val layout = DefaultLayout()

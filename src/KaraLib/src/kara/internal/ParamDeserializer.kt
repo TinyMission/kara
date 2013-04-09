@@ -1,4 +1,4 @@
-package kara.controllers
+package kara.internal
 
 import java.util.HashMap
 import java.util.ArrayList

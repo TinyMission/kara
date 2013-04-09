@@ -1,15 +1,7 @@
-package kara.views
+package kara
 
 import java.util.*
-import kara.views.Attributes
-import kara.styles.StyleClass
-import kara.controllers.Request
-import kara.views.EncodingType
-import kara.views.FormMethod
-import kara.views.InputType
-import kara.views.Wrap
-import kara.controllers.Link
-import kara.styles.StyledElement
+import kara.internal.*
 
 val <T> empty_init : T.() -> Unit = {}
 

@@ -4,14 +4,13 @@ import java.net.URLClassLoader
 import java.io.*
 import kara.server.FileWatchListener
 import java.util.ArrayList
-import kara.controllers.Dispatcher
-import kara.controllers.BaseController
 import kara.server.FileWatcher
 import java.util.concurrent.Executors
 import java.util.concurrent.Executor
-import kara.config.AppConfig
 import org.apache.log4j.Logger
 import java.net.URL
+import kara.*
+import kara.internal.*
 
 /** Interface for object that want to listen for when an app is loaded.
  */

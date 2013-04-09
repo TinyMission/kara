@@ -1,7 +1,7 @@
 package karatests.views
 
 
-import kara.views.*
+import kara.*
 
 //fun testHtml(args : Array<String>) =
 //    html {

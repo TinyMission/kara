@@ -1,6 +1,6 @@
 package karademo
 
-import kara.config.AppConfig
+import kara.*
 
 
-public class Application(config: AppConfig) : kara.app.Application(config)
+public class Application(config: AppConfig) : kara.Application(config)

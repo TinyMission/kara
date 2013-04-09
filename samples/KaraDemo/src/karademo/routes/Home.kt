@@ -1,7 +1,6 @@
 package karademo.routes
 
-import kara.controllers.Get
-import kara.controllers.*
+import kara.*
 import karademo.views.DefaultLayout
 import java.util.Date
 import karademo.views.posts.Show

@@ -1,4 +1,6 @@
-package kara.views
+package kara
+
+import kara.internal.*
 
 public enum class FormMethod() : StringEnum<FormMethod> {
     get

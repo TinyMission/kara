@@ -1,7 +1,8 @@
-package kara.controllers
+package kara.internal
 
 import org.reflections.Reflections
 import java.util.ArrayList
+import kara.*
 
 fun scanPackage(prefix : String, classloader : ClassLoader) : List<Class<out Request>> {
     return Reflections(prefix, classloader).getSubTypesOf(javaClass<Request>())!!.toList()

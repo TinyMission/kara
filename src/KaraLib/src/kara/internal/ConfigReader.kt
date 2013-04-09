@@ -1,11 +1,11 @@
-package kara.config
+package kara.internal
 
 import java.io.*
 import java.util.*
-import kara.util.*
 import org.codehaus.jackson.node.*
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.*
+import kara.*
 
 /**
  * Parses a json file containing a config hash.

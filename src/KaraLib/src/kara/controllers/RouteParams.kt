@@ -1,7 +1,7 @@
-package kara.controllers
+package kara
 
 import java.util.*
-import kara.util.*
+import kara.internal.*
 
 /** Contains all of the parameters for a matched route. */
 class RouteParams() {

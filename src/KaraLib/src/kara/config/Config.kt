@@ -1,4 +1,4 @@
-package kara.config
+package kara
 
 import java.util.HashMap
 

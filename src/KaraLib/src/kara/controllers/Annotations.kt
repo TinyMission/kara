@@ -1,4 +1,4 @@
-package kara.controllers
+package kara
 
 import java.lang.annotation.*
 

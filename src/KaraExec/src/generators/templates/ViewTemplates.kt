@@ -25,7 +25,7 @@ fun Generator.viewTemplate(filePath : String, isLanding : Boolean = false) : Str
     return """
 package ${appPackage}.views.${routeSlug}
 
-import kara.views.*
+import kara.*
 
 class ${viewName}() : HtmlView() {
     override fun render(context: ActionContext) {
@@ -41,7 +41,7 @@ fun Generator.layoutTemplate() : String {
     return """
 package ${appPackage}.views
 
-import kara.views.*
+import kara.*
 import ${appPackage}.styles.*
 
 class ${viewName}() : HtmlLayout() {
@@ -67,7 +67,7 @@ fun Generator.stylesheetTemplate() : String {
     return """
 package ${appPackage}.styles
 
-import kara.styles.*
+import kara.*
 
 class ${stylesheetName}() : Stylesheet() {
     override fun render() {

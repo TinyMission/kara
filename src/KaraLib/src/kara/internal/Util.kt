@@ -1,9 +1,9 @@
-package kara.util
+package kara.internal
 
 import java.util.*
-import kara.exceptions.InvalidPropertyException
 import java.lang.reflect.Method
 import java.beans.Introspector
+import kara.InvalidPropertyException
 
 /** Maps a list by applying a function to each element. */
 fun <T, R> List<T>.map(transform : (T) -> R) : List<R> {

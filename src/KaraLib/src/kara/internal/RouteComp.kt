@@ -1,4 +1,6 @@
-package kara.controllers
+package kara.internal
+
+import kara.*
 
 fun String.routeComps() : List<RouteComp> {
     return this.split("/").map {

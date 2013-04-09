@@ -1,4 +1,4 @@
-package kara.styles
+package kara
 
 enum class BackgroundAttachment(val value : String) {
 	scroll : BackgroundAttachment("scroll")
@@ -345,11 +345,11 @@ fun makeEmptyCells(s : String) : EmptyCells {
 	}
 }
 
-enum class Float(val value : String) {
-	left : Float("left")
-	right : Float("right")
-	none : Float("none")
-	inherit : Float("inherit")
+enum class FloatType(val value : String) {
+	left : FloatType("left")
+	right : FloatType("right")
+	none : FloatType("none")
+	inherit : FloatType("inherit")
 	fun toString() : String {
 		return value
 	}
@@ -357,11 +357,11 @@ enum class Float(val value : String) {
 fun isFloat(s : String) : Boolean {
 	return s == "left" || s == "right" || s == "none"
 }
-fun makeFloat(s : String) : Float {
+fun makeFloat(s : String) : FloatType {
 	return when (s) {
-		"left" -> Float.left
-		"right" -> Float.right
-		"none" -> Float.none
+		"left" -> FloatType.left
+		"right" -> FloatType.right
+		"none" -> FloatType.none
 		else -> throw RuntimeException("Unknown Float value $s")
 	}
 }

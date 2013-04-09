@@ -1,7 +1,8 @@
-package kara
+package kara.cli
 
 import java.util.HashMap
-import kara.config.*
+import kara.*
+import kara.internal.*
 import kara.server.JettyRunner
 import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.Logger

@@ -1,11 +1,9 @@
-package kara.servlet
+package kara.internal
 
 import javax.servlet.http.*
 import java.io.IOException
 import org.reflections.Reflections
-import kara.controllers.Dispatcher
-import kara.config.AppConfig
-import kara.app.Application
+import kara.*
 
 open class Servlet(val app: Application, val appConfig : AppConfig) : HttpServlet() {
     fun doGet(request: HttpServletRequest, response : HttpServletResponse) {

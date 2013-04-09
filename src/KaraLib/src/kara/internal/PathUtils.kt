@@ -1,3 +1,5 @@
+package kara.internal
+
 fun String.appendPathElement(part : String) : String {
     val b = StringBuilder()
     b.append(this)

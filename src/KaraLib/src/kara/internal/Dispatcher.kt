@@ -1,14 +1,12 @@
-package kara.controllers
+package kara.internal
 
 import java.util.ArrayList
 import jet.MutableList
 import org.reflections.Reflections
-import kara.controllers.*
+import kara.*
 import javax.servlet.http.*
 import java.lang.reflect.Method
-import kara.exceptions.NotFoundException
 import org.apache.log4j.Logger
-import kara.config.AppConfig
 import java.lang.reflect.Modifier
 
 /** Used by the server to dispatch requests to their appropriate actions.

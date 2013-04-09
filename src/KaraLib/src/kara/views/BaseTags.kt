@@ -1,45 +1,13 @@
-package kara.views
+package kara
 
 import java.util.ArrayList
 import java.util.HashMap
-import kara.styles.Stylesheet
 import java.util.Stack
 import java.io.PrintWriter
-import kara.config.AppConfig
-import kara.views.Attribute
-import kara.views.Attributes
-import kara.controllers.Request
-import kara.controllers.Link
-import kara.controllers.link
-import kara.util.htmlEscape
+import kara.internal.*
 
 
-/**
- * Keeps track of the stack of tags that are currently being rendered.
- */
-class TagStack(val initial : Tag) {
-
-    val stack = Stack<Tag>();
-
-    {
-        stack.push(initial)
-    }
-
-    public val top : Tag
-        get() = stack.last()
-
-    public fun push(tag : Tag) {
-        stack.push(tag)
-    }
-
-    public fun pop(tag : Tag) {
-        if (tag == top)
-            stack.pop()
-    }
-}
-
-
-trait Element {
+trait HtmlElement {
     fun render(appConfig : AppConfig, builder : StringBuilder, indent : String)
 
     fun toString(appConfig : AppConfig) : String? {
@@ -49,7 +17,7 @@ trait Element {
     }
 }
 
-class TextElement(private val text : String) : Element {
+class TextElement(private val text : String) : HtmlElement {
     override fun render(appConfig : AppConfig, builder : StringBuilder, indent : String) {
         builder.append(indent)
         builder.append(escapedText());
@@ -61,8 +29,8 @@ class TextElement(private val text : String) : Element {
     }
 }
 
-abstract class Tag(val tagName : String, val isEmpty : Boolean) : Element {
-    val children : MutableList<Element> = ArrayList<Element>()
+abstract class Tag(val tagName : String, val isEmpty : Boolean) : HtmlElement {
+    val children : MutableList<HtmlElement> = ArrayList<HtmlElement>()
     private val attributes = HashMap<String, String>()
 
     public var tagStack : TagStack? = null
@@ -180,7 +148,7 @@ class HEAD() : TagWithText("head", false) {
     }
 
     fun link(href : Link, rel : String = "stylesheet", mimeType : String = "text/javascript") {
-        val tag = initTag(LINK(), {})
+        val tag = initTag(_LINK(), {})
         tag.href = href
         tag.rel = rel
         tag.mimeType = mimeType
@@ -214,7 +182,7 @@ class HEAD() : TagWithText("head", false) {
     }
 }
 
-class LINK() : TagWithText("link", true) {
+class _LINK() : TagWithText("link", true) {
     public var href : Link
         get() = this[Attributes.href]
         set(value) {

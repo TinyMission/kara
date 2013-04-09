@@ -1,6 +1,6 @@
 package karademo.styles
 
-import kara.styles.*
+import kara.*
 import karademo.styles.StyleClasses.*
 
 /** The default stylesheet for the demo application.

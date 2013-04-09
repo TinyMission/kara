@@ -1,12 +1,14 @@
 package kara.server
 
 import javax.servlet.http.*
-import kara.app.*
 import org.eclipse.jetty.server.*
 import org.eclipse.jetty.server.handler.*
 import org.eclipse.jetty.server.session.*
 import org.apache.log4j.Logger
-import kara.config.AppConfig
+import kara.internal.*
+import kara.app.*
+import kara.AppConfig
+import kara.Application
 
 /** A Runnable responsible for managing a Jetty server instance.
  */

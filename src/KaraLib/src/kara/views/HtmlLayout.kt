@@ -1,4 +1,4 @@
-package kara.views
+package kara
 
 /** Base class for html layouts.
  * A layout is an html template that renders the shared part of the page.

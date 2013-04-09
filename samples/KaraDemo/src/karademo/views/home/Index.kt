@@ -1,8 +1,6 @@
 package karademo.views.home
 
-import kara.views.*
-import kara.views.InputType
-import kara.styles.Color
+import kara.*
 
 class Index() : HtmlView() {
 

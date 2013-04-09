@@ -1,9 +1,8 @@
 package karatests.mock
 
-import kara.controllers.Dispatcher
-import kara.config.AppConfig
 import karatests.controllers.Routes
-import kara.controllers.scanObjects
+import kara.*
+import kara.internal.*
 
 
 val _dispatcher = Dispatcher(scanObjects(Routes))

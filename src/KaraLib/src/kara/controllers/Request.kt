@@ -1,15 +1,10 @@
-package kara.controllers
+package kara
 
-import kara.controllers.Get
-import kara.controllers.Post
 import java.net.URL
-import kara.controllers.ActionResult
-import kara.controllers.BaseController
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import java.lang.reflect.Modifier
-import kara.views.ActionContext
-import kara.util.*
+import kara.internal.*
 import java.util.HashSet
 import java.util.LinkedHashSet
 

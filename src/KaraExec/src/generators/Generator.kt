@@ -5,7 +5,8 @@ import java.io.File
 import kara.generators.Permissions
 import java.io.*
 import java.util.Properties
-import kara.config.AppConfig
+import kara.*
+import kara.internal.*
 import generators.templates.*
 import com.google.common.io.Files
 

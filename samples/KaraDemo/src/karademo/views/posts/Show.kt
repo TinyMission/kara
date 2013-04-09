@@ -1,7 +1,6 @@
 package karademo.views.posts
 
-import kara.views.HtmlView
-import kara.views.*
+import kara.*
 import karademo.models.*
 import karademo.styles.StyleClasses.*
 import karademo.styles.StyleClasses

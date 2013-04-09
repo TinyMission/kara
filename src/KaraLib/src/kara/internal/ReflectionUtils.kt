@@ -1,6 +1,7 @@
-package kara.controllers
+package kara.internal
 
 import java.lang.reflect.Modifier
+import kara.*
 
 fun Class<*>.objectInstance() : Any? {
     try {

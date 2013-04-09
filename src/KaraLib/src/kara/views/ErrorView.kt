@@ -1,8 +1,6 @@
-package kara.views
+package kara
 
 import java.io.*
-import kara.util.*
-import kara.styles.*
 
 
 fun Throwable.getStackTrace() : String {

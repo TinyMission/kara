@@ -1,8 +1,7 @@
-package kara.views
+package kara
 
-/**
- * @author max
- */
+import kara.internal.*
+
 public enum class InputType: StringEnum<InputType> {
     button checkbox file hidden image password radio reset submit text
 

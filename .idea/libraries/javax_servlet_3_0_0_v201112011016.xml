@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet-3.0.0.v201112011016.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/javax.servlet-3.0.0.v201112011016-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

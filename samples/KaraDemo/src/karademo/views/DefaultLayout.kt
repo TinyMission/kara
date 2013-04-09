@@ -1,8 +1,7 @@
 package karademo.views
 
-import kara.views.*
+import kara.*
 import karademo.styles.DefaultStyles
-import kara.controllers.link
 
 class DefaultLayout() : HtmlLayout() {
     override fun render(context: ActionContext, mainView: HtmlView) {

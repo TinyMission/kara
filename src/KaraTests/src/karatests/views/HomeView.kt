@@ -1,6 +1,7 @@
 package karatests.views
 
-import kara.views.*
+import kara.*
+import kara.internal.*
 
 /** Home html view.
  */

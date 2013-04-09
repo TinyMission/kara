@@ -1,4 +1,4 @@
-package kara.styles
+package kara
 
 
 /** Container class for HSL values */

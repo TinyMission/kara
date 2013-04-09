@@ -1,11 +1,7 @@
-package kara.views
+package kara
 
 import javax.servlet.http.*
-import kara.controllers.RouteParams
-import kara.util.*
-import kara.config.AppConfig
-import kara.controllers.RedirectResult
-import kara.controllers.ActionResult
+import kara.internal.*
 
 
 fun HttpSession.getDescription() : String {

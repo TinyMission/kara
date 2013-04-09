@@ -1,18 +1,9 @@
-package kara.views
+package kara
 
 import java.lang.reflect.Method
-import kara.helpers.*
-import kara.exceptions.InvalidPropertyException
 import org.apache.log4j.Logger
-import kara.util.*
-import kara.views.InputType
-import kara.views.InputType.*
-import kara.views.FormMethod
-import kara.controllers.Request
-import kara.views.EncodingType
-import kara.styles.StyleClass
-import kara.controllers.Link
-
+import kara.internal.*
+import kara.InputType.*
 
 /**
  * Allows forms to be built based on a model object.

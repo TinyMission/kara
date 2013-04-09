@@ -1,4 +1,4 @@
-package kara.styles
+package kara
 
 
 enum class LinearUnits(val value : String) {

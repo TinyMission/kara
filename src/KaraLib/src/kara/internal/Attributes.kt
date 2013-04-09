@@ -1,7 +1,7 @@
-package kara.views
+package kara.internal
 
 import java.net.URL
-import kara.controllers.Request
+import kara.*
 
 object Attributes {
     val c = ClassAttribute("class")

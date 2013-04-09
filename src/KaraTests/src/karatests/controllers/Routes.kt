@@ -1,8 +1,7 @@
 package karatests.controllers
 
-import kara.controllers.Get
-import kara.controllers.Post
-import kara.controllers.*
+import kara.*
+import kara.internal.*
 import karatests.views.DefaultLayout
 import karatests.views.HomeView
 

@@ -1,12 +1,12 @@
-package kara.styles
+package kara
 
-import kara.config.AppConfig
+import kara.internal.*
 import java.io.OutputStreamWriter
 import java.io.FileOutputStream
 
 /** A class for programmatically generating CSS stylesheets.
  */
-abstract class Stylesheet(var namespace : String = "") : Element() {
+abstract class Stylesheet(var namespace : String = "") : CssElement() {
 
     /** Subclasses should override this to actual perform the stylesheet building.
     */

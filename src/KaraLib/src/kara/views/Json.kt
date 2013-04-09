@@ -1,6 +1,5 @@
-package kara.views
+package kara
 
-import kara.controllers.ActionResult
 import javax.servlet.http.HttpServletResponse
 import org.codehaus.jackson.map.ObjectMapper
 

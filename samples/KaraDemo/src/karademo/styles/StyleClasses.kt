@@ -1,6 +1,6 @@
 package karademo.styles
 
-import kara.styles.StyleClass
+import kara.*
 
 public enum class StyleClasses : StyleClass {
     fields cLabel top

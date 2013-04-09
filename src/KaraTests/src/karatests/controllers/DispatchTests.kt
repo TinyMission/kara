@@ -1,10 +1,9 @@
 package karatests.controllers
 
-import kara.controllers.Dispatcher
 import kotlin.test.*
-import kara.config.AppConfig
+import kara.*
+import kara.internal.*
 import karatests.mock.mockRequest
-import kara.controllers.scanObjects
 import org.apache.log4j.BasicConfigurator
 import org.junit.Before
 import org.junit.Test

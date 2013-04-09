@@ -1,12 +1,9 @@
 package karademo.views.home
 
-import kara.views.*
-import kara.styles.*
+import kara.*
 import karademo.models.Book
 import karademo.styles.StyleClasses.*
-import kara.views.FormMethod
 import karademo.routes.Home
-import kara.controllers.link
 
 class Forms(val book : Book) : HtmlView() {
     override fun render(context: ActionContext) {

@@ -9,7 +9,7 @@ import java.net.URLDecoder
 fun main(args: Array<String>) {
     val cl = URLClassLoader(HomePathResolver.collectJars(), null)
     Thread.currentThread().setContextClassLoader(cl)
-    val clazz = cl.loadClass("kara.KaraPackage")!!
+    val clazz = cl.loadClass("kara.cli.CliPackage")!!
     clazz.getMethod("main2", javaClass<Array<String>>()).invoke(null, args)
 }
 

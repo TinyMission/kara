@@ -1,4 +1,4 @@
-package kara.exceptions
+package kara
 
 /**
  * If thrown during the handling of a request, a 404 response will be returned.

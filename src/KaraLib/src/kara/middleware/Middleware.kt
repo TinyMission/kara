@@ -1,11 +1,10 @@
-package kara.middleware
+package kara
 
 /**
  * Base class for Kara middleware.
  * Middleware is code that is injected inside the request pipeline,
  * either before or after a request is handled by the application.
  */
-import kara.views.ActionContext
 
 abstract class Middleware() {
 

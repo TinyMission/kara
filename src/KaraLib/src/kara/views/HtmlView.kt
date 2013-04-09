@@ -1,7 +1,6 @@
-package kara.views
+package kara
 
-import kara.controllers.ActionResult
-import kara.config.AppConfig
+import kara.internal.*
 
 /** Base class for html views.
  */

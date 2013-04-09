@@ -1,4 +1,4 @@
-package kara.controllers
+package kara
 
 public enum class HttpMethod {
     GET

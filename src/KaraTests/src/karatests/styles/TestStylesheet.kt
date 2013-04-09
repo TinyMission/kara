@@ -1,6 +1,7 @@
 package karatests.styles
 
-import kara.styles.*
+import kara.*
+import kara.internal.*
 
 /** A test stylesheet builder.
  */

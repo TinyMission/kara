@@ -1,9 +1,8 @@
-package kara.styles
+package kara
 
 import java.util.ArrayList
 import java.util.HashMap
-import kara.styles.*
-import kara.util.join
+import kara.internal.*
 
 trait Selector {
     fun toExternalForm() : String
@@ -51,7 +50,7 @@ public enum class PseudoClass : StyleClass {
 /**
  * Represents a single stylesheet element.
  */
-open class Element() {
+open class CssElement() {
     val children : MutableList<StyledElement> = ArrayList<StyledElement>()
     val attributes = HashMap<String, Any>()
 
@@ -213,7 +212,7 @@ open class Element() {
 }
 
 
-class StyledElement(val selector : String) : Element() {
+class StyledElement(val selector : String) : CssElement() {
     /**
      * Writes the element to the builder with the given indenation.
      */
@@ -359,8 +358,8 @@ class StyledElement(val selector : String) : Element() {
             attributes["color"] = value.toString()
         }
 
-    var float : Float?
-        get() = getAttribute<Float>("float")
+    var float : FloatType?
+        get() = getAttribute<FloatType>("float")
         set(value) {
             attributes["float"] = value.toString()
         }

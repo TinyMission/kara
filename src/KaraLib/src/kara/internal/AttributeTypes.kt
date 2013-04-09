@@ -1,14 +1,7 @@
-package kara.views
+package kara.internal
 
-import kara.controllers.Request
-import kara.util.join
-import kara.styles.StyleClass
-import kara.controllers.Link
-import kara.controllers.DirectLink
+import kara.*
 
-/**
- * @author max
- */
 public abstract class Attribute<T>(val name : String) {
     abstract fun encode(t: T) : String
     abstract fun decode(s: String) : T

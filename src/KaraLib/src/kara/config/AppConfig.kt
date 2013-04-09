@@ -1,9 +1,8 @@
-package kara.config
+package kara
 
-import kara.controllers.ParamDeserializer
 import java.io.File
 import java.util.HashMap
-import kara.middleware.MiddlewareList
+import kara.internal.*
 
 /**
  * Store application configuration.

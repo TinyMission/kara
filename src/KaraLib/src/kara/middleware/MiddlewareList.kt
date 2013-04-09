@@ -1,4 +1,4 @@
-package kara.middleware
+package kara
 
 import java.util.ArrayList
 

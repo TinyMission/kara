@@ -1,6 +1,6 @@
 package dependencies
 
-import kara.config.AppConfig
+import kara.*
 import org.apache.ivy.core.settings.IvySettings
 import org.apache.ivy.Ivy
 import org.apache.ivy.core.event.EventManager

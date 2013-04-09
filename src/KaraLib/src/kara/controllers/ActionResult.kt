@@ -1,7 +1,6 @@
-package kara.controllers
+package kara
 
 import javax.servlet.http.HttpServletResponse
-import kara.views.ActionContext
 
 /** Base class for objects that are returned from actions.
  */
