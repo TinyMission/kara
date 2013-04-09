@@ -114,11 +114,6 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
 
             val result = routeInstance.handle(context)
 
-            // set the html layout, if applicable (this is a bit of a hack, but I'm not sure how to do it better)
-            if (result is HtmlView) {
-                (result as HtmlView).layout = layout()
-            }
-
             // run middleware with afterRequest
             for (ref in appConfig.middleware.all) {
                 if (ref.matches(request.getRequestURI()!!)) {
@@ -136,34 +131,10 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
             var error : Throwable = ex
             if (ex.getCause() != null)
                 error = ex.getCause()!!
-            val errorView = ErrorView(error)
-            errorView.layout = ErrorLayout()
-            errorView.writeResponse(context)
+            ErrorView(error).writeResponse(context)
         }
     }
 
-    private fun layout() : HtmlLayout? {
-        var cur : Class<*>? = requestClass;
-        while (cur != null) {
-            val l = layout(cur!!.objectInstance())
-            if (l != null) return l
-            cur = cur!!.getEnclosingClass()
-        }
-        return null
-    }
-
-    private fun layout(instance : Any?) : HtmlLayout? {
-        if (instance == null) return null
-        try {
-            val value = instance.propertyValue("layout")
-            if (value is HtmlLayout) return value;
-        }
-        catch (e: Exception) {
-            // ignore
-        }
-
-        return null
-    }
 
     public fun toString() : String {
         return "Action{route=$route, handler=${requestClass}}"

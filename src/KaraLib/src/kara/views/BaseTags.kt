@@ -8,17 +8,17 @@ import kara.internal.*
 
 
 trait HtmlElement {
-    fun render(appConfig : AppConfig, builder : StringBuilder, indent : String)
+    fun renderElement(appConfig : AppConfig, builder : StringBuilder, indent : String)
 
     fun toString(appConfig : AppConfig) : String? {
         val builder = StringBuilder()
-        render(appConfig, builder, "")
+        renderElement(appConfig, builder, "")
         return builder.toString()
     }
 }
 
 class TextElement(private val text : String) : HtmlElement {
-    override fun render(appConfig : AppConfig, builder : StringBuilder, indent : String) {
+    override fun renderElement(appConfig : AppConfig, builder : StringBuilder, indent : String) {
         builder.append(indent)
         builder.append(escapedText());
         builder.append('\n')
@@ -46,7 +46,7 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : HtmlElement {
         return tag
     }
 
-    override fun render(appConfig : AppConfig, builder : StringBuilder, indent : String) {
+    override fun renderElement(appConfig : AppConfig, builder : StringBuilder, indent : String) {
         if (isEmpty) {
             builder.append("$indent<$tagName${renderAttributes()}/>\n")
         }
@@ -59,7 +59,7 @@ abstract class Tag(val tagName : String, val isEmpty : Boolean) : HtmlElement {
             else { // more than one text element or a tag child
                 builder.append("$indent<$tagName${renderAttributes()}>\n")
                 for (c in children) {
-                    c.render(appConfig, builder, indent + "  ")
+                    c.renderElement(appConfig, builder, indent + "  ")
                 }
                 builder.append("$indent</$tagName>\n")
             }
@@ -133,9 +133,9 @@ open class HTML() : TagWithText("html", false) {
 
     public var doctype : String = "<!DOCTYPE html>"
 
-    override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
+    override fun renderElement(appConfig : AppConfig, builder: StringBuilder, indent: String) {
         builder.append("$doctype\n")
-        super<TagWithText>.render(appConfig : AppConfig, builder, indent)
+        super<TagWithText>.renderElement(appConfig : AppConfig, builder, indent)
     }
 }
 
@@ -250,7 +250,7 @@ class STYLE(val stylesheet : Stylesheet) : TagWithText("style", false) {
         mimeType = "text/css"
     }
 
-    override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
+    override fun renderElement(appConfig : AppConfig, builder: StringBuilder, indent: String) {
         builder.append("$indent<$tagName${renderAttributes()}>\n")
         builder.append(stylesheet.toString())
         builder.append("$indent</$tagName>\n")
@@ -279,10 +279,10 @@ class STYLESHEETLINK(var stylesheet : Stylesheet) : TagWithText("link", true) {
     }
 
 
-    override fun render(appConfig : AppConfig, builder: StringBuilder, indent: String) {
+    override fun renderElement(appConfig : AppConfig, builder: StringBuilder, indent: String) {
         stylesheet.write(appConfig)
         href = stylesheet.relativePath(appConfig).link()
-        super<TagWithText>.render(appConfig, builder, indent)
+        super<TagWithText>.renderElement(appConfig, builder, indent)
     }
 }
 

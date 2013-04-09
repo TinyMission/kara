@@ -5,7 +5,7 @@ import kara.internal.*
 
 /** Home html view.
  */
-class HomeView() : HtmlView() {
+class HomeView() : HtmlView(DefaultLayout()) {
     override fun render(context: ActionContext) {
         h2 {+"Welcome Home"}
         p ("<h2>MakeSureThisIsEscaped</h2>")

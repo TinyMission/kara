@@ -1,14 +1,11 @@
 package karademo.routes
 
 import kara.*
-import karademo.views.DefaultLayout
 import java.util.Date
 import karademo.views.posts.Show
 import karademo.models.Book
 
 object Home {
-    val layout = DefaultLayout()
-
     Get("/")
     class Index(): Request({ karademo.views.home.Index() })
 

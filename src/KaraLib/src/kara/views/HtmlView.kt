@@ -4,7 +4,7 @@ import kara.internal.*
 
 /** Base class for html views.
  */
-abstract class HtmlView(var layout : HtmlLayout? = null) : BodyTag("view", false), ActionResult {
+abstract class HtmlView(val layout : HtmlLayout? = null) : BodyTag("view", false), ActionResult {
 
 
     override fun writeResponse(context : ActionContext) : Unit {
@@ -17,17 +17,23 @@ abstract class HtmlView(var layout : HtmlLayout? = null) : BodyTag("view", false
             writer.write(this.toString(context.appConfig)!!)
         }
         else {
-            layout?.children?.clear()
-            layout?.render(context, this)
-            writer.write(layout?.toString(context.appConfig)!!)
+            val page = HTML()
+            with(layout!!) {
+                page.render(context, this@HtmlView)
+            }
+            writer.write(page.toString(context.appConfig)!!)
         }
         writer.flush()
+    }
+
+    fun <T:Any> with(t: T, body: T.() -> Unit) {
+        t.body()
     }
 
     override fun toString(appConfig : AppConfig): String? {
         val builder = StringBuilder()
         for (child in children) {
-            child.render(appConfig, builder, "")
+            child.renderElement(appConfig, builder, "")
         }
         return builder.toString()
     }

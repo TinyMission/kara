@@ -6,7 +6,7 @@ import java.io.*
 fun Throwable.getStackTrace() : String {
     val os = ByteArrayOutputStream()
     this.printStackTrace(PrintStream(os))
-    return os.toString()!!
+    return os.toString()
 }
 
 
@@ -15,7 +15,7 @@ fun Throwable.getStackTrace() : String {
  */
 class ErrorLayout() : HtmlLayout() {
 
-    override fun render(context: ActionContext, mainView: HtmlView) {
+    override fun HTML.render(context: ActionContext, mainView: HtmlView) {
         head {
             title("Kara Error")
 
@@ -57,7 +57,7 @@ class ErrorLayout() : HtmlLayout() {
 /**
  * The standard Kara error page.
  */
-class ErrorView(val ex : Throwable) : HtmlView() {
+class ErrorView(val ex : Throwable) : HtmlView(ErrorLayout()) {
     override fun render(context: ActionContext) {
         context.session.setAttribute("hello", "world")
 

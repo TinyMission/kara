@@ -6,8 +6,6 @@ import karatests.views.DefaultLayout
 import karatests.views.HomeView
 
 object Routes {
-    val layout = DefaultLayout()
-
     Get("/")
     class Index(): Request({ HomeView() })
 

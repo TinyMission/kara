@@ -6,7 +6,7 @@ import kara.internal.*
 /** A default layout implementation.
  */
 class DefaultLayout() : HtmlLayout() {
-    override fun render(context: ActionContext, mainView: HtmlView) {
+    override fun HTML.render(context: ActionContext, mainView: HtmlView) {
         head {
             title {+"This is the default layout"}
         }

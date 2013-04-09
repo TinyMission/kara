@@ -1,8 +1,9 @@
 package karademo.views.home
 
 import kara.*
+import karademo.views.DefaultLayout
 
-class Index() : HtmlView() {
+class Index() : HtmlView(DefaultLayout()) {
 
     override fun render(context: ActionContext) {
 

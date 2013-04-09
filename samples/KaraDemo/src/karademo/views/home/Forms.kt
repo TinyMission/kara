@@ -4,8 +4,9 @@ import kara.*
 import karademo.models.Book
 import karademo.styles.StyleClasses.*
 import karademo.routes.Home
+import karademo.views.DefaultLayout
 
-class Forms(val book : Book) : HtmlView() {
+class Forms(val book : Book) : HtmlView(DefaultLayout()) {
     override fun render(context: ActionContext) {
         h2("Forms")
         formFor(book, Home.Update(), FormMethod.post) {

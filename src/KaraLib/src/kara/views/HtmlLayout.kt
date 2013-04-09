@@ -4,8 +4,8 @@ package kara
  * A layout is an html template that renders the shared part of the page.
  * Subclasses must implement the render function to provide the layout html.
  */
-abstract class HtmlLayout() : HTML() {
+abstract class HtmlLayout() {
     /** Subclasses must implement this to render the main view inside the html document.
     */
-    abstract fun render(context : ActionContext, mainView : HtmlView)
+    abstract fun HTML.render(context : ActionContext, mainView : HtmlView)
 }
