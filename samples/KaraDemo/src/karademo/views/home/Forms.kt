@@ -9,7 +9,7 @@ import karademo.views.DefaultLayout
 class Forms(val book : Book) : HtmlView(DefaultLayout()) {
     override fun render(context: ActionContext) {
         h2("Forms")
-        formFor(book, Home.Update(), FormMethod.post) {
+        formForBean(book, Home.Update(), FormMethod.post) {
 
             table(fields) {
                 tr {
