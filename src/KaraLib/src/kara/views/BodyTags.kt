@@ -662,6 +662,13 @@ open class OPTION() : BodyTag("option", false) {
 		set(value) {
 			this[Attributes.disabled] = value
 		}
+
+    public var selected : Boolean
+        get() = this[Attributes.selected]
+        set(value) {
+            this[Attributes.selected] = value
+        }
+
 }
 open class OPTGROUP() : BodyTag("optgroup", false) {
 }
