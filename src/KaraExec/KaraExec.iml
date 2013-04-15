@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="KotlinRuntime" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="KaraLib" />
     <orderEntry type="library" name="javax.servlet-3.0.0.v201112011016" level="project" />
     <orderEntry type="library" name="jetty-all-server-8.1.5.v20120716" level="project" />
