@@ -252,8 +252,36 @@ abstract class BodyTag(name : String, isEmpty : Boolean) : TagWithText(name, isE
 		}
 	}
 
+	fun small(text : String = "", c : StyleClass? = null, id : String = "" , init : SMALL.() -> Unit = empty_init) {
+		val tag = SMALL()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+		if (tag.children.size == 0) {
+			tag.text = text
+		}
+	}
+
+    fun blockquote(text : String = "", c : StyleClass? = null, id : String = "" , cite : Link? = null, init : BLOCKQUOTE.() -> Unit = empty_init) {
+		val tag = BLOCKQUOTE()
+		tag.id = id
+        if (c != null) tag.c = c
+        if (cite != null) tag.cite = cite
+        initTag(tag, init)
+		if (tag.children.size == 0) {
+			tag.text = text
+		}
+	}
+
 	fun table(c : StyleClass? = null, id : String = "" , init : TABLE.() -> Unit = empty_init) {
 		val tag = TABLE()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+	}
+
+	fun dl(c : StyleClass? = null, id : String = "" , init : DL.() -> Unit = empty_init) {
+		val tag = DL()
 		tag.id = id
         if (c != null) tag.c = c
         initTag(tag, init)
@@ -564,6 +592,15 @@ open class SPAN() : BodyTag("span", false) {
 }
 open class STRONG() : BodyTag("strong", false) {
 }
+open class SMALL() : BodyTag("small", false) {
+}
+open class BLOCKQUOTE() : BodyTag("blockquote", false) {
+    public var cite : Link
+   		get() = this[Attributes.cite]
+   		set(value) {
+   			this[Attributes.cite] = value
+   		}
+}
 open class TABLE() : BodyTag("table", false) {
 	fun tr(c : StyleClass? = null, id : String = "" , init : TR.() -> Unit = empty_init) {
 		val tag = TR()
@@ -574,6 +611,24 @@ open class TABLE() : BodyTag("table", false) {
 
 	fun tbody(c : StyleClass? = null, id : String = "" , init : TBODY.() -> Unit = empty_init) {
 		val tag = TBODY()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+	}
+
+}
+open class DD() : BodyTag("dd", false) {}
+open class DT() : BodyTag("dt", false) {}
+open class DL() : BodyTag("dl", false) {
+	fun dt(c : StyleClass? = null, id : String = "" , init : DT.() -> Unit = empty_init) {
+		val tag = DT()
+		tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+	}
+
+	fun dd(c : StyleClass? = null, id : String = "" , init : DD.() -> Unit = empty_init) {
+		val tag = DD()
 		tag.id = id
         if (c != null) tag.c = c
         initTag(tag, init)

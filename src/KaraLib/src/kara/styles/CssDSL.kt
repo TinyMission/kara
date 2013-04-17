@@ -111,7 +111,9 @@ open class CssElement() {
     val p : TagSelector get() = TagSelector("p")
     val select : TagSelector get() = TagSelector("select")
     val span : TagSelector get() = TagSelector("span")
+    val small : TagSelector get() = TagSelector("small")
     val strong : TagSelector get() = TagSelector("strong")
+    val blockquote : TagSelector get() = TagSelector("blockquote")
     val table : TagSelector get() = TagSelector("table")
     val textarea : TagSelector get() = TagSelector("textarea")
     val ul : TagSelector get() = TagSelector("ul")
@@ -122,6 +124,10 @@ open class CssElement() {
     val tbody : TagSelector get() = TagSelector("tbody")
     val td : TagSelector get() = TagSelector("td")
     val th : TagSelector get() = TagSelector("th")
+    val dl : TagSelector get() = TagSelector("dl")
+    val dt : TagSelector get() = TagSelector("dt")
+    val dd : TagSelector get() = TagSelector("dd")
+
 
     public fun id(name: String, body : StyledElement.() -> Unit) {
         any.id(name, body)

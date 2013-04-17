@@ -9,6 +9,7 @@ object Attributes {
     val title = IdAttribute("title")
 
     val href = LinkAttribute("href")
+    val cite = LinkAttribute("cite")
     val rel = StringAttribute("rel")
     val target = StringAttribute("target")
     val mimeType = MimeAttribute("type")
