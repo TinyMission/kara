@@ -25,7 +25,7 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
     val logger = Logger.getLogger(this.javaClass)!!
 
-    var classLoader : URLClassLoader? = null
+    var classLoader : ClassLoader? = null
 
     /** This lock is held while loading and retreiving the application to avoid someone retrieving an invalid application. **/
     val appLock : jet.Any = Object()
@@ -44,7 +44,7 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
     }
 
     override fun onFileWatch(dir: String, fileName : String) {
-        this@AppLoader.loadApp()
+        //this@AppLoader.loadApp()
     }
 
     public fun init() {
@@ -57,15 +57,13 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
      */
     public fun loadApp() {
         if (classLoader != null) {
-            classLoader?.close()
+            (classLoader as URLClassLoader).close()
             classLoader = null
         }
 
         synchronized(appLock) {
             // load the application class
-            val cp = buildClasspath()
-            logger.debug("Application classpath: " + cp)
-            classLoader = URLClassLoader(cp, javaClass.getClassLoader())
+            classLoader = appConfig.applicationClassloader(javaClass.getClassLoader()!!)
             val appClassObject = classLoader?.loadClass("${appConfig.appPackage}.Application")
             if (appClassObject == null)
                 throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
@@ -76,28 +74,6 @@ class AppLoader(val appConfig : AppConfig) : FileWatchListener {
 
             for (listener in listeners) {
                 listener.onAppLoaded(application as Application)
-            }
-        }
-    }
-
-    private fun buildClasspath() : Array<URL> {
-        val answer = ArrayList<URL>()
-        answer.add(File(appConfig.appRoot, "bin").toURI().toURL())
-        appendJars(File(appConfig.appRoot, "lib"), answer)
-        return Array<URL>(answer.size) {answer.get(it)}
-    }
-
-    private fun appendJars(dir: File, answer : MutableList<URL>) {
-        dir.listFiles()?.forEach { file ->
-            val name = file.getName()
-            when {
-                name == "src" || name == "sources" -> {}
-                name.endsWith("-src.jar") || name.endsWith("-sources.jar") -> {}
-                file.isDirectory() -> appendJars(file, answer)
-                name.endsWith(".jar") -> {
-                    answer.add(file.toURI().toURL())
-                }
-                else -> {}
             }
         }
     }

@@ -5,7 +5,7 @@ import kara.*
 import kara.internal.*
 
 
-val _dispatcher = Dispatcher(scanObjects(Routes))
+val _dispatcher = Dispatcher(scanObjects(array(Routes)))
 val _mockAppConfig = AppConfig("", "test")
 
 /** Provides a mock dispatch of the given method and url.

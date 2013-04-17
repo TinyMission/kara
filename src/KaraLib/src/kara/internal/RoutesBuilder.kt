@@ -8,11 +8,12 @@ fun scanPackage(prefix : String, classloader : ClassLoader) : List<Class<out Req
     return Reflections(prefix, classloader).getSubTypesOf(javaClass<Request>())!!.toList()
 }
 
-fun scanObjects(vararg objects : Any) : List<Class<out Request>> {
+fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<Class<out Request>> {
     val answer = ArrayList<Class<out Request>>()
 
     fun scan(routesObject : Any) {
-        for (innerClass in routesObject.javaClass.getDeclaredClasses()) {
+        val newClass = classloader?.loadClass(routesObject.javaClass.getName()) ?: routesObject.javaClass
+        for (innerClass in newClass.getDeclaredClasses()) {
             val objectInstance = innerClass.objectInstance()
             if (objectInstance != null) {
                 scan(objectInstance)
