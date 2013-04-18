@@ -106,6 +106,7 @@ open class CssElement() {
     val h5 : TagSelector get() = TagSelector("h5")
     val img : TagSelector get() = TagSelector("img")
     val input : TagSelector get() = TagSelector("input")
+    val legend : TagSelector get() = TagSelector("legend")
     val label : TagSelector get() = TagSelector("label")
     val ol : TagSelector get() = TagSelector("ol")
     val p : TagSelector get() = TagSelector("p")

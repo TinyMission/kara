@@ -354,7 +354,18 @@ open class DIV() : BodyTag("div", false) {
 }
 open class EM() : BodyTag("em", false) {
 }
+
+open class LEGEND() : BodyTag("legend", false)
 open class FIELDSET() : BodyTag("fieldset", false) {
+    fun legend(text : String = "", c : StyleClass? = null, id : String = "" , init : LEGEND.() -> Unit = empty_init) {
+        val tag = LEGEND()
+        tag.id = id
+        if (c != null) tag.c = c
+        initTag(tag, init)
+        if (tag.children.size == 0) {
+            tag.text = text
+        }
+    }
 }
 open class FORM() : BodyTag("form", false) {
 	public var action : Link
