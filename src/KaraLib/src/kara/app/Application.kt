@@ -15,9 +15,18 @@ import java.io.File
  */
 abstract class Application(protected val config: AppConfig, private vararg val routes : Any) {
     private var _dispatcher : Dispatcher? = null
+    private var lastRequestServedAt: Long = 0
     public val dispatcher : Dispatcher
         get() {
-            if (config.isDevelopment()) return buildDispatcher()
+            val now = System.currentTimeMillis()
+
+            if (config.isDevelopment()) {
+                if (now - lastRequestServedAt > 300.toLong()) {
+                    _dispatcher = null
+                }
+            }
+
+            lastRequestServedAt = now
 
             var d = _dispatcher
             if (d == null) {
