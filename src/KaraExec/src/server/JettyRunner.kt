@@ -39,6 +39,7 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
                 try {
                     logger.info("Rendering action ${actionInfo}")
                     actionInfo.exec(appConfig, p2!!, p3!!)
+                    p1!!.setHandled(true)
                 }
                 catch (ex : Exception) {
                     val out = p3?.getWriter()
