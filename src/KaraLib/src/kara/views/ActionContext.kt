@@ -19,6 +19,7 @@ class ActionContext(val appConfig : AppConfig,
                     val response : HttpServletResponse,
                     val params : RouteParams) {
     public val session : HttpSession = request.getSession(true)!!
+    public val startedAt : Long = System.currentTimeMillis()
 
     fun redirect(url : String) : ActionResult {
         return RedirectResult(url)
