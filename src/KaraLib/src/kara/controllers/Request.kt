@@ -40,7 +40,7 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
 
         if (properties.size > 0) {
             answer.append("?")
-            answer.append(properties map { "$it=${propertyValue(it)}" } join("&"))
+            answer.append(properties filter { propertyValue(it) != null } map { "$it=${propertyValue(it)}" } join("&"))
         }
 
         return answer.toString()
