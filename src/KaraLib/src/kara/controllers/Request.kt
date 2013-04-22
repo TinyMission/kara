@@ -38,9 +38,10 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
 
         if (answer.length() == 0) answer.append("/")
 
-        if (properties.size > 0) {
+        val nonEmptyProperties = properties filter { propertyValue(it) != null }
+        if (nonEmptyProperties.count() > 0) {
             answer.append("?")
-            answer.append(properties filter { propertyValue(it) != null } map { "$it=${propertyValue(it)}" } join("&"))
+            answer.append(nonEmptyProperties map { "$it=${propertyValue(it)}" } join("&"))
         }
 
         return answer.toString()
