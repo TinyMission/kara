@@ -2,7 +2,6 @@ package kara.internal
 
 import javax.servlet.http.*
 import java.io.IOException
-import org.reflections.Reflections
 import kara.*
 
 open class Servlet(val app: Application, val appConfig : AppConfig) : HttpServlet() {

@@ -1,15 +1,12 @@
 package kara
 
-import org.reflections.Reflections
 import java.util.regex.Pattern
 import java.util.ArrayList
-import org.reflections.util.ClasspathHelper
 import java.net.URLClassLoader
-import org.reflections.util.ConfigurationBuilder
-import org.reflections.scanners.SubTypesScanner
 import kara.internal.*
 import java.net.URL
 import java.io.File
+import org.apache.log4j.Logger
 
 /** The base Kara application class.
  */
@@ -38,13 +35,22 @@ abstract class Application(protected val config: AppConfig, private vararg val r
 
     private fun buildDispatcher() : Dispatcher {
         val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
-        val routeClasses = if (routes.size == 0) {
-            scanPackage("${config.appPackage}.routes", newClassloader)
-        }
-        else {
-            scanObjects(routes, newClassloader)
+        if (routes.size != 0) {
+            return Dispatcher(scanObjects(routes, newClassloader))
         }
 
-        return Dispatcher(routeClasses)
+        // Discover routes via reflections
+        val routePackages = config.routePackages;
+        if (routePackages == null) {
+            // routePackages are not specified in appConfig, use default app.routes package
+            val defaultRoutes = "${config.appPackage}.routes"
+            return Dispatcher(scanPackage(defaultRoutes, newClassloader))
+        }
+
+        val dynamicRoutes = ArrayList<Class<out Request>>()
+        for (routePackage in routePackages) {
+            dynamicRoutes.addAll(scanPackage(routePackage, newClassloader))
+        }
+        return Dispatcher(dynamicRoutes)
     }
 }

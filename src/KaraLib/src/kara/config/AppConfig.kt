@@ -71,10 +71,30 @@ public class AppConfig(appRoot : String, val environment : String = "development
         //Is you see error here, click "Setup Kotlin JDK Annotations"
         get() = File(appRoot, sessionDir).toString()
 
+    public val routePackages: List<String>?
+        get() {
+            return if (contains("kara.routePackages")) {
+                this["kara.routePackages"].split(',').toList() map {"${it.trim()}"}
+            }
+            else {
+                null
+            }
+        }
+
     public val hotPackages: List<String>?
         get() {
             return if (contains("kara.hotPackages")) {
                 this["kara.hotPackages"].split(',').toList() map {"${it.trim()}.*"}
+            }
+            else {
+                null
+            }
+        }
+
+    public val staticPackages: List<String>?
+        get() {
+            return if (contains("kara.staticPackages")) {
+                this["kara.staticPackages"].split(',').toList() map {"${it.trim()}.*"}
             }
             else {
                 null
@@ -97,8 +117,12 @@ public class AppConfig(appRoot : String, val environment : String = "development
     public fun applicationClassloader(current: ClassLoader): ClassLoader {
         if (isDevelopment()) {
             val hot = hotPackages
+            val static = staticPackages
             if (hot != null) {
-                return RestrictedClassLoader(hot, buildClasspath(), current)
+                if (static == null)
+                    return RestrictedClassLoader(hot, ArrayList<String>(), buildClasspath(), current)
+                else
+                    return RestrictedClassLoader(hot, static, buildClasspath(), current)
             }
         }
 
