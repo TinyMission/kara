@@ -47,10 +47,6 @@ abstract class Application(protected val config: AppConfig, private vararg val r
             return Dispatcher(scanPackage(defaultRoutes, newClassloader))
         }
 
-        val dynamicRoutes = ArrayList<Class<out Request>>()
-        for (routePackage in routePackages) {
-            dynamicRoutes.addAll(scanPackage(routePackage, newClassloader))
-        }
-        return Dispatcher(dynamicRoutes)
+        return Dispatcher(routePackages.flatMap { scanPackage(it, newClassloader) })
     }
 }
