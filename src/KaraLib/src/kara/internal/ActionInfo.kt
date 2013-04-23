@@ -62,6 +62,15 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
             params[name] = value
         }
 
+        if (request.getContentType()?.startsWith("multipart/form-data")?:false) {
+            for (part in request.getParts()!!) {
+                if (part.getSize() < 4192) {
+                    val name = part.getName()!!
+                    params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
+                }
+            }
+        }
+
         return params
     }
 
