@@ -30,7 +30,7 @@ class BeanFormModel(val model: Any) : FormModel<String> {
 /**
  * Allows forms to be built based on a model object.
  */
-class FormBuilder<P>(val model : FormModel<P>) : FORM() {
+class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FORM(containingTag) {
     val logger = Logger.getLogger(this.javaClass)!!
 
     /** If true, the form will have enctype="multipart/form-data" */
@@ -51,13 +51,13 @@ class FormBuilder<P>(val model : FormModel<P>) : FORM() {
     /**
      * Gets the current body tag on the top of the stack, or this if one doesn't exist (shouldn't happen).
      */
-    val currentTag : BodyTag
+    val currentTag : HtmlBodyTag
         get() {
             if (tagStack == null)
                 return this
             val tag = tagStack?.top!!
-            if (tag is BodyTag)
-                return tag as BodyTag
+            if (tag is HtmlBodyTag)
+                return tag as HtmlBodyTag
             return this
         }
 
@@ -66,10 +66,9 @@ class FormBuilder<P>(val model : FormModel<P>) : FORM() {
      *
      * @param text the text to use for the label (defaults to the property name)
      */
-    public fun labelFor(property: P, text : String? = null, classes : StyleClass? = null) {
-        currentTag.label(
-                forId=propertyId(property),
-                c=classes) {
+    public fun labelFor(property: P, text : String? = null, c : StyleClass? = null) {
+        currentTag.label(c) {
+            forId = propertyId(property)
             +(text ?: model.propertyName(property).decamel().capitalize())
         }
     }
@@ -79,24 +78,38 @@ class FormBuilder<P>(val model : FormModel<P>) : FORM() {
      * This method should not generally be used, as all valid input types are mapped to their own methods.
      * It may be convenient, however, if you're trying to assign the input type programmatically.
      */
-    public fun inputFor(inputType : InputType, property: P, init : INPUT.() -> Unit = {}) {
+    public fun inputFor(inputType : InputType, property: P, contents : INPUT.() -> Unit = {}) {
         val value = propertyValue(property)
-        currentTag.input(inputType=inputType, id=propertyId(property), name=propertyName(property), value=value, init=init)
+        currentTag.input(id = propertyId(property)) {
+            this.inputType = inputType
+            this.name = propertyName(property)
+            this.value = value
+            this.contents()
+        }
     }
 
     /**
      * Creates a textarea for the given property.
      */
-    public fun textAreaFor(property: P, init : TEXTAREA.() -> Unit = {}) {
+    public fun textAreaFor(property: P, contents : TEXTAREA.() -> Unit = {}) {
         val value = propertyValue(property)
-        currentTag.textarea(id=propertyId(property), name=propertyName(property), text=value, init=init)
+        currentTag.textarea(id=propertyId(property)) {
+            this.name=propertyName(property)
+            this.text=value
+            this.contents()
+        }
     }
 
     /**
      * Creates a submit button for the form, with an optional name.
      */
     public fun submitButton(value : String, name : String = "submit", init : INPUT.() -> Unit = {}) {
-        currentTag.input(inputType=InputType.submit, value=value, name=name, init=init)
+        currentTag.input() {
+            this.inputType = InputType.submit
+            this.value = value
+            this.name = name
+            init()
+        }
     }
 
     /**
@@ -211,28 +224,33 @@ class FormBuilder<P>(val model : FormModel<P>) : FORM() {
     /**
      * Creates a radio button for the given property and value.
      */
-    public fun radioFor(property: P, value : String, init : INPUT.() -> Unit = {}) {
+    public fun radioFor(property: P, value : String, contents : INPUT.() -> Unit = {}) {
         val modelValue = propertyValue(property).toString()
-        currentTag.input(inputType=radio, id=propertyId(property), name=propertyName(property), value=value) {
+        currentTag.input(id = propertyId(property)) {
+            this.name = propertyName(property)
+            this.inputType = radio
+            this.value = value
             checked = value.equalsIgnoreCase(modelValue)
-            init()
+            contents()
         }
     }
 
     /**
      * Creates a checkbox for the given property.
      */
-    public fun checkBoxFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun checkBoxFor(property: P, contents : INPUT.() -> Unit = {}) {
         val modelValue = propertyValue(property)
-        currentTag.input(inputType=checkbox, id=propertyId(property), name=propertyName(property)) {
+        currentTag.input(id = propertyId(property)) {
+            this.inputType = checkbox
+            this.name = propertyName(property)
             checked = modelValue == "true"
-            init()
+            contents()
         }
     }
 }
 
-fun <P> BodyTag.formForModel(model: FormModel<P>, action : Link, formMethod : FormMethod = FormMethod.post, init : FormBuilder<P>.() -> Unit) {
-    val builder = FormBuilder(model)
+fun <P> HtmlBodyTag.formForModel(model: FormModel<P>, action : Link, formMethod : FormMethod = FormMethod.post, init : FormBuilder<P>.() -> Unit) {
+    val builder = FormBuilder(this, model)
     builder.action = action
     builder.method = formMethod
     builder.tagStack = this.tagStack
@@ -244,6 +262,6 @@ fun <P> BodyTag.formForModel(model: FormModel<P>, action : Link, formMethod : Fo
     }
 }
 
-fun BodyTag.formForBean(bean: Any, action : Link, formMethod : FormMethod = FormMethod.post, init : FormBuilder<String>.() -> Unit) {
+fun HtmlBodyTag.formForBean(bean: Any, action : Link, formMethod : FormMethod = FormMethod.post, init : FormBuilder<String>.() -> Unit) {
     formForModel(BeanFormModel(bean), action, formMethod, init)
 }

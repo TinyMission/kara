@@ -4,9 +4,7 @@ import kara.internal.*
 
 /** Base class for html views.
  */
-abstract class HtmlView(val layout : HtmlLayout? = null) : BodyTag("view", false), ActionResult {
-
-
+abstract class HtmlView(val layout : HtmlLayout? = null) : HtmlBodyTag(null, "view"), ActionResult {
     override fun writeResponse(context : ActionContext) : Unit {
         context.response.setContentType("text/html")
 
@@ -30,7 +28,7 @@ abstract class HtmlView(val layout : HtmlLayout? = null) : BodyTag("view", false
         t.body()
     }
 
-    override fun toString(appConfig : AppConfig): String? {
+    override fun toString(appConfig : AppConfig): String {
         val builder = StringBuilder()
         for (child in children) {
             child.renderElement(appConfig, builder, "")

@@ -3,7 +3,7 @@ package kara
 import java.io.*
 
 
-fun Throwable.getStackTrace() : String {
+fun Throwable.getStackTrace(): String {
     val os = ByteArrayOutputStream()
     this.printStackTrace(PrintStream(os))
     return os.toString()
@@ -13,7 +13,7 @@ fun Throwable.getStackTrace() : String {
 /**
  * Layout for the standard error view.
  */
-class ErrorLayout() : HtmlLayout() {
+class ErrorLayout(): HtmlLayout() {
 
     override fun HTML.render(context: ActionContext, mainView: HtmlView) {
         head {
@@ -57,34 +57,34 @@ class ErrorLayout() : HtmlLayout() {
 /**
  * The standard Kara error page.
  */
-class ErrorView(val ex : Throwable) : HtmlView(ErrorLayout()) {
+class ErrorView(val ex: Throwable): HtmlView(ErrorLayout()) {
     override fun render(context: ActionContext) {
         context.session.setAttribute("hello", "world")
 
-        div(id="header") {
-            h1("Error Rendering Page")
+        div(id = "header") {
+            h1 { +"Error Rendering Page" }
             val message = ex.getMessage()
             if (message != null)
-                p(message)
+                p { +message }
         }
 
-        h2("Action")
-        div(id="actioninfo") {
+        h2 { +"Action" }
+        div(id = "actioninfo") {
             p {
-                text = "Request: ${context.request.getRequestURI()}"
+                +"Request: ${context.request.getRequestURI()}"
             }
             p {
-                text = "Params: ${context.params.toString()}"
+                +"Params: ${context.params.toString()}"
             }
             p {
-                text = "Session: ${context.session.getDescription()}"
+                +"Session: ${context.session.getDescription()}"
             }
         }
 
         val stackTrace = ex.getStackTrace()
-        h2("Stack Trace")
-        div(id="stacktrace") {
-            text = stackTrace.replace("\n", "<br/>")
+        h2 { +"Stack Trace" }
+        div(id = "stacktrace") {
+            +stackTrace.replace("\n", "<br/>")
         }
     }
 }
