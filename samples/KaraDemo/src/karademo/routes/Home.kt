@@ -31,6 +31,22 @@ object Home {
         karademo.views.home.Forms(book)
     })
 
+    Get("/json")
+    class JsonPage: Request({
+        jsonObject {
+            "id" to "sdfsdf"
+            "id" to {
+                "value" to "111"
+                "id" to array {
+                    value { "sdfsdf" }
+                    item {
+                        "id" to "sdfsdf"
+                    }
+                }
+            }
+        }
+    })
+
     object Posts {
         Get("get/:id") class GetPost(id: Int) : Request({
             val post = karademo.models.Post(Date(), "Post ${id}")
