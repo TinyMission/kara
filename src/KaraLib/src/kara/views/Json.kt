@@ -20,14 +20,20 @@ fun jsonReflect(obj: Any): ActionResult = Json(obj)
 
 class JsonArray {
     val elements = ArrayList<Any>()
-    fun value(value: ()->String) {
-        elements.add(value())
+
+    fun jsonValue(value : String)  = elements.add(value)
+    fun jsonValue(value : Int) = elements.add(value)
+
+    fun jsonObject(body: JsonObject.()->Unit) {
+        val value = JsonObject()
+        value.body()
+        elements.add(value)
     }
 
-    fun item(body: JsonObject.()->Unit) {
-        val obj = JsonObject()
-        obj.body()
-        elements.add(obj)
+    fun jsonArray(body: JsonArray.()->Unit) {
+        val value = JsonArray()
+        value.body()
+        elements.add(value)
     }
 
     fun build(builder: StringBuilder) {
@@ -51,24 +57,18 @@ class JsonArray {
 class JsonObject {
     val properties = HashMap<String, Any>()
 
-    fun array(body: JsonArray.()->Unit): JsonArray {
-        val instance = JsonArray()
-        instance.body()
-        return instance
-    }
-
-    fun String.to(value: String) {
-        properties.put(this, value)
-    }
-
-    fun String.to(value: JsonArray) {
-        properties.put(this, value)
-    }
-
-    fun String.to(body: JsonObject.()->Unit) {
+    fun jsonValue(name : String, value : String) = properties.put(name, value)
+    fun jsonValue(name : String, value : Int) = properties.put(name, value)
+    fun jsonObject(name : String, body: JsonObject.()->Unit) {
         val value = JsonObject()
         value.body()
-        properties.put(this, value)
+        properties.put(name, value)
+    }
+
+    fun jsonArray(name : String, body: JsonArray.()->Unit) {
+        val value = JsonArray()
+        value.body()
+        properties.put(name, value)
     }
 
     fun build(builder: StringBuilder) {
