@@ -214,7 +214,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getContentType() : String? {
-        throw UnsupportedOperationException()
+        return "text/html"
     }
     public override fun getRemotePort() : Int {
         throw UnsupportedOperationException()
