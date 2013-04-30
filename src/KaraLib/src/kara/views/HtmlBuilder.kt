@@ -29,43 +29,36 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     val children: MutableList<HtmlElement> = ArrayList<HtmlElement>()
     private val attributes = HashMap<String, String>()
 
-    public var tagStack: TagStack? = null
-
     public fun build<T: HtmlTag>(tag: T, contents: T.() -> Unit): T {
-        tag.tagStack = this.tagStack
-        if (tagStack != null)
-            tagStack?.push(tag)
         tag.contents()
-        if (tagStack != null)
-            tagStack?.pop(tag)
         return tag
     }
 
     override fun renderElement(appConfig: AppConfig, builder: StringBuilder, indent: String) {
-        if (children.count() == 0 && renderStyle != RenderStyle.expanded) {
-            builder.append("$indent<$tagName${renderAttributes()}/>\n")
-        } else {
-            if (children.count() != 0 && renderStyle == RenderStyle.empty)
+        val count = children.count()
+        when {
+            count == 0 && renderStyle != RenderStyle.expanded -> {
+                builder.append("$indent<$tagName${renderAttributes()}/>\n")
+            }
+            count != 0 && renderStyle == RenderStyle.empty -> {
                 throw InvalidHtmlException("Empty tag has children")
-
-            if (children.count() == 1 && children[0] is HtmlText) {
+            }
+            count == 1 && children[0] is HtmlText -> {
                 // for single text elements, render inline
                 builder.append("$indent<$tagName${renderAttributes()}>")
                 builder.append((children[0] as HtmlText).escapedText())
                 builder.append("</$tagName>\n")
-            } else {
-                // more than one text element or a tag child
-                if (children.count() == 0) {
-                    builder.append("$indent<$tagName${renderAttributes()}>")
-                    builder.append("</$tagName>\n")
-                } else
-                {
-                    builder.append("$indent<$tagName${renderAttributes()}>\n")
-                    for (c in children) {
-                        c.renderElement(appConfig, builder, indent + "  ")
-                    }
-                    builder.append("$indent</$tagName>\n")
+            }
+            count == 0 -> {
+                builder.append("$indent<$tagName${renderAttributes()}>")
+                builder.append("</$tagName>\n")
+            }
+            else -> {
+                builder.append("$indent<$tagName${renderAttributes()}>\n")
+                for (c in children) {
+                    c.renderElement(appConfig, builder, indent + "  ")
                 }
+                builder.append("$indent</$tagName>\n")
             }
         }
     }

@@ -49,25 +49,12 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
     }
 
     /**
-     * Gets the current body tag on the top of the stack, or this if one doesn't exist (shouldn't happen).
-     */
-    val currentTag : HtmlBodyTag
-        get() {
-            if (tagStack == null)
-                return this
-            val tag = tagStack?.top!!
-            if (tag is HtmlBodyTag)
-                return tag as HtmlBodyTag
-            return this
-        }
-
-    /**
      * Creates a label element for the given property.
      *
      * @param text the text to use for the label (defaults to the property name)
      */
-    public fun labelFor(property: P, text : String? = null, c : StyleClass? = null) {
-        currentTag.label(c) {
+    public fun HtmlBodyTag.labelFor(property: P, text : String? = null, c : StyleClass? = null) {
+        label(c) {
             forId = propertyId(property)
             +(text ?: model.propertyName(property).decamel().capitalize())
         }
@@ -78,9 +65,9 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
      * This method should not generally be used, as all valid input types are mapped to their own methods.
      * It may be convenient, however, if you're trying to assign the input type programmatically.
      */
-    public fun inputFor(inputType : InputType, property: P, contents : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.inputFor(inputType : InputType, property: P, contents : INPUT.() -> Unit = {}) {
         val value = propertyValue(property)
-        currentTag.input(id = propertyId(property)) {
+        input(id = propertyId(property)) {
             this.inputType = inputType
             this.name = propertyName(property)
             this.value = value
@@ -91,9 +78,9 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
     /**
      * Creates a textarea for the given property.
      */
-    public fun textAreaFor(property: P, contents : TEXTAREA.() -> Unit = {}) {
+    public fun HtmlBodyTag.textAreaFor(property: P, contents : TEXTAREA.() -> Unit = {}) {
         val value = propertyValue(property)
-        currentTag.textarea(id=propertyId(property)) {
+        textarea(id=propertyId(property)) {
             this.name=propertyName(property)
             this.text=value
             this.contents()
@@ -103,8 +90,8 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
     /**
      * Creates a submit button for the form, with an optional name.
      */
-    public fun submitButton(value : String, name : String = "submit", init : INPUT.() -> Unit = {}) {
-        currentTag.input() {
+    public fun HtmlBodyTag.submitButton(value : String, name : String = "submit", init : INPUT.() -> Unit = {}) {
+        input() {
             this.inputType = InputType.submit
             this.value = value
             this.name = name
@@ -115,105 +102,105 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
     /**
      * Creates an input of type text for the given property.
      */
-    public fun textFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.textFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.text, property, init)
     }
 
     /**
      * Creates an input of type password for the given property.
      */
-    public fun passwordFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.passwordFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.password, property, init)
     }
 
     /**
      * Creates an input of type email for the given property.
      */
-    public fun emailFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.emailFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.email, property, init)
     }
 
     /**
      * Creates an input of type tel for the given property.
      */
-    public fun telFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.telFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.tel, property, init)
     }
 
     /**
      * Creates an input of type date for the given property.
      */
-    public fun dateFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.dateFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.date, property, init)
     }
 
     /**
      * Creates an input of type datetime for the given property.
      */
-    public fun dateTimeFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.dateTimeFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.datetime, property, init)
     }
 
     /**
      * Creates an input of type color for the given property.
      */
-    public fun colorFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.colorFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.color, property, init)
     }
 
     /**
      * Creates an input of type number for the given property.
      */
-    public fun numberFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.numberFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(InputType.number, property, init)
     }
 
     /**
      * Creates an input of type month for the given property.
      */
-    public fun monthFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.monthFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(month, property, init)
     }
 
     /**
      * Creates an input of type range for the given property.
      */
-    public fun rangeFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.rangeFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(range, property, init)
     }
 
     /**
      * Creates an input of type search for the given property.
      */
-    public fun searchFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.searchFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(search, property, init)
     }
 
     /**
      * Creates an input of type time for the given property.
      */
-    public fun timeFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.timeFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(time, property, init)
     }
 
     /**
      * Creates an input of type url for the given property.
      */
-    public fun urlFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.urlFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(url, property, init)
     }
 
     /**
      * Creates an input of type week for the given property.
      */
-    public fun weekFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.weekFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(week, property, init)
     }
 
     /**
      * Creates an input of type file for the given property.
      */
-    public fun fileFieldFor(property: P, init : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.fileFieldFor(property: P, init : INPUT.() -> Unit = {}) {
         inputFor(file, property, init)
         if (!hasFiles) {
             hasFiles = true
@@ -224,9 +211,9 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
     /**
      * Creates a radio button for the given property and value.
      */
-    public fun radioFor(property: P, value : String, contents : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.radioFor(property: P, value : String, contents : INPUT.() -> Unit = {}) {
         val modelValue = propertyValue(property).toString()
-        currentTag.input(id = propertyId(property)) {
+        input(id = propertyId(property)) {
             this.name = propertyName(property)
             this.inputType = radio
             this.value = value
@@ -238,9 +225,9 @@ class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FO
     /**
      * Creates a checkbox for the given property.
      */
-    public fun checkBoxFor(property: P, contents : INPUT.() -> Unit = {}) {
+    public fun HtmlBodyTag.checkBoxFor(property: P, contents : INPUT.() -> Unit = {}) {
         val modelValue = propertyValue(property)
-        currentTag.input(id = propertyId(property)) {
+        input(id = propertyId(property)) {
             this.inputType = checkbox
             this.name = propertyName(property)
             checked = modelValue == "true"
@@ -253,9 +240,7 @@ fun <P> HtmlBodyTag.formForModel(model: FormModel<P>, action : Link, formMethod 
     val builder = FormBuilder(this, model)
     builder.action = action
     builder.method = formMethod
-    builder.tagStack = this.tagStack
-    builder.init()
-    children.add(builder)
+    build(builder, init)
 
     if (builder.hasFiles) {
         builder.enctype = EncodingType.multipart
