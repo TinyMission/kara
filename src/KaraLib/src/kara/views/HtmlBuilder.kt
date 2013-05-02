@@ -78,16 +78,6 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         attributes[name] = value
     }
 
-    public fun get<T>(attr: Attribute<T>): T {
-        val answer = attributes[attr.name]
-        if (answer == null) throw RuntimeException("Atrribute ${attr.name} is missing")
-        return attr.decode(answer)
-    }
-
-    public fun set<T>(attr: Attribute<T>, value: T) {
-        attributes[attr.name] = attr.encode(value)
-    }
-
     public fun get(attributeName: String): String {
         val answer = attributes[attributeName]
         if (answer == null) throw RuntimeException("Atrribute $attributeName is missing")

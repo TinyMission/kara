@@ -6,8 +6,9 @@ import kara.*
 object Attributes {
     val c = ClassAttribute("class")
     val id = IdAttribute("id")
-    val title = IdAttribute("title")
+    val style = StringAttribute("style")
 
+    val title = IdAttribute("title")
     val href = LinkAttribute("href")
     val cite = LinkAttribute("cite")
     val rel = StringAttribute("rel")

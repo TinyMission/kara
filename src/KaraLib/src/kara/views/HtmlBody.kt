@@ -9,21 +9,9 @@ fun HTML.body(init: BODY.() -> Unit) = build(BODY(this), init)
 class BODY(containingTag : HTML) : HtmlBodyTagWithText(containingTag, "body")
 
 abstract class HtmlBodyTag(containingTag : HtmlTag?, name : String, renderStyle : RenderStyle = RenderStyle.expanded) : HtmlTag(containingTag, name, renderStyle) {
-    public var id : String
-        get() = this[Attributes.id]
-        set(value) {
-            this[Attributes.id] = value
-        }
-    public var c : StyleClass
-        get() = this[Attributes.c]
-        set(value) {
-            this[Attributes.c] = value
-        }
-    public var style : String
-        get() = this["style"]
-        set(value) {
-            this["style"] = value
-        }
+    public var id : String by Attributes.id
+    public var c : StyleClass by Attributes.c
+    public var style : String by Attributes.style
 
     fun style(init : StyledElement.()->Unit) {
         val element = StyledElement("inline")
@@ -69,21 +57,9 @@ fun HtmlBodyTag.textarea(c : StyleClass? = null, id : String? = null, contents :
 
 fun HtmlBodyTag.a(c : StyleClass? = null, id : String? = null, contents : A.() -> Unit = empty_contents) = contentTag(A(this), c, id, contents)
 open class A(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "a") {
-	public var href : Link
-		get() = this[Attributes.href]
-		set(value) {
-			this[Attributes.href] = value
-		}
-	public var rel : String
-		get() = this[Attributes.rel]
-		set(value) {
-			this[Attributes.rel] = value
-		}
-	public var target : String
-		get() = this[Attributes.target]
-		set(value) {
-			this[Attributes.target] = value
-		}
+	public var href : Link by Attributes.href
+	public var rel : String by Attributes.rel
+	public var target : String by Attributes.target
 }
 
 open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "button") {}
@@ -107,11 +83,7 @@ open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTa
 open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "small") {}
 open class EM(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "em") {}
 open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "blockquote") {
-    public var cite : Link
-   		get() = this[Attributes.cite]
-   		set(value) {
-   			this[Attributes.cite] = value
-   		}
+    public var cite : Link by Attributes.cite
 }
 
 
@@ -133,151 +105,31 @@ open class H3(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "
 open class H4(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h4") {}
 open class H5(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h5") {}
 open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "img") {
-    public var width : Int
-   		get() = this[Attributes.width]
-   		set(value) {
-   			this[Attributes.width] = value
-   		}
-   	public var height : Int
-   		get() = this[Attributes.height]
-   		set(value) {
-   			this[Attributes.height] = value
-   		}
-   	public var src : Link
-   		get() = this[Attributes.src]
-   		set(value) {
-   			this[Attributes.src] = value
-   		}
-   	public var alt : String
-   		get() = this[Attributes.alt]
-   		set(value) {
-   			this[Attributes.alt] = value
-   		}
+    public var width : Int by Attributes.width
+   	public var height : Int by Attributes.height
+   	public var src : Link by Attributes.src
+   	public var alt : String by Attributes.alt
 }
 open class INPUT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "input") {
-/*
-	public var accept : String
-		get() = this[Attributes.accept]
-		set(value) {
-			this[Attributes.accept] = value
-		}
-*/
-	public var alt : String
-		get() = this[Attributes.alt]
-		set(value) {
-			this[Attributes.alt] = value
-		}
-	public var autocomplete : Boolean
-		get() = this[Attributes.autocomplete]
-		set(value) {
-			this[Attributes.autocomplete] = value
-		}
-	public var autofocus : Boolean
-		get() = this[Attributes.autofocus]
-		set(value) {
-			this[Attributes.autofocus] = value
-		}
-	public var checked : Boolean
-		get() = this[Attributes.checked]
-		set(value) {
-			this[Attributes.checked] = value
-		}
-	public var disabled : Boolean
-		get() = this[Attributes.disabled]
-		set(value) {
-			this[Attributes.disabled] = value
-		}
-	public var height : Int
-		get() = this[Attributes.height]
-		set(value) {
-			this[Attributes.height] = value
-		}
-/*
-	public var list : String
-		get() = this[Attributes.list]
-		set(value) {
-			this[Attributes.list] = value
-		}
-*/
-/*
-	public var max : String
-		get() = this[Attributes.max]
-		set(value) {
-			this[Attributes.max] = value
-		}
-*/
-	public var maxlength : Int
-		get() = this[Attributes.maxlength]
-		set(value) {
-			this[Attributes.maxlength] = value
-		}
-/*
-	public var min : String
-		get() = this[Attributes.min]
-		set(value) {
-			this[Attributes.min] = value
-		}
-*/
-	public var multiple : Boolean
-		get() = this[Attributes.multiple]
-		set(value) {
-			this[Attributes.multiple] = value
-		}
-	public var inputType : InputType
-		get() = this[Attributes.inputType]
-		set(value) {
-			this[Attributes.inputType] = value
-		}
-	public var name : String
-		get() = this[Attributes.name]
-		set(value) {
-			this[Attributes.name] = value
-		}
-	public var pattern : String
-		get() = this[Attributes.pattern]
-		set(value) {
-			this[Attributes.pattern] = value
-		}
-	public var placeholder : String
-		get() = this[Attributes.placeholder]
-		set(value) {
-			this[Attributes.placeholder] = value
-		}
-	public var readonly : Boolean
-		get() = this[Attributes.readonly]
-		set(value) {
-			this[Attributes.readonly] = value
-		}
-	public var required : Boolean
-		get() = this[Attributes.required]
-		set(value) {
-			this[Attributes.required] = value
-		}
-	public var size : Int
-		get() = this[Attributes.size]
-		set(value) {
-			this[Attributes.size] = value
-		}
-	public var src : Link
-		get() = this[Attributes.src]
-		set(value) {
-			this[Attributes.src] = value
-		}
-	public var step : Int
-		get() = this[Attributes.step]
-		set(value) {
-			this[Attributes.step] = value
-		}
-	public var value : String
-		get() = this[Attributes.value]
-		set(value) {
-			this[Attributes.value] = value
-		}
-	public var width : Int
-		get() = this[Attributes.width]
-		set(value) {
-			this[Attributes.width] = value
-		}
+	public var alt : String by Attributes.alt
+	public var autocomplete : Boolean by Attributes.autocomplete
+	public var autofocus : Boolean by Attributes.autofocus
+	public var checked : Boolean by Attributes.checked
+	public var disabled : Boolean by Attributes.disabled
+	public var height : Int by Attributes.height
+	public var maxlength : Int by Attributes.maxlength
+	public var multiple : Boolean by Attributes.multiple
+	public var inputType : InputType by Attributes.inputType
+	public var name : String by Attributes.name
+	public var pattern : String by Attributes.pattern
+	public var placeholder : String by Attributes.placeholder
+	public var readonly : Boolean by Attributes.readonly
+	public var required : Boolean by Attributes.required
+	public var size : Int by Attributes.size
+	public var src : Link by Attributes.src
+	public var step : Int by Attributes.step
+	public var value : String by Attributes.value
+	public var width : Int by Attributes.width
 }
 
 abstract class TableTag(containingTag: HtmlBodyTag, name : String) : HtmlBodyTag(containingTag, name) {}
@@ -305,144 +157,49 @@ fun SELECT.optiongroup(c : StyleClass? = null, id : String? = null, contents : O
 
 open class FIELDSET(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "fieldset") {}
 open class FORM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "form") {
-    public var action : Link
-   		get() = this[Attributes.action]
-   		set(value) {
-   			this[Attributes.action] = value
-   		}
-   	public var enctype : EncodingType
-   		get() = this[Attributes.enctype]
-   		set(value) {
-   			this[Attributes.enctype] = value
-   		}
-   	public var method : FormMethod
-   		get() = this[Attributes.method]
-   		set(value) {
-   			this[Attributes.method] = value
-   		}
+    public var action : Link by Attributes.action
+   	public var enctype : EncodingType by Attributes.enctype
+   	public var method : FormMethod by Attributes.method
 }
-open class SELECT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "select") {
-	public var name : String
-		get() = this[Attributes.name]
-		set(value) {
-			this[Attributes.name] = value
-		}
-	public var size : Int
-		get() = this[Attributes.size]
-		set(value) {
-			this[Attributes.size] = value
-		}
-	public var multiple : Boolean
-		get() = this[Attributes.multiple]
-		set(value) {
-			this[Attributes.multiple] = value
-		}
-	public var disabled : Boolean
-		get() = this[Attributes.disabled]
-		set(value) {
-			this[Attributes.disabled] = value
-		}
-}
-open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "option") {
-	public var value : String
-		get() = this[Attributes.value]
-		set(value) {
-			this[Attributes.value] = value
-		}
-	public var label : String
-		get() = this[Attributes.label]
-		set(value) {
-			this[Attributes.label] = value
-		}
-	public var disabled : Boolean
-		get() = this[Attributes.disabled]
-		set(value) {
-			this[Attributes.disabled] = value
-		}
 
-    public var selected : Boolean
-        get() = this[Attributes.selected]
-        set(value) {
-            this[Attributes.selected] = value
-        }
+open class SELECT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "select") {
+	public var name : String by Attributes.name
+	public var size : Int by Attributes.size
+	public var multiple : Boolean by Attributes.multiple
+	public var disabled : Boolean by Attributes.disabled
+}
+
+open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "option") {
+	public var value : String by Attributes.value
+	public var label : String by Attributes.label
+	public var disabled : Boolean by Attributes.disabled
+    public var selected : Boolean by Attributes.selected
 }
 open class OPTGROUP(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "optgroup") {}
 
 open class TEXTAREA(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "textarea") {
-	public var autofocus : Boolean
-		get() = this[Attributes.autofocus]
-		set(value) {
-			this[Attributes.autofocus] = value
-		}
-	public var cols : Int
-		get() = this[Attributes.cols]
-		set(value) {
-			this[Attributes.cols] = value
-		}
-	public var disabled : Boolean
-		get() = this[Attributes.disabled]
-		set(value) {
-			this[Attributes.disabled] = value
-		}
-	public var maxlength : Int
-		get() = this[Attributes.maxlength]
-		set(value) {
-			this[Attributes.maxlength] = value
-		}
-	public var name : String
-		get() = this[Attributes.name]
-		set(value) {
-			this[Attributes.name] = value
-		}
-	public var placeholder : String
-		get() = this[Attributes.placeholder]
-		set(value) {
-			this[Attributes.placeholder] = value
-		}
-	public var readonly : Boolean
-		get() = this[Attributes.readonly]
-		set(value) {
-			this[Attributes.readonly] = value
-		}
-	public var required : Boolean
-		get() = this[Attributes.required]
-		set(value) {
-			this[Attributes.required] = value
-		}
-	public var rows : Int
-		get() = this[Attributes.rows]
-		set(value) {
-			this[Attributes.rows] = value
-		}
-	public var wrap : Wrap
-		get() = this[Attributes.wrap]
-		set(value) {
-			this[Attributes.wrap] = value
-		}
+	public var autofocus : Boolean by Attributes.autofocus
+	public var cols : Int by Attributes.cols
+	public var disabled : Boolean by Attributes.disabled
+	public var maxlength : Int by Attributes.maxlength
+	public var name : String by Attributes.name
+	public var placeholder : String by Attributes.placeholder
+	public var readonly : Boolean by Attributes.readonly
+	public var required : Boolean by Attributes.required
+	public var rows : Int by Attributes.rows
+	public var wrap : Wrap by Attributes.wrap
 }
 
 fun HtmlBodyTag.fieldset(c : StyleClass? = null, id : String? = null, contents : FIELDSET.() -> Unit = empty_contents) = contentTag(FIELDSET(this), c, id, contents)
 fun FIELDSET.legend(c : StyleClass? = null, id : String? = null, contents : LEGEND.() -> Unit = empty_contents) = contentTag(LEGEND(this), c, id, contents)
 
 open class LABEL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "label") {
-    public var forId : String
-   		get() = this[Attributes.forId]
-   		set(value) {
-   			this[Attributes.forId] = value
-   		}
+    public var forId : String by Attributes.forId
 }
 open class LEGEND(containingTag: FIELDSET) : HtmlBodyTagWithText(containingTag, "legend") {}
 
 fun HtmlBodyTag.canvas(c : StyleClass? = null, id : String? = null, contents : CANVAS.() -> Unit = empty_contents) = contentTag(CANVAS(this), c, id, contents)
 open class CANVAS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "canvas") {
-    public var width : Int
-   		get() = this[Attributes.width]
-   		set(value) {
-   			this[Attributes.width] = value
-   		}
-   	public var height : Int
-   		get() = this[Attributes.height]
-   		set(value) {
-   			this[Attributes.height] = value
-   		}
+    public var width : Int by Attributes.width
+   	public var height : Int by Attributes.height
 }

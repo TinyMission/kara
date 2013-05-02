@@ -49,16 +49,9 @@ fun HEAD.stylesheet(stylesheet: Stylesheet)  = build(STYLESHEETLINK(this, styles
 class HEAD(containingTag: HTML): HtmlTagWithText(containingTag, "head") {}
 
 class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTagWithText(containingTag, "style") {
-    public var media : String
-        get() = this["media"]
-        set(value) {
-            this["media"] = value
-        }
-    public var mimeType : String
-        get() = this[Attributes.mimeType]
-        set(value) {
-            this[Attributes.mimeType] = value
-        }
+    public var media : String by StringAttribute("media")
+    public var mimeType : String by Attributes.mimeType
+
     {
         media = "all"
         mimeType = "text/css"
@@ -73,34 +66,14 @@ class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTagWithText
 
 
 class META(containingTag : HEAD) : HtmlTag(containingTag, "meta") {
-    public var name : String
-        get() = this[Attributes.name]
-        set(value) {
-            this[Attributes.name] = value
-        }
-    public var content : String
-        get() = this["content"]
-        set(value) {
-            this["content"] = value
-        }
+    public var name : String by Attributes.name
+    public var content : String by StringAttribute("content")
 }
 
 class _LINK(containingTag : HEAD) : HtmlTag(containingTag, "link", RenderStyle.empty) {
-    public var href : Link
-        get() = this[Attributes.href]
-        set(value) {
-            this[Attributes.href] = value
-        }
-    public var rel : String
-        get() = this[Attributes.rel]
-        set(value) {
-            this[Attributes.rel] = value
-        }
-    public var mimeType : String
-        get() = this[Attributes.mimeType]
-        set(value) {
-            this[Attributes.mimeType] = value
-        }
+    public var href : Link by Attributes.href
+    public var rel : String by Attributes.rel
+    public var mimeType : String by Attributes.mimeType
     {
         rel = "stylesheet"
         mimeType = "text/css"
@@ -108,48 +81,24 @@ class _LINK(containingTag : HEAD) : HtmlTag(containingTag, "link", RenderStyle.e
 }
 
 class SCRIPTSRC(containingTag : HtmlTag) : HtmlTag(containingTag, "script") {
-    public var src : Link
-        get() = this[Attributes.src]
-        set(value) {
-            this[Attributes.src] = value
-        }
-    public var mimeType : String
-        get() = this[Attributes.mimeType]
-        set(value) {
-            this[Attributes.mimeType] = value
-        }
+    public var src : Link by Attributes.src
+    public var mimeType : String by Attributes.mimeType
     {
         mimeType = "text/javascript"
     }
 }
 
 class SCRIPTBLOCK(containingTag : HtmlTag) : HtmlTagWithText(containingTag, "script") {
-    public var mimeType : String
-        get() = this[Attributes.mimeType]
-        set(value) {
-            this[Attributes.mimeType] = value
-        }
+    public var mimeType : String by Attributes.mimeType
     {
         mimeType = "text/javascript"
     }
 }
 
 class STYLESHEETLINK(containingTag : HEAD, var stylesheet : Stylesheet) : HtmlTag(containingTag, "link", RenderStyle.empty) {
-    public var href : Link
-        get() = this[Attributes.href]
-        set(value) {
-            this[Attributes.href] = value
-        }
-    public var rel : String
-        get() = this[Attributes.rel]
-        set(value) {
-            this[Attributes.rel] = value
-        }
-    public var mimeType : String
-        get() = this[Attributes.mimeType]
-        set(value) {
-            this[Attributes.mimeType] = value
-        }
+    public var href : Link by Attributes.href
+    public var rel : String by Attributes.rel
+    public var mimeType : String by Attributes.mimeType
     {
         rel = "stylesheet"
         mimeType = "text/css"
