@@ -18,6 +18,6 @@ abstract class Middleware() {
      * Gets called after the application is allowed to handle the request.
      * Return false to stop the request pipeline from executing anything else.
      */
-    abstract fun afterRequest(context : ActionContext) : Boolean
+    abstract fun afterRequest(context : ActionContext, result : ActionResult) : Boolean
 
 }

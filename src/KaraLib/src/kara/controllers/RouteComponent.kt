@@ -23,7 +23,7 @@ abstract class RouteComponent(val componentText: String) {
 
     abstract fun matches(value: String) : Boolean
 
-    abstract fun getParam(params : RouteParameters, component: String)
+    abstract fun setParameter(params : RouteParameters, component: String)
 }
 
 /** Route component for a literal string. */
@@ -32,7 +32,7 @@ class StringRouteComponent(componentText: String) : RouteComponent(componentText
         return value.equalsIgnoreCase(componentText)
     }
 
-    override fun getParam(params : RouteParameters, component: String) {
+    override fun setParameter(params : RouteParameters, component: String) {
     }
 }
 
@@ -44,7 +44,7 @@ class ParamRouteComponent(componentText: String) : RouteComponent(componentText)
         return true
     }
 
-    override fun getParam(params : RouteParameters, component: String) {
+    override fun setParameter(params : RouteParameters, component: String) {
         params[name] = component
     }
 }
@@ -56,7 +56,7 @@ class WildcardRouteComponent(componentText: String) : RouteComponent(componentTe
         return true
     }
 
-    override fun getParam(params : RouteParameters, component: String) {
+    override fun setParameter(params : RouteParameters, component: String) {
         params.append(component)
     }
 }

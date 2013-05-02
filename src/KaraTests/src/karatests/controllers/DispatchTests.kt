@@ -36,12 +36,12 @@ class DispatchTests() {
 
         var request = mockRequest("GET", "/foo/bar/list")
         actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // unnamed param
-        var params = actionInfo.getParams(request)
+        var params = actionInfo.buildParams(request)
         assertEquals("bar", params[0])
 
         request = mockRequest("GET", "/foo/complex/bar/list/42")
         actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // named and unnamed params
-        params = actionInfo.getParams(request)
+        params = actionInfo.buildParams(request)
         assertEquals("bar", params[0])
         assertEquals("42", params["id"])
         assertEquals(2, params.size())
@@ -50,24 +50,24 @@ class DispatchTests() {
         request = mockRequest("GET", "/crud?name=value")
         actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // empty route with parameters
         assertEquals(Routes.Crud.Index().javaClass, actionInfo.requestClass)
-        params = actionInfo.getParams(request)
+        params = actionInfo.buildParams(request)
         assertEquals("value", params["name"])
 
         request = mockRequest("GET", "/crud/42")
         actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // named parameter
-        params = actionInfo.getParams(request)
+        params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
 
         dispatcher.findDescriptor("POST", "/crud") // models
 
         request = mockRequest("PUT", "/crud/42")
         actionInfo = dispatcher.findDescriptor("PUT", request.getRequestURI()!!)!! // put
-        params = actionInfo.getParams(request)
+        params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
 
         request = mockRequest("DELETE", "/crud/42")
         actionInfo = dispatcher.findDescriptor("DELETE", request.getRequestURI()!!)!! // delete
-        params = actionInfo.getParams(request)
+        params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
     }
 }

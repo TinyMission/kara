@@ -64,4 +64,3 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
     }
 }
 
-class InvalidRouteException(message : String) : RuntimeException(message) {}

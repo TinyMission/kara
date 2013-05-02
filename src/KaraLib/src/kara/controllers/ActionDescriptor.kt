@@ -18,32 +18,32 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         public val paramDeserializer: ParamDeserializer = ParamDeserializer()
     }
 
-    private val routeComps = route.toRouteComponents()
+    private val routeComponents = route.toRouteComponents()
 
     public fun matches(url : String) : Boolean {
         val path = url.split("\\?")[0]
-        val comps = path.split("/")
-        if (comps.size != routeComps.size())
+        val components = path.split("/")
+        if (components.size != routeComponents.size())
             return false
-        for (i in comps.indices) {
-            val comp = comps[i]
-            val routeComp = routeComps[i]
-            if (!routeComp.matches(comp))
+        for (i in components.indices) {
+            val component = components[i]
+            val routeComponent = routeComponents[i]
+            if (!routeComponent.matches(component))
                 return false
         }
         return true
     }
 
-    public fun getParams(request : HttpServletRequest) : RouteParameters {
+    public fun buildParams(request : HttpServletRequest) : RouteParameters {
         val url = request.getRequestURI()!!
         val query = request.getQueryString()
         val params = RouteParameters()
 
         // parse the query string
         if (query != null) {
-            val queryComps = query.split("\\&") map { URLDecoder.decode(it, "UTF-8")}
-            for (qc in queryComps) {
-                val nvp = qc.split("=")
+            val queryComponents = query.split("\\&") map { URLDecoder.decode(it, "UTF-8")}
+            for (component in queryComponents) {
+                val nvp = component.split("=")
                 if (nvp.size > 1)
                     params[nvp[0]] = nvp[1]
                 else
@@ -52,19 +52,19 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         }
 
         // parse the route parameters
-        val comps = url.split("/") map { URLDecoder.decode(it, "UTF-8")}
-        if (comps.size != routeComps.size())
-            throw RuntimeException("URL has different number of components than route")
-        for (i in comps.indices) {
-            val comp = comps[i]
-            val routeComp = routeComps[i]
-            routeComp.getParam(params, comp)
+        val pathComponents = url.split("/") map { URLDecoder.decode(it, "UTF-8")}
+        if (pathComponents.size != routeComponents.size())
+            throw InvalidRouteException("URL has different number of components than route")
+        for (i in pathComponents.indices) {
+            val component = pathComponents[i]
+            val routeComponent = routeComponents[i]
+            routeComponent.setParameter(params, component)
         }
 
         // parse the form parameters
-        for (name in request.getParameterNames()) {
-            val value = request.getParameter(name)!!
-            params[name] = value
+        for (formParameterName in request.getParameterNames()) {
+            val value = request.getParameter(formParameterName)!!
+            params[formParameterName] = value
         }
 
         if (request.getContentType()?.startsWith("multipart/form-data")?:false) {
@@ -79,14 +79,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         return params
     }
 
-    /** Execute the action based on the given request and populate the response. */
-    public fun exec(appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
-        val params = getParams(request)
-        val routeConstructor = requestClass.getConstructors()[0] as Constructor<Request>
-
-        val paramTypes = routeConstructor.getParameterTypes()!!
-        val annotations = routeConstructor.getParameterAnnotations()
-
+    fun buildRouteInstance(params : RouteParameters) : Request{
         fun find(list : Array<Annotation>) : JetValueParameter {
             for (a in list) {
                 if (a is JetValueParameter) return a
@@ -94,26 +87,36 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
             throw RuntimeException("Missing Kotlin runtime annotations!");
         }
 
-        val paramValues : Array<Any?> = Array(paramTypes.size) { i ->
-            val annotation = find(annotations[i]!!)
-            val paramName = annotation.name()!!
-            val optional = annotation.`type`()?.startsWith("?") ?: false
-            val paramString = params[paramName]
-            if (paramString == null) {
-                if (optional) {
-                    null
-                }
-                else {
-                    throw RuntimeException("Required argument $paramName is missing")
-                }
-            }
-            else {
-                paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
-            }
-        }
+        val routeConstructor = requestClass.getConstructors()[0] as Constructor<Request>
 
-        val routeInstance = routeConstructor.newInstance(*paramValues)!!
+        val paramTypes = routeConstructor.getParameterTypes()!!
+        val annotations = routeConstructor.getParameterAnnotations()
 
+        val arguments : Array<Any?> = Array(paramTypes.size) { i ->
+               val annotation = find(annotations[i]!!)
+               val paramName = annotation.name()!!
+               val optional = annotation.`type`()?.startsWith("?") ?: false
+               val paramString = params[paramName]
+               if (paramString == null) {
+                   if (optional) {
+                       null
+                   }
+                   else {
+                       throw InvalidRouteException("Required argument $paramName is missing")
+                   }
+               }
+               else {
+                   paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
+               }
+           }
+
+        return routeConstructor.newInstance(*arguments)!!
+    }
+
+    /** Execute the action based on the given request and populate the response. */
+    public fun exec(appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
+        val params = buildParams(request)
+        val routeInstance = buildRouteInstance(params)
         val context = ActionContext(appConfig, request, response, params)
 
         try {
@@ -131,7 +134,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
             // run middleware with afterRequest
             for (ref in appConfig.middleware.all) {
                 if (ref.matches(request.getRequestURI()!!)) {
-                    val keepGoing = ref.middleware.afterRequest(context)
+                    val keepGoing = ref.middleware.afterRequest(context, result)
                     if (!keepGoing)
                         return
                 }

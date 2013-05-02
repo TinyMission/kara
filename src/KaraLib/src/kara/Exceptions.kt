@@ -14,3 +14,8 @@ class NotFoundException(val message : String) : RuntimeException(message) {
 class InvalidPropertyException(val modelClass : Class<jet.Any>, val property : String) : RuntimeException("Invalid property ${property} on type ${modelClass.getName()}") {
 
 }
+
+/**
+ * Thrown by the routing system, when it cannot handle the request
+ */
+class InvalidRouteException(message : String) : RuntimeException(message) {}
