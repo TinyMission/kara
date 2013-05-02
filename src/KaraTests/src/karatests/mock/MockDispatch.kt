@@ -5,15 +5,15 @@ import kara.*
 import kara.internal.*
 
 
-val _dispatcher = Dispatcher(scanObjects(array(Routes)))
 val _mockAppConfig = AppConfig("", "test")
+val _dispatcher = ActionDispatcher(_mockAppConfig, scanObjects(array(Routes)))
 
 /** Provides a mock dispatch of the given method and url.
  */
 public fun mockDispatch(httpMethod : String, url : String) : MockHttpServletResponse {
     val request = MockHttpServletRequest(httpMethod, url)
     val response = MockHttpServletResponse()
-    _dispatcher.dispatch(_mockAppConfig, request, response)
+    _dispatcher.dispatch(request, response)
     return response
 }
 

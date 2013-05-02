@@ -12,8 +12,13 @@ import kara.*
 
 /** Contains all the information necessary to match a route and execute an action.
 */
-class ActionInfo(val route : String, val requestClass: Class<out Request>) {
-    private val routeComps = route.routeComps()
+class ActionDescriptor(val route : String, val requestClass: Class<out Request>) {
+    class object {
+        /** Deserializes parameters into objects. */
+        public val paramDeserializer: ParamDeserializer = ParamDeserializer()
+    }
+
+    private val routeComps = route.toRouteComponents()
 
     public fun matches(url : String) : Boolean {
         val path = url.split("\\?")[0]
@@ -29,10 +34,10 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
         return true
     }
 
-    public fun getParams(request : HttpServletRequest) : RouteParams {
+    public fun getParams(request : HttpServletRequest) : RouteParameters {
         val url = request.getRequestURI()!!
         val query = request.getQueryString()
-        val params = RouteParams()
+        val params = RouteParameters()
 
         // parse the query string
         if (query != null) {
@@ -103,7 +108,7 @@ class ActionInfo(val route : String, val requestClass: Class<out Request>) {
                 }
             }
             else {
-                appConfig.paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
+                paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
             }
         }
 

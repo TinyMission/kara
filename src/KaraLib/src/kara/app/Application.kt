@@ -11,9 +11,9 @@ import org.apache.log4j.Logger
 /** The base Kara application class.
  */
 abstract class Application(protected val config: AppConfig, private vararg val routes : Any) {
-    private var _dispatcher : Dispatcher? = null
+    private var _dispatcher : ActionDispatcher? = null
     private var lastRequestServedAt: Long = 0
-    public val dispatcher : Dispatcher
+    public val dispatcher : ActionDispatcher
         get() {
             val now = System.currentTimeMillis()
 
@@ -33,10 +33,10 @@ abstract class Application(protected val config: AppConfig, private vararg val r
             return d!!
         }
 
-    private fun buildDispatcher() : Dispatcher {
+    private fun buildDispatcher() : ActionDispatcher {
         val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
         if (routes.size != 0) {
-            return Dispatcher(scanObjects(routes, newClassloader))
+            return ActionDispatcher(config, scanObjects(routes, newClassloader))
         }
 
         // Discover routes via reflections
@@ -44,9 +44,9 @@ abstract class Application(protected val config: AppConfig, private vararg val r
         if (routePackages == null) {
             // routePackages are not specified in appConfig, use default app.routes package
             val defaultRoutes = "${config.appPackage}.routes"
-            return Dispatcher(scanPackage(defaultRoutes, newClassloader))
+            return ActionDispatcher(config, scanPackage(defaultRoutes, newClassloader))
         }
 
-        return Dispatcher(routePackages.flatMap { scanPackage(it, newClassloader) })
+        return ActionDispatcher(config, routePackages.flatMap { scanPackage(it, newClassloader) })
     }
 }

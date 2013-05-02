@@ -49,9 +49,6 @@ public class AppConfig(appRoot : String, val environment : String = "development
     public val appPackagePath : String
         get() = this.appPackage.replace(".", "/")
 
-    /** Deserializes parameters into objects. */
-    public val paramDeserializer : ParamDeserializer = ParamDeserializer()
-
     /** Stores all middleware instances for the application. */
     public val middleware : MiddlewareList = MiddlewareList()
 

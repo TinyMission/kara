@@ -4,7 +4,7 @@ import java.util.*
 import kara.internal.*
 
 /** Contains all of the parameters for a matched route. */
-class RouteParams() {
+class RouteParameters() {
     val _map = HashMap<String, String>()
     val _list = ArrayList<String>()
 

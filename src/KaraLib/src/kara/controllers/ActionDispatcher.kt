@@ -10,19 +10,17 @@ import java.lang.reflect.Modifier
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class Dispatcher(routes : List<Class<out Request>>) {
+class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Request>>) {
     private val logger = Logger.getLogger(this.javaClass)!!
 
-    private val actions = Array(HttpMethod.values().size) {
-        ArrayList<ActionInfo>()
+    private val httpMethods = Array(HttpMethod.values().size) {
+        ArrayList<ActionDescriptor>()
     };
 
     {
-        for (r in routes) {
-            for (ann in r.getAnnotations()) {
-                val (route, method) = r.route()
-                actions[method.ordinal()].add(ActionInfo(route, r))
-            }
+        for (routeType in routeTypes) {
+            val (route, httpMethod) = routeType.route()
+            httpMethods[httpMethod.ordinal()].add(ActionDescriptor(route, routeType))
         }
     }
 
@@ -30,25 +28,25 @@ class Dispatcher(routes : List<Class<out Request>>) {
     /** Matches an http method and url to an ActionInfo object.
         Returns null if no match is found.
     */
-    fun match(httpMethod : String, url : String) : ActionInfo? {
-        val method = httpMethod.asHttpMethod()
+    fun findDescriptor(httpMethod: String, url: String): ActionDescriptor? {
+        val httpMethodIndex = httpMethod.asHttpMethod().ordinal()
+        val matches = ArrayList<ActionDescriptor>(httpMethods[httpMethodIndex].filter { it.matches(url) })
 
-        for (actionInfo in actions[method.ordinal()]) {
-            if (actionInfo.matches(url)) {
-                return actionInfo
-            }
+        return when (matches.size()) {
+            1 -> matches[0]
+            0 -> null
+            else -> throw InvalidRouteException("URL '${url}' matches more than single route: ${matches.map { it.route }.join(", ")}")
         }
-        return null
     }
 
-    fun dispatch(appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
+    fun dispatch(request: HttpServletRequest, response : HttpServletResponse) {
         try {
             val url = request.getRequestURI() as String
-            val actionInfo = match(request.getMethod() as String, url)
-            if (actionInfo == null)
+            val actionDescriptor = findDescriptor(request.getMethod()!!, url)
+            if (actionDescriptor == null)
                 throw NotFoundException("Could not match any routes to ${url}")
             else
-                actionInfo.exec(appConfig, request, response)
+                actionDescriptor.exec(appConfig, request, response)
         }
         catch (ex404 : NotFoundException) {
             val out = response.getWriter()
@@ -65,3 +63,5 @@ class Dispatcher(routes : List<Class<out Request>>) {
         }
     }
 }
+
+class InvalidRouteException(message : String) : RuntimeException(message) {}

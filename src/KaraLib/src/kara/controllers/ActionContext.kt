@@ -17,7 +17,7 @@ fun HttpSession.getDescription() : String {
 class ActionContext(val appConfig : AppConfig,
                     val request : HttpServletRequest,
                     val response : HttpServletResponse,
-                    val params : RouteParams) {
+                    val params : RouteParameters) {
     public val session : HttpSession = request.getSession(true)!!
     public val startedAt : Long = System.currentTimeMillis()
 

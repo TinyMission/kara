@@ -8,7 +8,7 @@ open class Servlet(val app: Application, val appConfig : AppConfig) : HttpServle
     fun doGet(request: HttpServletRequest, response : HttpServletResponse) {
         try {
 
-            app.dispatcher.dispatch(appConfig, request, response)
+            app.dispatcher.dispatch(request, response)
         }
         catch (ex : Exception) {
             val out = response.getWriter()

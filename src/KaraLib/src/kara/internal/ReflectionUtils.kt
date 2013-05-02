@@ -1,6 +1,8 @@
 package kara.internal
 
-import java.lang.reflect.Modifier
+import java.util.*
+import java.lang.reflect.*
+import java.beans.Introspector
 import kara.*
 
 fun Class<*>.objectInstance() : Any? {
@@ -38,4 +40,31 @@ fun Class<out Request>.route() : Pair<String, HttpMethod> {
     }
 
     throw RuntimeException("No HTTP method annotation found in ${getName()}")
+}
+
+fun Class<Any>.propertyGetter(property : String) : Method {
+    try {
+        return getMethod("get${if (property.length > 2 && property[1].isLowerCase() ) property.capitalize() else property}")
+    }
+    catch (e : Exception) {
+        throw InvalidPropertyException(this, property)
+    }
+}
+
+fun Any.propertyValue(property : String) : Any? {
+    val getter = javaClass.propertyGetter(property)
+    return getter.invoke(this)
+}
+
+fun Any.properties() : List<String> {
+    val answer = ArrayList<String>()
+
+    for (method in javaClass.getDeclaredMethods()) {
+        val name = method.getName()!!
+        if (name.startsWith("get") && method.getParameterTypes()?.size == 0) {
+            answer.add(Introspector.decapitalize(name.substring(3))!!)
+        }
+    }
+
+    return answer.sort()
 }

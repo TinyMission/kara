@@ -22,16 +22,16 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
 
         val properties = LinkedHashSet(properties())
 
-        answer.append(route.routeComps().map({
+        answer.append(route.toRouteComponents().map({
             when (it) {
-                is StringRouteComp -> (it as RouteComp).compString
-                is ParamRouteComp -> {
+                is StringRouteComponent -> (it as RouteComponent).componentText
+                is ParamRouteComponent -> {
                     properties.remove(it.name)
 
                     // TODO: introduce serializers similar to deserializers in appconfig
                     "${propertyValue(it.name)}"
                 }
-                is WildcardRouteComp -> throw RuntimeException("Routes with wildcards aren't supported")
+                is WildcardRouteComponent -> throw RuntimeException("Routes with wildcards aren't supported")
                 else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.getName()}")
             }
         }).join("/"))

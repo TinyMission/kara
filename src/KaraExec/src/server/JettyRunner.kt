@@ -31,7 +31,7 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
             val url = p2?.getRequestURI()!!
             p3!!.setCharacterEncoding("UTF-8")
 
-            val actionInfo = app.dispatcher.match(p2?.getMethod()!!, url)
+            val actionInfo = app.dispatcher.findDescriptor(p2?.getMethod()!!, url)
             if (actionInfo == null) { // try to match a resource
                 resourceHandler.handle(p0, p1, p2, p3)
             }
