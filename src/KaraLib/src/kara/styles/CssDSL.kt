@@ -365,6 +365,12 @@ class StyledElement(val selector : String) : CssElement() {
             attributes["color"] = value.toString()
         }
 
+    var display : Display?
+        get() = getAttribute<Display>("display")
+        set(value) {
+            attributes["display"] = value.toString()
+        }
+
     var float : FloatType?
         get() = getAttribute<FloatType>("float")
         set(value) {
