@@ -139,8 +139,7 @@ open class CssElement() {
         any.id(name, body)
     }
 
-    //TODO: Return IdSelector instead of SelectorTrait when KT-3301 is fixed
-    public fun id(name: String) : SelectorTrait = IdSelector(name)
+    public fun id(name: String) : IdSelector = IdSelector(name)
 
     fun c(klass : StyleClass, body : StyledElement.() -> Unit) {
         any.invoke(klass, body = body)
