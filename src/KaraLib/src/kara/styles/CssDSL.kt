@@ -228,18 +228,15 @@ class StyledElement(val selector : String) : CssElement() {
      * Writes the element to the builder with the given indenation.
      */
     fun build(builder : StringBuilder, baseSelector : String) {
-        if (baseSelector.length() > 0)
-            builder.append("$baseSelector $selector {\n")
-        else
-            builder.append("$selector {\n")
+        val thisSelector = if (baseSelector.length() > 0) if (selector.startsWith(':')) "$baseSelector$selector" else "$baseSelector $selector" else selector
+        builder.append("$thisSelector {\n")
         for (a in attributes.keySet()) {
             val attr = attributes[a]!!
             builder.append("    $a: ${attr.toString()};\n")
         }
         builder.append("}\n")
-        val childBaseSelector = if (baseSelector.length() > 0) "$baseSelector $selector" else selector
         for (child in children) {
-            child.build(builder, childBaseSelector)
+            child.build(builder, thisSelector)
         }
     }
 
