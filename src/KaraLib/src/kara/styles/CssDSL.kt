@@ -36,7 +36,12 @@ class CompositeStyleClass(val a : StyleClass, val b: StyleClass) : StyleClass {
     }
 }
 
-public fun StyleClass.plus(another: StyleClass) : StyleClass = CompositeStyleClass(this, another)
+public fun StyleClass?.plus(another: StyleClass?) : StyleClass? = when {
+    this == null && another == null -> null
+    this == null -> another
+    another == null -> this
+    else -> CompositeStyleClass(this, another)
+}
 
 public enum class PseudoClass : StyleClass {
     root firstChild lastChild firstOfType lastOfType onlyChild onlyOfType
