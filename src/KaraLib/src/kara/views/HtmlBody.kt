@@ -67,6 +67,7 @@ open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTa
 fun HtmlBodyTag.br(c : StyleClass? = null, id : String? = null) = contentTag(BR(this), c, id)
 fun HtmlBodyTag.div(c : StyleClass? = null, id : String? = null, contents : DIV.() -> Unit = empty_contents) = contentTag(DIV(this), c, id, contents)
 fun HtmlBodyTag.b(c : StyleClass? = null, id : String? = null, contents : B.() -> Unit = empty_contents) = contentTag(B(this), c, id, contents)
+fun HtmlBodyTag.i(c : StyleClass? = null, id : String? = null, contents : I.() -> Unit = empty_contents) = contentTag(I(this), c, id, contents)
 fun HtmlBodyTag.p(c : StyleClass? = null, id : String? = null, contents : P.() -> Unit = empty_contents) = contentTag(P(this), c, id, contents)
 fun HtmlBodyTag.span(c : StyleClass? = null, id : String? = null, contents : SPAN.() -> Unit = empty_contents) = contentTag(SPAN(this), c, id, contents)
 fun HtmlBodyTag.strong(c : StyleClass? = null, id : String? = null, contents : STRONG.() -> Unit = empty_contents) = contentTag(STRONG(this), c, id, contents)
@@ -76,6 +77,7 @@ fun HtmlBodyTag.em(c : StyleClass? = null, id : String? = null, contents : EM.()
 
 open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle.empty) {}
 open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "div") {}
+open class I(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "i") {}
 open class B(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "b") {}
 open class P(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "p") {}
 open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "span") {}
