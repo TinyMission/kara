@@ -6,8 +6,8 @@ import kara.internal.*
 /** A test stylesheet builder.
  */
 enum class StyleClasses : StyleClass { box }
-class TestStylesheet() : Stylesheet() {
-    override fun render() {
+object TestStylesheet : Stylesheet() {
+    override fun CssElement.render() {
         body {
             fontFamily = "sans-serif"
             backgroundColor = c("#fa542e")

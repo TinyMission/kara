@@ -39,14 +39,27 @@ abstract class Application(protected val config: AppConfig, private vararg val r
             return ActionDispatcher(config, scanObjects(routes, newClassloader))
         }
 
-        // Discover routes via reflections
-        val routePackages = config.routePackages;
-        if (routePackages == null) {
-            // routePackages are not specified in appConfig, use default app.routes package
-            val defaultRoutes = "${config.appPackage}.routes"
-            return ActionDispatcher(config, scanPackage(defaultRoutes, newClassloader))
+        val resourceFinder = {
+            (url: String) -> when {
+                url.startsWith("/resources") -> {
+                    try {
+                        val classname = url.substring(0, url.lastIndexOf('.')).trimLeading("/resources/")
+                        val res = Class.forName(classname, true, newClassloader).objectInstance()
+                        if (res is Resource) res as Resource else null
+                    } catch(e: ClassNotFoundException) {
+                        null
+                    }
+
+                }
+                else -> null
+            }
         }
 
-        return ActionDispatcher(config, routePackages.flatMap { scanPackage(it, newClassloader) })
+
+        // Discover routes via reflections
+        val routePackages = config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles");
+        return ActionDispatcher(config,
+                routePackages.flatMap { scanPackageForRequests(it, newClassloader) },
+                resourceFinder)
     }
 }

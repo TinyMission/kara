@@ -5,9 +5,9 @@ import karademo.styles.StyleClasses.*
 
 /** The default stylesheet for the demo application.
  */
-class DefaultStyles() : Stylesheet() {
+object DefaultStyles : Stylesheet() {
 
-    override fun render() {
+    override fun CssElement.render() {
         body {
             backgroundColor = c("#f0f0f0")
         }

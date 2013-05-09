@@ -28,26 +28,22 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
         public override fun handle(p0: String?, p1: Request?, p2: HttpServletRequest?, p3: HttpServletResponse?) {
 
             val app = appLoader.application as Application
-            val url = p2?.getRequestURI()!!
             p3!!.setCharacterEncoding("UTF-8")
 
-            val actionInfo = app.dispatcher.findDescriptor(p2?.getMethod()!!, url)
-            if (actionInfo == null) { // try to match a resource
-                resourceHandler.handle(p0, p1, p2, p3)
-            }
-            else { // let the action handle the request
-                try {
-                    logger.info("Rendering action ${actionInfo}")
-                    actionInfo.exec(appConfig, p2!!, p3!!)
+            try {
+                if (app.dispatcher.dispatch(p2!!, p3)) {
                     p1!!.setHandled(true)
                 }
-                catch (ex : Exception) {
-                    val out = p3?.getWriter()
-                    logger.warn("dispatch error: ${ex.getMessage()}");
-                    ex.printStackTrace()
-                    out?.print(ex.getMessage())
-                    out?.flush()
+                else {
+                    resourceHandler.handle(p0, p1, p2, p3)
                 }
+            }
+            catch(ex: Exception) {
+                val out = p3.getWriter()
+                logger.warn("dispatch error: ${ex.getMessage()}");
+                ex.printStackTrace()
+                out?.print(ex.getMessage())
+                out?.flush()
             }
         }
     }
@@ -68,7 +64,6 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
 
 
         appLoader.addListener(this)
-        appLoader.init()
         appLoader.loadApp()
     }
 

@@ -10,17 +10,11 @@ enum class SampleClasses : StyleClass {
     c1 c2 c3
 }
 
-private object MockStylesheet : Stylesheet() {
-    override fun render() {
-        throw UnsupportedOperationException()
-    }
-}
-
 class SelectorsTest {
     private var result : String = "";
 
-    private fun test(expectation: String, selector: Stylesheet.() -> Selector) {
-        assertEquals(expectation, MockStylesheet.selector().toExternalForm())
+    private fun test(expectation: String, selector: CssElement.() -> Selector) {
+        assertEquals(expectation, CssElement().selector().toExternalForm())
     }
 
 

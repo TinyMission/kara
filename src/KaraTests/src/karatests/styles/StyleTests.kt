@@ -6,8 +6,7 @@ import org.junit.Test
 
 class StyleTests() {
     Test fun styles() {
-        val ss = TestStylesheet()
-        val styleString = ss.toString()
+        val styleString = TestStylesheet.toString()
 
         println(styleString)
 

@@ -33,10 +33,10 @@ fun HtmlTag.script(mimeType: String = "text/javascript", content : SCRIPTBLOCK.(
     tag.mimeType = mimeType
 }
 
-fun HEAD.style(media: String = "all", mimeType: String = "text/css", init: Stylesheet.() -> Unit) {
-    val stylesheet = object : Stylesheet() {
-        override fun render() {
-            this.init()
+fun HEAD.style(media: String = "all", mimeType: String = "text/css", buildSheet: CssElement.() -> Unit) {
+    val stylesheet = object : Stylesheet("") {
+        override fun CssElement.render() {
+            buildSheet()
         }
     }
     val tag = build(STYLE(this, stylesheet), { })
@@ -106,8 +106,7 @@ class STYLESHEETLINK(containingTag : HEAD, var stylesheet : Stylesheet) : HtmlTa
 
 
     override fun renderElement(appConfig : AppConfig, builder: StringBuilder, indent: String) {
-        stylesheet.write(appConfig)
-        href = stylesheet.relativePath(appConfig).link()
+        href = stylesheet
         super<HtmlTag>.renderElement(appConfig, builder, indent)
     }
 }

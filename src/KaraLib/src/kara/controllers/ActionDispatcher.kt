@@ -7,15 +7,18 @@ import javax.servlet.http.*
 import java.lang.reflect.Method
 import org.apache.log4j.Logger
 import java.lang.reflect.Modifier
+import java.util.HashMap
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Request>>) {
+class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Request>>, val resourceFinder: (String)->Resource? = {null}) {
     private val logger = Logger.getLogger(this.javaClass)!!
 
     private val httpMethods = Array(HttpMethod.values().size) {
         ArrayList<ActionDescriptor>()
     };
+
+    private val resources = HashMap<String, Resource>();
 
     {
         for (routeType in routeTypes) {
@@ -39,28 +42,28 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
         }
     }
 
-    fun dispatch(request: HttpServletRequest, response : HttpServletResponse) {
-        try {
-            val url = request.getRequestURI() as String
-            val actionDescriptor = findDescriptor(request.getMethod()!!, url)
-            if (actionDescriptor == null)
-                throw NotFoundException("Could not match any routes to ${url}")
-            else
-                actionDescriptor.exec(appConfig, request, response)
+    fun findResource(url: String): Resource? {
+        return resources[url] ?: resourceFinder(url)?.let {resources[url] = it; it}
+    }
+
+    fun dispatch(request: HttpServletRequest, response : HttpServletResponse): Boolean {
+        val url = request.getRequestURI() as String
+        val actionDescriptor = findDescriptor(request.getMethod()!!, url)
+        if (actionDescriptor != null) {
+            actionDescriptor.exec(appConfig, request, response)
+            return true
         }
-        catch (ex404 : NotFoundException) {
-            val out = response.getWriter()
-            out?.println("Requested resource ${request.getRequestURI()} not found.")
-            out?.println(ex404.getMessage())
-            out?.flush()
+        else {
+            if (request.getMethod()?.asHttpMethod() == HttpMethod.GET) {
+                val resource = findResource(url)
+                if (resource != null) {
+                    val content = resource.content()
+                    val resp = BinaryResponse(resource.mime, content.length, content.lastModified, content.data)
+                    resp.writeResponse(ActionContext(appConfig, request, response, RouteParameters()))
+                    return true
+                }
+            }
         }
-        catch (ex : Exception) {
-            val out = response.getWriter()
-            println("dispatch error: ${ex.getMessage()}")
-            ex.printStackTrace()
-            out?.print(ex.getMessage())
-            out?.flush()
-        }
+        return false
     }
 }
-

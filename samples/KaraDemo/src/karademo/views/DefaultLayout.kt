@@ -7,7 +7,7 @@ class DefaultLayout(): HtmlLayout() {
     override fun HTML.render(context: ActionContext, mainView: HtmlView) {
         head {
             title("Kara Demo Title")
-            stylesheet(DefaultStyles())
+            stylesheet(DefaultStyles)
         }
         body {
             h1 { +"Kara Demo Site" }
