@@ -8,7 +8,7 @@ val <T> empty_contents: T.() -> Unit = {}
 fun HTML.body(init: BODY.() -> Unit) = build(BODY(this), init)
 class BODY(containingTag : HTML) : HtmlBodyTagWithText(containingTag, "body")
 
-abstract class HtmlBodyTag(containingTag : HtmlTag?, name : String, renderStyle : RenderStyle = RenderStyle.expanded) : HtmlTag(containingTag, name, renderStyle) {
+abstract class HtmlBodyTag(containingTag : HtmlTag?, name : String, renderStyle : RenderStyle = RenderStyle.expanded, contentStyle : ContentStyle = ContentStyle.block) : HtmlTag(containingTag, name, renderStyle, contentStyle) {
     public var id : String by Attributes.id
     public var c : StyleClass by Attributes.c
     public var style : String by Attributes.style
@@ -56,7 +56,7 @@ fun HtmlBodyTag.select(c : StyleClass? = null, id : String? = null, contents : S
 fun HtmlBodyTag.textarea(c : StyleClass? = null, id : String? = null, contents : TEXTAREA.() -> Unit = empty_contents) = contentTag(TEXTAREA(this), c, id, contents)
 
 fun HtmlBodyTag.a(c : StyleClass? = null, id : String? = null, contents : A.() -> Unit = empty_contents) = contentTag(A(this), c, id, contents)
-open class A(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "a") {
+open class A(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "a", contentStyle = ContentStyle.propagate) {
 	public var href : Link by Attributes.href
 	public var rel : String by Attributes.rel
 	public var target : String by Attributes.target
@@ -77,21 +77,21 @@ fun HtmlBodyTag.em(c : StyleClass? = null, id : String? = null, contents : EM.()
 
 open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle.empty) {}
 open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "div") {}
-open class I(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "i") {}
-open class B(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "b") {}
+open class I(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "i", contentStyle = ContentStyle.propagate) {}
+open class B(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "b", contentStyle = ContentStyle.propagate) {}
 open class P(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "p") {}
-open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "span") {}
-open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "strong") {}
-open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "small") {}
-open class EM(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "em") {}
+open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "span", contentStyle = ContentStyle.propagate) {}
+open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "strong", contentStyle = ContentStyle.propagate) {}
+open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "small", contentStyle = ContentStyle.propagate) {}
+open class EM(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "em", contentStyle = ContentStyle.propagate) {}
 open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "blockquote") {
     public var cite : Link by Attributes.cite
 }
 
 
 open class DL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "dl") {}
-open class DD(containingTag: DL) : HtmlBodyTagWithText(containingTag, "dd") {}
-open class DT(containingTag: DL) : HtmlBodyTagWithText(containingTag, "dt") {}
+open class DD(containingTag: DL) : HtmlBodyTagWithText(containingTag, "dd", contentStyle = ContentStyle.propagate) {}
+open class DT(containingTag: DL) : HtmlBodyTagWithText(containingTag, "dt", contentStyle = ContentStyle.propagate) {}
 
 abstract class ListTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name) {}
 open class OL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ol") {}
@@ -106,7 +106,7 @@ open class H2(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "
 open class H3(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h3") {}
 open class H4(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h4") {}
 open class H5(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h5") {}
-open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "img") {
+open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", RenderStyle.empty, ContentStyle.text) {
     public var width : Int by Attributes.width
    	public var height : Int by Attributes.height
    	public var src : Link by Attributes.src
