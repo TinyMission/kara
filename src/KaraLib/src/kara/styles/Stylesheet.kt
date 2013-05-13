@@ -11,6 +11,8 @@ abstract class Stylesheet(var namespace : String = "") : Resource("text/css", "c
     */
     abstract fun CssElement.render()
 
+    var cache: Pair<ByteArray, Long>? = null
+
     fun toString() : String {
         val element = CssElement()
         element.render()
@@ -21,9 +23,11 @@ abstract class Stylesheet(var namespace : String = "") : Resource("text/css", "c
         return builder.toString()
     }
 
-    // TODO: Implement caching and lastModified
     override fun content(): ResourceContent {
-        val bytes = toString().toByteArray("UTF-8")
-        return ResourceContent(-1.toLong(), bytes.size, {bytes.inputStream})
+        val (bytes, stamp) = cache ?: run {
+            cache = Pair(toString().toByteArray("UTF-8"), System.currentTimeMillis())
+            cache!!
+        }
+        return ResourceContent(stamp, bytes.size, {bytes.inputStream})
     }
 }
