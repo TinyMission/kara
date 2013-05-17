@@ -12,8 +12,9 @@ import org.apache.ivy.core.retrieve.RetrieveOptions
 import org.apache.ivy.util.filter.Filter
 import org.apache.ivy.util.filter.FilterHelper
 import org.apache.ivy.Main
+import kara.server.JettyAppConfig
 
-public class DependenciesResolver(val appConfig : AppConfig) {
+public class DependenciesResolver(val appConfig : JettyAppConfig) {
     public fun exec() {
         val pattern = "${appConfig.appRoot}/lib/[artifact]-[revision].[ext]"
         Main.main(array("-retrieve", pattern, "-types", "jar"))

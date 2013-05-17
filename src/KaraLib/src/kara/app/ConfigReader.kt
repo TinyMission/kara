@@ -6,6 +6,7 @@ import org.codehaus.jackson.node.*
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.*
 import kara.*
+import java.net.URL
 
 /**
  * Parses a json file containing a config hash.
@@ -13,11 +14,16 @@ import kara.*
 class ConfigReader(val config : Config) {
 
     /** Parses a json config file and uses it to populate the given reader's config. */
-    fun read(file : File) {
-        val tree = ObjectMapper().readTree(file)!!
+    fun read(file : URL) {
+        try {
+            val tree = ObjectMapper().readTree(file)!!
 
-        var keyStack = Stack<String>()
-        parseNode(tree, keyStack)
+            var keyStack = Stack<String>()
+            parseNode(tree, keyStack)
+        }
+        catch(e: IOException) {
+            // Do nothing. Can't read
+        }
     }
 
     /** Recursively parses the node and adds all value nodes to the config with flattened keys. */

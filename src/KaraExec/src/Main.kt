@@ -11,19 +11,20 @@ import org.apache.log4j.LogManager
 import kara.generators.*
 import java.util.ArrayList
 import dependencies.DependenciesResolver
+import kara.server.JettyAppConfig
 
-fun server(appConfig : AppConfig) {
+fun server(appConfig : JettyAppConfig) {
     val jettyRunner = JettyRunner(appConfig)
     jettyRunner.init()
     jettyRunner.start()
 }
 
-fun generator(appConfig : AppConfig, task : GeneratorTask, args : List<String>) {
+fun generator(appConfig : JettyAppConfig, task : GeneratorTask, args : List<String>) {
     var generator = Generator(appConfig, task, args)
     generator.exec()
 }
 
-fun resolverDependencies(appConfig : AppConfig) {
+fun resolverDependencies(appConfig : JettyAppConfig) {
     var dependencyResolver = DependenciesResolver(appConfig)
     dependencyResolver.exec()
 }
@@ -135,7 +136,7 @@ fun main2(args: Array<String>) {
         }
 
         // create the app config
-        val appConfig = AppConfig(System.getProperty("user.dir")!!, env)
+        val appConfig = JettyAppConfig(System.getProperty("user.dir")!!, env)
 
         // set the log level
         LogManager.getRootLogger()?.setLevel(logLevel)

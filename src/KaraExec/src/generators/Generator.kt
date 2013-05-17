@@ -9,6 +9,7 @@ import kara.*
 import kara.internal.*
 import generators.templates.*
 import com.google.common.io.Files
+import kara.server.JettyAppConfig
 
 /** Possbile named tasks that the generator can perform. */
 enum class GeneratorTask(val name : String) {
@@ -24,7 +25,7 @@ enum class GeneratorTask(val name : String) {
 /**
  * Actually performs the file and directory generation.
  */
-class Generator(val appConfig : AppConfig, val task : GeneratorTask, val args : List<String>) {
+class Generator(val appConfig : JettyAppConfig, val task : GeneratorTask, val args : List<String>) {
     val logger = Logger.getLogger("Generator")!!
     val permissions = Permissions()
     var karaHome = ""

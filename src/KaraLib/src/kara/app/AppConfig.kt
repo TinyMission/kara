@@ -10,19 +10,14 @@ import java.net.URLClassLoader
 /**
  * Store application configuration.
  */
-public class AppConfig(appRoot : String, val environment : String = "development") : Config() {
+public open class AppConfig(val environment : String = "development", configResolver: (jsonFile: String) -> URL? = {null}) : Config() {
 
     {
-        this["kara.appRoot"] = appRoot
         this["kara.port"] = "8080"
 
         // read the main appconfig file and also look for an environment-specific one
-        var file = File(appRoot, "config/appconfig.json")
-        if (file.exists())
-            ConfigReader(this).read(file)
-        file = File(appRoot, "config/appconfig.${environment}.json")
-        if (file.exists())
-            ConfigReader(this).read(file)
+        configResolver("appconfig.json")?.let {ConfigReader(this).read(it)}
+        configResolver("appconfig.${environment}.json")?.let {ConfigReader(this).read(it)}
     }
 
     /** Returns true if the application is running in the development environment. */
@@ -40,14 +35,8 @@ public class AppConfig(appRoot : String, val environment : String = "development
         return environment == "production"
     }
 
-    public val appRoot : String
-        get() = this["kara.appRoot"]
-
     public val appPackage : String
         get() = this["kara.appPackage"]
-
-    public val appPackagePath : String
-        get() = this.appPackage.replace(".", "/")
 
     /** Stores all middleware instances for the application. */
     public val middleware : MiddlewareList = MiddlewareList()
@@ -55,18 +44,6 @@ public class AppConfig(appRoot : String, val environment : String = "development
     /** The directory where publicly available files (like stylesheets, scripts, and images) will go. */
     public val publicDir : String
         get() = this["kara.publicDir"]
-
-    /** The subdirectory of publicDir where stylesheets are stored. */
-    public val stylesheetDir : String
-        get() = this["kara.stylesheetDir"]
-
-    /** The directory where sessions are stored are stored. */
-    public val sessionDir : String
-        get() = this["kara.sessionDir"]
-
-    public val absSessionDir : String
-        //Is you see error here, click "Setup Kotlin JDK Annotations"
-        get() = File(appRoot, sessionDir).toString()
 
     public val routePackages: List<String>?
         get() {
@@ -126,25 +103,8 @@ public class AppConfig(appRoot : String, val environment : String = "development
         return URLClassLoader(buildClasspath(), current)
     }
 
-    private fun buildClasspath() : Array<URL> {
-        val answer = ArrayList<URL>()
-        answer.add(File(appRoot, "bin").toURI().toURL())
-        appendJars(File(appRoot, "lib"), answer)
-        return Array<URL>(answer.size) {answer.get(it)}
-    }
-
-    private fun appendJars(dir: File, answer : MutableList<URL>) {
-        dir.listFiles()?.forEach { file ->
-            val name = file.getName()
-            when {
-                name == "src" || name == "sources" -> {}
-                name.endsWith("-src.jar") || name.endsWith("-sources.jar") -> {}
-                file.isDirectory() -> appendJars(file, answer)
-                name.endsWith(".jar") -> {
-                    answer.add(file.toURI().toURL())
-                }
-                else -> {}
-            }
-        }
+    protected open fun buildClasspath() : Array<URL> {
+        val cl = javaClass.getClassLoader() as URLClassLoader
+        return cl.getURLs()!!
     }
 }

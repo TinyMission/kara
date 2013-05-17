@@ -12,7 +12,7 @@ import kara.Application
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
-public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
+public class JettyRunner(val appConfig: JettyAppConfig) : AppLoadListener {
 
     val logger = Logger.getLogger(this.javaClass)!!
 
