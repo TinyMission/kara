@@ -18,7 +18,7 @@ open class Servlet() : HttpServlet() {
 
     private fun loadApp(): Application {
         val config:AppConfig = AppConfig() {
-            javaClass.getClassLoader()!!.getResource("config/$it")
+            javaClass.getResource("/config/$it")
         }
 
         val loader = AppLoader(config)
@@ -26,15 +26,23 @@ open class Servlet() : HttpServlet() {
         return loader.application!!
     }
 
-    override fun doGet(req: HttpServletRequest?, resp: HttpServletResponse?) {
+
+    protected override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
+        dispatch(req!!, resp!!)
+    }
+
+    private fun dispatch(req: HttpServletRequest, resp: HttpServletResponse) {
+        resp.setCharacterEncoding("UTF-8")
+
         try {
-            app.dispatcher.dispatch(req!!, resp!!)
+            app.dispatcher.dispatch(req, resp)
         }
         catch (ex : Exception) {
-            val out = resp?.getWriter()
-            out?.println("Error handling request $req:")
-            out?.println(ex.getMessage())
-            out?.println(ex.printStackTrace())
+            with (resp.getWriter()!!) {
+                println("Error handling request $req:")
+                println(ex.getMessage())
+                println(ex.printStackTrace())
+            }
         }
     }
 
