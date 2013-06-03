@@ -27,25 +27,25 @@ class BeanFormModel(val model: Any) : FormModel<String> {
     }
 }
 
-fun <P> HtmlBodyTag.formForModel(model: FormModel<P>, action : Link, formMethod : FormMethod = FormMethod.post, contents: FormBuilder<P>.() -> Unit) {
+fun <P,M:FormModel<P>> HtmlBodyTag.formForModel(model: M, action : Link, formMethod : FormMethod = FormMethod.post, contents: FormBuilder<P,M>.() -> Unit) {
     val builder = FormBuilder(this, model)
     builder.action = action
     builder.method = formMethod
-    build(builder, contents)
+    builder.contents()
 
     if (builder.hasFiles) {
         builder.enctype = EncodingType.multipart
     }
 }
 
-fun HtmlBodyTag.formForBean(bean: Any, action : Link, formMethod : FormMethod = FormMethod.post, contents : FormBuilder<String>.() -> Unit) {
+fun HtmlBodyTag.formForBean(bean: Any, action : Link, formMethod : FormMethod = FormMethod.post, contents : FormBuilder<String, FormModel<String>>.() -> Unit) {
     formForModel(BeanFormModel(bean), action, formMethod, contents)
 }
 
 /**
  * Allows forms to be built based on a model object.
  */
-class FormBuilder<P>(containingTag : HtmlBodyTag, val model : FormModel<P>) : FORM(containingTag) {
+class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M) : FORM(containingTag) {
     val logger = Logger.getLogger(this.javaClass)!!
 
     /** If true, the form will have enctype="multipart/form-data" */
