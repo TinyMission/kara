@@ -48,13 +48,14 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
 
     fun dispatch(request: HttpServletRequest, response : HttpServletResponse): Boolean {
         val url = request.getRequestURI() as String
-        val actionDescriptor = findDescriptor(request.getMethod()!!, url)
+        val method = request.getMethod()
+        val actionDescriptor = findDescriptor(method!!, url)
         if (actionDescriptor != null) {
             actionDescriptor.exec(appConfig, request, response)
             return true
         }
         else {
-            if (request.getMethod()?.asHttpMethod() == HttpMethod.GET) {
+            if (method.asHttpMethod() == HttpMethod.GET) {
                 val resource = findResource(url)
                 if (resource != null) {
                     val content = resource.content()
