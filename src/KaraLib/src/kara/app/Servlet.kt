@@ -38,11 +38,8 @@ open class Servlet() : HttpServlet() {
             app.dispatcher.dispatch(req, resp)
         }
         catch (ex : Exception) {
-            with (resp.getWriter()!!) {
-                println("Error handling request $req:")
-                println(ex.getMessage())
-                println(ex.printStackTrace())
-            }
+            println(ex.printStackTrace())
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
         }
     }
 
