@@ -92,7 +92,7 @@ class Color(var red: Double, var green : Double, var blue : Double, var alpha : 
 
     fun toString() : String {
         if (alpha < 1.0) {
-            return "rgba(${red}, ${green}, ${blue}, ${alpha})"
+            return "rgba(${redInt}, ${greenInt}, ${blueInt}, ${alpha})"
         }
         else {
             return hexString
