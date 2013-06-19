@@ -30,3 +30,9 @@ open class RedirectResult(val url : String) : ActionResult {
         context.response.sendRedirect(url)
     }
 }
+
+open class ErrorResult(val code : Int, val msg : String?) : ActionResult {
+    override fun writeResponse(context : ActionContext) {
+        context.response.sendError(code, msg)
+    }
+}
