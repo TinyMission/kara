@@ -33,6 +33,7 @@ open class Servlet() : HttpServlet() {
 
     private fun dispatch(req: HttpServletRequest, resp: HttpServletResponse) {
         resp.setCharacterEncoding("UTF-8")
+        req.setCharacterEncoding("UTF-8")
 
         try {
             app.dispatcher.dispatch(req, resp)
