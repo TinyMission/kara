@@ -59,8 +59,6 @@ class ErrorLayout(): HtmlLayout() {
  */
 class ErrorView(val ex: Throwable): HtmlView(ErrorLayout()) {
     override fun render(context: ActionContext) {
-        context.session.setAttribute("hello", "world")
-
         div(id = "header") {
             h1 { +"Error Rendering Page" }
             val message = ex.getMessage()
