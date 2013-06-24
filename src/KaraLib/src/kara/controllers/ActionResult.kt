@@ -36,3 +36,10 @@ open class ErrorResult(val code : Int, val msg : String?) : ActionResult {
         context.response.sendError(code, msg)
     }
 }
+
+open class RequestAuthentication(val realm : String) : ErrorResult(401, "Not authorized") {
+    override fun writeResponse(context : ActionContext) {
+        context.response.addHeader("WWW-Authenticate", "Basic realm=\"$realm\"")
+        context.response.sendError(code, msg)
+    }
+}
