@@ -2,7 +2,7 @@ package kara
 
 import java.io.InputStream
 
-public class BinaryResponse(val mime: String, val length: Int, val modified : Long, val data: () -> InputStream) : ActionResult {
+public class BinaryResponse(val mime: String, val length: Int, val modified : Long, val streamData: () -> InputStream) : ActionResult {
 
     override fun writeResponse(context: ActionContext) {
         val r = context.response
@@ -20,7 +20,7 @@ public class BinaryResponse(val mime: String, val length: Int, val modified : Lo
                 r.setDateHeader("Last-Modified", modified)
             }
 
-            val stream = data()
+            val stream = streamData()
             try {
                 stream.copyTo(r.getOutputStream()!!)
             }
