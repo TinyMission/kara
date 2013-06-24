@@ -73,6 +73,7 @@ fun HtmlBodyTag.span(c : StyleClass? = null, id : String? = null, contents : SPA
 fun HtmlBodyTag.strong(c : StyleClass? = null, id : String? = null, contents : STRONG.() -> Unit = empty_contents) = contentTag(STRONG(this), c, id, contents)
 fun HtmlBodyTag.small(c : StyleClass? = null, id : String? = null, contents : SMALL.() -> Unit = empty_contents) = contentTag(SMALL(this), c, id, contents)
 fun HtmlBodyTag.blockquote(c : StyleClass? = null, id : String? = null, contents : BLOCKQUOTE.() -> Unit = empty_contents) = contentTag(BLOCKQUOTE(this), c, id, contents)
+fun HtmlBodyTag.address(c : StyleClass? = null, id : String? = null, contents : ADDRESS.() -> Unit = empty_contents) = contentTag(ADDRESS(this), c, id, contents)
 fun HtmlBodyTag.em(c : StyleClass? = null, id : String? = null, contents : EM.() -> Unit = empty_contents) = contentTag(EM(this), c, id, contents)
 
 open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle.empty) {}
@@ -84,6 +85,7 @@ open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag,
 open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "strong", contentStyle = ContentStyle.propagate) {}
 open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "small", contentStyle = ContentStyle.propagate) {}
 open class EM(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "em", contentStyle = ContentStyle.propagate) {}
+open class ADDRESS(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "address") {}
 open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "blockquote") {
     public var cite : Link by Attributes.cite
 }
