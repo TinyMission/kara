@@ -27,6 +27,10 @@ open class Servlet() : HttpServlet() {
     }
 
 
+    public override fun destroy() {
+        _app?.shutDown()
+    }
+
     protected override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         dispatch(req!!, resp!!)
     }

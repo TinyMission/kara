@@ -62,4 +62,8 @@ abstract class Application(protected val config: AppConfig, private vararg val r
                 routePackages.flatMap { scanPackageForRequests(it, newClassloader) },
                 resourceFinder)
     }
+
+    open fun shutDown() {
+
+    }
 }
