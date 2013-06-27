@@ -5,7 +5,7 @@ import karademo.views.DefaultLayout
 
 class Index(): HtmlView(DefaultLayout()) {
 
-    override fun render(context: ActionContext) {
+    override fun HtmlBodyTag.render(context: ActionContext) {
 
         p {
             +"This is the demo site for Kara. Below you'll find all of the html content that can be expressed in Kara views."

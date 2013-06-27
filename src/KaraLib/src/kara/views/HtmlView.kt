@@ -4,14 +4,13 @@ import kara.internal.*
 
 /** Base class for html views.
  */
-abstract class HtmlView(val layout : HtmlLayout? = null) : HtmlBodyTag(null, "view"), ActionResult {
+abstract class HtmlView(val layout : HtmlLayout? = null) : ActionResult {
     override fun writeResponse(context : ActionContext) : Unit {
         context.response.setContentType("text/html")
 
         val writer = context.response.getWriter()!!
         if (layout == null) {
-            render(context)
-            writer.write(this.toString(context.appConfig)!!)
+            writer.write(this.toString(context.appConfig, context))
         }
         else {
             val page = HTML()
@@ -27,9 +26,12 @@ abstract class HtmlView(val layout : HtmlLayout? = null) : HtmlBodyTag(null, "vi
         t.body()
     }
 
-    override fun toString(appConfig : AppConfig): String {
+    fun toString(appConfig : AppConfig, context: ActionContext): String {
+        val root = object: HtmlBodyTag(null, "view") {}
+        root.render(context)
+
         val builder = StringBuilder()
-        for (child in children) {
+        for (child in root.children) {
             child.renderElement(appConfig, builder, "")
         }
         return builder.toString()
@@ -38,5 +40,5 @@ abstract class HtmlView(val layout : HtmlLayout? = null) : HtmlBodyTag(null, "vi
 
     /** Subclasses must implement this to provide the primary html to dispay.
     */
-    abstract fun render(context : ActionContext)
+    abstract fun HtmlBodyTag.render(context : ActionContext)
 }

@@ -25,9 +25,9 @@ abstract class HtmlBodyTag(containingTag : HtmlTag?, name : String, renderStyle 
     }
 
     fun renderView(context : ActionContext, view : HtmlView) {
-        view.render(context)
-        children.addAll(view.children)
-        view.children.clear()
+        with(view) {
+            render(context)
+        }
     }
 }
 

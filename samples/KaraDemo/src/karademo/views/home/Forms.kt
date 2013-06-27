@@ -7,7 +7,7 @@ import karademo.routes.Home
 import karademo.views.DefaultLayout
 
 class Forms(val book : Book) : HtmlView(DefaultLayout()) {
-    override fun render(context: ActionContext) {
+    override fun HtmlBodyTag.render(context: ActionContext) {
         h2 { +"Forms" }
         formForBean(book, Home.Update(), FormMethod.post) {
 

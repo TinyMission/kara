@@ -6,7 +6,7 @@ import karademo.styles.StyleClasses.*
 import karademo.styles.StyleClasses
 
 class Show(val post : Post) : HtmlView() {
-    override fun render(context: ActionContext) {
+    override fun HtmlBodyTag.render(context: ActionContext) {
         h3 {+ "Show Post"}
         div(c=date) {
             label {+ "Date:"}
