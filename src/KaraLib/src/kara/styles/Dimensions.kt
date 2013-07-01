@@ -43,53 +43,40 @@ fun isLinearDimension(s : String) : Boolean {
 }
 
 /** Extenion property to convert a double to a LinearDimension with units em. */
-var Double.em : LinearDimension
+val Double.em : LinearDimension
     get() {
         return LinearDimension(this, LinearUnits.em)
     }
-    set(value) {
-    }
 
 /** Extenion property to convert an int to a LinearDimension with units em. */
-var Int.em : LinearDimension
+val Int.em : LinearDimension
     get() {
         return LinearDimension(this.toDouble(), LinearUnits.em)
     }
-    set(value) {
-    }
 
 /** Extenion property to convert a double to a LinearDimension with units px. */
-var Double.px : LinearDimension
+val Double.px : LinearDimension
     get() {
         return LinearDimension(this, LinearUnits.px)
     }
-    set(value) {
-    }
 
 /** Extenion property to convert an int to a LinearDimension with units px. */
-var Int.px : LinearDimension
+val Int.px : LinearDimension
     get() {
         return LinearDimension(this.toDouble(), LinearUnits.px)
     }
-    set(value) {
-    }
 
 /** Extenion property to convert a double to a LinearDimension with units percent. */
-var Double.percent : LinearDimension
+val Double.percent : LinearDimension
     get() {
         return LinearDimension(this, LinearUnits.percent)
     }
-    set(value) {
-    }
 
 /** Extenion property to convert an int to a LinearDimension with units percent. */
-var Int.percent : LinearDimension
+val Int.percent : LinearDimension
     get() {
         return LinearDimension(this.toDouble(), LinearUnits.percent)
     }
-    set(value) {
-    }
-
 
 /** Stores 4 linear dimensions that describe a box, like padding and margin.
  */
