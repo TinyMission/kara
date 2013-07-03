@@ -22,6 +22,12 @@ fun HEAD.meta(name: String, content: String) {
     tag.content = content
 }
 
+fun HEAD.base(href: String, target: String) {
+    val tag = build(BASE(this), { })
+    tag.href = href
+    tag.target = target
+}
+
 fun HtmlTag.script(src: Link, mimeType: String = "text/javascript") {
     val tag = build(SCRIPTSRC(this), { })
     tag.src = src
@@ -68,6 +74,11 @@ class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTagWithText
 class META(containingTag : HEAD) : HtmlTag(containingTag, "meta") {
     public var name : String by Attributes.name
     public var content : String by StringAttribute("content")
+}
+
+class BASE(containingTag : HEAD) : HtmlTag(containingTag, "base") {
+    public var href : String by StringAttribute("href")
+    public var target : String by StringAttribute("target")
 }
 
 class _LINK(containingTag : HEAD) : HtmlTag(containingTag, "link", RenderStyle.empty) {
