@@ -21,4 +21,4 @@ Retention(RetentionPolicy.RUNTIME) annotation class Delete(val route : String = 
 /** Used to annotate route objects, representing alternative URL path component.
 Default is / for top level root object or lowercased object name for inner objects
 */
-Retention(RetentionPolicy.RUNTIME) annotation class Path(val path: String? = null)
+Retention(RetentionPolicy.RUNTIME) annotation class Path(val path: String = "")
