@@ -1,7 +1,6 @@
-package kara.internal
+package kotlin.html
 
-import java.net.URL
-import kara.*
+import kotlin.html.*
 
 object Attributes {
     val c = ClassAttribute("class")

@@ -1,7 +1,7 @@
 package kara
 
 import java.io.*
-
+import kotlin.html.*
 
 fun Throwable.getStackTrace(): String {
     val os = ByteArrayOutputStream()

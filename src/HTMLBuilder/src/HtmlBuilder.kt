@@ -1,22 +1,21 @@
-package kara
+package kotlin.html
 
 import java.util.*
-import kara.internal.*
 
 abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle: ContentStyle = ContentStyle.block) {
     {
         appendTo(containingElement)
     }
 
-    private fun appendTo(element : HtmlElement?) = element?.children?.add(this)
+    private fun appendTo(element: HtmlElement?) = element?.children?.add(this)
 
     val children: MutableList<HtmlElement> = ArrayList<HtmlElement>()
 
-    abstract fun renderElement(appConfig: AppConfig, builder: StringBuilder, indent: String)
+    abstract fun renderElement(builder: StringBuilder, indent: String)
 
-    open fun toString(appConfig: AppConfig): String {
+    open fun toString(): String {
         val builder = StringBuilder()
-        renderElement(appConfig, builder, "")
+        renderElement(builder, "")
         return builder.toString()
     }
 }
@@ -40,17 +39,20 @@ private fun HtmlElement.computeContentStyle(): ContentStyle {
     }
 }
 
-abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block): HtmlElement(containingTag, contentStyle) {
+private fun String.htmlEscape(): String {
+    return replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;")
+}
+
+abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
     private val attributes = HashMap<String, String>()
 
-    public fun build<T: HtmlTag>(tag: T, contents: T.() -> Unit): T {
+    public fun build<T : HtmlTag>(tag: T, contents: T.() -> Unit): T {
         tag.contents()
         return tag
     }
 
-    override fun renderElement(appConfig: AppConfig, builder: StringBuilder, indent: String) {
+    override fun renderElement(builder: StringBuilder, indent: String) {
         val count = children.size()
-        val contentStyle = computeContentStyle()
         builder.append(indent)
         when {
             count == 0 && renderStyle != RenderStyle.expanded -> {
@@ -62,7 +64,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
             children.all { it.computeContentStyle() == ContentStyle.text } -> {
                 builder.append("<$tagName${renderAttributes()}>")
                 for (c in children) {
-                    c.renderElement(appConfig, builder, "")
+                    c.renderElement(builder, "")
                 }
                 builder.append("</$tagName>")
             }
@@ -72,7 +74,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
             else -> {
                 builder.append("<$tagName${renderAttributes()}>\n")
                 for (c in children) {
-                    c.renderElement(appConfig, builder, indent + "  ")
+                    c.renderElement(builder, indent + "  ")
                 }
                 builder.append("$indent</$tagName>")
             }
@@ -107,8 +109,8 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     }
 }
 
-class HtmlText(containingTag: HtmlTag?, private val text: String): HtmlElement(containingTag, ContentStyle.text) {
-    override fun renderElement(appConfig: AppConfig, builder: StringBuilder, indent: String) {
+class HtmlText(containingTag: HtmlTag?, private val text: String) : HtmlElement(containingTag, ContentStyle.text) {
+    override fun renderElement(builder: StringBuilder, indent: String) {
         builder.append(indent)
         builder.append(escapedText())
         if (indent != "")
@@ -118,7 +120,7 @@ class HtmlText(containingTag: HtmlTag?, private val text: String): HtmlElement(c
     public fun escapedText(): String = text.htmlEscape()
 }
 
-abstract class HtmlTagWithText(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded): HtmlTag(containingTag, name, renderStyle) {
+abstract class HtmlTagWithText(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded) : HtmlTag(containingTag, name, renderStyle) {
     /**
      * Override the plus operator to add a text element.
      */
@@ -140,7 +142,7 @@ abstract class HtmlTagWithText(containingTag: HtmlTag?, name: String, renderStyl
         }
 }
 
-abstract class HtmlBodyTagWithText(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block): HtmlBodyTag(containingTag, name, renderStyle, contentStyle) {
+abstract class HtmlBodyTagWithText(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlBodyTag(containingTag, name, renderStyle, contentStyle) {
     /**
      * Override the plus operator to add a text element.
      */
@@ -162,6 +164,6 @@ abstract class HtmlBodyTagWithText(containingTag: HtmlTag?, name: String, render
         }
 }
 
-class InvalidHtmlException(val message: String): RuntimeException(message) {
+class InvalidHtmlException(val message: String) : RuntimeException(message) {
 
 }

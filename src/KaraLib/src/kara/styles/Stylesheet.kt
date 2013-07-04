@@ -1,6 +1,6 @@
 package kara
 
-import kara.internal.*
+import kotlin.html.*
 import java.io.OutputStreamWriter
 import java.io.FileOutputStream
 
@@ -29,5 +29,50 @@ abstract class Stylesheet(var namespace : String = "") : Resource("text/css", "c
             cache!!
         }
         return ResourceContent(stamp, bytes.size, {bytes.inputStream})
+    }
+}
+
+fun HEAD.style(media: String = "all", mimeType: String = "text/css", buildSheet: CssElement.() -> Unit) {
+    val stylesheet = object : Stylesheet("") {
+        override fun CssElement.render() {
+            buildSheet()
+        }
+    }
+    val tag = build(STYLE(this, stylesheet), { })
+    tag.media = media
+    tag.mimeType = mimeType
+}
+
+fun HEAD.stylesheet(stylesheet: Stylesheet)  = build(STYLESHEETLINK(this, stylesheet), { })
+
+class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTagWithText(containingTag, "style") {
+    public var media : String by StringAttribute("media")
+    public var mimeType : String by Attributes.mimeType
+
+    {
+        media = "all"
+        mimeType = "text/css"
+    }
+
+    override fun renderElement(builder: StringBuilder, indent: String) {
+        builder.append("$indent<$tagName${renderAttributes()}>\n")
+        builder.append(stylesheet.toString())
+        builder.append("$indent</$tagName>\n")
+    }
+}
+
+class STYLESHEETLINK(containingTag : HEAD, var stylesheet : Stylesheet) : HtmlTag(containingTag, "link", RenderStyle.empty) {
+    public var href : Link by Attributes.href
+    public var rel : String by Attributes.rel
+    public var mimeType : String by Attributes.mimeType
+    {
+        rel = "stylesheet"
+        mimeType = "text/css"
+    }
+
+
+    override fun renderElement(builder: StringBuilder, indent: String) {
+        href = stylesheet
+        super<HtmlTag>.renderElement(builder, indent)
     }
 }

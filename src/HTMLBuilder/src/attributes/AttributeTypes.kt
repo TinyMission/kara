@@ -1,20 +1,20 @@
-package kara.internal
+package kotlin.html
 
-import kara.*
+import kotlin.html.*
 
-public abstract class Attribute<T>(val name : String) {
-    fun get(tag : HtmlTag, property : PropertyMetadata) : T {
+public abstract class Attribute<T>(val name: String) {
+    fun get(tag: HtmlTag, property: PropertyMetadata): T {
         return decode(tag[name]);
     }
-    fun set(tag : HtmlTag, property : PropertyMetadata, value : T) {
+    fun set(tag: HtmlTag, property: PropertyMetadata, value: T) {
         tag[name] = encode(value);
     }
 
-    abstract fun encode(t: T) : String
-    abstract fun decode(s: String) : T
+    abstract fun encode(t: T): String
+    abstract fun decode(s: String): T
 }
 
-public open class StringAttribute(name : String): Attribute<String>(name) {
+public open class StringAttribute(name: String) : Attribute<String>(name) {
     override fun encode(t: String): String {
         return t // TODO: it actually might need HTML esaping
     }
@@ -24,7 +24,7 @@ public open class StringAttribute(name : String): Attribute<String>(name) {
     }
 }
 
-public class ClassAttribute(name: String): Attribute<StyleClass>(name) {
+public class ClassAttribute(name: String) : Attribute<StyleClass>(name) {
     override fun encode(t: StyleClass): String {
         return t.name()
     }
@@ -35,10 +35,10 @@ public class ClassAttribute(name: String): Attribute<StyleClass>(name) {
     }
 }
 
-public class TextAttribute(name: String): StringAttribute(name)
-public class RegexpAttribute(name: String): StringAttribute(name)
-public class IdAttribute(name: String): StringAttribute(name)
-public class MimeAttribute(name: String): StringAttribute(name)
+public class TextAttribute(name: String) : StringAttribute(name)
+public class RegexpAttribute(name: String) : StringAttribute(name)
+public class IdAttribute(name: String) : StringAttribute(name)
+public class MimeAttribute(name: String) : StringAttribute(name)
 
 public class IntAttribute(name: String) : Attribute<Int>(name) {
     override fun encode(t: Int): String {
@@ -77,10 +77,10 @@ public class LinkAttribute(name: String) : Attribute<Link>(name) {
 }
 
 public trait StringEnum<T : Enum<T>> : Enum<T> {
-    val value : String get() = name()
+    val value: String get() = name()
 }
 
-public class EnumAttribute<T : StringEnum<T>>(name: String, val klass : Class<T>) : Attribute<T>(name) {
+public class EnumAttribute<T : StringEnum<T>>(name: String, val klass: Class<T>) : Attribute<T>(name) {
     override fun encode(t: T): String {
         return t.value
     }
@@ -97,7 +97,7 @@ public class EnumAttribute<T : StringEnum<T>>(name: String, val klass : Class<T>
 public class MimeTypesAttribute(name: String) : Attribute<List<String>>(name) {
 
     override fun encode(t: List<String>): String {
-        return t.join(",")
+        return t.makeString(",")
     }
     override fun decode(s: String): List<String> {
         return s.split(',').map { it.trim() }

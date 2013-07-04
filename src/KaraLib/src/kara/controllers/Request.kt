@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier
 import kara.internal.*
 import java.util.HashSet
 import java.util.LinkedHashSet
+import kotlin.html.*
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Link {
     fun handle(context : ActionContext) : ActionResult {

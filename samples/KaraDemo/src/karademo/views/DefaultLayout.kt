@@ -2,6 +2,7 @@ package karademo.views
 
 import kara.*
 import karademo.styles.DefaultStyles
+import kotlin.html.*
 
 class DefaultLayout(): HtmlLayout() {
     override fun HTML.render(context: ActionContext, mainView: HtmlView) {

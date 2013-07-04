@@ -2,6 +2,7 @@ package karademo.views.home
 
 import kara.*
 import karademo.views.DefaultLayout
+import kotlin.html.*
 
 class Index(): HtmlView(DefaultLayout()) {
 

@@ -9,6 +9,10 @@
           <element id="directory" name="config">
             <element id="dir-copy" path="$PROJECT_DIR$/samples/KaraDemo/config" />
           </element>
+          <element id="directory" name="WEB-INF">
+            <element id="directory" name="classes" />
+          </element>
+          <element id="module-output" name="HTMLBuilder" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="KotlinJavaRuntime" />

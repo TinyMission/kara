@@ -1,5 +1,7 @@
 package kara
 
+import kotlin.html.*
+
 /** Base class for html layouts.
  * A layout is an html template that renders the shared part of the page.
  * Subclasses must implement the render function to provide the layout html.

@@ -3,7 +3,8 @@ package kara
 import java.lang.reflect.Method
 import org.apache.log4j.Logger
 import kara.internal.*
-import kara.InputType.*
+import kotlin.html.*
+import kotlin.html.InputType.*
 
 public trait FormModel<P> {
     fun modelName(): String

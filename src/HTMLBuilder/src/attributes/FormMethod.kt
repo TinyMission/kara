@@ -1,6 +1,4 @@
-package kara
-
-import kara.internal.*
+package kotlin.html
 
 public enum class FormMethod() : StringEnum<FormMethod> {
     get

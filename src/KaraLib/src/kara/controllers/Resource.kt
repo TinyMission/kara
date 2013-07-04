@@ -1,6 +1,7 @@
 package kara
 
 import java.io.InputStream
+import kotlin.html.*
 
 public data class ResourceContent(val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream)
 

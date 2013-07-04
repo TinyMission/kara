@@ -1,5 +1,6 @@
 package kara
 
+import kotlin.html.*
 import kara.internal.*
 
 /** Base class for html views.
@@ -10,14 +11,14 @@ abstract class HtmlView(val layout : HtmlLayout? = null) : ActionResult {
 
         val writer = context.response.getWriter()!!
         if (layout == null) {
-            writer.write(this.toString(context.appConfig, context))
+            writer.write(this.toString(context))
         }
         else {
             val page = HTML()
             with(layout!!) {
                 page.render(context, this@HtmlView)
             }
-            writer.write(page.toString(context.appConfig)!!)
+            writer.write(page.toString()!!)
         }
         writer.flush()
     }
@@ -26,13 +27,13 @@ abstract class HtmlView(val layout : HtmlLayout? = null) : ActionResult {
         t.body()
     }
 
-    fun toString(appConfig : AppConfig, context: ActionContext): String {
+    fun toString(context: ActionContext): String {
         val root = object: HtmlBodyTag(null, "view") {}
         root.render(context)
 
         val builder = StringBuilder()
         for (child in root.children) {
-            child.renderElement(appConfig, builder, "")
+            child.renderElement(builder, "")
         }
         return builder.toString()
     }
@@ -41,4 +42,10 @@ abstract class HtmlView(val layout : HtmlLayout? = null) : ActionResult {
     /** Subclasses must implement this to provide the primary html to dispay.
     */
     abstract fun HtmlBodyTag.render(context : ActionContext)
+}
+
+public fun HtmlBodyTag.renderView(context : ActionContext, view : HtmlView) {
+    with(view) {
+        render(context)
+    }
 }

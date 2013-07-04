@@ -1,15 +1,15 @@
-package kara
+package kotlin.html
 
 import java.util.ArrayList
 import java.util.HashMap
-import kara.internal.*
+import kotlin.html.internal.*
 
 trait Selector {
-    fun toExternalForm() : String
+    fun toExternalForm(): String
 }
 
 trait SelectorTrait {
-    fun toExternalForm() : String
+    fun toExternalForm(): String
 }
 
 object EmptyTrait : SelectorTrait {
@@ -19,14 +19,14 @@ object EmptyTrait : SelectorTrait {
 }
 
 public trait StyleClass : SelectorTrait, Selector {
-    fun name() : String
+    fun name(): String
 
     override fun toExternalForm(): String {
         return ".${name()}"
     }
 }
 
-class CompositeStyleClass(val a : StyleClass, val b: StyleClass) : StyleClass {
+class CompositeStyleClass(val a: StyleClass, val b: StyleClass) : StyleClass {
     override fun name(): String {
         return "${a.name()} ${b.name()}"
     }
@@ -36,7 +36,7 @@ class CompositeStyleClass(val a : StyleClass, val b: StyleClass) : StyleClass {
     }
 }
 
-public fun StyleClass?.plus(another: StyleClass?) : StyleClass? = when {
+public fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
     this == null && another == null -> null
     this == null -> another
     another == null -> this
@@ -56,11 +56,11 @@ public enum class PseudoClass : StyleClass {
  * Represents a single stylesheet element.
  */
 open class CssElement() {
-    val children : MutableList<StyledElement> = ArrayList<StyledElement>()
+    val children: MutableList<StyledElement> = ArrayList<StyledElement>()
     val attributes = HashMap<String, Any>()
 
-    public inner class IdSelector(val name : String) : SelectorTrait, Selector {
-        fun invoke(body : StyledElement.() -> Unit) {
+    public inner class IdSelector(val name: String) : SelectorTrait, Selector {
+        fun invoke(body: StyledElement.() -> Unit) {
             any.invoke(this, body = body)
         }
 
@@ -69,107 +69,107 @@ open class CssElement() {
         }
     }
 
-    public inner open class TagSelector(val name : String) : Selector {
-        fun id(name: String) : Selector = invoke(IdSelector(name))
-        fun id(name : String, body : StyledElement.() -> Unit) = id(IdSelector(name), body)
-        fun id(id : IdSelector, body : StyledElement.() -> Unit) = invoke(id, body = body)
+    public inner open class TagSelector(val name: String) : Selector {
+        fun id(name: String): Selector = invoke(IdSelector(name))
+        fun id(name: String, body: StyledElement.() -> Unit) = id(IdSelector(name), body)
+        fun id(id: IdSelector, body: StyledElement.() -> Unit) = invoke(id, body = body)
 
-        fun c(vararg klass : StyleClass, body : StyledElement.() -> Unit) {
+        fun c(vararg klass: StyleClass, body: StyledElement.() -> Unit) {
             invoke(*(klass as Array<SelectorTrait>), body = body)
         }
-        fun c(vararg klass : StyleClass) : Selector = invoke(*(klass as Array<SelectorTrait>))
+        fun c(vararg klass: StyleClass): Selector = invoke(*(klass as Array<SelectorTrait>))
 
-        fun invoke(vararg traits : SelectorTrait, body : StyledElement.() -> Unit) {
+        fun invoke(vararg traits: SelectorTrait, body: StyledElement.() -> Unit) {
             s(SimpleSelector(this, traits).toExternalForm(), body)
         }
 
-        fun invoke(vararg t: SelectorTrait) : Selector {
+        fun invoke(vararg t: SelectorTrait): Selector {
             return SimpleSelector(this, t)
         }
 
-        fun isAny() : Boolean = "*" == name
+        fun isAny(): Boolean = "*" == name
 
         override fun toExternalForm(): String {
             return name
         }
     }
 
-    val any : TagSelector get() = TagSelector("*")
-    val a : TagSelector get() = TagSelector("a")
-    val b : TagSelector get() = TagSelector("b")
-    val body : TagSelector get() = TagSelector("body")
-    val button : TagSelector get() = TagSelector("button")
-    val canvas : TagSelector get() = TagSelector("canvas")
-    val div : TagSelector get() = TagSelector("div")
-    val em : TagSelector get() = TagSelector("em")
-    val fieldset : TagSelector get() = TagSelector("fieldset")
-    val form : TagSelector get() = TagSelector("form")
-    val h1 : TagSelector get() = TagSelector("h1")
-    val h2 : TagSelector get() = TagSelector("h2")
-    val h3 : TagSelector get() = TagSelector("h3")
-    val h4 : TagSelector get() = TagSelector("h4")
-    val h5 : TagSelector get() = TagSelector("h5")
-    val i : TagSelector get() = TagSelector("i")
-    val img : TagSelector get() = TagSelector("img")
-    val input : TagSelector get() = TagSelector("input")
-    val legend : TagSelector get() = TagSelector("legend")
-    val label : TagSelector get() = TagSelector("label")
-    val ol : TagSelector get() = TagSelector("ol")
-    val p : TagSelector get() = TagSelector("p")
-    val select : TagSelector get() = TagSelector("select")
-    val span : TagSelector get() = TagSelector("span")
-    val small : TagSelector get() = TagSelector("small")
-    val strong : TagSelector get() = TagSelector("strong")
-    val blockquote : TagSelector get() = TagSelector("blockquote")
-    val table : TagSelector get() = TagSelector("table")
-    val textarea : TagSelector get() = TagSelector("textarea")
-    val ul : TagSelector get() = TagSelector("ul")
-    val li : TagSelector get() = TagSelector("li")
-    val option : TagSelector get() = TagSelector("option")
-    val optgroup : TagSelector get() = TagSelector("optgroup")
-    val tr : TagSelector get() = TagSelector("tr")
-    val tbody : TagSelector get() = TagSelector("tbody")
-    val td : TagSelector get() = TagSelector("td")
-    val th : TagSelector get() = TagSelector("th")
-    val dl : TagSelector get() = TagSelector("dl")
-    val dt : TagSelector get() = TagSelector("dt")
-    val dd : TagSelector get() = TagSelector("dd")
+    val any: TagSelector get() = TagSelector("*")
+    val a: TagSelector get() = TagSelector("a")
+    val b: TagSelector get() = TagSelector("b")
+    val body: TagSelector get() = TagSelector("body")
+    val button: TagSelector get() = TagSelector("button")
+    val canvas: TagSelector get() = TagSelector("canvas")
+    val div: TagSelector get() = TagSelector("div")
+    val em: TagSelector get() = TagSelector("em")
+    val fieldset: TagSelector get() = TagSelector("fieldset")
+    val form: TagSelector get() = TagSelector("form")
+    val h1: TagSelector get() = TagSelector("h1")
+    val h2: TagSelector get() = TagSelector("h2")
+    val h3: TagSelector get() = TagSelector("h3")
+    val h4: TagSelector get() = TagSelector("h4")
+    val h5: TagSelector get() = TagSelector("h5")
+    val i: TagSelector get() = TagSelector("i")
+    val img: TagSelector get() = TagSelector("img")
+    val input: TagSelector get() = TagSelector("input")
+    val legend: TagSelector get() = TagSelector("legend")
+    val label: TagSelector get() = TagSelector("label")
+    val ol: TagSelector get() = TagSelector("ol")
+    val p: TagSelector get() = TagSelector("p")
+    val select: TagSelector get() = TagSelector("select")
+    val span: TagSelector get() = TagSelector("span")
+    val small: TagSelector get() = TagSelector("small")
+    val strong: TagSelector get() = TagSelector("strong")
+    val blockquote: TagSelector get() = TagSelector("blockquote")
+    val table: TagSelector get() = TagSelector("table")
+    val textarea: TagSelector get() = TagSelector("textarea")
+    val ul: TagSelector get() = TagSelector("ul")
+    val li: TagSelector get() = TagSelector("li")
+    val option: TagSelector get() = TagSelector("option")
+    val optgroup: TagSelector get() = TagSelector("optgroup")
+    val tr: TagSelector get() = TagSelector("tr")
+    val tbody: TagSelector get() = TagSelector("tbody")
+    val td: TagSelector get() = TagSelector("td")
+    val th: TagSelector get() = TagSelector("th")
+    val dl: TagSelector get() = TagSelector("dl")
+    val dt: TagSelector get() = TagSelector("dt")
+    val dd: TagSelector get() = TagSelector("dd")
 
 
-    public fun id(name: String, body : StyledElement.() -> Unit) {
+    public fun id(name: String, body: StyledElement.() -> Unit) {
         any.id(name, body)
     }
 
-    public fun id(name: String) : IdSelector = IdSelector(name)
+    public fun id(name: String): IdSelector = IdSelector(name)
 
-    fun c(klass : StyleClass, body : StyledElement.() -> Unit) {
+    fun c(klass: StyleClass, body: StyledElement.() -> Unit) {
         any.invoke(klass, body = body)
     }
 
-    public fun att(name : String) : Attribute = Attribute(name, HasAttribute(name))
+    public fun att(name: String): Attribute = Attribute(name, HasAttribute(name))
 
-    public class Attribute internal (val name : String, val filter : AttFilter) : SelectorTrait {
-        public fun startsWith(value : String) : Attribute {
+    public class Attribute internal (val name: String, val filter: AttFilter) : SelectorTrait {
+        public fun startsWith(value: String): Attribute {
             return Attribute(name, StartsWith(value))
         }
 
-        public fun equalTo(value : String) : Attribute {
+        public fun equalTo(value: String): Attribute {
             return Attribute(name, Equals(value))
         }
 
-        public fun endsWith(value : String) : Attribute {
+        public fun endsWith(value: String): Attribute {
             return Attribute(name, EndsWith(value))
         }
 
-        public fun contains(value : String) : Attribute {
+        public fun contains(value: String): Attribute {
             return Attribute(name, Contains(value, AttributeValueTokenizer.Substring))
         }
 
-        public fun containsInHypen(value : String) : Attribute {
+        public fun containsInHypen(value: String): Attribute {
             return Attribute(name, Contains(value, AttributeValueTokenizer.Hypen))
         }
 
-        public fun containsInSpaces(value : String) : Attribute {
+        public fun containsInSpaces(value: String): Attribute {
             return Attribute(name, Contains(value, AttributeValueTokenizer.Spaces))
         }
 
@@ -178,8 +178,8 @@ open class CssElement() {
         }
     }
 
-    class SimpleSelector(val tag : TagSelector, val traits : Array<out SelectorTrait>) : Selector {
-        override fun toExternalForm() : String {
+    class SimpleSelector(val tag: TagSelector, val traits: Array<out SelectorTrait>) : Selector {
+        override fun toExternalForm(): String {
             val answer = StringBuilder()
 
             val isAny = tag.isAny()
@@ -199,24 +199,24 @@ open class CssElement() {
         }
     }
 
-    public fun forAny(vararg selectors : Selector, body : StyledElement.() -> Unit) {
+    public fun forAny(vararg selectors: Selector, body: StyledElement.() -> Unit) {
         s(UnionSelector(selectors).toExternalForm(), body)
     }
 
-    public fun forAny(vararg selectors : Selector) : UnionSelector {
+    public fun forAny(vararg selectors: Selector): UnionSelector {
         return UnionSelector(selectors)
     }
 
-    class UnionSelector(val selectors : Array<Selector>) : Selector {
+    class UnionSelector(val selectors: Array<Selector>) : Selector {
         override fun toExternalForm(): String {
-            return "(${selectors.map { it.toExternalForm()} join ","})"
+            return "(${selectors.map ({ it.toExternalForm() }).makeString(",")})"
         }
     }
 
     /**
      * Creates a new child element with the given selector and block.
      */
-    fun s(selector : String, init : StyledElement.() -> Unit) {
+    fun s(selector: String, init: StyledElement.() -> Unit) {
         val element = StyledElement(selector)
         element.init()
         children.add(element)
@@ -224,11 +224,11 @@ open class CssElement() {
 }
 
 
-class StyledElement(val selector : String) : CssElement() {
+class StyledElement(val selector: String) : CssElement() {
     /**
      * Writes the element to the builder with the given indenation.
      */
-    fun build(builder : StringBuilder, baseSelector : String) {
+    fun build(builder: StringBuilder, baseSelector: String) {
         val thisSelector = if (baseSelector.length() > 0) if (selector.startsWith(':')) "$baseSelector$selector" else "$baseSelector $selector" else selector
         builder.append("$thisSelector {\n")
         for (a in attributes.keySet()) {
@@ -242,7 +242,7 @@ class StyledElement(val selector : String) : CssElement() {
     }
 
     /** Strongly-typed method for pulling attributes out of the hash. */
-    fun getAttribute<T>(name : String) : T {
+    fun getAttribute<T>(name: String): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
         else
@@ -250,7 +250,7 @@ class StyledElement(val selector : String) : CssElement() {
     }
 
     /** Strongly-typed method for pulling attributes out of the hash, with a default return value. */
-    fun getAttribute<T>(name : String, default : T) : T {
+    fun getAttribute<T>(name: String, default: T): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
         else
@@ -258,41 +258,41 @@ class StyledElement(val selector : String) : CssElement() {
     }
 
     /** Shorthand for making a color inside a stylesheet. */
-    fun c(colorString : String) : Color {
+    fun c(colorString: String): Color {
         return color(colorString)
     }
 
-    var backgroundAttachment : BackgroundAttachment?
+    var backgroundAttachment: BackgroundAttachment?
         get() = getAttribute<BackgroundAttachment>("background-attachment")
         set(value) {
             attributes["background-attachment"] = value.toString()
         }
 
-    var backgroundColor : Color?
+    var backgroundColor: Color?
         get() = getAttribute<Color>("background-color")
         set(value) {
             attributes["background-color"] = value.toString()
         }
 
-    var backgroundImage : String?
+    var backgroundImage: String?
         get() = getAttribute<String>("background-image")
         set(value) {
             attributes["background-image"] = value.toString()
         }
 
-    var backgroundPosition : String?
+    var backgroundPosition: String?
         get() = getAttribute<String>("background-position")
         set(value) {
             attributes["background-position"] = value.toString()
         }
 
-    var backgroundRepeat : BackgroundRepeat?
+    var backgroundRepeat: BackgroundRepeat?
         get() = getAttribute<BackgroundRepeat>("background-repeat")
         set(value) {
             attributes["background-repeat"] = value.toString()
         }
 
-    var border : String = ""
+    var border: String = ""
         set(value) {
             val tokens = value.split(' ')
             for (token in tokens) {
@@ -307,211 +307,211 @@ class StyledElement(val selector : String) : CssElement() {
             }
         }
 
-    var borderColor : Color?
+    var borderColor: Color?
         get() = getAttribute<Color>("border-color")
         set(value) {
             attributes["border-color"] = value.toString()
         }
 
-    var borderRadius : LinearDimension
+    var borderRadius: LinearDimension
         get() = getAttribute<LinearDimension>("border-radius", 0.px)
         set(value) {
             attributes["border-radius"] = value.toString()
         }
 
-    var borderBottomLeftRadius : LinearDimension
+    var borderBottomLeftRadius: LinearDimension
         get() = getAttribute<LinearDimension>("border-bottom-left-radius", 0.px)
         set(value) {
             attributes["border-bottom-left-radius"] = value.toString()
         }
 
-    var borderBottomRightRadius : LinearDimension
+    var borderBottomRightRadius: LinearDimension
         get() = getAttribute<LinearDimension>("border-bottom-right-radius", 0.px)
         set(value) {
             attributes["border-bottom-right-radius"] = value.toString()
         }
 
-    var borderTopLeftRadius : LinearDimension
+    var borderTopLeftRadius: LinearDimension
         get() = getAttribute<LinearDimension>("border-top-left-radius", 0.px)
         set(value) {
             attributes["border-top-left-radius"] = value.toString()
         }
 
-    var borderTopRightRadius : LinearDimension
+    var borderTopRightRadius: LinearDimension
         get() = getAttribute<LinearDimension>("border-top-right-radius", 0.px)
         set(value) {
             attributes["border-top-right-radius"] = value.toString()
         }
 
-    var borderStyle : BorderStyle?
+    var borderStyle: BorderStyle?
         get() = getAttribute<BorderStyle>("border-style")
         set(value) {
             attributes["border-style"] = value.toString()
         }
 
-    var borderWidth : LinearDimension
+    var borderWidth: LinearDimension
         get() = getAttribute<LinearDimension>("border-width", 0.px)
         set(value) {
             attributes["border-width"] = value.toString()
         }
 
-    var clear : Clear?
+    var clear: Clear?
         get() = getAttribute<Clear>("clear")
         set(value) {
             attributes["clear"] = value.toString()
         }
 
-    var color : Color?
+    var color: Color?
         get() = getAttribute<Color>("color")
         set(value) {
             attributes["color"] = value.toString()
         }
 
-    var display : Display?
+    var display: Display?
         get() = getAttribute<Display>("display")
         set(value) {
             attributes["display"] = value.toString()
         }
 
-    var float : FloatType?
+    var float: FloatType?
         get() = getAttribute<FloatType>("float")
         set(value) {
             attributes["float"] = value.toString()
         }
 
-    var fontFamily : String?
+    var fontFamily: String?
         get() = getAttribute<String>("font-family")
         set(value) {
             attributes["font-family"] = value.toString()
         }
 
-    var fontSize : LinearDimension?
+    var fontSize: LinearDimension?
         get() = getAttribute<LinearDimension>("font-size")
         set(value) {
             attributes["font-size"] = value.toString()
         }
 
-    var fontWeight : FontWeight
+    var fontWeight: FontWeight
         get() = getAttribute<FontWeight>("font-weight")
         set(value) {
             attributes["font-weight"] = value.toString()
         }
 
-    var height : LinearDimension?
+    var height: LinearDimension?
         get() = getAttribute<LinearDimension>("height")
         set(value) {
             attributes["height"] = value.toString()
         }
 
-    var lineHeight : LinearDimension?
+    var lineHeight: LinearDimension?
         get() = getAttribute<LinearDimension>("line-height")
         set(value) {
             attributes["line-height"] = value.toString()
         }
 
-    var margin : BoxDimensions?
+    var margin: BoxDimensions?
         get() = getAttribute<BoxDimensions>("margin")
         set(value) {
             attributes["margin"] = value.toString()
         }
 
-    var marginTop : LinearDimension?
+    var marginTop: LinearDimension?
         get() = getAttribute<LinearDimension>("margin-top")
         set(value) {
             attributes["margin-top"] = value.toString()
         }
 
-    var marginBottom : LinearDimension?
+    var marginBottom: LinearDimension?
         get() = getAttribute<LinearDimension>("margin-bottom")
         set(value) {
             attributes["margin-bottom"] = value.toString()
         }
 
-    var marginLeft : LinearDimension?
+    var marginLeft: LinearDimension?
         get() = getAttribute<LinearDimension>("margin-left")
         set(value) {
             attributes["margin-left"] = value.toString()
         }
 
-    var marginRight : LinearDimension?
+    var marginRight: LinearDimension?
         get() = getAttribute<LinearDimension>("margin-right")
         set(value) {
             attributes["margin-right"] = value.toString()
         }
 
-    var maxHeight : LinearDimension?
+    var maxHeight: LinearDimension?
         get() = getAttribute<LinearDimension>("max-height")
         set(value) {
             attributes["max-height"] = value.toString()
         }
 
-    var maxWidth : LinearDimension?
+    var maxWidth: LinearDimension?
         get() = getAttribute<LinearDimension>("max-width")
         set(value) {
             attributes["max-width"] = value.toString()
         }
 
-    var minHeight : LinearDimension?
+    var minHeight: LinearDimension?
         get() = getAttribute<LinearDimension>("min-height")
         set(value) {
             attributes["min-height"] = value.toString()
         }
 
-    var minWidth : LinearDimension?
+    var minWidth: LinearDimension?
         get() = getAttribute<LinearDimension>("min-width")
         set(value) {
             attributes["min-width"] = value.toString()
         }
 
-    var overflow : Overflow
+    var overflow: Overflow
         get() = getAttribute<Overflow>("overflow", Overflow.inherit)
         set(value) {
             attributes["overflow"] = value.toString()
         }
 
-    var padding : BoxDimensions?
+    var padding: BoxDimensions?
         get() = getAttribute<BoxDimensions>("padding")
         set(value) {
             attributes["padding"] = value.toString()
         }
 
-    var paddingTop : LinearDimension?
+    var paddingTop: LinearDimension?
         get() = getAttribute<LinearDimension>("padding-top")
         set(value) {
             attributes["padding-top"] = value.toString()
         }
 
-    var paddingBottom : LinearDimension?
+    var paddingBottom: LinearDimension?
         get() = getAttribute<LinearDimension>("padding-bottom")
         set(value) {
             attributes["padding-bottom"] = value.toString()
         }
 
-    var paddingLeft : LinearDimension?
+    var paddingLeft: LinearDimension?
         get() = getAttribute<LinearDimension>("padding-left")
         set(value) {
             attributes["padding-left"] = value.toString()
         }
 
-    var paddingRight : LinearDimension?
+    var paddingRight: LinearDimension?
         get() = getAttribute<LinearDimension>("padding-right")
         set(value) {
             attributes["padding-right"] = value.toString()
         }
 
-    var textAlign : TextAlign
+    var textAlign: TextAlign
         get() = getAttribute<TextAlign>("text-align", TextAlign.inherit)
         set(value) {
             attributes["text-align"] = value.toString()
         }
 
-    var verticalAlign : VerticalAlign
+    var verticalAlign: VerticalAlign
         get() = getAttribute<VerticalAlign>("vertical-align", VerticalAlign.inherit)
         set(value) {
             attributes["vertical-align"] = value.toString()
         }
 
-    var width : LinearDimension?
+    var width: LinearDimension?
         get() = getAttribute<LinearDimension>("width")
         set(value) {
             attributes["width"] = value.toString()

@@ -3,8 +3,7 @@ package karatests.styles
 import org.junit.Test
 import kotlin.test.assertEquals
 import karatests.styles.SampleClasses.*
-import kara.*
-import kara.internal.*
+import kotlin.html.*
 
 enum class SampleClasses : StyleClass {
     c1 c2 c3

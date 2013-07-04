@@ -1,6 +1,4 @@
-package kara
-
-import kara.internal.*
+package kotlin.html
 
 public enum class EncodingType(override val value: String) : StringEnum<EncodingType> {
     urlencoded : EncodingType("application/x-www-form-urlencoded")

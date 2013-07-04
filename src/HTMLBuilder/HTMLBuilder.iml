@@ -8,8 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
-    <orderEntry type="module" module-name="HTMLBuilder" />
-    <orderEntry type="module" module-name="KaraLib" />
   </component>
 </module>
 

@@ -1,8 +1,6 @@
-package kara
+package kotlin.html
 
-import kara.internal.*
-
-public enum class InputType: StringEnum<InputType> {
+public enum class InputType : StringEnum<InputType> {
     button checkbox file hidden image password radio reset submit text
 
     // HTML5:

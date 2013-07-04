@@ -4,6 +4,7 @@ import kara.*
 import karademo.models.*
 import karademo.styles.StyleClasses.*
 import karademo.styles.StyleClasses
+import kotlin.html.*
 
 class Show(val post : Post) : HtmlView() {
     override fun HtmlBodyTag.render(context: ActionContext) {
