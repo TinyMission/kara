@@ -88,7 +88,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getRequestURL() : StringBuffer? {
-        throw UnsupportedOperationException()
+        return StringBuffer(_url)
     }
     public override fun isUserInRole(p0 : String?) : Boolean {
         throw UnsupportedOperationException()
