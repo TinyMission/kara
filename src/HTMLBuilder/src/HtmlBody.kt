@@ -56,6 +56,7 @@ open class A(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "a
 open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "button") {
 }
 
+fun HtmlBodyTag.hr(c: StyleClass? = null, id: String? = null) = contentTag(HR(this), c, id)
 fun HtmlBodyTag.br(c: StyleClass? = null, id: String? = null) = contentTag(BR(this), c, id)
 fun HtmlBodyTag.div(c: StyleClass? = null, id: String? = null, contents: DIV.() -> Unit = empty_contents) = contentTag(DIV(this), c, id, contents)
 fun HtmlBodyTag.b(c: StyleClass? = null, id: String? = null, contents: B.() -> Unit = empty_contents) = contentTag(B(this), c, id, contents)
@@ -69,6 +70,8 @@ fun HtmlBodyTag.address(c: StyleClass? = null, id: String? = null, contents: ADD
 fun HtmlBodyTag.em(c: StyleClass? = null, id: String? = null, contents: EM.() -> Unit = empty_contents) = contentTag(EM(this), c, id, contents)
 
 open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle.empty) {
+}
+open class HR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "hr", RenderStyle.empty) {
 }
 open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "div") {
 }
