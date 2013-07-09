@@ -39,9 +39,9 @@ public class JettyRunner(val appConfig: JettyAppConfig) : AppLoadListener {
                 }
             }
             catch(ex: Exception) {
-                val out = p3.getWriter()
                 logger.warn("dispatch error: ${ex.getMessage()}");
                 ex.printStackTrace()
+                val out = p3.getWriter()
                 out?.print(ex.getMessage())
                 out?.flush()
             }

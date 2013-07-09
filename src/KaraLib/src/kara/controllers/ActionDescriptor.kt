@@ -8,12 +8,15 @@ import jet.runtime.typeinfo.JetValueParameter
 import java.lang.reflect.Constructor
 import java.net.URLDecoder
 import kara.*
+import org.apache.log4j.Logger
 
 
 /** Contains all the information necessary to match a route and execute an action.
 */
 class ActionDescriptor(val route : String, val requestClass: Class<out Request>) {
     class object {
+        val logger = Logger.getLogger(this.javaClass)!!
+
         /** Deserializes parameters into objects. */
         public val paramDeserializer: ParamDeserializer = ParamDeserializer()
     }
@@ -144,6 +147,8 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
             result.writeResponse(context)
         }
         catch (ex : Exception) {
+            logger.warn("exec error: ${ex.getMessage()}");
+            ex.printStackTrace()
             // write the standard error page
             var error : Throwable = ex
             if (ex.getCause() != null)
