@@ -16,7 +16,7 @@ open class Config() {
     fun get(name : String) : String {
         if (data.containsKey(name))
             return data[name]!!
-        throw RuntimeException("Could not find config value for key $name")
+        throw ConfigMissingException("Could not find config value for key $name")
     }
 
     /** Sets a value for the given key. */
@@ -38,3 +38,5 @@ open class Config() {
         return builder.toString()
     }
 }
+
+public class ConfigMissingException(desc: String) : RuntimeException(desc)
