@@ -197,6 +197,7 @@ open class SELECT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "sele
     public var size: Int by Attributes.size
     public var multiple: Boolean by Attributes.multiple
     public var disabled: Boolean by Attributes.disabled
+    public var required: Boolean by Attributes.required
 }
 
 open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "option") {
