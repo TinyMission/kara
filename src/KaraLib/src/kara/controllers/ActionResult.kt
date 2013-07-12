@@ -1,6 +1,7 @@
 package kara
 
 import javax.servlet.http.HttpServletResponse
+import java.io.IOException
 
 /** Base class for objects that are returned from actions.
  */
@@ -41,5 +42,18 @@ open class RequestAuthentication(val realm : String) : ErrorResult(401, "Not aut
     override fun writeResponse(context : ActionContext) {
         context.response.addHeader("WWW-Authenticate", "Basic realm=\"$realm\"")
         context.response.sendError(code, msg)
+    }
+}
+
+fun ActionResult.tryWriteResponse(context: ActionContext) {
+    try {
+        writeResponse(context)
+    }
+    catch(ex: IOException) {
+        // All kinds of EOFs and Broken Pipes can be safely ignored
+    }
+    catch(ex: Exception) {
+        println(ex.printStackTrace())
+        context.response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
     }
 }

@@ -9,6 +9,7 @@ import java.lang.reflect.Constructor
 import java.net.URLDecoder
 import kara.*
 import org.apache.log4j.Logger
+import java.io.IOException
 
 
 /** Contains all the information necessary to match a route and execute an action.
@@ -122,6 +123,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         val routeInstance = buildRouteInstance(params)
         val context = ActionContext(appConfig, request, response, params)
 
+        var result:ActionResult? = null
         try {
             // run middleware with beforeRequest
             for (ref in appConfig.middleware.all) {
@@ -132,19 +134,16 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
                 }
             }
 
-            val result = routeInstance.handle(context)
+            result = routeInstance.handle(context)
 
             // run middleware with afterRequest
             for (ref in appConfig.middleware.all) {
                 if (ref.matches(request.getRequestURI()!!)) {
-                    val keepGoing = ref.middleware.afterRequest(context, result)
+                    val keepGoing = ref.middleware.afterRequest(context, result!!)
                     if (!keepGoing)
                         return
                 }
             }
-
-            // write the result to the response
-            result.writeResponse(context)
         }
         catch (ex : Exception) {
             logger.warn("exec error: ${ex.getMessage()}");
@@ -155,6 +154,8 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
                 error = ex.getCause()!!
             ErrorView(error).writeResponse(context)
         }
+
+        result?.tryWriteResponse(context)
     }
 
 

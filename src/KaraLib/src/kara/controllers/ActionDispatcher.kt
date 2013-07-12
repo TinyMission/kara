@@ -61,7 +61,7 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
                 if (resource != null) {
                     val content = resource.content()
                     val resp = BinaryResponse(resource.mime, content.length, content.lastModified, content.data)
-                    resp.writeResponse(ActionContext(appConfig, request, response, RouteParameters()))
+                    resp.tryWriteResponse(ActionContext(appConfig, request, response, RouteParameters()))
                     return true
                 }
             }
