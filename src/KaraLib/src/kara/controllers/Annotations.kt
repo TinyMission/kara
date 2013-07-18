@@ -2,7 +2,11 @@ package kara
 
 import java.lang.annotation.*
 
-/** Used to annotate actions that respond to GET requests.
+/** Used to annotate actions that respond to HTTP requests.
+ */
+Retention(RetentionPolicy.RUNTIME) annotation class Route(val method : HttpMethod, val route : String)
+
+/** Used to annotate actions that respond to HTTP GET requests.
  */
 Retention(RetentionPolicy.RUNTIME) annotation class Get(val route : String = "")
 

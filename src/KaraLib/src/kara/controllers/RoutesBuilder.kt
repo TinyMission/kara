@@ -7,7 +7,7 @@ import org.reflections.util.ClasspathHelper
 
 fun scanPackageForRequests(prefix : String, classloader : ClassLoader) : List<Class<out Request>> {
     val reflections = Reflections(prefix, classloader)
-    return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Path>()).flatMap {
+    return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Path>()).flatMap {
         reflections.getTypesAnnotatedWith(it)!!.toList().filter { javaClass<Request>().isAssignableFrom(it) }.map { it as Class<Request> }
     }
 }

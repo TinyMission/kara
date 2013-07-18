@@ -5,6 +5,11 @@ public enum class HttpMethod {
     POST
     PUT
     DELETE
+
+    // WebDav
+    OPTIONS
+    PROPFIND
+    REPORT
 }
 
 fun String.asHttpMethod(): HttpMethod = when (this) {
@@ -12,5 +17,8 @@ fun String.asHttpMethod(): HttpMethod = when (this) {
     "POST" -> HttpMethod.POST
     "PUT" -> HttpMethod.PUT
     "DELETE" -> HttpMethod.DELETE
+    "OPTIONS" -> HttpMethod.OPTIONS
+    "PROPFIND" -> HttpMethod.PROPFIND
+    "REPORT" -> HttpMethod.REPORT
     else -> throw RuntimeException("Unknown $this as HTTP method")
 }
