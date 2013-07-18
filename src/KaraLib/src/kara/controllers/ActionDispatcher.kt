@@ -48,8 +48,8 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
 
     fun dispatch(request: HttpServletRequest, response : HttpServletResponse): Boolean {
         val url = request.getRequestURI() as String
-        logger.info(request.getRequestURL())
         val method = request.getMethod()
+        logger.info("$method -- ${request.getRequestURL()}")
         val actionDescriptor = findDescriptor(method!!, url)
         if (actionDescriptor != null) {
             actionDescriptor.exec(appConfig, request, response)
