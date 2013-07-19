@@ -11,9 +11,11 @@ class DirectLink(val href: String) : Link {
 }
 
 public fun String.link(): Link {
+/* URL appeared costly due to storing registered protocols in synchronized HashTable
     if (!startsWith("/")) {
         URL(this) // Give a chance for MalformedUrlException to be thrown
     }
+*/
 
     return DirectLink(this)
 }
