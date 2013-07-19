@@ -11,13 +11,15 @@ import kotlin.html.*
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Link {
     fun handle(context : ActionContext) : ActionResult {
-        return context.handler()
+        return context.withContext {
+            context.handler()
+        }
     }
 
     override fun href() = toExternalForm()
 
     public fun toExternalForm() : String {
-        val (route, method) = javaClass.route()
+        val route = ActionContext.current()?.app?.dispatcher?.route(javaClass) ?: javaClass.route().first
 
         val answer = StringBuilder()
 

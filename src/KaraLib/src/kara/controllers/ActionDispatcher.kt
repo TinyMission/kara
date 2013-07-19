@@ -11,22 +11,26 @@ import java.util.HashMap
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Request>>, val resourceFinder: (String)->Resource? = {null}) {
+class ActionDispatcher(val app: Application, routeTypes: List<Class<out Request>>, val resourceFinder: (String)->Resource? = {null}) {
     private val logger = Logger.getLogger(this.javaClass)!!
 
     private val httpMethods = Array(HttpMethod.values().size) {
         ArrayList<ActionDescriptor>()
     };
-
+    private val routes = HashMap<Class<out Request>, String>()
     private val resources = HashMap<String, Resource>();
 
     {
         for (routeType in routeTypes) {
             val (route, httpMethod) = routeType.route()
+            routes[routeType] = route
             httpMethods[httpMethod.ordinal()].add(ActionDescriptor(route, routeType))
         }
     }
 
+    fun route(requestType: Class<out Request>): String {
+        return routes[requestType] ?: requestType.route().first
+    }
 
     /** Matches an http method and url to an ActionInfo object.
         Returns null if no match is found.
@@ -52,7 +56,7 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
         logger.info("$method -- ${request.getRequestURL()}")
         val actionDescriptor = findDescriptor(method!!, url)
         if (actionDescriptor != null) {
-            actionDescriptor.exec(appConfig, request, response)
+            actionDescriptor.exec(app, request, response)
             return true
         }
         else {
@@ -61,7 +65,7 @@ class ActionDispatcher(val appConfig: AppConfig, routeTypes: List<Class<out Requ
                 if (resource != null) {
                     val content = resource.content()
                     val resp = BinaryResponse(resource.mime, content.length, content.lastModified, content.data)
-                    resp.tryWriteResponse(ActionContext(appConfig, request, response, RouteParameters()))
+                    resp.tryWriteResponse(ActionContext(app, request, response, RouteParameters()))
                     return true
                 }
             }

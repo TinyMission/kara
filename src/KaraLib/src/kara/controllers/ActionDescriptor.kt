@@ -118,15 +118,15 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
     }
 
     /** Execute the action based on the given request and populate the response. */
-    public fun exec(appConfig: AppConfig, request: HttpServletRequest, response : HttpServletResponse) {
+    public fun exec(app: Application, request: HttpServletRequest, response : HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = buildRouteInstance(params)
-        val context = ActionContext(appConfig, request, response, params)
+        val context = ActionContext(app, request, response, params)
 
         var result:ActionResult? = null
         try {
             // run middleware with beforeRequest
-            for (ref in appConfig.middleware.all) {
+            for (ref in app.config.middleware.all) {
                 if (ref.matches(request.getRequestURI()!!)) {
                     val keepGoing = ref.middleware.beforeRequest(context)
                     if (!keepGoing)
@@ -137,7 +137,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
             result = routeInstance.handle(context)
 
             // run middleware with afterRequest
-            for (ref in appConfig.middleware.all) {
+            for (ref in app.config.middleware.all) {
                 if (ref.matches(request.getRequestURI()!!)) {
                     val keepGoing = ref.middleware.afterRequest(context, result!!)
                     if (!keepGoing)

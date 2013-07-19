@@ -18,7 +18,9 @@ class DispatchTests() {
         val appConfig = AppConfig()
         appConfig["kara.appPackage"] = "karatests.controllers"
 
-        val dispatcher = ActionDispatcher(appConfig, scanObjects(array(Routes)))
+        val app = object : Application(appConfig) {}
+
+        val dispatcher = ActionDispatcher(app, scanObjects(array(Routes)))
 
         var actionInfo = dispatcher.findDescriptor("GET", "/")!!
         assertNotNull(actionInfo)

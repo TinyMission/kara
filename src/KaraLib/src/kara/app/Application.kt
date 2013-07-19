@@ -10,7 +10,7 @@ import org.apache.log4j.Logger
 
 /** The base Kara application class.
  */
-abstract class Application(protected val config: AppConfig, private vararg val routes : Any) {
+abstract class Application(val config: AppConfig, private vararg val routes : Any) {
     private var _dispatcher : ActionDispatcher? = null
     private var lastRequestServedAt: Long = 0
     public val dispatcher : ActionDispatcher
@@ -36,7 +36,7 @@ abstract class Application(protected val config: AppConfig, private vararg val r
     private fun buildDispatcher() : ActionDispatcher {
         val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
         if (routes.size != 0) {
-            return ActionDispatcher(config, scanObjects(routes, newClassloader))
+            return ActionDispatcher(this, scanObjects(routes, newClassloader))
         }
 
         val resourceFinder = {
@@ -58,7 +58,7 @@ abstract class Application(protected val config: AppConfig, private vararg val r
 
         // Discover routes via reflections
         val routePackages = config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles");
-        return ActionDispatcher(config,
+        return ActionDispatcher(this,
                 routePackages.flatMap { scanPackageForRequests(it, newClassloader) },
                 resourceFinder)
     }

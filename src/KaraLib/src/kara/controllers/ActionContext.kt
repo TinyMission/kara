@@ -14,7 +14,7 @@ fun HttpSession.getDescription() : String {
 /** This contains information about the current rendering action.
  * An action context is provided by the dispatcher to the action result when it's rendered.
  */
-class ActionContext(val appConfig : AppConfig,
+class ActionContext(val app: Application,
                     val request : HttpServletRequest,
                     val response : HttpServletResponse,
                     val params : RouteParameters) {
@@ -24,4 +24,23 @@ class ActionContext(val appConfig : AppConfig,
     fun redirect(url : String) : ActionResult {
         return RedirectResult(url)
     }
+
+    class object {
+        val currents = ThreadLocal<ActionContext?>()
+
+        public fun current(): ActionContext? {
+            return currents.get()
+        }
+    }
 }
+
+public fun <T> ActionContext.withContext(body: () -> T): T {
+    try {
+        ActionContext.currents.set(this)
+        return body()
+    }
+    finally {
+        ActionContext.currents.set(null)
+    }
+}
+

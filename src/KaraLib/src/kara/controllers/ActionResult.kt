@@ -47,7 +47,9 @@ open class RequestAuthentication(val realm : String) : ErrorResult(401, "Not aut
 
 fun ActionResult.tryWriteResponse(context: ActionContext) {
     try {
-        writeResponse(context)
+        context.withContext {
+            writeResponse(context)
+        }
     }
     catch(ex: IOException) {
         // All kinds of EOFs and Broken Pipes can be safely ignored
