@@ -107,6 +107,20 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     public fun set(attName: String, attValue: String) {
         attributes[attName] = attValue
     }
+
+    /**
+     * Override the plus operator to add a text element.
+     */
+    fun String.not() = RawHtml(this@HtmlTag, this)
+}
+
+class RawHtml(containingTag: HtmlTag?, private val html: String) : HtmlElement(containingTag, ContentStyle.text) {
+    override fun renderElement(builder: StringBuilder, indent: String) {
+        builder.append(indent)
+        builder.append(html)
+        if (indent != "")
+            builder.append("\n")
+    }
 }
 
 class HtmlText(containingTag: HtmlTag?, private val text: String) : HtmlElement(containingTag, ContentStyle.text) {
