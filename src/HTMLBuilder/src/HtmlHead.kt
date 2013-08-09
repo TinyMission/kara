@@ -68,7 +68,7 @@ class SCRIPTSRC(containingTag: HtmlTag) : HtmlTag(containingTag, "script") {
     }
 }
 
-class SCRIPTBLOCK(containingTag: HtmlTag) : HtmlTagWithText(containingTag, "script") {
+class SCRIPTBLOCK(containingTag: HtmlTag) : HtmlTag(containingTag, "script") {
     public var mimeType: String by Attributes.mimeType
     {
         mimeType = "text/javascript"
