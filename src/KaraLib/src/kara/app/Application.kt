@@ -16,20 +16,18 @@ abstract class Application(val config: AppConfig, private vararg val routes : An
     public val dispatcher : ActionDispatcher
         get() {
             val now = System.currentTimeMillis()
-
             if (config.isDevelopment()) {
                 if (now - lastRequestServedAt > 300.toLong()) {
                     _dispatcher = null
                 }
             }
 
-            lastRequestServedAt = now
-
             var d = _dispatcher
             if (d == null) {
                 d = buildDispatcher()
                 _dispatcher = d
             }
+            lastRequestServedAt = System.currentTimeMillis()
             return d!!
         }
 
