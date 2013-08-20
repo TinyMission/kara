@@ -1,5 +1,7 @@
 package kotlin.html
 
+import java.util.Locale
+
 
 /** Container class for HSL values */
 class HslValues(var hue: Double, var saturation: Double, var lightness: Double) {
@@ -27,19 +29,21 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
         }
 
         /** Makes a color from a hex string (hash included). */
-        public fun fromHex(s: String): Color {
+        public fun fromHex(s : String) : Color {
+            // TODO 4/8-digit are actually not supported by CSS spec, make framework parse rgb/rgba() format instead
+
             if (s.length == 4 && s.charAt(0) == '#') {
                 val r = Integer.parseInt(s.substring(1, 2), 16)
                 val g = Integer.parseInt(s.substring(2, 3), 16)
                 val b = Integer.parseInt(s.substring(3, 4), 16)
-                return Color.fromRgb(r, g, b)
+                return Color.fromRgb(r * 16 + r, g * 16 + g, b * 16 + b)
             }
             if (s.length == 5 && s.charAt(0) == '#') {
                 val r = Integer.parseInt(s.substring(1, 2), 16)
                 val g = Integer.parseInt(s.substring(2, 3), 16)
                 val b = Integer.parseInt(s.substring(3, 4), 16)
                 val a = Integer.parseInt(s.substring(4, 5), 16)
-                return Color.fromRgb(r, g, b, a)
+                return Color.fromRgb(r * 16 + r, g * 16 + g, b * 16 + b, a * 16 + a)
             }
             if (s.length == 7 && s.charAt(0) == '#') {
                 val r = Integer.parseInt(s.substring(1, 3), 16)
@@ -87,12 +91,14 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
         get() = (alpha * 255.0).toInt()
         set(value) = alpha = value.toDouble() / 255.0
 
+    private fun Int.twoDigitHex(): String = (if (this < 16) "0" else "") + Integer.toHexString(this)
+
     val hexString: String
-        get() = "#${Integer.toHexString(redInt)}${Integer.toHexString(greenInt)}${Integer.toHexString(blueInt)}"
+        get() = "#${redInt.twoDigitHex()}${greenInt.twoDigitHex()}${blueInt.twoDigitHex()}"
 
     fun toString(): String {
         if (alpha < 1.0) {
-            return "rgba(${redInt}, ${greenInt}, ${blueInt}, ${alpha})"
+            return "rgba($redInt, $greenInt, $blueInt, ${java.lang.String.format(Locale.ENGLISH, "%.3f", alpha)})"
         }
         else {
             return hexString
@@ -218,3 +224,4 @@ inline fun color(s: String): Color {
 inline fun isColor(s: String): Boolean {
     return s.startsWith("#") || s.startsWith("rgb")
 }
+
