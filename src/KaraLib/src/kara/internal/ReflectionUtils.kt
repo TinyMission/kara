@@ -19,7 +19,7 @@ fun Class<*>.objectInstance() : Any? {
 }
 
 fun String?.asNotEmpty(): String? {
-    return if (notEmpty()) this else null
+    return if (notEmpty) this else null
 }
 
 fun Class<*>.routePrefix() : String {
