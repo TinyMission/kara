@@ -18,9 +18,7 @@ fun Class<*>.objectInstance() : Any? {
     }
 }
 
-fun String?.asNotEmpty(): String? {
-    return if (isNotEmpty()) this else null
-}
+fun String?.asNotEmpty(): String? = if (this == null) null else if (!isEmpty()) this else null
 
 fun Class<*>.routePrefix() : String {
     val owner = getEnclosingClass()
