@@ -1,5 +1,9 @@
 package kotlin.html
 
+public enum class ButtonType : StringEnum<ButtonType> {
+    button reset submit
+}
+
 public enum class InputType : StringEnum<InputType> {
     button checkbox file hidden image password radio reset submit text
 

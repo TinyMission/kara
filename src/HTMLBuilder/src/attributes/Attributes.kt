@@ -27,6 +27,7 @@ object Attributes {
     val maxlength = IntAttribute("maxlength")
     val multiple = TickerAttribute("multiple")
     val inputType = EnumAttribute("type", javaClass<InputType>())
+    val buttonType = EnumAttribute("type", javaClass<ButtonType>())
     val name = StringAttribute("name")
     val pattern = RegexpAttribute("pattern")
     val placeholder = TextAttribute("placeholder")
