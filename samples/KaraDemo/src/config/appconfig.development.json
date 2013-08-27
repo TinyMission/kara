@@ -1,0 +1,6 @@
+{
+    "kara": {
+        "port": 3000,
+        "hotPackages": "karademo.routes, karademo.styles, karademo.views"
+    }
+}

@@ -1,8 +1,0 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="kara">
-    <target name="resolve" description="retrieve dependencies with ivy">
-        <!-- this is only used for manual libs update -->
-        <ivy:retrieve />
-    </target>
-
-    <property name="build.number" value="SNAPSHOT"/>
-</project>

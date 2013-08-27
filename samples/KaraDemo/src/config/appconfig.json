@@ -1,0 +1,6 @@
+{
+    "kara": {
+        "appPackage": "karademo",
+        "appClass": "karademo.Application"
+    }
+}

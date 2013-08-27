@@ -10,10 +10,13 @@ import java.net.URLClassLoader
 /**
  * Store application configuration.
  */
-public open class AppConfig(val environment : String = "development", configResolver: (jsonFile: String) -> URL? = {null}) : Config() {
-
+public open class AppConfig(val environment : String = "development") : Config() {
     {
         this["kara.port"] = "8080"
+
+        val configResolver: (jsonFile: String) -> URL? = {
+            javaClass.getResource("/config/$it")
+        }
 
         // read the main appconfig file and also look for an environment-specific one
         configResolver("appconfig.json")?.let {ConfigReader(this).read(it)}
@@ -37,6 +40,9 @@ public open class AppConfig(val environment : String = "development", configReso
 
     public val appPackage : String
         get() = this["kara.appPackage"]
+
+    public val appClass: String
+        get() = if (contains("kara.appClass")) this["kara.appClass"] else "$appPackage.Application"
 
     /** Stores all middleware instances for the application. */
     public val middleware : MiddlewareList = MiddlewareList()

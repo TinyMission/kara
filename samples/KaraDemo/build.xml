@@ -1,5 +1,0 @@
-<project>
-    <target name="restart">
-         <touch file="tmp/restart.txt" />
-    </target>
-</project>

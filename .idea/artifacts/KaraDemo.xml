@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="KaraDemo">
+    <output-path>$PROJECT_DIR$/out/artifacts/KaraDemo</output-path>
+    <root id="archive" name="KaraDemo.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="KaraDemo" />
+          <element id="module-output" name="KaraLib" />
+          <element id="module-output" name="HTMLBuilder" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="KotlinJavaRuntime" />
+          <element id="library" level="project" name="slf4j-log4j12-1.6.6" />
+          <element id="library" level="project" name="log4j-1.2.17" />
+          <element id="library" level="project" name="slf4j-api-1.6.6" />
+          <element id="library" level="project" name="Reflections" />
+          <element id="library" level="project" name="Jackson" />
+        </element>
+        <element id="file-copy" path="$PROJECT_DIR$/src/KaraLib/src/WEB-INF/web.xml" />
+      </element>
+    </root>
+  </artifact>
+</component>

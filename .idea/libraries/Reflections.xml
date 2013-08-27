@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Reflections">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/reflections-0.9.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javassist-3.12.1.GA.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guava-11.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/reflections-0.9.8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

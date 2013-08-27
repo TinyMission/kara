@@ -17,9 +17,7 @@ open class Servlet() : HttpServlet() {
     }
 
     private fun loadApp(): Application {
-        val config:AppConfig = AppConfig(getInitParameter("environment") ?: "development") {
-            javaClass.getResource("/config/$it")
-        }
+        val config:AppConfig = AppConfig(getInitParameter("environment") ?: "development")
 
         val loader = AppLoader(config)
         loader.loadApp()

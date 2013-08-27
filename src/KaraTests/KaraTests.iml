@@ -10,13 +10,11 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="HTMLBuilder" />
     <orderEntry type="module" module-name="KaraLib" />
-    <orderEntry type="library" name="javax.servlet-3.0.0.v201112011016" level="project" />
+    <orderEntry type="library" name="ServletAPI" level="project" />
     <orderEntry type="library" name="slf4j-log4j12-1.6.6" level="project" />
     <orderEntry type="library" name="log4j-1.2.17" level="project" />
-    <orderEntry type="library" name="guava-11.0.2" level="project" />
     <orderEntry type="library" name="slf4j-api-1.6.6" level="project" />
-    <orderEntry type="library" name="reflections-0.9.8" level="project" />
-    <orderEntry type="library" name="javassist-3.12.1.GA" level="project" />
+    <orderEntry type="library" name="Reflections" level="project" />
     <orderEntry type="library" name="junit-4.10" level="project" />
   </component>
 </module>

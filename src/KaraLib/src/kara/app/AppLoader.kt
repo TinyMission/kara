@@ -50,9 +50,9 @@ class AppLoader(val appConfig : AppConfig)  {
             if (application == null) {
                 // load the application class
                 classLoader = appConfig.applicationClassloader(javaClass.getClassLoader()!!)
-                val appClassObject = classLoader?.loadClass("${appConfig.appPackage}.Application")
+                val appClassObject = classLoader?.loadClass(appConfig.appClass)
                 if (appClassObject == null)
-                    throw RuntimeException("Expected class ${appConfig.appPackage}.Application to be defined")
+                    throw RuntimeException("Expected class ${appConfig.appClass} to be defined")
                 val appClass = appClassObject as Class<Application>
                 val cons = appClass.getConstructor(javaClass<AppConfig>())
                 application = cons.newInstance(appConfig)

@@ -8,14 +8,12 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
-    <orderEntry type="module" module-name="KaraLib" />
-    <orderEntry type="library" name="javax.servlet-3.0.0.v201112011016" level="project" />
-    <orderEntry type="library" name="jetty-all-server-8.1.5.v20120716" level="project" />
+    <orderEntry type="module" module-name="KaraLib" exported="" />
+    <orderEntry type="library" name="ServletAPI" level="project" />
+    <orderEntry type="library" name="Jetty" level="project" />
     <orderEntry type="library" name="slf4j-log4j12-1.6.6" level="project" />
     <orderEntry type="library" name="log4j-1.2.17" level="project" />
     <orderEntry type="library" name="slf4j-api-1.6.6" level="project" />
-    <orderEntry type="library" name="guava-11.0.2" level="project" />
-    <orderEntry type="library" name="ivy-2.2.0" level="project" />
   </component>
 </module>
 
