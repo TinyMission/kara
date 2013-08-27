@@ -12,7 +12,9 @@
         <element id="directory" name="src">
           <element id="dir-copy" path="$PROJECT_DIR$/src/KaraLib/src" />
           <element id="dir-copy" path="$PROJECT_DIR$/src/HTMLBuilder/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/Kootstrap/src" />
         </element>
+        <element id="module-output" name="Kootstrap" />
       </element>
       <element id="library" level="project" name="Jackson" />
       <element id="library" level="project" name="Logging" />
