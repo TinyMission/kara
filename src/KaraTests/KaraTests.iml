@@ -11,9 +11,7 @@
     <orderEntry type="module" module-name="HTMLBuilder" />
     <orderEntry type="module" module-name="KaraLib" />
     <orderEntry type="library" name="ServletAPI" level="project" />
-    <orderEntry type="library" name="slf4j-log4j12-1.6.6" level="project" />
-    <orderEntry type="library" name="log4j-1.2.17" level="project" />
-    <orderEntry type="library" name="slf4j-api-1.6.6" level="project" />
+    <orderEntry type="library" name="Logging" level="project" />
     <orderEntry type="library" name="Reflections" level="project" />
     <orderEntry type="library" name="junit-4.10" level="project" />
   </component>

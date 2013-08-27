@@ -10,12 +10,10 @@
         <element id="module-output" name="KaraLib" />
         <element id="module-output" name="HTMLBuilder" />
       </element>
-      <element id="library" level="project" name="log4j-1.2.17" />
       <element id="library" level="project" name="Jackson" />
-      <element id="library" level="project" name="slf4j-api-1.6.6" />
+      <element id="library" level="project" name="Logging" />
       <element id="library" level="project" name="KotlinJavaRuntime" />
       <element id="library" level="project" name="Reflections" />
-      <element id="library" level="project" name="slf4j-log4j12-1.6.6" />
       <element id="library" level="project" name="Jetty" />
       <element id="library" level="project" name="ServletAPI" />
     </root>
