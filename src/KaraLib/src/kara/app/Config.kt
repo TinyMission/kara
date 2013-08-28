@@ -19,6 +19,10 @@ open class Config() {
         throw ConfigMissingException("Could not find config value for key $name")
     }
 
+    fun tryKey(name: String): String? {
+        return data[name]
+    }
+
     /** Sets a value for the given key. */
     fun set(name : String, value : String) {
         data[name] = value

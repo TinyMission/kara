@@ -25,17 +25,17 @@ public open class AppConfig(val environment : String = "development") : Config()
 
     /** Returns true if the application is running in the development environment. */
     fun isDevelopment() : Boolean {
-        return environment == "development"
+        return environment == "development" || tryKey("kara.environment") == "development"
     }
 
     /** Returns true if the application is running in the test environment. */
     fun isTest() : Boolean {
-        return environment == "test"
+        return environment == "test" || tryKey("kara.environment") == "test"
     }
 
     /** Returns true if the application is running in the production environment. */
     fun isProduction() : Boolean {
-        return environment == "production"
+        return environment == "production" || tryKey("kara.environment") == "production"
     }
 
     public val appPackage : String
@@ -53,32 +53,17 @@ public open class AppConfig(val environment : String = "development") : Config()
 
     public val routePackages: List<String>?
         get() {
-            return if (contains("kara.routePackages")) {
-                this["kara.routePackages"].split(',').toList() map {"${it.trim()}"}
-            }
-            else {
-                null
-            }
+            return tryKey("kara.routePackages")?.split(',')?.toList()?.map {"${it.trim()}"}
         }
 
     public val hotPackages: List<String>?
         get() {
-            return if (contains("kara.hotPackages")) {
-                this["kara.hotPackages"].split(',').toList() map {"${it.trim()}.*"}
-            }
-            else {
-                null
-            }
+            return tryKey("kara.hotPackages")?.split(',')?.toList()?.map {"${it.trim()}.*"}
         }
 
     public val staticPackages: List<String>?
         get() {
-            return if (contains("kara.staticPackages")) {
-                this["kara.staticPackages"].split(',').toList() map {"${it.trim()}.*"}
-            }
-            else {
-                null
-            }
+            return tryKey("kara.staticPackages")?.split(',')?.toList()?.map {"${it.trim()}.*"}
         }
 
     /** The port to run the server on. */
