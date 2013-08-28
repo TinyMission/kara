@@ -26,12 +26,16 @@ fun HtmlBodyTag.modal(content: ModalBuilder.()->Unit) {
     builder.content()
 
     showModalButton(id, builder.button!!)
-    div(s("modal hide fade"), id) {
+    div(s("modal fade"), id) {
         this["tabindex"] = "-1"
         this["role"] = "dialog"
         this["aria-hidden"] = "true"
 
-        modalBody(builder)
+        div(s("modal-dialog")) {
+            div(s("modal-content")) {
+                modalBody(builder)
+            }
+        }
     }
 }
 
@@ -42,16 +46,20 @@ fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post
     builder.content()
 
     showModalButton(id, builder.button!!)
-    div(s("modal hide fade"), id) {
+    div(s("modal fade"), id) {
         this["tabindex"] = "-1"
         this["role"] = "dialog"
         this["aria-hidden"] = "true"
 
-        form(form_horizontal) {
-            this.action = action
-            this.method = formMethod
+        div(s("modal-dialog")) {
+            div(s("modal-content")) {
+                form(form_horizontal) {
+                    this.action = action
+                    this.method = formMethod
 
-            modalBody(builder)
+                    modalBody(builder)
+                }
+            }
         }
     }
 }
