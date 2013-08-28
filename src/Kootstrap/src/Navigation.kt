@@ -18,6 +18,7 @@ public fun ListTag.dropdownItem(caption: A.()->Unit, items: UL.()->Unit): Unit =
     }
 }
 
+
 public fun HtmlBodyTag.listGroup(body: UL.()->Unit): Unit = ul(s("list-group"), contents = body)
 public fun ListTag.listItem(active: Boolean = false, body: LI.()->Unit): Unit = item(active, s("list-group-item"), body)
 public fun ListTag.listItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = item(url, active, s("list-group-item"), body)
@@ -27,11 +28,6 @@ public fun DIV.linkItem(active: Boolean = false, body: A.()->Unit): Unit = a(s("
 public fun DIV.linkItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = linkItem(active) { href = url; body() }
 
 public fun HtmlBodyTag.menu(body: UL.()->Unit): Unit = ul(s("dropdown-menu"), contents = body)
-
-public fun HtmlBodyTag.pills(body: UL.()->Unit): Unit = ul(s("nav nav-pills"), contents = body)
-public fun HtmlBodyTag.tabs(body: UL.()->Unit): Unit = ul(s("nav nav-tabs"), contents = body)
-public fun HtmlBodyTag.content(body: DIV.()->Unit): Unit = div(s("tab-content"), contents = body)
-public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div(s("tab-pane") + if (active) s("active") else null, id = name, contents = body)
 
 public enum class navbarPosition {
     default top bottom static

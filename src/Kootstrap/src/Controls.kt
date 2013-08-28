@@ -4,7 +4,6 @@ import kotlin.html.*
 
 val form_horizontal = s("form-horizontal")
 val form_control = s("form-control")
-val form_label = s("control-label")
 
 public fun HtmlBodyTag.blockAction(h: highlight = highlight.default, c: StyleClass? = null, body: A.()->Unit): Unit = a(s("btn btn-block btn-${h.name()}") + c, contents = body)
 public fun HtmlBodyTag.action(h: highlight = highlight.default, c: StyleClass? = null, body: A.()->Unit): Unit = a(s("btn btn-${h.name()}") + c, contents = body)
