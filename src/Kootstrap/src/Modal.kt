@@ -4,7 +4,13 @@ import kotlin.html.*
 
 class ModalBuilder() {
     var button: (A.()->Unit)? = null
-    fun button(b: A.()->Unit) = button = b
+    var h: highlight = highlight.default
+    var c: caliber = caliber.default
+    fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.()->Unit) {
+        button = b
+        this.h = h
+        this.c = size
+    }
 
     var header: (HtmlBodyTag.()->Unit)? = null
     fun header(content: HtmlBodyTag.()->Unit) = header = content
@@ -19,58 +25,41 @@ class ModalBuilder() {
 private var unique: Int = 0
 private val uniqueId: String get() = "__mdl${unique++}"
 
-fun HtmlBodyTag.modal(content: ModalBuilder.()->Unit) {
-    val id = uniqueId
-
+fun HtmlBodyTag.modalFrame(content: ModalBuilder.()->Unit, body: DIV.(ModalBuilder)->Unit) {
     val builder = ModalBuilder()
     builder.content()
-
-    showModalButton(id, builder.button!!)
+    val id = uniqueId
+    action("#$id".link(), builder.h, builder.c) {
+        this["role"] = "button"
+        this["data-toggle"] = "modal"
+        val button = builder.button!!
+        button()
+    }
     div(s("modal fade"), id) {
         this["tabindex"] = "-1"
         this["role"] = "dialog"
         this["aria-hidden"] = "true"
-
         div(s("modal-dialog")) {
             div(s("modal-content")) {
-                modalBody(builder)
+                body(builder)
             }
         }
+    }
+}
+
+fun HtmlBodyTag.modal(content: ModalBuilder.()->Unit) {
+    modalFrame(content) {
+        modalBody(it)
     }
 }
 
 fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.()->Unit) {
-    val id = uniqueId
-
-    val builder = ModalBuilder()
-    builder.content()
-
-    showModalButton(id, builder.button!!)
-    div(s("modal fade"), id) {
-        this["tabindex"] = "-1"
-        this["role"] = "dialog"
-        this["aria-hidden"] = "true"
-
-        div(s("modal-dialog")) {
-            div(s("modal-content")) {
-                form(form_horizontal) {
-                    this.action = action
-                    this.method = formMethod
-
-                    modalBody(builder)
-                }
-            }
+    modalFrame(content) {
+        form(form_horizontal) {
+            this.action = action
+            this.method = formMethod
+            modalBody(it)
         }
-    }
-}
-
-fun HtmlBodyTag.showModalButton(id: String, title: A.()->Unit) {
-    a() {
-        href = "#$id".link()
-        this["role"] = "button"
-        this["data-toggle"] = "modal"
-
-        title()
     }
 }
 

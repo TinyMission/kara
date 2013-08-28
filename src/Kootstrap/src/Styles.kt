@@ -36,6 +36,13 @@ val visible_medium = s("visible-md")
 val visible_large = s("visible-lg")
 
 
+enum class caliber(val value: String) {
+    tiny : caliber("xs")
+    small : caliber("sm")
+    default : caliber("")
+    large : caliber("lg")
+}
+
 enum class highlight {
     default
     muted
