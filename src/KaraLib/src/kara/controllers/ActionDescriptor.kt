@@ -145,7 +145,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
                 }
             }
         }
-        catch (ex : Exception) {
+        catch (ex : Throwable) {
             logger.warn("exec error: ${ex.getMessage()}");
             ex.printStackTrace()
             // write the standard error page

@@ -38,7 +38,7 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
                     resourceHandler.handle(p0, p1, p2, p3)
                 }
             }
-            catch(ex: Exception) {
+            catch(ex: Throwable) {
                 logger.warn("dispatch error: ${ex.getMessage()}");
                 ex.printStackTrace()
                 val out = p3.getWriter()

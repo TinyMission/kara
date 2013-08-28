@@ -54,7 +54,7 @@ fun ActionResult.tryWriteResponse(context: ActionContext) {
     catch(ex: IOException) {
         // All kinds of EOFs and Broken Pipes can be safely ignored
     }
-    catch(ex: Exception) {
+    catch(ex: Throwable) {
         println(ex.printStackTrace())
         context.response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
     }

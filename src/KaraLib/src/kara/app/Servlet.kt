@@ -42,7 +42,7 @@ open class Servlet() : HttpServlet() {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND)
             }
         }
-        catch (ex : Exception) {
+        catch (ex : Throwable) {
             println(ex.printStackTrace())
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
         }
