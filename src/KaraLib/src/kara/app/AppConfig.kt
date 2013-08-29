@@ -10,12 +10,14 @@ import java.net.URLClassLoader
 /**
  * Store application configuration.
  */
-public open class AppConfig(val environment : String = "development") : Config() {
+public open class AppConfig(val environment: String = "development", val appURL: URL? = null) : Config() {
     {
         this["kara.port"] = "8080"
 
+        val cl = URLClassLoader(buildClasspath(), javaClass.getClassLoader())
+
         val configResolver: (jsonFile: String) -> URL? = {
-            javaClass.getResource("/config/$it")
+            cl.getResource("config/$it")
         }
 
         // read the main appconfig file and also look for an environment-specific one
@@ -95,7 +97,11 @@ public open class AppConfig(val environment : String = "development") : Config()
     }
 
     protected open fun buildClasspath() : Array<URL> {
-        val cl = javaClass.getClassLoader() as URLClassLoader
-        return cl.getURLs()!!
+        if (appURL == null) {
+            return Array<URL>(0) {URL("")}
+        }
+        else {
+            return Array<URL>(1) {appURL}
+        }
     }
 }

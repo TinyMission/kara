@@ -9,6 +9,7 @@ import org.apache.log4j.Logger
 import org.apache.log4j.Level
 import org.apache.log4j.LogManager
 import java.util.ArrayList
+import java.net.URL
 
 fun server(appConfig : AppConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -21,8 +22,15 @@ fun config(appCongig : AppConfig) {
 }
 
 fun main(args: Array<String>) {
-    val env = if (args.size > 0) args[0] else "development"
-    val appConfig = AppConfig(env)
+    val map = HashMap<String, String>()
+    for (arg in args) {
+        val data = arg.split('=')
+        if (data.size == 2) {
+            map[data[0]] = data[1]
+        }
+    }
+
+    val appConfig = AppConfig(map["-env"] ?: "development", map["-jar"]?.let {URL("file:$it")})
 
     config(appConfig)
     server(appConfig)
