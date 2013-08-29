@@ -12,11 +12,11 @@ class ModalBuilder() {
         this.c = size
     }
 
-    var header: (HtmlBodyTag.()->Unit)? = null
-    fun header(content: HtmlBodyTag.()->Unit) = header = content
+    var header: (HtmlBodyTagWithText.()->Unit)? = null
+    fun header(content: HtmlBodyTagWithText.()->Unit) = header = content
 
-    var body: (HtmlBodyTag.()->Unit)? = null
-    fun body(c: HtmlBodyTag.()->Unit) = body = c
+    var body: (HtmlBodyTagWithText.()->Unit)? = null
+    fun body(c: HtmlBodyTagWithText.()->Unit) = body = c
 
     var save: (BUTTON.()->Unit)? = null
     fun save(c: BUTTON.()->Unit) = save = c
@@ -25,16 +25,34 @@ class ModalBuilder() {
 private var unique: Int = 0
 private val uniqueId: String get() = "__mdl${unique++}"
 
+fun HtmlBodyTag.modalShow(id : String, h: highlight = highlight.default, c: caliber = caliber.default, button : A.()->Unit) {
+    action("#$id".link(), h, c) {
+        this["role"] = "button"
+        this["data-toggle"] = "modal"
+        button()
+    }
+}
+
+fun HtmlBodyTag.modalDialog(id : String, content: ModalBuilder.()->Unit) {
+    val builder = ModalBuilder()
+    builder.content()
+    div(s("modal fade"), id) {
+        this["tabindex"] = "-1"
+        this["role"] = "dialog"
+        this["aria-hidden"] = "true"
+        div(s("modal-dialog")) {
+            div(s("modal-content")) {
+                modalBody(builder)
+            }
+        }
+    }
+}
+
 fun HtmlBodyTag.modalFrame(content: ModalBuilder.()->Unit, body: DIV.(ModalBuilder)->Unit) {
     val builder = ModalBuilder()
     builder.content()
     val id = uniqueId
-    action("#$id".link(), builder.h, builder.c) {
-        this["role"] = "button"
-        this["data-toggle"] = "modal"
-        val button = builder.button!!
-        button()
-    }
+    modalShow(id, builder.h, builder.c, builder.button!!)
     div(s("modal fade"), id) {
         this["tabindex"] = "-1"
         this["role"] = "dialog"

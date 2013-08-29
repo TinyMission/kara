@@ -7,7 +7,7 @@ public fun ListTag.item(url: Link, active: Boolean = false, c: StyleClass? = nul
 public fun ListTag.item(name: String, active: Boolean = false, c: StyleClass? = null, body: A.()->Unit): Unit = item(active,c) { a { href = DirectLink("#$name"); body() } }
 public fun ListTag.itemDivider(): Unit = li(s("divider"))
 
-public fun ListTag.dropdownItem(caption: A.()->Unit, items: UL.()->Unit): Unit = li(s("dropdown")) {
+public fun ListTag.dropdownItem(c: StyleClass? = null, caption: A.()->Unit, items: UL.()->Unit): Unit = li(s("dropdown") + c) {
     a {
         this["href"] = "#"
         this["data-toggle"] = "dropdown"
@@ -42,9 +42,9 @@ public fun HtmlBodyTag.navbar(position: navbarPosition, body: DIV.()->Unit): Uni
 
 public fun HtmlBodyTag.navbarHeader(body: DIV.()->Unit): Unit = div(s("navbar-header"), contents = body)
 public fun HtmlBodyTag.navbarBrand(c: StyleClass? = null, body: A.()->Unit): Unit = a(s("navbar-brand") + c, contents = body)
-public fun HtmlBodyTag.navbarCollapse(body: A.()->Unit): Unit = a(s("navbar-collapse"), contents = body)
+public fun HtmlBodyTag.navbarCollapse(body: DIV.()->Unit): Unit = div(s("collapse navbar-collapse navbar-ex1-collapse"), contents = body)
 public fun HtmlBodyTag.navbarGroup(body: UL.()->Unit): Unit = ul(s("nav navbar-nav"), contents = body)
-public fun HtmlBodyTag.navbarGroupRight(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-right"), contents = body)
+public fun HtmlBodyTag.navbarGroupRight(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-right pull-right"), contents = body)
 public fun HtmlBodyTag.navbarGroupLeft(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-left"), contents = body)
 
 public fun HtmlBodyTag.breadcrumb(c: StyleClass? = null, body: UL.()->Unit): Unit = ul(s("breadcrumb") + c, contents = body)
