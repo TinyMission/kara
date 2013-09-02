@@ -7,7 +7,7 @@ fun HEAD.title(text: String) {
     build(TITLE(this), { +text })
 }
 
-fun HEAD.link(href: Link, rel: String = "stylesheet", mimeType: String = "text/javascript", content: _LINK.() -> Unit = { }) {
+fun HEAD.link(href: Link, rel: String = "stylesheet", mimeType: String = "text/css", content: _LINK.() -> Unit = { }) {
     val tag = build(_LINK(this), content)
     tag.href = href
     tag.rel = rel
