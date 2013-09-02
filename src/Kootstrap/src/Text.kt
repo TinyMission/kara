@@ -8,7 +8,7 @@ public fun HtmlBodyTag.blockLabel(h : highlight, body: P.()->Unit) : Unit = p(s(
 public fun HtmlBodyTag.alert(h : highlight, body: DIV.()->Unit) : Unit = div(s("alert alert-${h.name()}"), contents = body)
 public fun HtmlBodyTag.badge(h : highlight, body: DIV.()->Unit) : Unit = div(s("badge badge-${h.name()}"), contents = body)
 
-public fun HtmlBodyTag.text(h : highlight = highlight.default, body: P.()->Unit) : Unit = p(s("text-${h.name()}"), contents = body)
+public fun HtmlBodyTag.text(h : highlight = highlight.default, body: SPAN.()->Unit) : Unit = span(s("text-${h.name()}"), contents = body)
 public fun HtmlBodyTag.lead(body: P.()->Unit) : Unit = p(s("lead"), contents = body)
 public fun HtmlBodyTag.well(body: DIV.()->Unit) : Unit = div(s("well"), contents = body)
 
