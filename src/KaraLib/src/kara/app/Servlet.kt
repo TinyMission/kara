@@ -38,7 +38,7 @@ open class Servlet() : HttpServlet() {
         req.setCharacterEncoding("UTF-8")
 
         try {
-            if (!app.dispatcher.dispatch(req, resp)) {
+            if (!app.dispatch(req, resp)) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND)
             }
         }

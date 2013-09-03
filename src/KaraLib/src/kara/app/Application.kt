@@ -5,8 +5,12 @@ import java.util.ArrayList
 import java.net.URLClassLoader
 import kara.internal.*
 import java.net.URL
+
+import javax.servlet.*
 import java.io.File
 import org.apache.log4j.Logger
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /** The base Kara application class.
  */
@@ -63,5 +67,26 @@ abstract class Application(val config: AppConfig, private vararg val routes : An
 
     open fun shutDown() {
 
+    }
+
+    public fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
+        fun dispatch(index: Int, request: HttpServletRequest, response: HttpServletResponse): Boolean {
+            return if (index in interceptors.indices) {
+                interceptors[index](request, response) { req, resp ->
+                    dispatch(index + 1, req, resp)
+                }
+            }
+            else {
+                dispatcher.dispatch(request, response)
+            }
+        }
+
+        return dispatch(0, request, response)
+    }
+
+    private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse)->Boolean)->Boolean>()
+
+    public fun intercept(interceptor: (request: HttpServletRequest, response: HttpServletResponse, proceed: (HttpServletRequest, HttpServletResponse)->Boolean)->Boolean) {
+        interceptors.add(interceptor)
     }
 }

@@ -31,7 +31,7 @@ public class JettyRunner(val appConfig: AppConfig) : AppLoadListener {
             p3!!.setCharacterEncoding("UTF-8")
 
             try {
-                if (app.dispatcher.dispatch(p2!!, p3)) {
+                if (app.dispatch(p2!!, p3)) {
                     p1!!.setHandled(true)
                 }
                 else {
