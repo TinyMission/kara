@@ -22,6 +22,8 @@ fun config(appCongig : AppConfig) {
 }
 
 fun main(args: Array<String>) {
+    BasicConfigurator.configure()
+
     val map = HashMap<String, String>()
     for (arg in args) {
         val data = arg.split('=')
