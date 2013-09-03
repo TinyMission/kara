@@ -10,6 +10,14 @@ public fun HtmlBodyTag.cell(width: devices, c: StyleClass? = null, body: DIV.()-
 public fun HtmlBodyTag.cell(width: devices, offset: devices, c: StyleClass? = null, body: DIV.()->Unit): Unit = div(width.styles() + offset.styles("offset") + c, contents = body)
 public fun HtmlBodyTag.cell(width: devices, offset: Int, c: StyleClass? = null, body: DIV.()->Unit): Unit = div(width.styles() + s("col-sm-offset-$offset") + c, contents = body)
 
+public fun HtmlBodyTag.footer(c: StyleClass? = null, body: DIV.()->Unit): Unit = div(s("footer")) {
+    container { body() }
+}
+public fun HtmlBodyTag.page(c: StyleClass? = null, body: DIV.()->Unit): Unit = div(s("footer-wrap")) {
+    body()
+    div(s("footer-push"))
+}
+
 public class devices(val phone: Int, val tablet: Int = phone, val medium: Int = tablet, val large: Int = medium) {
     public fun styles(name: String = ""): StyleClass? {
         val suffix = if (name.length() > 0) "-$name" else ""

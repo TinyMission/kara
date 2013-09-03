@@ -101,7 +101,7 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
     }
 
     div(s("modal-footer")) {
-        action {
+        button(highlight.default) {
             this["aria-hidden"] = "true"
             this["data-dismiss"] = "modal"
             +"Close"
