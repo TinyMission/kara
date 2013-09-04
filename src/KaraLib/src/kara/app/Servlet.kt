@@ -17,7 +17,9 @@ open class Servlet() : HttpServlet() {
     }
 
     private fun loadApp(): Application {
-        val config:AppConfig = AppConfig(getInitParameter("environment") ?: "development")
+        val config: AppConfig = AppConfig(getInitParameter("environment") ?: "development")
+        getInitParameter("host")?.let{ config.set("host", it) }
+        getInitParameter("port")?.let{ config.set("port", it) }
 
         val loader = AppLoader(config)
         loader.loadApp()
@@ -42,7 +44,7 @@ open class Servlet() : HttpServlet() {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND)
             }
         }
-        catch (ex : Throwable) {
+        catch (ex: Throwable) {
             println(ex.printStackTrace())
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
         }
