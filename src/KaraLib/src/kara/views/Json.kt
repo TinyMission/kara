@@ -44,6 +44,7 @@ class JsonArray {
                 builder.append(",")
             when (item) {
                 is String -> builder.append("\"${item}\"")
+                is Int -> builder.append("${item}")
                 is JsonObject -> item.build(builder)
                 is JsonArray -> item.build(builder)
                 else -> throw RuntimeException("Invalid entity in Json builder")
