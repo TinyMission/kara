@@ -57,6 +57,7 @@ class AppLoader(val appConfig : AppConfig)  {
                 val cons = appClass.getConstructor(javaClass<AppConfig>())
                 application = cons.newInstance(appConfig)
                 logger.debug("Application class: ${application.javaClass.toString()}")
+                application?.start()
 
                 for (listener in listeners) {
                     listener.onAppLoaded(application as Application)

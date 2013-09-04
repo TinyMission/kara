@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletResponse
 
 /** The base Kara application class.
  */
-abstract class Application(val config: AppConfig, private vararg val routes : Any) {
-    private var _dispatcher : ActionDispatcher? = null
+abstract class Application(val config: AppConfig, private vararg val routes: Any) {
+    private val appLogger = Logger.getLogger(this.javaClass)!!
+    val routePackages = config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles");
+    private var _dispatcher: ActionDispatcher? = null
     private var lastRequestServedAt: Long = 0
-    public val dispatcher : ActionDispatcher
+    public val dispatcher: ActionDispatcher
         get() {
             val now = System.currentTimeMillis()
             if (config.isDevelopment()) {
@@ -35,14 +37,15 @@ abstract class Application(val config: AppConfig, private vararg val routes : An
             return d!!
         }
 
-    private fun buildDispatcher() : ActionDispatcher {
+    private fun buildDispatcher(): ActionDispatcher {
         val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
         if (routes.size != 0) {
             return ActionDispatcher(this, scanObjects(routes, newClassloader))
         }
 
         val resourceFinder = {
-            (url: String) -> when {
+            (url: String) ->
+            when {
                 url.startsWith("/resources") -> {
                     try {
                         val classname = url.substring(0, url.lastIndexOf('.')).trimLeading("/resources/")
@@ -59,10 +62,22 @@ abstract class Application(val config: AppConfig, private vararg val routes : An
 
 
         // Discover routes via reflections
-        val routePackages = config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles");
-        return ActionDispatcher(this,
-                routePackages.flatMap { scanPackageForRequests(it, newClassloader) },
-                resourceFinder)
+        return ActionDispatcher(this, routePackages.flatMap { scanPackageForRequests(it, newClassloader) }, resourceFinder)
+    }
+
+    open fun start() {
+        val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
+        routePackages.flatMap { scanPackageForStartup(it, newClassloader) }.forEach {
+            val objectInstance = it.objectInstance()
+            if (objectInstance != null) {
+                appLogger.info("Executing startup sequence on $objectInstance")
+                (objectInstance as StartupProcess).init();
+            } else {
+                val instance = it.newInstance()
+                appLogger.info("Executing startup sequence on new instance of $it")
+                instance.init()
+            }
+        }
     }
 
     open fun shutDown() {
