@@ -10,6 +10,7 @@ import org.apache.log4j.Level
 import org.apache.log4j.LogManager
 import java.util.ArrayList
 import java.net.URL
+import org.apache.log4j.PropertyConfigurator
 
 fun server(appConfig : AppConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -22,8 +23,6 @@ fun config(appCongig : AppConfig) {
 }
 
 fun main(args: Array<String>) {
-    BasicConfigurator.configure()
-
     val map = HashMap<String, String>()
     for (arg in args) {
         val data = arg.split('=')
@@ -33,6 +32,16 @@ fun main(args: Array<String>) {
     }
 
     val appConfig = AppConfig(map["-env"] ?: "development", map["-jar"]?.let {URL("file:$it")})
+
+    val logPath = appConfig.tryKey("kara.logPropertiesPath")
+
+    if (logPath != null) {
+        PropertyConfigurator.configureAndWatch(logPath, 5000)
+    }
+    else {
+        BasicConfigurator.configure()
+        LogManager.getRootLogger()?.setLevel(Level.INFO)
+    }
 
     config(appConfig)
     server(appConfig)
