@@ -8,9 +8,9 @@ public fun HtmlBodyTag.blockLabel(h : highlight, body: P.()->Unit) : Unit = p(s(
 public fun HtmlBodyTag.alert(h : highlight, body: DIV.()->Unit) : Unit = div(s("alert alert-${h.name()}"), contents = body)
 public fun HtmlBodyTag.badge(h : highlight, body: DIV.()->Unit) : Unit = div(s("badge badge-${h.name()}"), contents = body)
 
-public fun HtmlBodyTag.text(h : highlight = highlight.default, body: SPAN.()->Unit) : Unit = span(s("text-${h.name()}"), contents = body)
-public fun HtmlBodyTag.lead(body: P.()->Unit) : Unit = p(s("lead"), contents = body)
-public fun HtmlBodyTag.well(body: DIV.()->Unit) : Unit = div(s("well"), contents = body)
+public fun HtmlBodyTag.text(h : highlight = highlight.default, body: SPAN.()->Unit, c : StyleClass? = null) : Unit = span(s("text-${h.name()}") + c, contents = body)
+public fun HtmlBodyTag.lead(body: SPAN.()->Unit, c : StyleClass? = null) : Unit = span(s("lead") + c, contents = body)
+public fun HtmlBodyTag.well(body: DIV.()->Unit, c : StyleClass? = null) : Unit = div(s("well") + c, contents = body)
 
 public fun HtmlBodyTag.panel(h : highlight = highlight.default, body: DIV.()->Unit) : Unit = div(s("panel panel-${h.name()}"), contents = body)
 public fun HtmlBodyTag.panelHeading(body: DIV.()->Unit) : Unit = div(s("panel-heading"), contents = body)
