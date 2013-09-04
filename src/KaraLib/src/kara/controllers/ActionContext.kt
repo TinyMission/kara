@@ -2,6 +2,7 @@ package kara
 
 import javax.servlet.http.*
 import kara.internal.*
+import kotlin.html.Link
 
 
 fun HttpSession.getDescription() : String {
@@ -20,6 +21,10 @@ class ActionContext(val app: Application,
                     val params : RouteParameters) {
     public val session : HttpSession = request.getSession(true)!!
     public val startedAt : Long = System.currentTimeMillis()
+
+    fun redirect(link: Link): ActionResult {
+        return RedirectResult(link.href())
+    }
 
     fun redirect(url : String) : ActionResult {
         return RedirectResult(url)
