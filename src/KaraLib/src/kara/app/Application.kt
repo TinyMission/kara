@@ -11,12 +11,13 @@ import java.io.File
 import org.apache.log4j.Logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.properties.Delegates
 
 /** The base Kara application class.
  */
 abstract class Application(val config: AppConfig, private vararg val routes: Any) {
     private val appLogger = Logger.getLogger(this.javaClass)!!
-    val routePackages = config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles");
+    val routePackages by Delegates.lazy { config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles") }
     private var _dispatcher: ActionDispatcher? = null
     private var lastRequestServedAt: Long = 0
     public val dispatcher: ActionDispatcher
