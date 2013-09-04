@@ -399,16 +399,7 @@ p {
 }
 
 .lead {
-  margin-bottom: 20px;
-  font-size: 14.95px;
-  font-weight: 200;
-  line-height: 1.4;
-}
-
-@media (min-width: 768px) {
-  .lead {
-    font-size: 19.5px;
-  }
+  font-size: 19px;
 }
 
 small {
