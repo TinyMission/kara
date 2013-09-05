@@ -84,6 +84,7 @@ class JsonObject {
                 is String -> builder.append("\"${value}\"")
                 is JsonObject -> value.build(builder)
                 is JsonArray -> value.build(builder)
+                is Int -> builder.append(value)
                 else -> throw RuntimeException("Invalid entity in Json builder")
             }
             first = false
