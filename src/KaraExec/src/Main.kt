@@ -11,6 +11,7 @@ import org.apache.log4j.LogManager
 import java.util.ArrayList
 import java.net.URL
 import org.apache.log4j.PropertyConfigurator
+import java.io.File
 
 fun server(appConfig : AppConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -31,7 +32,7 @@ fun main(args: Array<String>) {
         }
     }
 
-    val appConfig = AppConfig(map["-env"] ?: "development", map["-jar"]?.let {URL("file:$it")})
+    val appConfig = AppConfig(map["-env"] ?: "development", map["-jar"]?.let {File(it).toURI().toURL()})
 
     val logPath = appConfig.tryKey("kara.logPropertiesPath")
 
