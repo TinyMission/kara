@@ -42,7 +42,14 @@ public fun HtmlBodyTag.navbar(position: navbarPosition, body: DIV.()->Unit): Uni
 
 public fun HtmlBodyTag.navbarHeader(body: DIV.()->Unit): Unit = div(s("navbar-header"), contents = body)
 public fun HtmlBodyTag.navbarBrand(c: StyleClass? = null, body: A.()->Unit): Unit = a(s("navbar-brand") + c, contents = body)
-public fun HtmlBodyTag.navbarCollapse(body: DIV.()->Unit): Unit = div(s("collapse navbar-collapse navbar-ex1-collapse"), contents = body)
+public fun HtmlBodyTag.navbarCollapse(body: DIV.()->Unit): Unit = div(s("collapse navbar-collapse navbar-menu-collapse"), contents = body)
+public fun HtmlBodyTag.navbarCollapseToggle(body: BUTTON.()->Unit): Unit = button(s("navbar-toggle")) {
+    buttonType = ButtonType.button
+    attribute("data-toggle", "collapse")
+    attribute("data-target", ".navbar-menu-collapse")
+    span(s("sr-only")) { +"Toggle navigation" }
+    body()
+}
 public fun HtmlBodyTag.navbarGroup(body: UL.()->Unit): Unit = ul(s("nav navbar-nav"), contents = body)
 public fun HtmlBodyTag.navbarGroupRight(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-right pull-right"), contents = body)
 public fun HtmlBodyTag.navbarGroupLeft(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-left"), contents = body)
