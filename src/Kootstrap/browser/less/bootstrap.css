@@ -765,7 +765,6 @@ pre code {
 }
 
 .row {
-  min-height: 24px;
   margin-right: -16px;
   margin-left: -16px;
 }
@@ -1959,7 +1958,6 @@ textarea.input-lg {
 }
 
 .form-horizontal .form-group {
-  min-height: 24px;
   margin-right: -16px;
   margin-left: -16px;
 }
