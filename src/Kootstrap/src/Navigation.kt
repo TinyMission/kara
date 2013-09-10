@@ -22,10 +22,12 @@ public fun ListTag.dropdownItem(c: StyleClass? = null, caption: A.()->Unit, item
 public fun HtmlBodyTag.listGroup(body: UL.()->Unit): Unit = ul(s("list-group"), contents = body)
 public fun ListTag.listItem(active: Boolean = false, body: LI.()->Unit): Unit = item(active, s("list-group-item"), body)
 public fun ListTag.listItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = item(url, active, s("list-group-item"), body)
+public fun ListTag.listDivider(): Unit = span(s("list-group-divider"))
 
 public fun HtmlBodyTag.linkGroup(body: DIV.()->Unit): Unit = div(s("list-group"), contents = body)
 public fun DIV.linkItem(active: Boolean = false, body: A.()->Unit): Unit = a(s("list-group-item") + if (active) s("active") else null, contents = body)
 public fun DIV.linkItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = linkItem(active) { href = url; body() }
+public fun DIV.linkDivider(): Unit = span(s("list-group-divider"))
 
 public fun HtmlBodyTag.menu(body: UL.()->Unit): Unit = ul(s("dropdown-menu"), contents = body)
 

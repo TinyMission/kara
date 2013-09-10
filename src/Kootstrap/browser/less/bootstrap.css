@@ -4452,6 +4452,14 @@ a.thumbnail:focus {
   margin-bottom: 16px;
 }
 
+.list-group .list-group-divider {
+  display: block;
+  height: 1px;
+  margin: 8px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+
 .list-group-item {
   position: relative;
   display: block;

@@ -9,6 +9,12 @@
   // No need to set list-style: none; since .list-group-item is block level
   margin-bottom: @margin-large;
   padding-left: 0; // reset padding because ul and ol
+
+    // Dividers (basically an hr) within the dropdown
+  .list-group-divider {
+    .nav-divider(@dropdown-divider-bg);
+    display: block;
+  }
 }
 
 // Individual list items
