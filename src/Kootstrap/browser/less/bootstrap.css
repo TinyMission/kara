@@ -765,6 +765,7 @@ pre code {
 }
 
 .row {
+  min-height: 24px;
   margin-right: -16px;
   margin-left: -16px;
 }
@@ -1958,6 +1959,7 @@ textarea.input-lg {
 }
 
 .form-horizontal .form-group {
+  min-height: 24px;
   margin-right: -16px;
   margin-left: -16px;
 }
@@ -4543,7 +4545,7 @@ a.list-group-item:focus {
   margin-bottom: 20px;
   background-color: #ffffff;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 0;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
@@ -4604,8 +4606,8 @@ a.list-group-item:focus {
 .panel-heading {
   padding: 2px 16px;
   border-bottom: 1px solid transparent;
-  border-top-right-radius: 2px;
-  border-top-left-radius: 2px;
+  border-top-right-radius: -1px;
+  border-top-left-radius: -1px;
 }
 
 .panel-title {
@@ -4622,14 +4624,14 @@ a.list-group-item:focus {
   padding: 10px 15px;
   background-color: #f5f5f5;
   border-top: 1px solid #dddddd;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: -1px;
+  border-bottom-left-radius: -1px;
 }
 
 .panel-group .panel {
   margin-bottom: 0;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 .panel-group .panel + .panel {
