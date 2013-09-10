@@ -38,6 +38,8 @@ class ActionTests() {
     Test fun optionalTests() {
         assertResponse("optional/null", "/optional")
         assertResponse("optional/44", "/optional/44")
+        assertEquals("/optional", Routes.Optional(null).toExternalForm())
+        assertEquals("/optional/44", Routes.Optional("44").toExternalForm())
     }
 
     Test fun redirect() {
@@ -47,6 +49,8 @@ class ActionTests() {
     }
 
     Test fun externalForm() {
+        assertEquals("/test", Routes.Test().toExternalForm())
+        assertEquals("/foo/bar", Routes.Foo.Bar().toExternalForm())
         assertEquals("/foo/compute?aFloat=3.1415&anInt=42", Routes.Foo.ComputeQuery(42, 3.1415.toFloat()).toExternalForm())
         assertEquals("/foo/compute/42/3.1415", Routes.Foo.Compute(42, 3.1415.toFloat()).toExternalForm())
     }

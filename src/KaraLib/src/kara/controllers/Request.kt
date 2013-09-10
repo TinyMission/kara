@@ -24,13 +24,13 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
         val answer = StringBuilder()
 
         val properties = LinkedHashSet(properties())
-
-        answer.append(route.toRouteComponents().map({
+        val components = route.toRouteComponents().map({
             when (it) {
-                is StringRouteComponent -> (it as RouteComponent).componentText
+                is StringRouteComponent -> it.componentText
                 is OptionalParamRouteComponent -> {
                     properties.remove(it.name)
-                    "${propertyValue(it.name)}"
+                    val value = propertyValue(it.name)
+                    if (value == null) null else value.toString()
                 }
                 is ParamRouteComponent -> {
                     properties.remove(it.name)
@@ -41,7 +41,9 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
                 is WildcardRouteComponent -> throw RuntimeException("Routes with wildcards aren't supported")
                 else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.getName()}")
             }
-        }).join("/"))
+        })
+
+        answer.append(components.filterNotNull().join("/"))
 
         if (answer.length() == 0) answer.append("/")
 
