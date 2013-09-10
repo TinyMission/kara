@@ -14,7 +14,7 @@ public fun HtmlBodyTag.button(size: caliber, c: StyleClass? = null, body: BUTTON
 public fun HtmlBodyTag.button(h: highlight = highlight.default, size: caliber = caliber.default, c: StyleClass? = null, body: BUTTON.()->Unit): Unit = button(size, s("btn-${h.name()}") + c, body)
 public fun HtmlBodyTag.button(url: Link, h: highlight = highlight.default, size: caliber = caliber.default, c: StyleClass? = null, body: BUTTON.()->Unit): Unit = button(h, size, c) { href = url; body() }
 
-public fun HtmlBodyTag.actionGroup(c: StyleClass? = null, body: HtmlBodyTagWithText.()->Unit): Unit = p(c) { body() }
+public fun HtmlBodyTag.actionGroup(c: StyleClass? = null, body: HtmlBodyTag.()->Unit): Unit = p(c) { body() }
 public fun HtmlBodyTag.blockButton(h: highlight, body: BUTTON.()->Unit): Unit = button(s("btn btn-block btn-${h.name()}"), contents = body)
 
 public fun HtmlBodyTag.controlWithIcon(iconName: String, body: DIV.()->Unit): Unit = div(s("input-group")) { span(s("input-group-addon")) { icon(iconName) }; body() }

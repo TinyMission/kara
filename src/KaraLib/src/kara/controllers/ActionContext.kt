@@ -31,21 +31,30 @@ class ActionContext(val app: Application,
     }
 
     class object {
-        val currents = ThreadLocal<ActionContext?>()
+        val contexts = ThreadLocal<ActionContext?>()
 
-        public fun current(): ActionContext? {
-            return currents.get()
+        public fun current(): ActionContext {
+            val context = tryGet()
+            if (context == null)
+                throw ContextException("Operation is not in context of an action, ActionContext not set.")
+            return context
+        }
+
+        fun tryGet(): ActionContext? {
+            return contexts.get()
         }
     }
 }
 
+class ContextException(msg : String) : Exception(msg) {}
+
 public fun <T> ActionContext.withContext(body: () -> T): T {
     try {
-        ActionContext.currents.set(this)
+        ActionContext.contexts.set(this)
         return body()
     }
     finally {
-        ActionContext.currents.set(null)
+        ActionContext.contexts.set(null)
     }
 }
 

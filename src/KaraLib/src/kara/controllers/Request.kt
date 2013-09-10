@@ -19,7 +19,7 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
     override fun href() = toExternalForm()
 
     public fun toExternalForm(): String {
-        val route = ActionContext.current()?.app?.dispatcher?.route(javaClass) ?: javaClass.route().first
+        val route = ActionContext.tryGet()?.app?.dispatcher?.route(javaClass) ?: javaClass.route().first
 
         val answer = StringBuilder()
 

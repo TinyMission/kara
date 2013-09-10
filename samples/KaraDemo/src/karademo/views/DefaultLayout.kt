@@ -5,7 +5,7 @@ import karademo.styles.DefaultStyles
 import kotlin.html.*
 
 class DefaultLayout(): HtmlLayout() {
-    override fun HTML.render(context: ActionContext, mainView: HtmlView) {
+    override fun HTML.render(mainView: HtmlView) {
         head {
             title("Kara Demo Title")
             stylesheet(DefaultStyles)
@@ -13,7 +13,7 @@ class DefaultLayout(): HtmlLayout() {
         body {
             h1 { +"Kara Demo Site" }
             div(id = "main") {
-                renderView(context, mainView)
+                renderView(mainView)
             }
             +"Kara is devloped by: "
             a {

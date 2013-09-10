@@ -46,9 +46,6 @@ public open class AppConfig(val environment: String = "development", val appURL:
     public val appClass: String
         get() = if (contains("kara.appClass")) this["kara.appClass"] else "$appPackage.Application"
 
-    /** Stores all middleware instances for the application. */
-    public val middleware : MiddlewareList = MiddlewareList()
-
     /** The directory where publicly available files (like stylesheets, scripts, and images) will go. */
     public val publicDir : String
         get() = this["kara.publicDir"]

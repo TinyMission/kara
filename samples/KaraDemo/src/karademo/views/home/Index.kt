@@ -6,7 +6,7 @@ import kotlin.html.*
 
 class Index(): HtmlView(DefaultLayout()) {
 
-    override fun HtmlBodyTag.render(context: ActionContext) {
+    override fun HtmlBodyTag.render() {
 
         p {
             +"This is the demo site for Kara. Below you'll find all of the html content that can be expressed in Kara views."

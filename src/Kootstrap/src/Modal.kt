@@ -12,11 +12,11 @@ class ModalBuilder() {
         this.c = size
     }
 
-    var header: (HtmlBodyTagWithText.()->Unit)? = null
-    fun header(content: HtmlBodyTagWithText.()->Unit) = header = content
+    var header: (HtmlBodyTag.()->Unit)? = null
+    fun header(content: HtmlBodyTag.()->Unit) = header = content
 
-    var body: (HtmlBodyTagWithText.()->Unit)? = null
-    fun body(c: HtmlBodyTagWithText.()->Unit) = body = c
+    var body: (HtmlBodyTag.()->Unit)? = null
+    fun body(c: HtmlBodyTag.()->Unit) = body = c
 
     var save: (BUTTON.()->Unit)? = null
     fun save(c: BUTTON.()->Unit) = save = c

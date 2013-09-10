@@ -6,13 +6,13 @@ import kotlin.html.*
 /** A default layout implementation.
  */
 class DefaultLayout() : HtmlLayout() {
-    override fun HTML.render(context: ActionContext, mainView: HtmlView) {
+    override fun HTML.render(mainView: HtmlView) {
         head {
             title {+"This is the default layout"}
         }
         body {
             h1 {+"Default Layout"}
-            renderView(context, mainView)
+            renderView(mainView)
         }
     }
 }

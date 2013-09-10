@@ -9,5 +9,5 @@ import kotlin.html.*
 abstract class HtmlLayout() {
     /** Subclasses must implement this to render the main view inside the html document.
     */
-    abstract fun HTML.render(context : ActionContext, mainView : HtmlView)
+    abstract fun HTML.render(mainView : HtmlView)
 }

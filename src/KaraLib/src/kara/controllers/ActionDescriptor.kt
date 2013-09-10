@@ -14,8 +14,8 @@ import kotlin.properties.delegation.lazy.LazyVal
 
 
 /** Contains all the information necessary to match a route and execute an action.
-*/
-class ActionDescriptor(val route : String, val requestClass: Class<out Request>) {
+ */
+class ActionDescriptor(val route: String, val requestClass: Class<out Request>) {
     class object {
         val logger = Logger.getLogger(this.javaClass)!!
 
@@ -29,7 +29,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
     private val optionalComponents by LazyVal { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
 
 
-    public fun matches(url : String) : Boolean {
+    public fun matches(url: String): Boolean {
         val path = url.split("\\?")[0]
         val components = path.split("/")
         if (components.size > routeComponents.size() || components.size < routeComponents.size() - optionalComponents.size())
@@ -44,14 +44,14 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         return true
     }
 
-    public fun buildParams(request : HttpServletRequest) : RouteParameters {
+    public fun buildParams(request: HttpServletRequest): RouteParameters {
         val url = request.getRequestURI()!!
         val query = request.getQueryString()
         val params = RouteParameters()
 
         // parse the query string
         if (query != null) {
-            val queryComponents = query.split("\\&") map { URLDecoder.decode(it, "UTF-8")}
+            val queryComponents = query.split("\\&") map { URLDecoder.decode(it, "UTF-8") }
             for (component in queryComponents) {
                 val nvp = component.split("=")
                 if (nvp.size > 1)
@@ -62,7 +62,7 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         }
 
         // parse the route parameters
-        val pathComponents = url.split("/") map { URLDecoder.decode(it, "UTF-8")}
+        val pathComponents = url.split("/") map { URLDecoder.decode(it, "UTF-8") }
         if (pathComponents.size < routeComponents.size() - optionalComponents.size())
             throw InvalidRouteException("URL has less components than mandatory parameters of the route")
         for (i in pathComponents.indices) {
@@ -89,8 +89,8 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         return params
     }
 
-    fun buildRouteInstance(params : RouteParameters) : Request{
-        fun find(list : Array<Annotation>) : JetValueParameter {
+    fun buildRouteInstance(params: RouteParameters): Request {
+        fun find(list: Array<Annotation>): JetValueParameter {
             for (a in list) {
                 if (a is JetValueParameter) return a
             }
@@ -102,70 +102,52 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
         val paramTypes = routeConstructor.getParameterTypes()!!
         val annotations = routeConstructor.getParameterAnnotations()
 
-        val arguments : Array<Any?> = Array(paramTypes.size) { i ->
-               val annotation = find(annotations[i]!!)
-               val paramName = annotation.name()!!
-               val optional = annotation.`type`()?.startsWith("?") ?: false
-               val paramString = params[paramName]
-               if (paramString == null) {
-                   if (optional) {
-                       null
-                   }
-                   else {
-                       throw InvalidRouteException("Required argument $paramName is missing")
-                   }
-               }
-               else {
-                   paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
-               }
-           }
+        val arguments: Array<Any?> = Array(paramTypes.size) { i ->
+            val annotation = find(annotations[i]!!)
+            val paramName = annotation.name()!!
+            val optional = annotation.`type`()?.startsWith("?") ?: false
+            val paramString = params[paramName]
+            if (paramString == null) {
+                if (optional) {
+                    null
+                }
+                else {
+                    throw InvalidRouteException("Required argument $paramName is missing")
+                }
+            }
+            else {
+                paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
+            }
+        }
 
         return routeConstructor.newInstance(*arguments)!!
     }
 
     /** Execute the action based on the given request and populate the response. */
-    public fun exec(app: Application, request: HttpServletRequest, response : HttpServletResponse) {
+    public fun exec(app: Application, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = buildRouteInstance(params)
         val context = ActionContext(app, request, response, params)
-
-        var result:ActionResult? = null
-        try {
-            // run middleware with beforeRequest
-            for (ref in app.config.middleware.all) {
-                if (ref.matches(request.getRequestURI()!!)) {
-                    val keepGoing = ref.middleware.beforeRequest(context)
-                    if (!keepGoing)
-                        return
-                }
+        context.withContext {
+            var result: ActionResult? = null
+            try {
+                result = routeInstance.handle(context)
+            }
+            catch (ex: Throwable) {
+                logger.warn("exec error: ${ex.getMessage()}");
+                ex.printStackTrace()
+                // write the standard error page
+                var error: Throwable = ex
+                if (ex.getCause() != null)
+                    error = ex.getCause()!!
+                ErrorView(error).writeResponse(context)
             }
 
-            result = routeInstance.handle(context)
-
-            // run middleware with afterRequest
-            for (ref in app.config.middleware.all) {
-                if (ref.matches(request.getRequestURI()!!)) {
-                    val keepGoing = ref.middleware.afterRequest(context, result!!)
-                    if (!keepGoing)
-                        return
-                }
-            }
+            result?.tryWriteResponse(context)
         }
-        catch (ex : Throwable) {
-            logger.warn("exec error: ${ex.getMessage()}");
-            ex.printStackTrace()
-            // write the standard error page
-            var error : Throwable = ex
-            if (ex.getCause() != null)
-                error = ex.getCause()!!
-            ErrorView(error).writeResponse(context)
-        }
-
-        result?.tryWriteResponse(context)
     }
 
-
-    public fun toString() : String {
+    public fun toString(): String {
         return "Action{route=$route, handler=${requestClass}}"
     }
 
