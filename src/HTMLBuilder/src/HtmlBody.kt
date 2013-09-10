@@ -3,7 +3,7 @@ package kotlin.html
 val <T> empty_contents: T.() -> Unit = { }
 
 fun HTML.body(init: BODY.() -> Unit) = build(BODY(this), init)
-class BODY(containingTag: HTML) : HtmlBodyTagWithText(containingTag, "body")
+class BODY(containingTag: HTML) : HtmlBodyTag(containingTag, "body")
 
 public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlTag(containingTag, name, renderStyle, contentStyle) {
     public var id: String by Attributes.id
@@ -47,13 +47,13 @@ fun HtmlBodyTag.select(c: StyleClass? = null, id: String? = null, contents: SELE
 fun HtmlBodyTag.textarea(c: StyleClass? = null, id: String? = null, contents: TEXTAREA.() -> Unit = empty_contents) = contentTag(TEXTAREA(this), c, id, contents)
 
 fun HtmlBodyTag.a(c: StyleClass? = null, id: String? = null, contents: A.() -> Unit = empty_contents) = contentTag(A(this), c, id, contents)
-open class A(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "a", contentStyle = ContentStyle.propagate) {
+open class A(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "a", contentStyle = ContentStyle.propagate) {
     public var href: Link by Attributes.href
     public var rel: String by Attributes.rel
     public var target: String by Attributes.target
 }
 
-open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "button") {
+open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "button") {
     public var name: String by Attributes.name
     public var value: String by Attributes.value
     public var buttonType: ButtonType by Attributes.buttonType
@@ -77,34 +77,34 @@ open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", Ren
 }
 open class HR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "hr", RenderStyle.empty) {
 }
-open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "div") {
+open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "div") {
 }
-open class I(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "i", contentStyle = ContentStyle.propagate) {
+open class I(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "i", contentStyle = ContentStyle.propagate) {
 }
-open class B(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "b", contentStyle = ContentStyle.propagate) {
+open class B(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "b", contentStyle = ContentStyle.propagate) {
 }
-open class P(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "p") {
+open class P(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "p") {
 }
-open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "span", contentStyle = ContentStyle.propagate) {
+open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "span", contentStyle = ContentStyle.propagate) {
 }
-open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "strong", contentStyle = ContentStyle.propagate) {
+open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "strong", contentStyle = ContentStyle.propagate) {
 }
-open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "small", contentStyle = ContentStyle.propagate) {
+open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "small", contentStyle = ContentStyle.propagate) {
 }
-open class EM(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "em", contentStyle = ContentStyle.propagate) {
+open class EM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "em", contentStyle = ContentStyle.propagate) {
 }
-open class ADDRESS(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "address") {
+open class ADDRESS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "address") {
 }
-open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "blockquote") {
+open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "blockquote") {
     public var cite: Link by Attributes.cite
 }
 
 
 open class DL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "dl") {
 }
-open class DD(containingTag: DL) : HtmlBodyTagWithText(containingTag, "dd", contentStyle = ContentStyle.propagate) {
+open class DD(containingTag: DL) : HtmlBodyTag(containingTag, "dd", contentStyle = ContentStyle.propagate) {
 }
-open class DT(containingTag: DL) : HtmlBodyTagWithText(containingTag, "dt", contentStyle = ContentStyle.propagate) {
+open class DT(containingTag: DL) : HtmlBodyTag(containingTag, "dt", contentStyle = ContentStyle.propagate) {
 }
 
 abstract class ListTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name) {
@@ -113,21 +113,21 @@ open class OL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ol") {
 }
 open class UL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ul") {
 }
-open class LI(containingTag: ListTag) : HtmlBodyTagWithText(containingTag, "li") {
+open class LI(containingTag: ListTag) : HtmlBodyTag(containingTag, "li") {
 }
 fun HtmlBodyTag.ul(c: StyleClass? = null, id: String? = null, contents: UL.() -> Unit = empty_contents) = contentTag(UL(this), c, id, contents)
 fun HtmlBodyTag.ol(c: StyleClass? = null, id: String? = null, contents: OL.() -> Unit = empty_contents) = contentTag(OL(this), c, id, contents)
 fun ListTag.li(c: StyleClass? = null, id: String? = null, contents: LI.() -> Unit = empty_contents) = contentTag(LI(this), c, id, contents)
 
-open class H1(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h1") {
+open class H1(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h1") {
 }
-open class H2(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h2") {
+open class H2(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h2") {
 }
-open class H3(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h3") {
+open class H3(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h3") {
 }
-open class H4(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h4") {
+open class H4(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h4") {
 }
-open class H5(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "h5") {
+open class H5(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h5") {
 }
 open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", RenderStyle.empty, ContentStyle.text) {
     public var width: Int by Attributes.width
@@ -169,9 +169,9 @@ open class TBODY(containingTag: TABLE) : TableTag(containingTag, "tbody") {
 }
 open class TR(containingTag: TableTag) : HtmlBodyTag(containingTag, "tr"){
 }
-open class TH(containingTag: TR) : HtmlBodyTagWithText(containingTag, "th") {
+open class TH(containingTag: TR) : HtmlBodyTag(containingTag, "th") {
 }
-open class TD(containingTag: TR) : HtmlBodyTagWithText(containingTag, "td") {
+open class TD(containingTag: TR) : HtmlBodyTag(containingTag, "td") {
 }
 
 fun HtmlBodyTag.table(c: StyleClass? = null, id: String? = null, contents: TABLE.() -> Unit = empty_contents) = contentTag(TABLE(this), c, id, contents)
@@ -204,7 +204,7 @@ open class SELECT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "sele
     public var required: Boolean by Attributes.required
 }
 
-open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "option") {
+open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "option") {
     public var value: String by Attributes.value
     public var label: String by Attributes.label
     public var disabled: Boolean by Attributes.disabled
@@ -213,7 +213,7 @@ open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTa
 open class OPTGROUP(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "optgroup") {
 }
 
-open class TEXTAREA(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "textarea") {
+open class TEXTAREA(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "textarea") {
     public var autofocus: Boolean by Attributes.autofocus
     public var cols: Int by Attributes.cols
     public var disabled: Boolean by Attributes.disabled
@@ -229,10 +229,10 @@ open class TEXTAREA(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containing
 fun HtmlBodyTag.fieldset(c: StyleClass? = null, id: String? = null, contents: FIELDSET.() -> Unit = empty_contents) = contentTag(FIELDSET(this), c, id, contents)
 fun FIELDSET.legend(c: StyleClass? = null, id: String? = null, contents: LEGEND.() -> Unit = empty_contents) = contentTag(LEGEND(this), c, id, contents)
 
-open class LABEL(containingTag: HtmlBodyTag) : HtmlBodyTagWithText(containingTag, "label") {
+open class LABEL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "label") {
     public var forId: String by Attributes.forId
 }
-open class LEGEND(containingTag: FIELDSET) : HtmlBodyTagWithText(containingTag, "legend") {
+open class LEGEND(containingTag: FIELDSET) : HtmlBodyTag(containingTag, "legend") {
 }
 
 fun HtmlBodyTag.canvas(c: StyleClass? = null, id: String? = null, contents: CANVAS.() -> Unit = empty_contents) = contentTag(CANVAS(this), c, id, contents)

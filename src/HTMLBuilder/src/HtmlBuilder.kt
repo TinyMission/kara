@@ -112,6 +112,27 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
      * Override the plus operator to add a text element.
      */
     fun String.not() = RawHtml(this@HtmlTag, this)
+
+    /**
+     * Override the plus operator to add a text element.
+     */
+    fun String.plus() = HtmlText(this@HtmlTag, this)
+
+    /**
+     * Yet another way to set the text content of the node.
+     */
+    var text: String?
+        get() {
+            if (children.size > 0)
+                return children[0].toString()
+            return ""
+        }
+        set(value) {
+            children.clear()
+            if (value != null)
+                HtmlText(this@HtmlTag, value)
+        }
+
 }
 
 class RawHtml(containingTag: HtmlTag?, private val html: String) : HtmlElement(containingTag, ContentStyle.text) {
@@ -132,50 +153,6 @@ class HtmlText(containingTag: HtmlTag?, private val text: String) : HtmlElement(
     }
 
     public fun escapedText(): String = text.htmlEscape()
-}
-
-abstract class HtmlTagWithText(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded) : HtmlTag(containingTag, name, renderStyle) {
-    /**
-     * Override the plus operator to add a text element.
-     */
-    fun String.plus() = HtmlText(this@HtmlTagWithText, this)
-
-    /**
-     * Yet another way to set the text content of the node.
-     */
-    var text: String?
-        get() {
-            if (children.size > 0)
-                return children[0].toString()
-            return ""
-        }
-        set(value) {
-            children.clear()
-            if (value != null)
-                HtmlText(this@HtmlTagWithText, value)
-        }
-}
-
-abstract class HtmlBodyTagWithText(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlBodyTag(containingTag, name, renderStyle, contentStyle) {
-    /**
-     * Override the plus operator to add a text element.
-     */
-    fun String.plus() = HtmlText(this@HtmlBodyTagWithText, this)
-
-    /**
-     * Yet another way to set the text content of the node.
-     */
-    var text: String?
-        get() {
-            if (children.size > 0)
-                return children[0].toString()
-            return ""
-        }
-        set(value) {
-            children.clear()
-            if (value != null)
-                HtmlText(this@HtmlBodyTagWithText, value)
-        }
 }
 
 class InvalidHtmlException(val message: String) : RuntimeException(message) {
