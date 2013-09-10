@@ -10,6 +10,7 @@ import java.net.URLDecoder
 import kara.*
 import org.apache.log4j.Logger
 import java.io.IOException
+import kotlin.properties.delegation.lazy.LazyVal
 
 
 /** Contains all the information necessary to match a route and execute an action.
@@ -24,11 +25,16 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
 
     private val routeComponents = route.toRouteComponents()
 
+    // TODO: verify optional components are all last
+    private val optionalComponents by LazyVal { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
+
+
     public fun matches(url : String) : Boolean {
         val path = url.split("\\?")[0]
         val components = path.split("/")
-        if (components.size != routeComponents.size())
+        if (components.size > routeComponents.size() || components.size < routeComponents.size() - optionalComponents.size())
             return false
+
         for (i in components.indices) {
             val component = components[i]
             val routeComponent = routeComponents[i]
@@ -57,8 +63,8 @@ class ActionDescriptor(val route : String, val requestClass: Class<out Request>)
 
         // parse the route parameters
         val pathComponents = url.split("/") map { URLDecoder.decode(it, "UTF-8")}
-        if (pathComponents.size != routeComponents.size())
-            throw InvalidRouteException("URL has different number of components than route")
+        if (pathComponents.size < routeComponents.size() - optionalComponents.size())
+            throw InvalidRouteException("URL has less components than mandatory parameters of the route")
         for (i in pathComponents.indices) {
             val component = pathComponents[i]
             val routeComponent = routeComponents[i]

@@ -10,7 +10,7 @@ import java.util.LinkedHashSet
 import kotlin.html.*
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Link {
-    fun handle(context : ActionContext) : ActionResult {
+    fun handle(context: ActionContext): ActionResult {
         return context.withContext {
             context.handler()
         }
@@ -18,7 +18,7 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
 
     override fun href() = toExternalForm()
 
-    public fun toExternalForm() : String {
+    public fun toExternalForm(): String {
         val route = ActionContext.current()?.app?.dispatcher?.route(javaClass) ?: javaClass.route().first
 
         val answer = StringBuilder()
@@ -28,6 +28,10 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
         answer.append(route.toRouteComponents().map({
             when (it) {
                 is StringRouteComponent -> (it as RouteComponent).componentText
+                is OptionalParamRouteComponent -> {
+                    properties.remove(it.name)
+                    "${propertyValue(it.name)}"
+                }
                 is ParamRouteComponent -> {
                     properties.remove(it.name)
 
