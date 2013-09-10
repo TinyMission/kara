@@ -102,13 +102,18 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
 
     div(s("modal-footer")) {
         button(highlight.default) {
+            buttonType = ButtonType.button
             this["aria-hidden"] = "true"
             this["data-dismiss"] = "modal"
             +"Close"
         }
 
-        if (builder.save != null) {
-            button(highlight.primary, body = builder.save!!)
+        val submitButton = builder.save
+        if (submitButton != null) {
+            button(highlight.primary) {
+                buttonType = ButtonType.submit
+                submitButton()
+            }
         }
     }
 }
