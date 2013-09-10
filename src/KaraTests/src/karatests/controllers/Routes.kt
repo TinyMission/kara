@@ -15,6 +15,11 @@ object Routes {
     Post("/update")
     class Update(): Request({ TextResult("Something's been updated!") })
 
+    Get("/optional/?p")
+    class Optional(val p : String?) : Request({
+        TextResult("optional/${p}")
+    })
+
     object Foo {
         Get("#")
         class Blank() : Request({

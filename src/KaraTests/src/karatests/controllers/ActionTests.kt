@@ -35,6 +35,11 @@ class ActionTests() {
         assertResponse("compute: 42, 3.12", "/foo/compute?anInt=42&aFloat=3.12")
     }
 
+    Test fun optionalTests() {
+        assertResponse("optional/null", "/optional")
+        assertResponse("optional/44", "/optional/44")
+    }
+
     Test fun redirect() {
         val response = mockDispatch("GET", "/foo/redirect")
         assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, response.getStatus())
