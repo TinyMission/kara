@@ -12,6 +12,11 @@
   border: 1px solid transparent;
   border-radius: @alert-border-radius;
 
+  // Empty alert collapse automatically (not available in IE8)
+  &:empty {
+    display: none;
+  }
+
   // Headings for larger alerts
   h4 {
     margin-top: 0;

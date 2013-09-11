@@ -4206,6 +4206,10 @@ a.thumbnail:focus {
   border-radius: 3px;
 }
 
+.alert:empty {
+  display: none;
+}
+
 .alert h4 {
   margin-top: 0;
   color: inherit;
