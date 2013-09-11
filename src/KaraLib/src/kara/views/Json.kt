@@ -17,11 +17,12 @@ class Json(val obj: Any): ActionResult {
 
 fun jsonReflect(obj: Any): ActionResult = Json(obj)
 
+fun jsonQuote(value : String) : String = value.replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n")
 
 class JsonArray {
     val elements = ArrayList<Any>()
 
-    fun jsonValue(value : String)  = elements.add(value)
+    fun jsonValue(value : String)  = elements.add(jsonQuote(value))
     fun jsonValue(value : Int) = elements.add(value)
 
     fun jsonObject(body: JsonObject.()->Unit) {
@@ -58,7 +59,7 @@ class JsonArray {
 class JsonObject {
     val properties = HashMap<String, Any>()
 
-    fun jsonValue(name : String, value : String) = properties.put(name, value)
+    fun jsonValue(name : String, value : String) = properties.put(name, jsonQuote(value))
     fun jsonValue(name : String, value : Int) = properties.put(name, value)
     fun jsonObject(name : String, body: JsonObject.()->Unit) {
         val value = JsonObject()
