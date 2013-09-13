@@ -17,7 +17,7 @@ class Json(val obj: Any): ActionResult {
 
 fun jsonReflect(obj: Any): ActionResult = Json(obj)
 
-fun jsonQuote(value : String) : String = value.replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n")
+fun jsonQuote(value : String) : String = value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n")
 
 class JsonArray {
     val elements = ArrayList<Any>()
