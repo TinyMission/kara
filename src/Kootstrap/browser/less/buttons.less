@@ -9,13 +9,14 @@
 // Core styles
 .btn {
   display: inline-block;
-  padding: 0px 16px;
+  outline: none;
+  padding: 0px 15px;
   margin-bottom: 0; // For input.btn
-  font-size: @font-size-base;
+  font-size: @font-size-small;
   font-weight: @btn-font-weight;
   height: 24px;
   min-width: 48px;
-  line-height: @line-height-base;
+  line-height: 22px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -57,26 +58,26 @@
 // --------------------------------------------------
 
 .btn-default {
-  .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+  .button-variant(@btn-default-color; @btn-default-bg1; @btn-default-bg2; @btn-default-border);
 }
 .btn-primary {
-  .button-variant(@btn-primary-color; @btn-primary-bg; @btn-primary-border);
+  .button-variant(@btn-primary-color; @btn-primary-bg1; @btn-primary-bg2; @btn-primary-border);
 }
 // Warning appears as orange
 .btn-warning {
-  .button-variant(@btn-warning-color; @btn-warning-bg; @btn-warning-border);
+  .button-variant(@btn-warning-color; @btn-warning-bg1; @btn-warning-bg2; @btn-warning-border);
 }
 // Danger and error appear as red
 .btn-danger {
-  .button-variant(@btn-danger-color; @btn-danger-bg; @btn-danger-border);
+  .button-variant(@btn-danger-color; @btn-danger-bg1; @btn-danger-bg2; @btn-danger-border);
 }
 // Success appears as green
 .btn-success {
-  .button-variant(@btn-success-color; @btn-success-bg; @btn-success-border);
+  .button-variant(@btn-success-color; @btn-success-bg1; @btn-success-bg2; @btn-success-border);
 }
 // Info appears as blue-green
 .btn-info {
-  .button-variant(@btn-info-color; @btn-info-bg; @btn-info-border);
+  .button-variant(@btn-info-color; @btn-info-bg1; @btn-info-bg2; @btn-info-border);
 }
 
 
@@ -129,7 +130,6 @@
 }
 .btn-sm,
 .btn-xs {
-  padding: 3px 8px;
   line-height: 1.5;
   font-size: 11px;
   min-width: 40px;
@@ -137,7 +137,7 @@
 }
 
 .btn-xs {
-  padding: 4px 4px;
+  padding: 3px 8px;
   line-height: 1;
   height: 20px;
   min-width: 32px;
