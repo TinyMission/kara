@@ -10,11 +10,7 @@ import java.util.LinkedHashSet
 import kotlin.html.*
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Link {
-    fun handle(context: ActionContext): ActionResult {
-        return context.withContext {
-            context.handler()
-        }
-    }
+    fun handle(context: ActionContext): ActionResult = context.handler()
 
     override fun href() = toExternalForm()
 
