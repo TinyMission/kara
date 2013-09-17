@@ -61,4 +61,25 @@ class RouteParameters() {
         }.toArrayList()
         return pairs.join(", ")
     }
+
+    fun optIntParam(name: String): Int? {
+        try {
+            val text = this[name] ?: return null
+            return text.toInt()
+        } catch(e: NumberFormatException) {
+            return null
+        }
+    }
+
+    fun intParam(name: String): Int {
+        return optIntParam(name) ?: throw RuntimeException("Required parameter $name is missing in request")
+    }
+
+    fun stringParam(name: String): String {
+        return optStringParam(name) ?: throw RuntimeException("Required parameter $name is missing in request")
+    }
+
+    fun optStringParam(name: String): String? {
+        return this[name]
+    }
 }

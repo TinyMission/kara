@@ -9,13 +9,27 @@ import java.util.HashSet
 import java.util.LinkedHashSet
 import kotlin.html.*
 
+private fun Class<out Request>.fastRoute(): String {
+    return ActionContext.tryGet()?.app?.dispatcher?.route(this) ?: route().first
+}
+
+public fun Class<out Request>.baseLink(): Link {
+    val route = fastRoute()
+    if (route.contains(":")) {
+        throw RuntimeException("You can't have base link for the route with URL parameters")
+    }
+
+    return route.link()
+}
+
+
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Link {
     fun handle(context: ActionContext): ActionResult = context.handler()
 
     override fun href() = toExternalForm()
 
     public fun toExternalForm(): String {
-        val route = ActionContext.tryGet()?.app?.dispatcher?.route(javaClass) ?: javaClass.route().first
+        val route = javaClass.fastRoute()
 
         val answer = StringBuilder()
 
