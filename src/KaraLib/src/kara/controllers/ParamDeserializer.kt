@@ -7,7 +7,7 @@ import java.util.ArrayList
 /** Base class for object that deserialize parameters to a certain type.
 */
 abstract class ParamTypeDeserializer() {
-    abstract fun deserialize(param : String) : Any
+    abstract fun deserialize(param : String) : Any?
 
     abstract fun isThisType(testType : Class<Any>) : Boolean
 }
@@ -15,7 +15,8 @@ abstract class ParamTypeDeserializer() {
 /** Deserializer for integers.
 */
 class IntParamDeserializer() : ParamTypeDeserializer() {
-    override fun deserialize(param : String) : Any {
+    override fun deserialize(param : String) : Any? {
+        if (param.isEmpty()) return null
         return param.toInt()
     }
 
@@ -27,8 +28,9 @@ class IntParamDeserializer() : ParamTypeDeserializer() {
 /** Deserializer for floats.
 */
 class FloatParamDeserializer() : ParamTypeDeserializer() {
-    override fun deserialize(param : String) : Any {
-        return param.toFloat()
+    override fun deserialize(param : String) : Any? {
+        if (param.isEmpty()) return null
+        return param.toInt()
     }
 
     override fun isThisType(testType : Class<Any>) : Boolean {
@@ -54,7 +56,7 @@ class ParamDeserializer() {
         register(FloatParamDeserializer())
     }
 
-    public fun deserialize(param : String, paramType : Class<Any>) : Any {
+    public fun deserialize(param : String, paramType : Class<Any>) : Any? {
         if (paramType == javaClass<String>()) {
             return param
         }

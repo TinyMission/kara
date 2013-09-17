@@ -106,17 +106,14 @@ class ActionDescriptor(val route: String, val requestClass: Class<out Request>) 
             val annotation = find(annotations[i]!!)
             val paramName = annotation.name()!!
             val optional = annotation.`type`()?.startsWith("?") ?: false
-            val paramString = params[paramName]
-            if (paramString == null) {
-                if (optional) {
-                    null
-                }
-                else {
-                    throw InvalidRouteException("Required argument $paramName is missing")
-                }
+
+            params[paramName]?.let {
+                paramDeserializer.deserialize(it, paramTypes[i] as Class<Any>)
+            } ?: if (optional) {
+                null
             }
             else {
-                paramDeserializer.deserialize(paramString, paramTypes[i] as Class<Any>)
+                throw InvalidRouteException("Required argument $paramName is missing")
             }
         }
 
