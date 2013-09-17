@@ -15,7 +15,7 @@ fun HtmlBodyTag.template(dataUrl: Link, content: TEMPLATE.() -> Unit) {
             child["data-url"] = dataUrl.href()
             val oldClasses = child.tryGet("class")
             if (oldClasses == null) {
-                child.c = s("tempalte")
+                child.c = s("template")
             }
             else {
                 child.c = s("template $oldClasses")
