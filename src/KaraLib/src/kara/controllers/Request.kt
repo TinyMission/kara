@@ -8,6 +8,7 @@ import kara.internal.*
 import java.util.HashSet
 import java.util.LinkedHashSet
 import kotlin.html.*
+import java.util.LinkedHashMap
 
 private fun Class<out Request>.fastRoute(): String {
     return ActionContext.tryGet()?.app?.dispatcher?.route(this) ?: route().first
@@ -28,10 +29,10 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
 
     override fun href() = toExternalForm()
 
-    public fun toExternalForm(): String {
+    fun requestParts(): Pair<String, Map<String, Any>> {
         val route = javaClass.fastRoute()
 
-        val answer = StringBuilder()
+        val path = StringBuilder()
 
         val properties = LinkedHashSet(properties())
         val components = route.toRouteComponents().map({
@@ -53,15 +54,26 @@ public open class Request(private val handler: ActionContext.() -> ActionResult)
             }
         })
 
-        answer.append(components.filterNotNull().join("/"))
+        path.append(components.filterNotNull().join("/"))
+        if (path.length() == 0) path.append("/")
 
-        if (answer.length() == 0) answer.append("/")
-
-        val nonEmptyProperties = properties filter { propertyValue(it) != null }
-        if (nonEmptyProperties.count() > 0) {
-            answer.append("?")
-            answer.append(nonEmptyProperties map { "$it=${propertyValue(it)}" } join("&"))
+        val queryArgs = LinkedHashMap<String, Any>()
+        for (prop in properties filter { propertyValue(it) != null }) {
+            queryArgs[prop] = propertyValue(prop)!!
         }
+
+        return Pair(path.toString(), queryArgs)
+    }
+
+    public fun toExternalForm(): String {
+        val url = requestParts()
+        if (url.second.size() == 0) return url.first
+
+        val answer = StringBuilder()
+
+        answer.append(url.first)
+        answer.append("?")
+        answer.append(url.second map {"${it.key}=${it.value}"} join("&"))
 
         return answer.toString()
     }
