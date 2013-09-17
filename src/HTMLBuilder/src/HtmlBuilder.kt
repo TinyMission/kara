@@ -98,6 +98,10 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         attributes[name] = value
     }
 
+    public fun tryGet(attributeName: String): String? {
+        return attributes[attributeName]
+    }
+
     public fun get(attributeName: String): String {
         val answer = attributes[attributeName]
         if (answer == null) throw RuntimeException("Atrribute $attributeName is missing")
@@ -133,6 +137,14 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
                 HtmlText(this@HtmlTag, value)
         }
 
+}
+
+open class TransparentTag(containtingTag: HtmlTag?): HtmlBodyTag(containtingTag, "$$$ NOT FOR RENDER $$$") {
+    override fun renderElement(builder: StringBuilder, indent: String) {
+        for (child in children) {
+            child.renderElement(builder, indent)
+        }
+    }
 }
 
 class RawHtml(containingTag: HtmlTag?, private val html: String) : HtmlElement(containingTag, ContentStyle.text) {
