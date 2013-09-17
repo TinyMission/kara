@@ -113,7 +113,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     }
 
     /**
-     * Override the plus operator to add a text element.
+     * Override the not operator to add raw html
      */
     fun String.not() = RawHtml(this@HtmlTag, this)
 
@@ -139,7 +139,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
 
 }
 
-open class TransparentTag(containtingTag: HtmlTag?): HtmlBodyTag(containtingTag, "$$$ NOT FOR RENDER $$$") {
+open class TransparentTag(containtingTag: HtmlTag?): HtmlBodyTag(containtingTag, "$$$ NOT FOR RENDER $$$", contentStyle = ContentStyle.propagate) {
     override fun renderElement(builder: StringBuilder, indent: String) {
         for (child in children) {
             child.renderElement(builder, indent)
