@@ -2,22 +2,44 @@ package karatests.controllers
 
 import kara.*
 import kara.internal.*
-import karatests.views.DefaultLayout
-import karatests.views.HomeView
+import karatests.views.*
+import kotlin.html.*
 
 object Routes {
     Get("/")
-    class Index(): Request({ HomeView() })
+    class Index() : Request({ HomeView() })
 
     Get("/test")
-    class Test(): Request({ TextResult("This is a test action") })
+    class Test() : Request({ TextResult("This is a test action") })
 
     Post("/update")
-    class Update(): Request({ TextResult("Something's been updated!") })
+    class Update() : Request({ TextResult("Something's been updated!") })
 
     Get("/optional/?p")
-    class Optional(val p : String?) : Request({
+    class Optional(val p: String?) : Request({
         TextResult("optional/${p}")
+    })
+
+    Get("/template/:n")
+    class SomeRoute(n: Int) : Request({
+        when (n) {
+            1 -> HtmlTemplateView<DefaultPageTemplate>() {
+                header {
+                    div {
+
+                    }
+                }
+
+                content {
+                    span {
+
+                    }
+                }
+            }
+            2 -> SomeView()
+            3 -> SomeFunView()
+            else -> ErrorResult(404, "Not found")
+        }
     })
 
     object Foo {
@@ -47,7 +69,7 @@ object Routes {
         })
 
         Get("complex/*/list/:id")
-        class Complex(id : String) : Request({
+        class Complex(id: String) : Request({
             TextResult("complex: ${params[0]} id = $id")
         })
 
@@ -57,12 +79,12 @@ object Routes {
         })
 
         Get("compute/:anInt/:aFloat")
-        class Compute(val anInt : Int, val aFloat : Float) : Request({
+        class Compute(val anInt: Int, val aFloat: Float) : Request({
             TextResult("compute: ${anInt}, ${aFloat}")
         })
 
         Get("compute")
-        class ComputeQuery(val anInt : Int, val aFloat : Float) : Request({
+        class ComputeQuery(val anInt: Int, val aFloat: Float) : Request({
             TextResult("compute: ${anInt}, ${aFloat}")
         })
     }
@@ -74,7 +96,7 @@ object Routes {
         })
 
         Get(":id")
-        class Show(id : Int) : Request({
+        class Show(id: Int) : Request({
             TextResult("show $id")
         })
 
@@ -84,12 +106,12 @@ object Routes {
         })
 
         Put(":id")
-        class Update(id : Int) : Request({
+        class Update(id: Int) : Request({
             TextResult("update ${id}")
         })
 
         Delete(":id")
-        class _Delete(id : String) : Request({
+        class _Delete(id: String) : Request({
             TextResult("delete $id")
         })
     }
