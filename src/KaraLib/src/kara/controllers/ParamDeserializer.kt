@@ -30,7 +30,7 @@ class IntParamDeserializer() : ParamTypeDeserializer() {
 class FloatParamDeserializer() : ParamTypeDeserializer() {
     override fun deserialize(param : String) : Any? {
         if (param.isEmpty()) return null
-        return param.toInt()
+        return param.toFloat()
     }
 
     override fun isThisType(testType : Class<Any>) : Boolean {
