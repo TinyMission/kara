@@ -35,8 +35,8 @@ class TemplateTests() {
 }
 
 class DefaultPageTemplate : HtmlTemplate<DefaultPageTemplate>() {
-    val header = HtmlPlaceholder()
-    val content = HtmlPlaceholder()
+    val header = HtmlPlaceholder<BODY>()
+    val content = HtmlPlaceholder<BODY>()
 
     override fun HTML.render(view: HtmlTemplateView<DefaultPageTemplate>) {
         head {
@@ -44,8 +44,8 @@ class DefaultPageTemplate : HtmlTemplate<DefaultPageTemplate>() {
         }
 
         body {
-            render(header)
-            render(content)
+            insert(header)
+            insert(content)
         }
     }
 }

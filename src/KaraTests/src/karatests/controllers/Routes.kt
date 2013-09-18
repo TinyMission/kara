@@ -23,7 +23,7 @@ object Routes {
     Get("/template/:n")
     class SomeRoute(n: Int) : Request({
         when (n) {
-            1 -> HtmlTemplateView<DefaultPageTemplate>() {
+            1 -> view {
                 header {
                     div {
 
