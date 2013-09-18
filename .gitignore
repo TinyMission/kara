@@ -16,4 +16,6 @@ kara-SNAPSHOT.zip
 lib/kotlin-runtime.jar
 **/kotlin-runtime.jar
 samples/KaraDemo/bin
-
+src/Kootstrap/browser/less/*.css
+!src/Kootstrap/browser/less/bootstrap.min.css
+!src/Kootstrap/browser/less/bootstrap.css
