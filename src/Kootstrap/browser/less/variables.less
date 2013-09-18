@@ -64,6 +64,8 @@
 @headings-font-family:    @font-family-base;
 @headings-font-weight:    500;
 @headings-line-height:    1.1;
+@headings-color:          inherit;
+
 
 // Iconography
 // -------------------------
@@ -92,6 +94,7 @@
 @border-radius-large:            4px;
 @border-radius-small:            2px;
 
+@component-active-color:         #fff;
 @component-active-bg:            #25b7ff;
 
 @caret-width-base:               4px;
@@ -181,12 +184,12 @@
 @dropdown-fallback-border:       #ccc;
 @dropdown-divider-bg:            #e5e5e5;
 
-@dropdown-link-active-color:     #fff;
-@dropdown-link-active-bg:        @component-active-bg;
-
 @dropdown-link-color:            @gray-dark;
-@dropdown-link-hover-color:      #fff;
-@dropdown-link-hover-bg:         @dropdown-link-active-bg;
+@dropdown-link-hover-color:      darken(@gray-dark, 5%);
+@dropdown-link-hover-bg:         #f5f5f5;
+
+@dropdown-link-active-color:     @component-active-color;
+@dropdown-link-active-bg:        @component-active-bg;
 
 @dropdown-link-disabled-color:   @gray-light;
 
@@ -263,12 +266,13 @@
 @footer-height:                    32px;
 @navbar-height:                    48px;
 @navbar-margin-bottom:             @line-height-computed;
-@navbar-default-color:             #000000;
-@navbar-default-bg:                #f0f0f0;
-@navbar-default-border:            rgba(18, 35, 163, 0.2);
 @navbar-border-radius:             @border-radius-base;
 @navbar-padding-horizontal:        floor(@grid-gutter-width / 2);
 @navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
+
+@navbar-default-color:             #000000;
+@navbar-default-bg:                #f0f0f0;
+@navbar-default-border:            rgba(18, 35, 163, 0.2);
 
 // Navbar links
 @navbar-default-link-color:                #777;
@@ -342,8 +346,9 @@
 @nav-tabs-justified-active-link-border-color:     @body-bg;
 
 // Pills
+@nav-pills-border-radius:                   @border-radius-base;
 @nav-pills-active-link-hover-bg:            @component-active-bg;
-@nav-pills-active-link-hover-color:         #fff;
+@nav-pills-active-link-hover-color:         @component-active-color;
 
 
 // Pagination
@@ -380,14 +385,6 @@
 // Form states and alerts
 // -------------------------
 
-@state-warning-text:             #c09853;
-@state-warning-bg:               #fcf8e3;
-@state-warning-border:           darken(spin(@state-warning-bg, -10), 3%);
-
-@state-danger-text:              #b94a48;
-@state-danger-bg:                #f2dede;
-@state-danger-border:            darken(spin(@state-danger-bg, -10), 3%);
-
 @state-success-text:             #468847;
 @state-success-bg:               #dff0d8;
 @state-success-border:           darken(spin(@state-success-bg, -10), 5%);
@@ -395,6 +392,14 @@
 @state-info-text:                #3a87ad;
 @state-info-bg:                  #d9edf7;
 @state-info-border:              darken(spin(@state-info-bg, -10), 7%);
+
+@state-warning-text:             #c09853;
+@state-warning-bg:               #fcf8e3;
+@state-warning-border:           darken(spin(@state-warning-bg, -10), 3%);
+
+@state-danger-text:              #b94a48;
+@state-danger-bg:                #f2dede;
+@state-danger-border:            darken(spin(@state-danger-bg, -10), 3%);
 
 
 // Tooltips
@@ -496,7 +501,7 @@
 @list-group-border-radius:    @border-radius-base;
 
 @list-group-hover-bg:         #f5f5f5;
-@list-group-active-color:     #fff;
+@list-group-active-color:     @component-active-color;
 @list-group-active-bg:        @component-active-bg;
 @list-group-active-border:    @list-group-active-bg;
 
@@ -508,7 +513,7 @@
 // -------------------------
 @panel-bg:                    #fff;
 @panel-inner-border:          #ddd;
-@panel-border-radius:         3px;
+@panel-border-radius:         @border-radius-base;
 @panel-footer-bg:             #f5f5f5;
 
 @panel-default-text:          @gray-dark;
@@ -571,6 +576,8 @@
 @breadcrumb-bg:               transparent;
 @breadcrumb-color:            #ccc;
 @breadcrumb-active-color:     @gray-light;
+@breadcrumb-separator:        "\F054";
+@breadcrumb-font:             FontAwesome;
 
 
 // Carousel
@@ -591,8 +598,8 @@
 
 // Close
 // ------------------------
-@close-color:                 #000;
 @close-font-weight:           bold;
+@close-color:                 #000;
 @close-text-shadow:           0 1px 0 #fff;
 
 
@@ -630,9 +637,12 @@
 
 // Small screen / tablet
 @container-tablet:            ((720px + @grid-gutter-width));
+@container-sm:                 @container-tablet;
 
 // Medium screen / desktop
 @container-desktop:           ((940px + @grid-gutter-width));
+@container-md:                 @container-desktop;
 
 // Large screen / wide desktop
-@container-lg-desktop:        ((1140px + @grid-gutter-width));
+@container-large-desktop:      ((1140px + @grid-gutter-width));
+@container-lg:                 @container-large-desktop;
