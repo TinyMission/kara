@@ -3003,7 +3003,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .input-group-addon {
-  padding: 4px 2px;
+  padding: 4px 8px;
   font-size: 13px;
   font-weight: normal;
   line-height: 1;
@@ -3994,7 +3994,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .pagination > li > span {
   position: relative;
   float: left;
-  padding: 4px 2px;
+  padding: 4px 8px;
   margin-left: -1px;
   line-height: 1.5384615384615385;
   text-decoration: none;
