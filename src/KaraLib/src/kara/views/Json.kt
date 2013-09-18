@@ -3,77 +3,66 @@ package kara
 import javax.servlet.http.HttpServletResponse
 import org.codehaus.jackson.map.ObjectMapper
 import java.util.*
+import org.codehaus.jackson.map.annotate.JsonRootName
 
 /** JSON Action Result.
  */
-class Json(val obj: Any): ActionResult {
+class JsonResult(val json: JsonElement) : ActionResult {
     override fun writeResponse(context: ActionContext) {
         val out = context.response.getWriter()
-        val mapper = ObjectMapper()
-        mapper.writeValue(out, obj)
+        val result = StringBuilder()
+        json.build(result)
+        out?.print(result.toString())
         out?.flush()
     }
 }
 
-fun jsonReflect(obj: Any): ActionResult = Json(obj)
+fun jsonString(value: String): JsonValue = JsonValue(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n"))
 
-fun jsonQuote(value : String) : String = value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n")
+trait JsonElement {
+    fun build(builder: StringBuilder)
+}
 
-class JsonArray {
-    val elements = ArrayList<Any>()
-
-    fun jsonValue(value : String)  = elements.add(jsonQuote(value))
-    fun jsonValue(value : Int) = elements.add(value)
-
-    fun jsonObject(body: JsonObject.()->Unit) {
-        val value = JsonObject()
-        value.body()
-        elements.add(value)
+class JsonValue(val value: Any) : JsonElement {
+    override fun build(builder: StringBuilder) {
+        when (value) {
+            is Int -> builder.append(value)
+            is Long -> builder.append(value)
+            is Boolean -> builder.append(value)
+            else -> builder.append("\"${value}\"")
+        }
     }
+}
 
-    fun jsonArray(body: JsonArray.()->Unit) {
-        val value = JsonArray()
-        value.body()
-        elements.add(value)
-    }
+class JsonRoot : JsonElement {
+    private var _element : JsonElement? = null
+    fun set(element : JsonElement) = _element = element
+    override fun build(builder: StringBuilder) = _element?.build(builder)
+}
 
-    fun build(builder: StringBuilder) {
+class JsonArray : JsonElement {
+    private val elements = ArrayList<JsonElement>()
+
+    fun add(value: JsonElement) = elements.add(value)
+
+    override fun build(builder: StringBuilder) {
         builder.append("[")
         var first = true
         for(item in elements) {
             if (!first)
                 builder.append(",")
-            when (item) {
-                is String -> builder.append("\"${item}\"")
-                is Int -> builder.append("${item}")
-                is JsonObject -> item.build(builder)
-                is JsonArray -> item.build(builder)
-                else -> throw RuntimeException("Invalid entity in Json builder")
-            }
+            item.build(builder)
             first = false
         }
         builder.append("]")
     }
 }
 
-class JsonObject {
-    val properties = HashMap<String, Any>()
+class JsonObject : JsonElement {
+    private val properties = HashMap<String, JsonElement>()
+    fun put(name: String, value: JsonElement) = properties.put(name, value)
 
-    fun jsonValue(name : String, value : String) = properties.put(name, jsonQuote(value))
-    fun jsonValue(name : String, value : Int) = properties.put(name, value)
-    fun jsonObject(name : String, body: JsonObject.()->Unit) {
-        val value = JsonObject()
-        value.body()
-        properties.put(name, value)
-    }
-
-    fun jsonArray(name : String, body: JsonArray.()->Unit) {
-        val value = JsonArray()
-        value.body()
-        properties.put(name, value)
-    }
-
-    fun build(builder: StringBuilder) {
+    override fun build(builder: StringBuilder) {
         builder.append("{")
         var first = true
         for((key, value) in properties) {
@@ -81,31 +70,69 @@ class JsonObject {
                 builder.append(",")
             builder.append("\"${key}\"")
             builder.append(":")
-            when (value) {
-                is String -> builder.append("\"${value}\"")
-                is JsonObject -> value.build(builder)
-                is JsonArray -> value.build(builder)
-                is Int -> builder.append(value)
-                else -> throw RuntimeException("Invalid entity in Json builder")
-            }
+            value.build(builder)
             first = false
         }
         builder.append("}")
     }
 }
 
-fun jsonArray(body: JsonArray.()->Unit): ActionResult {
-    val array = JsonArray()
-    array.body()
-    val result = StringBuilder()
-    array.build(result)
-    return TextResult(result.toString())
+fun JsonArray.jsonValue(value: String) = add(jsonString(value))
+fun JsonArray.jsonValue(value: Number) = add(JsonValue(value))
+fun JsonArray.jsonValue(value: Boolean) = add(JsonValue(value))
+fun JsonObject.jsonValue(name: String, value: String) = put(name, jsonString(value))
+fun JsonObject.jsonValue(name: String, value: Number) = put(name, JsonValue(value))
+fun JsonObject.jsonValue(name: String, value: Boolean) = put(name, JsonValue(value))
+
+fun JsonArray.jsonObject(body: JsonObject.() -> Unit) {
+    val value = JsonObject()
+    value.body()
+    add(value)
 }
 
-fun jsonObject(body: JsonObject.()->Unit): ActionResult {
+fun JsonArray.jsonArray(body: JsonArray.() -> Unit) {
+    val value = JsonArray()
+    value.body()
+    add(value)
+}
+fun JsonObject.jsonObject(name: String, body: JsonObject.() -> Unit) {
+    val value = JsonObject()
+    value.body()
+    put(name, value)
+}
+
+fun JsonObject.jsonArray(name: String, body: JsonArray.() -> Unit) {
+    val value = JsonArray()
+    value.body()
+    put(name, value)
+}
+
+fun JsonRoot.jsonArray(body: JsonArray.() -> Unit) {
+    val array = JsonArray()
+    array.body()
+    set(array)
+}
+
+fun JsonRoot.jsonObject(body: JsonObject.() -> Unit){
     val obj = JsonObject()
     obj.body()
-    val result = StringBuilder()
-    obj.build(result)
-    return TextResult(result.toString())
+    set(obj)
+}
+
+fun jsonArray(body: JsonArray.() -> Unit) : JsonElement {
+    val array = JsonArray()
+    array.body()
+    return array
+}
+
+fun jsonObject(body: JsonObject.() -> Unit) : JsonElement {
+    val obj = JsonObject()
+    obj.body()
+    return obj
+}
+
+fun json(body: JsonRoot.() -> Unit) : JsonResult {
+    val json = JsonRoot()
+    json.body()
+    return JsonResult(json)
 }
