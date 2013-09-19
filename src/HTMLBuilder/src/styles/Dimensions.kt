@@ -1,5 +1,7 @@
 package kotlin.html
 
+import java.text.DecimalFormat
+
 
 enum class LinearUnits(val value: String) {
     percent : LinearUnits("%")
@@ -30,7 +32,7 @@ class LinearDimension(var value: Double, var units: LinearUnits) {
     fun toString(): String {
         if (units == LinearUnits.auto)
             return "auto"
-        return "$value$units"
+        return "${DecimalFormat("#").format(value)}$units"
     }
 }
 
@@ -42,7 +44,7 @@ fun isLinearDimension(s: String): Boolean {
     return s.endsWith("px") || s.endsWith("em") || s.endsWith("%")
 }
 
-/** Extenion property to convert a double to a LinearDimension with units em. */
+/** Extenion property to convejkrt a double to a LinearDimension with units em. */
 val Double.em: LinearDimension
     get() {
         return LinearDimension(this, LinearUnits.em)
