@@ -2433,7 +2433,8 @@ fieldset[disabled] .btn-link:focus {
 }
 
 .btn-lg {
-  padding: 16px 16px;
+  height: 32px;
+  padding: 4px 8px;
   font-size: 16px;
   line-height: 1.33;
   border-radius: 4px;
@@ -2796,7 +2797,8 @@ input[type="button"].btn-block {
 }
 
 .btn-group-lg > .btn {
-  padding: 16px 16px;
+  height: 32px;
+  padding: 4px 8px;
   font-size: 16px;
   line-height: 1.33;
   border-radius: 4px;
