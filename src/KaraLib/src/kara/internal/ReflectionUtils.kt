@@ -19,7 +19,8 @@ fun Class<*>.objectInstance() : Any? {
 fun Class<*>.routePrefix() : String {
     val owner = getEnclosingClass()
     val defaultPart = if (owner == null) "" else getSimpleName().toLowerCase()
-    val part = getAnnotation(javaClass<Path>())?.path ?: defaultPart
+    val annotatedPath = getAnnotation(javaClass<Path>())?.path
+    val part = if (annotatedPath == null || annotatedPath.isEmpty()) defaultPart else annotatedPath
 
     val base = if (owner == null) "" else owner.routePrefix()
     return base.appendPathElement(part)
