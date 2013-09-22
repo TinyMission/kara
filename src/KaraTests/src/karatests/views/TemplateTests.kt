@@ -3,6 +3,7 @@ package karatests.views
 import kotlin.test.*
 import kotlin.html.*
 import kara.*
+import kara.internal.*
 import org.junit.*
 import org.apache.log4j.BasicConfigurator
 import karatests.mock.*
@@ -19,66 +20,61 @@ class TemplateTests() {
 
     }
 
-    Test fun classTemplate() {
+    Test fun funTemplate() {
         val response = mockDispatch("GET", "/template/2")
         val output = response.stringOutput()
         assertEquals("text/html", response._contentType, "Content type should be html")
-
-    }
-
-    Test fun funTemplate() {
-        val response = mockDispatch("GET", "/template/3")
-        val output = response.stringOutput()
-        assertEquals("text/html", response._contentType, "Content type should be html")
-
+        assertTrue(output?.contains("header/div") as Boolean, "View contains header placeholder")
+        assertTrue(output?.contains("content/left/span") as Boolean, "View contains content/left placeholder")
+        assertTrue(output?.contains("content/right/span") as Boolean, "View contains content/right placeholder")
     }
 }
 
-class DefaultPageTemplate : HtmlTemplate<DefaultPageTemplate>() {
-    val header = HtmlPlaceholder<BODY>()
-    val content = HtmlPlaceholder<BODY>()
+class ContentTemplate : HtmlTemplate<ContentTemplate, BODY>() {
+    class object : TemplateBuilder<ContentTemplate> { override fun create(): ContentTemplate = ContentTemplate() }
 
-    override fun HTML.render(view: HtmlTemplateView<DefaultPageTemplate>) {
-        head {
+    val left = Placeholder<DIV>()
+    val right = Placeholder<DIV>()
 
+    override fun BODY.render() {
+        div {
+            insert(left)
         }
+        div {
+            insert(right)
+        }
+    }
+}
 
+class PageTemplate : HtmlTemplate<PageTemplate, HTML>() {
+    val header = Placeholder<BODY>()
+    val content = TemplatePlaceholder<BODY, ContentTemplate>()
+
+    override fun HTML.render() {
+        head { }
         body {
             insert(header)
-            insert(content)
+            insert(ContentTemplate(), content)
         }
     }
 }
-fun view(view: DefaultPageTemplate.() -> Unit) = HtmlTemplateView<DefaultPageTemplate>(DefaultPageTemplate(), view)
+fun view(view: PageTemplate.() -> Unit) = HtmlTemplateView<PageTemplate>(PageTemplate(), view)
 
 fun SomeFunView() = view {
     header {
-        div {
-
-        }
+        div { +"header/div" }
     }
 
     content {
-        span {
-
+        left {
+            span { +"content/left/span" }
+        }
+        right {
+            span { +"content/right/span" }
         }
     }
 
 }
-
-class SomeView() : HtmlTemplateView<DefaultPageTemplate>(DefaultPageTemplate(), {
-    header {
-        div {
-
-        }
-    }
-
-    content {
-        span {
-
-        }
-    }
-})
 
 
 

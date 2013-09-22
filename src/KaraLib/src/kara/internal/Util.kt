@@ -1,13 +1,32 @@
 package kara.internal
 
 import java.util.*
+import kotlin.html.*
 
-/** Maps a list by applying a function to each element. */
-fun <T, R> List<T>.map(transform : (T) -> R) : List<R> {
-    val result = ArrayList<R>()
-    for (item in this)
-        result.add(transform(item))
-    return result
+/*
+class HtmlBodyTagBuilder(val outer: HtmlBodyTag.(HtmlBodyTag.() -> Unit) -> Unit) {
+    fun HtmlBodyTag.invoke(inner: HtmlBodyTag.() -> Unit) { outer(inner) }
 }
 
+public fun HtmlBodyTag.testFetch() {
+    val tag = fetch("#".link()).every(5)
+    tag {
+        span { +"text" }
+    }
+}
+
+fun HtmlBodyTagBuilder.every(duration : Int) : HtmlBodyTagBuilder = HtmlBodyTagBuilder {
+    outer {
+        attribute("every", "$duration")
+        it()
+    }
+}
+
+fun HtmlBodyTag.fetch(url: Link) = HtmlBodyTagBuilder {
+    div {
+        it()
+    }
+}
+
+*/
 

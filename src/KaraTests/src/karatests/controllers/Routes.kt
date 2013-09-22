@@ -31,13 +31,14 @@ object Routes {
                 }
 
                 content {
-                    span {
+                    left {
+                        span {
 
+                        }
                     }
                 }
             }
-            2 -> SomeView()
-            3 -> SomeFunView()
+            2 -> SomeFunView()
             else -> ErrorResult(404, "Not found")
         }
     })
