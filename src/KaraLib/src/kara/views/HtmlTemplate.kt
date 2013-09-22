@@ -2,19 +2,30 @@ package kara
 
 import kotlin.html.*
 
-public class HtmlPlaceholder<T : HtmlElement>() {
-    private var content: T.() -> Unit = { }
-    fun invoke(content: T.() -> Unit) {
-        this.content = content
-    }
-    fun T.render() {
-        content()
-    }
+public class TemplatePlaceholder<TOuter, TTemplate>() {
+    private var content: TTemplate.() -> Unit = { }
+    fun invoke(content: TTemplate.() -> Unit) { this.content = content }
+    fun TTemplate.render() { content() }
 }
 
-public fun <T : HtmlTag> T.insert(placeholder: HtmlPlaceholder<T>): Unit = with(placeholder) { render() }
+public class Placeholder<TOuter>() {
+    private var content: TOuter.() -> Unit = { }
+    fun invoke(content: TOuter.() -> Unit) { this.content = content }
+    fun TOuter.render() { content() }
+}
 
-public open class HtmlTemplateView<T : HtmlTemplate<T>>(val template: T, val build: T.() -> Unit) : ActionResult {
+trait TemplateBuilder<Template> { fun create(): Template }
+
+public fun <TOuter> TOuter.insert(placeholder: Placeholder<TOuter>): Unit = with(placeholder) { render() }
+
+fun <TTemplate, TOuter> TOuter.insert(template : TTemplate, placeholder: TemplatePlaceholder<TOuter, TTemplate>)
+        where TTemplate : HtmlTemplate<TTemplate, TOuter> {
+    with(placeholder) { template.render() }
+    with(template) { render() }
+
+}
+
+public open class HtmlTemplateView<T : HtmlTemplate<T, HTML>>(val template: T, val build: T.() -> Unit) : ActionResult {
     override fun writeResponse(context: ActionContext) {
         context.response.setContentType("text/html")
         val writer = context.response.getWriter()!!
@@ -22,13 +33,13 @@ public open class HtmlTemplateView<T : HtmlTemplate<T>>(val template: T, val bui
         val page = HTML()
         with(template) {
             with(view) { build() }
-            with(page) { render(view) }
+            with(page) { render() }
         }
         writer.write(page.toString())
         writer.flush()
     }
 }
 
-public abstract class HtmlTemplate<T : HtmlTemplate<T>>() {
-    abstract fun HTML.render(view: HtmlTemplateView<T>)
+public abstract class HtmlTemplate<T : HtmlTemplate<T, TOuter>, TOuter>() {
+    abstract fun TOuter.render()
 }
