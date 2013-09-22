@@ -10,6 +10,7 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="HTMLBuilder" />
     <orderEntry type="module" module-name="KaraLib" />
+    <orderEntry type="library" name="jQuery-2.0.0" level="application" />
   </component>
 </module>
 

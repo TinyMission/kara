@@ -139,7 +139,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
 
 }
 
-open class TransparentTag(containtingTag: HtmlTag?): HtmlBodyTag(containtingTag, "$$$ NOT FOR RENDER $$$", contentStyle = ContentStyle.propagate) {
+open class TransparentTag(containtingTag: HtmlTag?): HtmlBodyTag(containtingTag, "\$\$transaprent\$\$", contentStyle = ContentStyle.propagate) {
     override fun renderElement(builder: StringBuilder, indent: String) {
         for (child in children) {
             child.renderElement(builder, indent)

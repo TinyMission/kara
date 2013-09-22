@@ -2,43 +2,59 @@ package kotlin.html.bootstrap
 
 import kotlin.html.*
 
-public class BIND(containingTag : HtmlTag): TransparentTag(containingTag)
+public class BIND(containingTag: HtmlTag) : TransparentTag(containingTag)
+public class FETCH(containingTag: HtmlTag) : TransparentTag(containingTag)
 
-public class TEMPLATE(containingTag: HtmlTag): TransparentTag(containingTag)
-
-fun HtmlBodyTag.template(dataUrl: Link, content: TEMPLATE.() -> Unit) {
-    val t = TEMPLATE(this)
-    t.content()
-
-    for (child in t.children) {
-        if (child is HtmlBodyTag) {
-            child["data-url"] = dataUrl.href()
-            val oldClasses = child.tryGet("class")
-            if (oldClasses == null) {
-                child.c = s("template")
+fun HtmlTag.applyAttributes(apply: HtmlTag.() -> Unit): Boolean {
+    for (child in children) {
+        if (child is HtmlTag) {
+            if (!(child is TransparentTag)) {
+                child.apply()
+                return true
             }
-            else {
-                child.c = s("template $oldClasses")
-            }
+            if (child.applyAttributes(apply))
+                return true
         }
     }
+    return false
 }
 
-fun HtmlBodyTag.bind(attribute: String, property: String) {
+fun HtmlTag.fetch(dataUrl: Link, interval: Int = 0, content: FETCH.() -> Unit) {
+    val t = FETCH(this)
+    t.content()
+    if (!t.applyAttributes {
+        attribute("data-url", dataUrl.href())
+        attribute("data-use", "bind")
+        if (interval > 0) {
+            attribute("data-interval", interval.toString())
+        }
+    }) throw Exception("No tag to apply attributes to")
+}
+
+fun HtmlTag.bindIf(attribute: String, condition: String, trueValue: String, falseValue: String? = null) {
+    if (falseValue != null)
+        attribute("bind-$attribute", "if:${condition}:${trueValue}:${falseValue}")
+    else
+        attribute("bind-$attribute", "if:${condition}:${trueValue}")
+}
+
+fun HtmlTag.bind(attribute: String, property: String) {
     attribute("bind-$attribute", property)
 }
 
-fun HtmlBodyTag.bindText(property: String) {
+fun HtmlTag.bindText(property: String) {
     attribute("bind-text", property)
 }
 
-fun HtmlBodyTag.bind(property: String, content: BIND.() -> Unit) {
+fun HtmlTag.bindHtml(property: String) {
+    attribute("bind-html", property)
+}
+
+fun HtmlTag.bind(property: String, content: BIND.() -> Unit) {
     val b = BIND(this)
     b.content()
+    if (!b.applyAttributes {
+        attribute("bind", property)
+    }) throw Exception("No tag to apply attributes to")
 
-    for (child in b.children) {
-        if (child is HtmlTag) {
-            child["data-bind"] = property
-        }
-    }
 }
