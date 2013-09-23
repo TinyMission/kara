@@ -1,4 +1,5 @@
-var sj_globalBindingId = 1
+var sj_globalBindingId = 1;
+
 function bind(node, data) {
     node.each(function () {
         bindNodes(this, data)
@@ -88,9 +89,9 @@ function bind(node, data) {
     }
 
     function bindValue(binding, value) {
-        var parameters = binding.split(":")
+        var parameters = binding.split(":");
         if (parameters.length > 1) {
-            var command = parameters[0]
+            var command = parameters[0];
             switch (command) {
                 case "if":
                     return command_if(parameters, value);
