@@ -22,16 +22,14 @@ import java.nio.file.attribute.BasicFileAttributes
  */
 abstract class Application(val config: ApplicationConfig, private vararg val routes: Any) {
     val logger = Logger.getLogger(this.javaClass)!!
-    private var lastRequestServedAt: Long = 0
     private var _context: ApplicationContext? = null
     private val watchKeys = ArrayList<WatchKey>()
     private val contextLock = Object()
 
     val context: ApplicationContext
         get() = synchronized(contextLock) {
-            val now = System.currentTimeMillis()
             if (config.isDevelopment()) {
-                if (watchKeys.any { it.pollEvents()!!.size() > 0 }) {
+                if (watchKeys.flatMap { it.pollEvents()!! }.size() > 0) {
                     destroyContext()
                     _context = null
                 }
@@ -42,7 +40,6 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
                 context = createContext()
                 _context = context
             }
-            lastRequestServedAt = System.currentTimeMillis()
             context!!
         }
 
@@ -69,7 +66,6 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
         watchKeys.forEach { it.cancel() }
     }
 
-
     fun watchUrls(resourceTypes: List<Class<out Resource>>) {
         val paths = HashSet<Path>()
         for (loader in resourceTypes.map { it.getClassLoader() }.toSet()) {
@@ -95,7 +91,6 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
         val watcher = FileSystems.getDefault()!!.newWatchService();
         watchKeys.addAll(paths.map { it.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)!! })
     }
-
 
     open fun start() {
     }
