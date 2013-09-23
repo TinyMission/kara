@@ -22,6 +22,7 @@
       <element id="library" level="project" name="Reflections" />
       <element id="library" level="project" name="Jetty" />
       <element id="library" level="project" name="ServletAPI" />
+      <element id="library" level="project" name="commons-io-2.4" />
     </root>
   </artifact>
 </component>
