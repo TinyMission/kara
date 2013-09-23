@@ -5,9 +5,9 @@ public enum class HttpMethod {
     POST
     PUT
     DELETE
+    OPTIONS
 
     // WebDav
-    OPTIONS
     PROPFIND
     REPORT
 }
