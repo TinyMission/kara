@@ -20,6 +20,23 @@ fun Class<*>.objectInstance(): Any? {
 
 fun String?.asNotEmpty(): String? = if (this == null) null else if (!isEmpty()) this else null
 
+fun String.appendPathElement(part : String) : String {
+    val b = StringBuilder()
+    b.append(this)
+    if (!this.endsWith("/")) {
+        b.append("/")
+    }
+
+    if (part.startsWith('/')) {
+        b.append(part.substring(1))
+    }
+    else {
+        b.append(part)
+    }
+
+    return b.toString()
+}
+
 fun Class<*>.routePrefix(): String {
     val owner = getEnclosingClass()
     val defaultPart = if (owner == null) "" else getSimpleName().toLowerCase()
