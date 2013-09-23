@@ -3,4 +3,4 @@ package karademo
 import kara.*
 
 
-public class Application(config: AppConfig) : kara.Application(config)
+public class Application(config: ApplicationConfig) : kara.Application(config)

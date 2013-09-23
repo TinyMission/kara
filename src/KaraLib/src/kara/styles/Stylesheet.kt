@@ -6,7 +6,7 @@ import java.io.FileOutputStream
 
 /** A class for programmatically generating CSS stylesheets.
  */
-abstract class Stylesheet(var namespace : String = "") : Resource("text/css", "css") {
+abstract class Stylesheet(var namespace : String = "") : StaticResource() {
     /** Subclasses should override this to actual perform the stylesheet building.
     */
     abstract fun CssElement.render()
@@ -28,7 +28,7 @@ abstract class Stylesheet(var namespace : String = "") : Resource("text/css", "c
             cache = Pair(toString().toByteArray("UTF-8"), System.currentTimeMillis())
             cache!!
         }
-        return ResourceContent(stamp, bytes.size, {bytes.inputStream})
+        return ResourceContent("text/css", stamp, bytes.size, {bytes.inputStream})
     }
 }
 

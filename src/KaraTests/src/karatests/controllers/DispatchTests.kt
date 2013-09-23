@@ -15,12 +15,12 @@ class DispatchTests() {
     }
 
     Test fun runDispatchTests() {
-        val appConfig = AppConfig()
+        val appConfig = ApplicationConfig("test")
         appConfig["kara.appPackage"] = "karatests.controllers"
 
         val app = object : Application(appConfig) {}
 
-        val dispatcher = ActionDispatcher(app, scanObjects(array(Routes)))
+        val dispatcher = ResourceDispatcher(app.context, scanObjects(array(Routes)))
 
         var actionInfo = dispatcher.findDescriptor("GET", "/")!!
         assertNotNull(actionInfo)
@@ -30,7 +30,7 @@ class DispatchTests() {
 
         // foo controller
         actionInfo = dispatcher.findDescriptor("GET", "/foo/bar")!!
-        assertEquals(Routes.Foo.Bar().javaClass, actionInfo.requestClass)
+        assertEquals(Routes.Foo.Bar().javaClass, actionInfo.resourceClass)
 
         dispatcher.findDescriptor("GET", "/foo/bar/baz")!! // nested route
 
@@ -51,7 +51,7 @@ class DispatchTests() {
         // crud controller
         request = mockRequest("GET", "/crud?name=value")
         actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // empty route with parameters
-        assertEquals(Routes.Crud.Index().javaClass, actionInfo.requestClass)
+        assertEquals(Routes.Crud.Index().javaClass, actionInfo.resourceClass)
         params = actionInfo.buildParams(request)
         assertEquals("value", params["name"])
 

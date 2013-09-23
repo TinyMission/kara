@@ -29,7 +29,7 @@ fun Class<*>.routePrefix(): String {
     return base.appendPathElement(part)
 }
 
-fun Class<out Request>.route(): Pair<String, HttpMethod> {
+fun Class<out Resource>.route(): Pair<String, HttpMethod> {
     fun p(part: String) = (getEnclosingClass()?.routePrefix()?:"").appendPathElement(part.replace("#", getSimpleName().toLowerCase()))
     for (ann in getAnnotations()) {
         when (ann) {

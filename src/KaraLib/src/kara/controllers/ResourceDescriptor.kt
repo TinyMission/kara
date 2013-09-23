@@ -15,7 +15,7 @@ import kotlin.properties.delegation.lazy.LazyVal
 
 /** Contains all the information necessary to match a route and execute an action.
  */
-class ActionDescriptor(val route: String, val requestClass: Class<out Request>) {
+class ResourceDescriptor(val route: String, val resourceClass: Class<out Resource>) {
     class object {
         val logger = Logger.getLogger(this.javaClass)!!
 
@@ -89,7 +89,7 @@ class ActionDescriptor(val route: String, val requestClass: Class<out Request>) 
         return params
     }
 
-    fun buildRouteInstance(params: RouteParameters): Request {
+    fun buildRouteInstance(params: RouteParameters): Resource {
         fun find(list: Array<Annotation>): JetValueParameter {
             for (a in list) {
                 if (a is JetValueParameter) return a
@@ -97,7 +97,12 @@ class ActionDescriptor(val route: String, val requestClass: Class<out Request>) 
             throw RuntimeException("Missing Kotlin runtime annotations!");
         }
 
-        val routeConstructor = requestClass.getConstructors()[0] as Constructor<Request>
+        val objectInstance = resourceClass.objectInstance()
+        if (objectInstance != null)
+            return objectInstance as Resource
+
+        val constructors = resourceClass.getConstructors()
+        val routeConstructor = constructors[0] as Constructor<Resource>
 
         val paramTypes = routeConstructor.getParameterTypes()!!
         val annotations = routeConstructor.getParameterAnnotations()
@@ -121,14 +126,14 @@ class ActionDescriptor(val route: String, val requestClass: Class<out Request>) 
     }
 
     /** Execute the action based on the given request and populate the response. */
-    public fun exec(app: Application, request: HttpServletRequest, response: HttpServletResponse) {
+    public fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = buildRouteInstance(params)
-        val context = ActionContext(app, request, response, params)
-        context.withContext {
+        val actionContext = ActionContext(context, request, response, params)
+        actionContext.withContext {
             var result: ActionResult? = null
             try {
-                result = routeInstance.handle(context)
+                result = routeInstance.handle(actionContext)
             }
             catch (ex: Throwable) {
                 logger.warn("exec error: ${ex.getMessage()}");
@@ -137,15 +142,15 @@ class ActionDescriptor(val route: String, val requestClass: Class<out Request>) 
                 var error: Throwable = ex
                 if (ex.getCause() != null)
                     error = ex.getCause()!!
-                ErrorView(error).writeResponse(context)
+                ErrorView(error).writeResponse(actionContext)
             }
 
-            result?.tryWriteResponse(context)
+            result?.tryWriteResponse(actionContext)
         }
     }
 
     public fun toString(): String {
-        return "Action{route=$route, handler=${requestClass}}"
+        return "Resource<${resourceClass}> at $route"
     }
 
 }

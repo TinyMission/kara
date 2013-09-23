@@ -5,11 +5,11 @@ import java.util.ArrayList
 import kara.*
 import org.reflections.util.ClasspathHelper
 
-fun scanPackageForRequests(prefix : String, classloader : ClassLoader) : List<Class<out Request>> {
+fun scanPackageForRequests(prefix : String, classloader : ClassLoader) : List<Class<out Resource>> {
     try {
         val reflections = Reflections(prefix, classloader)
         return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Path>()).flatMap {
-            reflections.getTypesAnnotatedWith(it)!!.toList().filter { javaClass<Request>().isAssignableFrom(it) }.map { it as Class<Request> }
+            reflections.getTypesAnnotatedWith(it)!!.toList().filter { javaClass<Resource>().isAssignableFrom(it) }.map { it as Class<Request> }
         }
     }
     catch(e: Throwable) {
@@ -18,8 +18,8 @@ fun scanPackageForRequests(prefix : String, classloader : ClassLoader) : List<Cl
     }
 }
 
-fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<Class<out Request>> {
-    val answer = ArrayList<Class<out Request>>()
+fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<Class<out Resource>> {
+    val answer = ArrayList<Class<out Resource>>()
 
     fun scan(routesObject : Any) {
         val newClass = classloader?.loadClass(routesObject.javaClass.getName()) ?: routesObject.javaClass
@@ -29,7 +29,7 @@ fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<C
                 scan(objectInstance)
             }
             else if (javaClass<Request>().isAssignableFrom(innerClass)) {
-                answer.add(innerClass as Class<Request>)
+                answer.add(innerClass as Class<Resource>)
             }
         }
     }

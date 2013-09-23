@@ -6,6 +6,7 @@ import kara.*
 
 /** The default stylesheet for the demo application.
  */
+Get("/dynamic/default.css")
 object DefaultStyles : Stylesheet() {
 
     override fun CssElement.render() {

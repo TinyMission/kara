@@ -15,7 +15,7 @@ fun HttpSession.getDescription() : String {
 /** This contains information about the current rendering action.
  * An action context is provided by the dispatcher to the action result when it's rendered.
  */
-class ActionContext(val app: Application,
+class ActionContext(val application: ApplicationContext,
                     val request : HttpServletRequest,
                     val response : HttpServletResponse,
                     val params : RouteParameters) {

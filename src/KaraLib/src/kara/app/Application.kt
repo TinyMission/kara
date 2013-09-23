@@ -11,98 +11,55 @@ import java.io.File
 import org.apache.log4j.Logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.properties.Delegates
+import kotlin.properties.*
 
 /** The base Kara application class.
  */
-abstract class Application(val config: AppConfig, private vararg val routes: Any) {
-    private val appLogger = Logger.getLogger(this.javaClass)!!
-    val routePackages by Delegates.lazy { config.routePackages ?: listOf("${config.appPackage}.routes", "${config.appPackage}.styles") }
-    private var _dispatcher: ActionDispatcher? = null
+abstract class Application(val config: ApplicationConfig, private vararg val routes: Any) {
+    val logger = Logger.getLogger(this.javaClass)!!
     private var lastRequestServedAt: Long = 0
-    public val dispatcher: ActionDispatcher
-        get() {
+    private var _context: ApplicationContext? = null
+    private val contextLock = Object()
+
+    val context: ApplicationContext
+        get() = synchronized(contextLock) {
             val now = System.currentTimeMillis()
             if (config.isDevelopment()) {
                 if (now - lastRequestServedAt > 300.toLong()) {
-                    _dispatcher = null
+                    _context?.dispose()
+                    _context = null
                 }
             }
 
-            var d = _dispatcher
-            if (d == null) {
-                d = buildDispatcher()
-                _dispatcher = d
+            var context = _context
+            if (context == null) {
+                context = createContext()
+                _context = context
             }
             lastRequestServedAt = System.currentTimeMillis()
-            return d!!
+            context!!
         }
 
-    private fun buildDispatcher(): ActionDispatcher {
-        val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
-        if (routes.size != 0) {
-            return ActionDispatcher(this, scanObjects(routes, newClassloader))
+    public fun requestClassloader(current: ClassLoader): ClassLoader =
+            if (config.isDevelopment()) {
+                URLClassLoader(config.classPath, current)
+            } else
+                current
+
+    open fun createContext(): ApplicationContext {
+        val classLoader = requestClassloader(javaClass.getClassLoader()!!)
+        val resourceTypes = if (routes.size != 0) {
+            scanObjects(routes, classLoader)
+        } else {
+            config.routePackages.flatMap { scanPackageForRequests(it, classLoader) }
         }
 
-        val resourceFinder = {
-            (url: String) ->
-            when {
-                url.startsWith("/resources") -> {
-                    try {
-                        val classname = url.substring(0, url.lastIndexOf('.')).trimLeading("/resources/")
-                        val res = Class.forName(classname, true, newClassloader).objectInstance()
-                        if (res is Resource) res as Resource else null
-                    } catch(e: ClassNotFoundException) {
-                        null
-                    }
-
-                }
-                else -> null
-            }
-        }
-
-
-        // Discover routes via reflections
-        return ActionDispatcher(this, routePackages.flatMap { scanPackageForRequests(it, newClassloader) }, resourceFinder)
+        return ApplicationContext(config.routePackages, classLoader, resourceTypes)
     }
 
-    open fun start() {
-        val newClassloader = config.requestClassloader(javaClass.getClassLoader()!!)
-        routePackages.flatMap { scanPackageForStartup(it, newClassloader) }.forEach {
-            val objectInstance = it.objectInstance()
-            if (objectInstance != null) {
-                appLogger.info("Executing startup sequence on $objectInstance")
-                (objectInstance as StartupProcess).init();
-            } else {
-                val instance = it.newInstance()
-                appLogger.info("Executing startup sequence on new instance of $it")
-                instance.init()
-            }
-        }
-    }
+    open fun start() {}
 
     open fun shutDown() {
-
-    }
-
-    public fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
-        fun dispatch(index: Int, request: HttpServletRequest, response: HttpServletResponse): Boolean {
-            return if (index in interceptors.indices) {
-                interceptors[index](request, response) { req, resp ->
-                    dispatch(index + 1, req, resp)
-                }
-            }
-            else {
-                dispatcher.dispatch(request, response)
-            }
-        }
-
-        return dispatch(0, request, response)
-    }
-
-    private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse)->Boolean)->Boolean>()
-
-    public fun intercept(interceptor: (request: HttpServletRequest, response: HttpServletResponse, proceed: (HttpServletRequest, HttpServletResponse)->Boolean)->Boolean) {
-        interceptors.add(interceptor)
+        _context?.dispose()
     }
 }

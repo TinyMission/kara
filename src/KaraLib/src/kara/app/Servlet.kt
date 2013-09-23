@@ -4,31 +4,26 @@ import javax.servlet.http.*
 import java.io.IOException
 import kara.*
 import javax.servlet.ServletConfig
-import kara.app.AppLoader
+import kara.app.ApplicationLoader
 
 open class Servlet() : HttpServlet() {
-    private var _app: Application? = null
+    private var _application: Application? = null
 
-    val app: Application get() {
-        return _app ?: run {
-            _app = loadApp()
-            _app!!
-        }
+    val application: Application get() = _application ?: run {
+        _application = loadApp()
+        _application!!
     }
 
     private fun loadApp(): Application {
-        val config: AppConfig = AppConfig(getInitParameter("environment") ?: "development")
-        getInitParameter("host")?.let{ config.set("host", it) }
-        getInitParameter("port")?.let{ config.set("port", it) }
+        val config: ApplicationConfig = ApplicationConfig(getInitParameter("environment") ?: "development")
+        getInitParameter("host")?.let { config.set("host", it) }
+        getInitParameter("port")?.let { config.set("port", it) }
 
-        val loader = AppLoader(config)
-        loader.loadApp()
-        return loader.application!!
+        return ApplicationLoader(config).load()
     }
 
-
     public override fun destroy() {
-        _app?.shutDown()
+        _application?.shutDown()
     }
 
     protected override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
@@ -40,7 +35,7 @@ open class Servlet() : HttpServlet() {
         req.setCharacterEncoding("UTF-8")
 
         try {
-            if (!app.dispatch(req, resp)) {
+            if (!application.context.dispatch(req, resp)) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND)
             }
         }
