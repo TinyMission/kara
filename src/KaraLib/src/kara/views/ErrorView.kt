@@ -9,13 +9,12 @@ fun Throwable.getStackTrace(): String {
     return os.toString()
 }
 
-
 /**
  * Layout for the standard error view.
  */
-class ErrorLayout(): HtmlLayout() {
-
-    override fun HTML.render(mainView: HtmlView) {
+class ErrorTemplate() : HtmlTemplate<ErrorTemplate, HTML>() {
+    val content = Placeholder<BODY>()
+    override fun HTML.render() {
         head {
             title("Kara Error")
 
@@ -48,7 +47,7 @@ class ErrorLayout(): HtmlLayout() {
         }
 
         body {
-            renderView(mainView)
+            insert(content)
         }
     }
 }
@@ -57,8 +56,8 @@ class ErrorLayout(): HtmlLayout() {
 /**
  * The standard Kara error page.
  */
-class ErrorView(val ex: Throwable): HtmlView(ErrorLayout()) {
-    override fun HtmlBodyTag.render() {
+fun ErrorView(ex: Throwable) = HtmlTemplateView<ErrorTemplate>(ErrorTemplate()) {
+    content {
         div(id = "header") {
             h1 { +"Error Rendering Page" }
             val message = ex.getMessage()
