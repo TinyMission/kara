@@ -1,14 +1,13 @@
-package karademo.views.home
+package karademo.views
 
 import kara.*
 import karademo.models.Book
 import karademo.styles.StyleClasses.*
 import karademo.routes.Home
-import karademo.views.DefaultLayout
 import kotlin.html.*
 
-class Forms(val book : Book) : HtmlView(DefaultLayout()) {
-    override fun HtmlBodyTag.render() {
+fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
+    content {
         h2 { +"Forms" }
         formForBean(book, Home.Update(), FormMethod.post) {
 
@@ -65,3 +64,4 @@ class Forms(val book : Book) : HtmlView(DefaultLayout()) {
         }
     }
 }
+

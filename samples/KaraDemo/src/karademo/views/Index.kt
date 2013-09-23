@@ -1,13 +1,10 @@
-package karademo.views.home
+package karademo.views
 
 import kara.*
-import karademo.views.DefaultLayout
 import kotlin.html.*
 
-class Index(): HtmlView(DefaultLayout()) {
-
-    override fun HtmlBodyTag.render() {
-
+fun Index() = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
+    content {
         p {
             +"This is the demo site for Kara. Below you'll find all of the html content that can be expressed in Kara views."
         }
@@ -25,11 +22,11 @@ class Index(): HtmlView(DefaultLayout()) {
             }
             p { +"Ordered List" }
             ol {
-                li{ +"List Item 1" }
-                li{ +"List Item 2" }
+                li { +"List Item 1" }
+                li { +"List Item 2" }
             }
             fieldset() {
-                label{ +"Text Input" }
+                label { +"Text Input" }
                 input {
                     inputType = InputType.text
                     value = "Text"
