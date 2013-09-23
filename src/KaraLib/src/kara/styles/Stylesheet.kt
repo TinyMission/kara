@@ -6,12 +6,10 @@ import java.io.FileOutputStream
 
 /** A class for programmatically generating CSS stylesheets.
  */
-abstract class Stylesheet(var namespace : String = "") : StaticResource() {
+abstract class Stylesheet(var namespace : String = "") : CachedResource() {
     /** Subclasses should override this to actual perform the stylesheet building.
     */
     abstract fun CssElement.render()
-
-    var cache: Pair<ByteArray, Long>? = null
 
     fun toString() : String {
         val element = CssElement()
@@ -24,11 +22,8 @@ abstract class Stylesheet(var namespace : String = "") : StaticResource() {
     }
 
     override fun content(): ResourceContent {
-        val (bytes, stamp) = cache ?: run {
-            cache = Pair(toString().toByteArray("UTF-8"), System.currentTimeMillis())
-            cache!!
-        }
-        return ResourceContent("text/css", stamp, bytes.size, {bytes.inputStream})
+        val bytes = toString().toByteArray("UTF-8")
+        return ResourceContent("text/css", System.currentTimeMillis(), bytes.size, {bytes.inputStream})
     }
 }
 
