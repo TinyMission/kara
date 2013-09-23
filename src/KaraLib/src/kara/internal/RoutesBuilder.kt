@@ -8,7 +8,7 @@ import org.reflections.util.ClasspathHelper
 fun scanPackageForResources(prefix : String, classloader : ClassLoader) : List<Class<out Resource>> {
     try {
         val reflections = Reflections(prefix, classloader)
-        return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Path>()).flatMap {
+        return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>()).flatMap {
             reflections.getTypesAnnotatedWith(it)!!.toList().filter { javaClass<Resource>().isAssignableFrom(it) }.map { it as Class<Resource> }
         }
     }

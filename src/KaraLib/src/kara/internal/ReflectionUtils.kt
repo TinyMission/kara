@@ -40,7 +40,7 @@ fun String.appendPathElement(part : String) : String {
 fun Class<*>.routePrefix(): String {
     val owner = getEnclosingClass()
     val defaultPart = if (owner == null) "" else getSimpleName().toLowerCase()
-    val part = getAnnotation(javaClass<Path>())?.path.asNotEmpty() ?: defaultPart
+    val part = getAnnotation(javaClass<Location>())?.path.asNotEmpty() ?: defaultPart
 
     val base = if (owner == null) "" else owner.routePrefix()
     return base.appendPathElement(part)
