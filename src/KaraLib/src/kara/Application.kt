@@ -29,7 +29,11 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
     val context: ApplicationContext
         get() = synchronized(contextLock) {
             if (config.isDevelopment()) {
-                if (watchKeys.flatMap { it.pollEvents()!! }.size() > 0) {
+                val changes = watchKeys.flatMap { it.pollEvents()!! }
+                if (changes.size() > 0) {
+                    changes.take(5).forEach {
+                        logger.info("Change to ${it.context()} caused ApplicationContext restart.")
+                    }
                     destroyContext()
                     _context = null
                 }
@@ -64,20 +68,31 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
     open fun destroyContext() {
         _context?.dispose()
         watchKeys.forEach { it.cancel() }
+        watchKeys.clear()
     }
 
     fun watchUrls(resourceTypes: List<Class<out Resource>>) {
         val paths = HashSet<Path>()
-        for (loader in resourceTypes.map { it.getClassLoader() }.toSet()) {
+        val loaders = resourceTypes.map { it.getClassLoader() }.toSet()
+        for (loader in loaders) {
             if (loader is URLClassLoader) {
                 val loaderUrls = loader.getURLs()
                 if (loaderUrls != null) {
+                    loaderUrls.forEach {
+                        logger.debug("Evaluating URL '${it}' to watch for changes.")
+                    }
                     for (url in loaderUrls) {
                         url.getPath()?.let {
-                            val folder = File(URLDecoder.decode(it, "utf-8")).toPath()?.getParent()
+                            val folder = File(URLDecoder.decode(it, "utf-8")).toPath()
                             val visitor = object : SimpleFileVisitor<Path?>() {
                                 override fun preVisitDirectory(dir: Path?, attrs: BasicFileAttributes): FileVisitResult {
                                     paths.add(dir!!)
+                                    return FileVisitResult.CONTINUE
+                                }
+                                override fun visitFile(file: Path?, attrs: BasicFileAttributes): FileVisitResult {
+                                    val dir = file?.getParent()
+                                    if (dir != null)
+                                        paths.add(dir)
                                     return FileVisitResult.CONTINUE
                                 }
                             }
@@ -89,6 +104,9 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
         }
 
         val watcher = FileSystems.getDefault()!!.newWatchService();
+        paths.forEach {
+            logger.debug("Watching ${it} for changes.")
+        }
         watchKeys.addAll(paths.map { it.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)!! })
     }
 
