@@ -1,12 +1,12 @@
-package karademo.routes
+package kara.demo.routes
 
 import kara.*
 import java.util.Date
-import karademo.models.Book
+import kara.demo.models.Book
 
 object Home {
     Get("/")
-    class Index() : Request({ karademo.views.Index() })
+    class Index() : Request({ kara.demo.views.Index() })
 
     Get("/test")
     class Test() : Request({
@@ -26,7 +26,7 @@ object Home {
             description = "This is an excellent book about a boy who gets drawn into an interstellar war."
             isPublished = true
         }
-        karademo.views.Forms(book)
+        kara.demo.views.Forms(book)
     })
 
     Get("/json")
@@ -54,9 +54,9 @@ object Home {
 
     object Posts {
         Get("get/:id") class GetPost(id: Int) : Request({
-            val post = karademo.models.Post(Date(), "Post ${id}")
+            val post = kara.demo.models.Post(Date(), "Post ${id}")
             post.body = "This is the <em>post</em> body"
-            karademo.views.Show(post)
+            kara.demo.views.Show(post)
         })
     }
 }

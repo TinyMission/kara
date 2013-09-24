@@ -1,9 +1,9 @@
-package karademo.views
+package kara.demo.views
 
 import kara.*
-import karademo.models.Book
-import karademo.styles.StyleClasses.*
-import karademo.routes.Home
+import kara.demo.models.Book
+import kara.demo.styles.StyleClasses.*
+import kara.demo.routes.Home
 import kotlin.html.*
 
 fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {

@@ -1,4 +1,4 @@
-package karademo.styles
+package kara.demo.styles
 
 import kara.*
 import kotlin.html.*

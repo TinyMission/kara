@@ -25,7 +25,7 @@ fun <TTemplate, TOuter> TOuter.insert(template : TTemplate, placeholder: Templat
 
 }
 
-public open class HtmlTemplateView<T : HtmlTemplate<T, HTML>>(val template: T, val build: T.() -> Unit) : ActionResult {
+public open class HtmlTemplateView<Template : HtmlTemplate<Template, HTML>>(val template: Template, val build: Template.() -> Unit) : ActionResult {
     override fun writeResponse(context: ActionContext) {
         context.response.setContentType("text/html")
         val writer = context.response.getWriter()!!

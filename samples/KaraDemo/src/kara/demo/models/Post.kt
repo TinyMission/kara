@@ -1,4 +1,4 @@
-package karademo.models
+package kara.demo.models
 
 import java.util.Date
 

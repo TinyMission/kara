@@ -1,7 +1,7 @@
-package karademo.views
+package kara.demo.views
 
 import kara.*
-import karademo.styles.DefaultStyles
+import kara.demo.styles.DefaultStyles
 import kotlin.html.*
 
 class DefaultTemplate : HtmlTemplate<DefaultTemplate, HTML>() {

@@ -1,4 +1,4 @@
-package karademo.models
+package kara.demo.models
 
 enum class BookCategory(val value : String) {
     Fiction: BookCategory("fiction")

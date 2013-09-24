@@ -1,7 +1,7 @@
 {
     "kara": {
-        "publicDir": "samples/KaraDemo/public",
-        "appPackage": "karademo",
-        "appClass": "karademo.Application"
+        "publicDir": "samples/kara.demo/public",
+        "appPackage": "kara.demo",
+        "appClass": "kara.demo.Application"
     }
 }

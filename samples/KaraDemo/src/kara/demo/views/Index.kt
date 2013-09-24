@@ -1,4 +1,4 @@
-package karademo.views
+package kara.demo.views
 
 import kara.*
 import kotlin.html.*

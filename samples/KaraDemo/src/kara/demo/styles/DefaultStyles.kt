@@ -1,7 +1,7 @@
-package karademo.styles
+package kara.demo.styles
 
 import kotlin.html.*
-import karademo.styles.StyleClasses.*
+import kara.demo.styles.StyleClasses.*
 import kara.*
 
 /** The default stylesheet for the demo application.

@@ -1,4 +1,4 @@
-package karademo
+package kara.demo
 
 import kara.*
 
