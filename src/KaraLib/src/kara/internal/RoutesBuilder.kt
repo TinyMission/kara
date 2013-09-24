@@ -28,7 +28,7 @@ fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<C
             if (objectInstance != null) {
                 scan(objectInstance)
             }
-            else if (javaClass<Request>().isAssignableFrom(innerClass)) {
+            else if (javaClass<Resource>().isAssignableFrom(innerClass)) {
                 answer.add(innerClass as Class<Resource>)
             }
         }
