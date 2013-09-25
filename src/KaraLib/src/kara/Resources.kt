@@ -31,3 +31,11 @@ public open class EmbeddedResource(val mime : String, val name: String) : Cached
         return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
     }
 }
+
+public open class Request(private val handler: ActionContext.() -> ActionResult) : Resource(){
+    override fun handle(context: ActionContext): ActionResult = context.handler()
+}
+
+public open class Json(private val handler: ActionContext.() -> JsonElement) : Resource(){
+    override fun handle(context: ActionContext): ActionResult = JsonResult(context.handler())
+}
