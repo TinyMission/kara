@@ -6,7 +6,7 @@ import java.util.*
 /** Base class for object that deserialize parameters to a certain type.
 */
 abstract class ParamTypeDeserializer() {
-    abstract fun deserialize(param : String) : Any?
+    abstract fun deserialize(param : String, paramType: Class<*>) : Any?
     open fun serialize(param: Any): String = param.toString()
 
     abstract fun isThisType(testType : Class<*>) : Boolean
@@ -15,7 +15,7 @@ abstract class ParamTypeDeserializer() {
 /** Deserializer for integers.
 */
 class IntParamDeserializer() : ParamTypeDeserializer() {
-    override fun deserialize(param : String) : Any? {
+    override fun deserialize(param : String, paramType: Class<*>) : Any? {
         if (param.isEmpty()) return null
         return param.toInt()
     }
@@ -28,7 +28,7 @@ class IntParamDeserializer() : ParamTypeDeserializer() {
 /** Deserializer for floats.
 */
 class FloatParamDeserializer() : ParamTypeDeserializer() {
-    override fun deserialize(param : String) : Any? {
+    override fun deserialize(param : String, paramType: Class<*>) : Any? {
         if (param.isEmpty()) return null
         return param.toFloat()
     }
@@ -62,7 +62,7 @@ public object ParamSerializer {
         }
         for (deserializer in _typeDeserializers) {
             if (deserializer.isThisType(paramType)) {
-                return deserializer.deserialize(param)
+                return deserializer.deserialize(param, paramType)
             }
         }
 

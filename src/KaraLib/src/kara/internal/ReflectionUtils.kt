@@ -18,6 +18,19 @@ fun Class<*>.objectInstance(): Any? {
     }
 }
 
+fun Class<*>.classObjectInstance(): Any? {
+    try {
+        val field = getDeclaredField("object\$")
+        if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
+            return field.get(null)!!
+        }
+        return null
+    }
+    catch (e: NoSuchFieldException) {
+        return null
+    }
+}
+
 fun String?.asNotEmpty(): String? = if (this == null) null else if (!isEmpty()) this else null
 
 fun String.appendPathElement(part : String) : String {
