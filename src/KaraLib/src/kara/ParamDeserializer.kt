@@ -57,7 +57,7 @@ public object ParamSerializer {
     }
 
     public fun deserialize(param : String, paramType : Class<Any>) : Any? {
-        if (param is String) {
+        if (paramType == javaClass<String>()) {
             return param
         }
         for (deserializer in _typeDeserializers) {
