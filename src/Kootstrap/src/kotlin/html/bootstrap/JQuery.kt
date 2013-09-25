@@ -17,9 +17,7 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
         val params = JsonObject()
         for ((key, value) in parts.second) {
             when (value) {
-                is Int -> params.jsonValue(key, value)
-                is String -> params.jsonValue(key, value)
-                else -> params.jsonValue(key, value.toString())
+                else -> params.jsonValue(key, ParamSerializer.serialize(value)!!)
             }
         }
 
