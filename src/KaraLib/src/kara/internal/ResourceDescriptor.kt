@@ -18,9 +18,6 @@ import kotlin.properties.delegation.lazy.LazyVal
 class ResourceDescriptor(val route: String, val resourceClass: Class<out Resource>) {
     class object {
         val logger = Logger.getLogger(this.javaClass)!!
-
-        /** Deserializes parameters into objects. */
-        public val paramDeserializer: ParamDeserializer = ParamDeserializer()
     }
 
     private val routeComponents = route.toRouteComponents()
@@ -113,7 +110,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
             val optional = annotation.`type`()?.startsWith("?") ?: false
 
             params[paramName]?.let {
-                paramDeserializer.deserialize(it, paramTypes[i] as Class<Any>)
+                ParamSerializer.deserialize(it, paramTypes[i] as Class<Any>)
             } ?: if (optional) {
                 null
             }

@@ -26,14 +26,11 @@ public abstract class Resource() : Link {
                 is StringRouteComponent -> it.componentText
                 is OptionalParamRouteComponent -> {
                     properties.remove(it.name)
-                    val value = propertyValue(it.name)
-                    if (value == null) null else value.toString()
+                    ParamSerializer.serialize(propertyValue(it.name))
                 }
                 is ParamRouteComponent -> {
                     properties.remove(it.name)
-
-                    // TODO: introduce serializers similar to deserializers in appconfig
-                    "${propertyValue(it.name)}"
+                    ParamSerializer.serialize(propertyValue(it.name))
                 }
                 is WildcardRouteComponent -> throw RuntimeException("Routes with wildcards aren't supported")
                 else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.getName()}")
@@ -59,7 +56,7 @@ public abstract class Resource() : Link {
 
         answer.append(url.first)
         answer.append("?")
-        answer.append(url.second map { "${it.key}=${it.value}" } join("&"))
+        answer.append(url.second map { "${it.key}=${ParamSerializer.serialize(it.value)}" } join("&"))
 
         return answer.toString()
     }

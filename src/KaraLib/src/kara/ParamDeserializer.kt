@@ -1,15 +1,15 @@
-package kara.internal
+package kara
 
-import java.util.HashMap
-import java.util.ArrayList
+import java.util.*
 
 
 /** Base class for object that deserialize parameters to a certain type.
 */
 abstract class ParamTypeDeserializer() {
     abstract fun deserialize(param : String) : Any?
+    open fun serialize(param: Any): String = param.toString()
 
-    abstract fun isThisType(testType : Class<Any>) : Boolean
+    abstract fun isThisType(testType : Class<*>) : Boolean
 }
 
 /** Deserializer for integers.
@@ -20,7 +20,7 @@ class IntParamDeserializer() : ParamTypeDeserializer() {
         return param.toInt()
     }
 
-    override fun isThisType(testType : Class<Any>) : Boolean {
+    override fun isThisType(testType : Class<*>) : Boolean {
         return testType.toString() == "int" || testType.getName() == "java.lang.Integer"
     }
 }
@@ -33,15 +33,15 @@ class FloatParamDeserializer() : ParamTypeDeserializer() {
         return param.toFloat()
     }
 
-    override fun isThisType(testType : Class<Any>) : Boolean {
+    override fun isThisType(testType : Class<*>) : Boolean {
         return testType.toString() == "float" || testType.getName() == "java.lang.Float"
     }
 }
 
 /** Deserializes string parameters into other for consumtion by actions.
 */
-class ParamDeserializer() {
-    val _typeDeserializers : MutableList<ParamTypeDeserializer> = ArrayList<ParamTypeDeserializer>();
+public object ParamSerializer {
+    val _typeDeserializers = ArrayList<ParamTypeDeserializer>();
 
     {
         this.loadDefaults()
@@ -57,7 +57,7 @@ class ParamDeserializer() {
     }
 
     public fun deserialize(param : String, paramType : Class<Any>) : Any? {
-        if (paramType == javaClass<String>()) {
+        if (param is String) {
             return param
         }
         for (deserializer in _typeDeserializers) {
@@ -65,6 +65,21 @@ class ParamDeserializer() {
                 return deserializer.deserialize(param)
             }
         }
-        return ""
+
+        throw RuntimeException("Can't deserialize parameter of class $paramType")
+    }
+
+    public fun serialize(param: Any?): String? {
+        if (param == null) return null
+        if (param is String) return param
+
+        val paramType = param.javaClass
+        for (serializer in _typeDeserializers) {
+            if (serializer.isThisType(paramType)) {
+                return serializer.serialize(param)
+            }
+        }
+
+        throw RuntimeException("Can't serialize parameter of class $paramType")
     }
 }
