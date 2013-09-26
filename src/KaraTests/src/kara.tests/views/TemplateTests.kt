@@ -30,9 +30,25 @@ class TemplateTests() {
     }
 }
 
-class ContentTemplate : HtmlTemplate<ContentTemplate, BODY>() {
-    class object : TemplateBuilder<ContentTemplate> { override fun create(): ContentTemplate = ContentTemplate() }
+class MenuTemplate : HtmlTemplate<MenuTemplate, HtmlBodyTag>() {
+    val header = Placeholder<HtmlBodyTag>()
+    val item = Placeholders<UL>()
 
+    override fun HtmlBodyTag.render() {
+        div {
+            insert(header)
+        }
+        ul {
+            each(item) {
+                li() {
+                    insert(it)
+                }
+            }
+        }
+    }
+}
+
+class ContentTemplate : HtmlTemplate<ContentTemplate, BODY>() {
     val left = Placeholder<DIV>()
     val right = Placeholder<DIV>()
 
@@ -49,10 +65,12 @@ class ContentTemplate : HtmlTemplate<ContentTemplate, BODY>() {
 class PageTemplate : HtmlTemplate<PageTemplate, HTML>() {
     val header = Placeholder<BODY>()
     val content = TemplatePlaceholder<BODY, ContentTemplate>()
+    val menu = TemplatePlaceholder<HtmlBodyTag, MenuTemplate>()
 
     override fun HTML.render() {
         head { }
         body {
+            insert(MenuTemplate(), menu)
             insert(header)
             insert(ContentTemplate(), content)
         }
@@ -61,6 +79,20 @@ class PageTemplate : HtmlTemplate<PageTemplate, HTML>() {
 fun view(view: PageTemplate.() -> Unit) = HtmlTemplateView<PageTemplate>(PageTemplate(), view)
 
 fun SomeFunView() = view {
+    menu {
+        header { +"Menu" }
+        item {
+
+            +"Item 1"
+        }
+        item {
+            +"Item 2"
+        }
+        item {
+            +"Item 3"
+        }
+    }
+
     header {
         div { +"header/div" }
     }
