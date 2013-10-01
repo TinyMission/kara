@@ -77,19 +77,19 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
 
     var redInt: Int
         get() = (red * 255.0).toInt()
-        set(value) = red = value.toDouble() / 255.0
+        set(value) { red = value.toDouble() / 255.0 }
 
     var greenInt: Int
         get() = (green * 255.0).toInt()
-        set(value) = green = value.toDouble() / 255.0
+        set(value) { green = value.toDouble() / 255.0 }
 
     var blueInt: Int
         get() = (blue * 255.0).toInt()
-        set(value) = blue = value.toDouble() / 255.0
+        set(value) { blue = value.toDouble() / 255.0 }
 
     var alphaInt: Int
         get() = (alpha * 255.0).toInt()
-        set(value) = alpha = value.toDouble() / 255.0
+        set(value) { alpha = value.toDouble() / 255.0}
 
     private fun Int.twoDigitHex(): String = (if (this < 16) "0" else "") + Integer.toHexString(this)
 

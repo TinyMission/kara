@@ -36,7 +36,7 @@ class JsonValue(val value: Any) : JsonElement {
 
 class JsonRoot : JsonElement {
     private var _element : JsonElement? = null
-    fun set(element : JsonElement) = _element = element
+    fun set(element : JsonElement) { _element = element }
     override fun build(builder: StringBuilder) = _element?.build(builder)
 }
 

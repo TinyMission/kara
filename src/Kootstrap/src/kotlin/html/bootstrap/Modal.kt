@@ -13,13 +13,13 @@ class ModalBuilder() {
     }
 
     var header: (HtmlBodyTag.()->Unit)? = null
-    fun header(content: HtmlBodyTag.()->Unit) = header = content
+    fun header(content: HtmlBodyTag.()->Unit) { header = content }
 
     var body: (HtmlBodyTag.()->Unit)? = null
-    fun body(c: HtmlBodyTag.()->Unit) = body = c
+    fun body(c: HtmlBodyTag.()->Unit) { body = c }
 
     var save: (BUTTON.()->Unit)? = null
-    fun save(c: BUTTON.()->Unit) = save = c
+    fun save(c: BUTTON.()->Unit) { save = c }
 }
 
 private var unique: Int = 0
