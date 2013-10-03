@@ -75,6 +75,16 @@ class JsonObject : JsonElement {
         }
         builder.append("}")
     }
+
+    fun isEmpty(): Boolean {
+        return properties.isEmpty()
+    }
+}
+
+class JsonCode(val code: String) : JsonElement {
+    override fun build(builder: StringBuilder) {
+        builder.append(code)
+    }
 }
 
 fun JsonArray.jsonValue(value: String) = add(jsonString(value))

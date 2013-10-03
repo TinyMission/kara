@@ -13,14 +13,14 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
     answer.append(parts.first)
     answer.append("'")
 
-    if (parts.second.size() > 0) {
-        answer.append(",")
-        val params = JsonObject()
-        for ((key, value) in parts.second) {
-            params.jsonValue(key, ParamSerializer.serialize(value)!!)
-        }
-        params.paramsBuilder()
+    val params = JsonObject()
+    for ((key, value) in parts.second) {
+        params.jsonValue(key, ParamSerializer.serialize(value)!!)
+    }
+    params.paramsBuilder()
 
+    if (!params.isEmpty()) {
+        answer.append(",")
         params.build(answer)
     }
     answer.append(")")
