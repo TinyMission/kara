@@ -19,4 +19,4 @@ public fun HtmlBodyTag.blockButton(h: highlight, body: BUTTON.()->Unit): Unit = 
 
 public fun HtmlBodyTag.controlWithIcon(iconName: String, body: DIV.()->Unit): Unit = div(s("input-group")) { span(s("input-group-addon")) { icon(iconName) }; body() }
 public fun HtmlBodyTag.controlGroup(body: DIV.()->Unit): Unit = div(s("form-group"), contents = body)
-public fun HtmlBodyTag.controlLabel(body: LABEL.()->Unit): Unit = div(s("control-label")) { label { body() } }
+public fun HtmlBodyTag.controlLabel(body: LABEL.()->Unit): Unit = label(s("control-label")) { body() }
