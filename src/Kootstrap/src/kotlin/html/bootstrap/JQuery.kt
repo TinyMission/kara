@@ -4,7 +4,8 @@ import kotlin.html.*
 import kara.*
 import java.net.URL
 
-public fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null): String {
+private val empty: JsonObject.()->Unit = {}
+public fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String {
     val parts = requestParts()
 
     val answer = StringBuilder()
@@ -16,10 +17,9 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
         answer.append(",")
         val params = JsonObject()
         for ((key, value) in parts.second) {
-            when (value) {
-                else -> params.jsonValue(key, ParamSerializer.serialize(value)!!)
-            }
+            params.jsonValue(key, ParamSerializer.serialize(value)!!)
         }
+        params.paramsBuilder()
 
         params.build(answer)
     }
