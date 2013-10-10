@@ -1,6 +1,7 @@
 package kara
 
 import java.util.HashMap
+import javax.naming.*
 
 /**
  * Base class for config classes that use the Kara JSON config system.
@@ -16,13 +17,11 @@ open class Config() {
      * Will raise an exception if the value isn't present. Try calling contains(key) first if you're unsure.
      */
     fun get(name: String): String {
-        if (data.containsKey(name))
-            return data[name]!!
-        throw MissingException("Could not find config value for key $name")
+        return tryGet(name) ?: throw MissingException("Could not find config value for key $name")
     }
 
     fun tryGet(name: String): String? {
-        return data[name]
+        return lookupJNDI(name) ?: data[name]
     }
 
     /** Sets a value for the given key. */
@@ -32,7 +31,7 @@ open class Config() {
 
     /** Returns true if the config contains a value for the given key. */
     fun contains(name: String): Boolean {
-        return data.containsKey(name)
+        return data.containsKey(name) || lookupJNDI(name) != null
     }
 
     /** Prints the entire config to a nicely formatted string. */
@@ -42,5 +41,18 @@ open class Config() {
             builder.append("$name: ${data[name]}\n")
         }
         return builder.toString()
+    }
+
+    private fun lookupJNDI(name: String): String? {
+        try {
+            val initCtx = InitialContext()
+            val envCtx = initCtx.lookup("java:comp/env") as Context
+
+            val folder = envCtx.lookup(name)
+            return (folder as String)
+        }
+        catch(e: NameNotFoundException) {
+            return null
+        }
     }
 }
