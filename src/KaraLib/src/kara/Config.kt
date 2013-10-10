@@ -51,7 +51,7 @@ open class Config() {
             val folder = envCtx.lookup(name)
             return (folder as String)
         }
-        catch(e: NameNotFoundException) {
+        catch(e: NamingException) {
             return null
         }
     }
