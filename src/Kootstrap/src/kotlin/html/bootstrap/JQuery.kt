@@ -42,10 +42,10 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
     return answer.toString()
 }
 
-public fun HtmlBodyTag.post(link: Request, done: String? = null, content: A.()->Unit) {
+public fun HtmlBodyTag.post(link: Request, done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty, content: A.()->Unit) {
     a {
         href="#".link()
-        onClick = link.jQueryPost(done = done ?: "location.reload()")
+        onClick = link.jQueryPost(done ?: "location.reload()",fail, always, paramsBuilder)
 
         content()
     }
