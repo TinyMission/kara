@@ -162,7 +162,7 @@ function fetch(node) {
 
 $(function () {
     $('[data-url]').each(function () {
-        var node = $(this)
+        var node = $(this);
         fetch(node);
         var interval = node.attr("data-interval");
         if (interval != undefined) {
@@ -195,7 +195,7 @@ $(function () {
             data: data
         }).done(function (data) {
                 executeData(node, data);
-                var fetchSelector = node.attr('send-fetch')
+                var fetchSelector = node.attr('send-fetch');
                 if (fetchSelector != undefined) {
                     fetch($(fetchSelector))
                 }
@@ -207,21 +207,21 @@ $(function () {
     // submit json on link
     $(document).on('click', 'a[send-url]', function (e) {
         var data = { };
-        appendAttributes(data, $(this), $(this).attr('send-values'))
+        appendAttributes(data, $(this), $(this).attr('send-values'));
         roundTripData($(this), data);
         e.preventDefault()
     });
 
     $(document).on('change', 'input[send-url]', function (e) {
         var data = { "value": $(this).val() };
-        appendAttributes(data, $(this), $(this).attr('send-values'))
+        appendAttributes(data, $(this), $(this).attr('send-values'));
         roundTripData($(this), data);
         e.preventDefault()
     });
 
     // submit json on form.submit
     $(document).on('submit', 'form[send-url]', function (e) {
-        var data = $(this).serialize()
+        var data = $(this).serialize();
         roundTripData($(this), data, function (node, data) {
                 node.each(function () {
                     this.reset()
