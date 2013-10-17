@@ -95,14 +95,11 @@ function bind(node, data) {
             switch (command) {
                 case "if":
                     return command_if(parameters, value);
-                default:
-                    return undefined
             }
-
-        } else {
-            // primitive property
-            return bindProperties(binding, value)
+            return undefined
         }
+
+        return bindProperties(binding, value)
     }
 
     function command_if(parameters, value) {
@@ -145,32 +142,92 @@ function executeData(node, data) {
     }
 }
 
+function fetch(node) {
+    var retry = 0;
+    $.ajax({
+        url: node.attr("data-url"),
+        context: node,
+        dataType: node.attr("data-type") || "json"
+    })
+        .done(function (data) {
+            executeData($(this), data);
+        })
+        .fail(function () {
+            retry = retry + 1;
+            setTimeout(function () {
+                fetch($(this))
+            }, 10000 * retry);
+        });
+}
+
 $(function () {
     $('[data-url]').each(function () {
-        var getData = function (node) {
-            var retry = 0;
-            $.ajax({
-                url: node.attr("data-url"),
-                context: node,
-                dataType: node.attr("data-type") || "json"
-            })
-                .done(function (data) {
-                    executeData($(this), data);
-                })
-                .fail(function () {
-                    retry = retry + 1;
-                    setTimeout(function () {
-                        getData($(this))
-                    }, 10000 * retry);
-                });
+        var node = $(this)
+        fetch(node);
+        var interval = node.attr("data-interval");
+        if (interval != undefined) {
+            setTimeout(function () {
+                fetch(node)
+            }, parseInt(interval) * 1000);
+        }
+    })
+});
 
-            var interval = node.attr("data-interval");
-            if (interval != undefined) {
-                setTimeout(function () {
-                    getData(node)
-                }, parseInt(interval) * 1000);
+$(function () {
+    function appendAttributes(data, node, attributes) {
+        var properties = attributes.split(",");
+        for (var i = 0; i < properties.length; i++) {
+            var name = properties[i].trim();
+            var value = node.attr(name);
+            if (value != undefined) {
+                data[name] = value;
             }
-        };
-        getData($(this));
+        }
+    }
+
+    function roundTripData(node, data, done) {
+        $.ajax({
+            url: node.attr('send-url'),
+            cache: false,
+            context: node,
+            type: node.attr('send-method') || "GET",
+            dataType: "json",
+            data: data
+        }).done(function (data) {
+                executeData(node, data);
+                var fetchSelector = node.attr('send-fetch')
+                if (fetchSelector != undefined) {
+                    fetch($(fetchSelector))
+                }
+                if (done != undefined)
+                    done(node, data)
+            });
+    }
+
+    // submit json on link
+    $(document).on('click', 'a[send-url]', function (e) {
+        var data = { };
+        appendAttributes(data, $(this), $(this).attr('send-values'))
+        roundTripData($(this), data);
+        e.preventDefault()
+    });
+
+    $(document).on('change', 'input[send-url]', function (e) {
+        var data = { "value": $(this).val() };
+        appendAttributes(data, $(this), $(this).attr('send-values'))
+        roundTripData($(this), data);
+        e.preventDefault()
+    });
+
+    // submit json on form.submit
+    $(document).on('submit', 'form[send-url]', function (e) {
+        var data = $(this).serialize()
+        roundTripData($(this), data, function (node, data) {
+                node.each(function () {
+                    this.reset()
+                })
+            }
+        );
+        e.preventDefault()
     })
 });
