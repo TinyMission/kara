@@ -76,8 +76,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
 
         val contentType = request.getContentType()
         if (contentType != null) {
-            if (contentType.startsWith("multipart/form-data") ||
-                contentType == "application/x-www-form-urlencoded") {
+            if (contentType.startsWith("multipart/form-data")) {
                 for (part in request.getParts()!!) {
                     if (part.getSize() < 4192) {
                         val name = part.getName()!!
