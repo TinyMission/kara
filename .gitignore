@@ -14,6 +14,7 @@ kara/demo/bin/*
 .idea/workspace.xml
 kara-SNAPSHOT.zip
 lib/kotlin-runtime.jar
+lib/kotlin-runtime-sources.jar
 **/kotlin-runtime.jar
 samples/kara/demo/bin
 src/Kootstrap/browser/less/*.css
