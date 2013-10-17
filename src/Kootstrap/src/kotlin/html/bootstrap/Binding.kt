@@ -16,14 +16,24 @@ fun HtmlTag.applyAttributes(apply: HtmlTag.() -> Unit): Boolean {
     return false
 }
 
-fun <T: HtmlTag> T.fetch(dataUrl: Link, interval: Int = 0, content: T.() -> Unit) {
+fun <T : HtmlTag> T.withAttributes(content: T.() -> Unit, apply: HtmlTag.() -> Unit) {
     val curChildren = children.size
     content()
     if (curChildren + 1 != children.size) {
-        throw Exception("Bind must have single child tag")
+        throw Exception("Template tag must have single child tag")
     }
 
-    with (children.last as HtmlTag) {
+    with(children.last as HtmlTag, apply)
+}
+
+fun <T : HtmlTag> T.bind(property: String, content: T.() -> Unit) {
+    withAttributes(content) {
+        attribute("bind", property)
+    }
+}
+
+fun <T : HtmlTag> T.fetch(dataUrl: Link, interval: Int = 0, content: T.() -> Unit) {
+    withAttributes(content) {
         attribute("data-url", dataUrl.href())
         attribute("data-use", "bind")
         if (interval > 0) {
@@ -51,12 +61,3 @@ fun HtmlTag.bindHtml(property: String) {
     attribute("bind-html", property)
 }
 
-fun <T:HtmlTag> T.bind(property: String, content: T.() -> Unit) {
-    val curChildren = children.size
-    content()
-    if (curChildren + 1 != children.size) {
-        throw Exception("Bind must have single child tag")
-    }
-
-    (children.last as HtmlTag).attribute("bind", property)
-}
