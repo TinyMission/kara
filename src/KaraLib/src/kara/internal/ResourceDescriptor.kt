@@ -74,11 +74,15 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
             params[formParameterName] = value
         }
 
-        if (request.getContentType()?.startsWith("multipart/form-data")?:false) {
-            for (part in request.getParts()!!) {
-                if (part.getSize() < 4192) {
-                    val name = part.getName()!!
-                    params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
+        val contentType = request.getContentType()
+        if (contentType != null) {
+            if (contentType.startsWith("multipart/form-data") ||
+                contentType == "application/x-www-form-urlencoded") {
+                for (part in request.getParts()!!) {
+                    if (part.getSize() < 4192) {
+                        val name = part.getName()!!
+                        params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
+                    }
                 }
             }
         }
