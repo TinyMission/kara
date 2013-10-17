@@ -1,6 +1,7 @@
 package kotlin.html.bootstrap
 
 import kotlin.html.*
+import java.util.HashMap
 
 fun HtmlTag.applyAttributes(apply: HtmlTag.() -> Unit): Boolean {
     for (child in children) {
@@ -59,5 +60,35 @@ fun HtmlTag.bindText(property: String) {
 
 fun HtmlTag.bindHtml(property: String) {
     attribute("bind-html", property)
+}
+
+class SendContext(val tag: HtmlBodyTag) {
+    fun bindResponse(selector: String) {
+        tag.attribute("data-bind", selector)
+    }
+
+    fun refresh(selector: String) {
+        tag.attribute("send-fetch", selector)
+    }
+}
+
+class LinkWithParameters(val link: Link) {
+    val parameters = HashMap<String, String>()
+    fun put(name: String, value: String): LinkWithParameters {
+        parameters.put(name, value)
+        return this
+    }
+}
+
+fun Link.param(name: String): LinkWithParameters = LinkWithParameters(this).put(name, name)
+fun LinkWithParameters.param(name: String): LinkWithParameters = this.put(name, name)
+fun Link.param(name: String, value: String): LinkWithParameters = LinkWithParameters(this).put(name, value)
+fun LinkWithParameters.param(name: String, value: String): LinkWithParameters = this.put(name, value)
+
+fun HtmlBodyTag.send(url: LinkWithParameters): SendContext {
+    attribute("send-url", url.link.href())
+    attribute("send-values", url.parameters.iterator().makeString(","))
+    attribute("send-method", "POST")
+    return SendContext(this)
 }
 

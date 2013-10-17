@@ -175,12 +175,23 @@ $(function () {
 
 $(function () {
     function appendAttributes(data, node, attributes) {
-        var properties = attributes.split(",");
-        for (var i = 0; i < properties.length; i++) {
-            var name = properties[i].trim();
-            var value = node.attr(name);
-            if (value != undefined) {
-                data[name] = value;
+        var values = attributes.split(",");
+        for (var i = 0; i < values.length; i++) {
+            var assignment = values[i].trim();
+            var parts = assignment.split("=");
+            var value;
+            var name;
+            if (parts.length > 1) {
+                value = parts[1];
+                name = parts[0];
+            } else {
+                value = assignment;
+                name = assignment;
+            }
+            if (value == "value") {
+                data[name] = node.val()
+            } else {
+                data[name] = node.attr(value)
             }
         }
     }
@@ -213,7 +224,7 @@ $(function () {
     });
 
     $(document).on('change', 'input[send-url]', function (e) {
-        var data = { "value": $(this).val() };
+        var data = { };
         appendAttributes(data, $(this), $(this).attr('send-values'));
         roundTripData($(this), data);
         e.preventDefault()
