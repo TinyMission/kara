@@ -175,6 +175,8 @@ $(function () {
 
 $(function () {
     function appendAttributes(data, node, attributes) {
+        if (attributes == undefined) return;
+
         var values = attributes.split(",");
         for (var i = 0; i < values.length; i++) {
             var assignment = values[i].trim();

@@ -64,6 +64,7 @@ fun HtmlTag.bindHtml(property: String) {
 
 class SendContext(val tag: HtmlBodyTag) {
     fun bindResponse(selector: String) {
+        tag.attribute("data-use", "bind")
         tag.attribute("data-bind", selector)
     }
 
@@ -85,10 +86,14 @@ fun LinkWithParameters.param(name: String): LinkWithParameters = this.put(name, 
 fun Link.param(name: String, value: String): LinkWithParameters = LinkWithParameters(this).put(name, value)
 fun LinkWithParameters.param(name: String, value: String): LinkWithParameters = this.put(name, value)
 
-fun HtmlBodyTag.send(url: LinkWithParameters): SendContext {
-    attribute("send-url", url.link.href())
-    attribute("send-values", url.parameters.iterator().makeString(","))
-    attribute("send-method", "POST")
+fun HtmlBodyTag.send(url: Link, httpMethod: FormMethod = FormMethod.post): SendContext {
+    attribute("send-url", url.href())
+    attribute("send-method", httpMethod.toString().toUpperCase())
     return SendContext(this)
+}
+
+fun HtmlBodyTag.send(url: LinkWithParameters): SendContext {
+    attribute("send-values", url.parameters.iterator().makeString(","))
+    return send(url.link)
 }
 
