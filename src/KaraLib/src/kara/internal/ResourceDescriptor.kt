@@ -10,8 +10,7 @@ import java.net.URLDecoder
 import kara.*
 import org.apache.log4j.Logger
 import java.io.IOException
-import kotlin.properties.delegation.lazy.LazyVal
-
+import kotlin.properties.*
 
 /** Contains all the information necessary to match a route and execute an action.
  */
@@ -23,8 +22,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
     private val routeComponents = route.toRouteComponents()
 
     // TODO: verify optional components are all last
-    private val optionalComponents by LazyVal { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
-
+    private val optionalComponents by Delegates.lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
 
     public fun matches(url: String): Boolean {
         val path = url.split("\\?")[0]
