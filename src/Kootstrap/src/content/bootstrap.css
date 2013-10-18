@@ -1988,7 +1988,7 @@ textarea.input-lg {
 
 @media (min-width: 768px) {
   .form-horizontal .control-label {
-    text-align: right;
+    float: right;
   }
 }
 
@@ -4233,6 +4233,15 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .label-danger[href]:hover,
 .label-danger[href]:focus {
   background-color: #661419;
+}
+
+.label-muted {
+  background-color: #b4b4b4;
+}
+
+.label-muted[href]:hover,
+.label-muted[href]:focus {
+  background-color: #9b9b9b;
 }
 
 .badge {
