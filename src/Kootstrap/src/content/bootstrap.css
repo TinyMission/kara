@@ -4419,6 +4419,20 @@ a.thumbnail:focus {
   color: #953b39;
 }
 
+.alert-muted {
+  color: #757575;
+  background-color: #f0f0f0;
+  border-color: #e8e8e8;
+}
+
+.alert-muted hr {
+  border-top-color: #dcdcdc;
+}
+
+.alert-muted .alert-link {
+  color: #5b5b5b;
+}
+
 @-webkit-keyframes progress-bar-stripes {
   from {
     background-position: 40px 0;
