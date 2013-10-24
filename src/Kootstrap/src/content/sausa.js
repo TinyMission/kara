@@ -151,6 +151,12 @@ function fetch(node) {
     })
         .done(function (data) {
             executeData($(this), data);
+            var interval = node.attr("data-interval");
+            if (interval != undefined) {
+                setTimeout(function () {
+                    fetch(node)
+                }, parseInt(interval) * 1000);
+            }
         })
         .fail(function () {
             retry = retry + 1;
@@ -164,12 +170,6 @@ $(function () {
     $('[data-url]').each(function () {
         var node = $(this);
         fetch(node);
-        var interval = node.attr("data-interval");
-        if (interval != undefined) {
-            setTimeout(function () {
-                fetch(node)
-            }, parseInt(interval) * 1000);
-        }
     })
 });
 
