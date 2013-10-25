@@ -215,10 +215,13 @@
 .navbar-nav {
   margin: 0px -@navbar-padding-horizontal;
 
-  > li > a {
-    padding-top:    10px;
-    padding-bottom: 10px;
-    line-height: @line-height-computed;
+  > li {
+    float: left;
+    > a {
+      padding-top:    10px;
+      padding-bottom: 10px;
+      line-height: @line-height-computed;
+    }
   }
 
   @media (max-width: @screen-xs-max) {
@@ -253,6 +256,10 @@
     > li {
       float: left;
       > a {
+        padding-top: ((@navbar-height - @line-height-computed) / 2);
+        padding-bottom: ((@navbar-height - @line-height-computed) / 2);
+      }
+      > div {
         padding-top: ((@navbar-height - @line-height-computed) / 2);
         padding-bottom: ((@navbar-height - @line-height-computed) / 2);
       }
