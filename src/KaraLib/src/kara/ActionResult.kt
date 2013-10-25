@@ -1,7 +1,9 @@
 package kara
 
 import javax.servlet.http.HttpServletResponse
-import java.io.IOException
+import javax.xml.transform.*
+import javax.xml.transform.stream.*
+import java.io.*
 
 /** Base class for objects that are returned from actions.
  */
@@ -55,5 +57,35 @@ fun ActionResult.tryWriteResponse(context: ActionContext) {
     catch(ex: Throwable) {
         println(ex.printStackTrace())
         context.response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+    }
+}
+
+open class XmlResult(val xml: String) : ActionResult {
+    fun prettyFormat(input: String, indent: Int): String {
+        val xmlInput = StreamSource(StringReader(input));
+        val stringWriter = StringWriter();
+        val xmlOutput = StreamResult(stringWriter);
+        val transformerFactory = TransformerFactory.newInstance()!!;
+        transformerFactory.setAttribute("indent-number", indent);
+        val transformer = transformerFactory.newTransformer()!!;
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(xmlInput, xmlOutput);
+        return xmlOutput.getWriter().toString();
+    }
+
+    override fun writeResponse(context: ActionContext) {
+        context.response.setStatus(200)
+        respondWithXml(context)
+    }
+
+    fun respondWithXml(context: ActionContext) {
+        val text = prettyFormat(xml, 2)
+        val content = text.getBytes("UTF-8");
+        context.response.setContentLength(content.size)
+        context.response.setContentType("text/xml")
+        context.response.setCharacterEncoding("UTF-8")
+        val out = context.response.getOutputStream()
+        out?.write(content)
+        out?.flush()
     }
 }
