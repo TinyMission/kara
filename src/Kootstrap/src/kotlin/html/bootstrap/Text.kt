@@ -3,6 +3,8 @@ package kotlin.html.bootstrap
 import kotlin.html.*
 
 public fun HtmlBodyTag.label(h : highlight, body: SPAN.()->Unit) : Unit = span(s("label label-${h.name()}"), contents = body)
+public fun HtmlBodyTag.label(url: Link, h : highlight, body: A.()->Unit) : Unit = a(s("label label-${h.name()}")) { href = url; body() }
+
 public fun HtmlBodyTag.blockLabel(h : highlight, body: P.()->Unit) : Unit = p(s("label label-${h.name()}")) { style="display:block;margin-top: 10px;"; body() }
 
 public fun HtmlBodyTag.alert(h : highlight, body: DIV.()->Unit) : Unit = div(s("alert alert-${h.name()}"), contents = body)
