@@ -42,9 +42,9 @@ public fun HtmlBodyTag.navbar(position: navbarPosition, body: DIV.()->Unit): Uni
     else -> null
 }, contents = body)
 
-public fun HtmlBodyTag.navbarHeader(body: DIV.()->Unit): Unit = div(s("navbar-header"), contents = body)
+public fun HtmlBodyTag.navbarHeader(c: StyleClass? = null, body: DIV.()->Unit): Unit = div(s("navbar-header") + c, contents = body)
 public fun HtmlBodyTag.navbarBrand(c: StyleClass? = null, body: A.()->Unit): Unit = a(s("navbar-brand") + c, contents = body)
-public fun HtmlBodyTag.navbarCollapse(body: DIV.()->Unit): Unit = div(s("collapse navbar-collapse navbar-menu-collapse"), contents = body)
+public fun HtmlBodyTag.navbarCollapse(c: StyleClass? = null, body: DIV.()->Unit): Unit = div(s("collapse navbar-collapse navbar-menu-collapse") + c, contents = body)
 public fun HtmlBodyTag.navbarCollapseToggle(body: BUTTON.()->Unit): Unit = button(s("navbar-toggle")) {
     buttonType = ButtonType.button
     attribute("data-toggle", "collapse")
@@ -52,8 +52,8 @@ public fun HtmlBodyTag.navbarCollapseToggle(body: BUTTON.()->Unit): Unit = butto
     span(s("sr-only")) { +"Toggle navigation" }
     body()
 }
-public fun HtmlBodyTag.navbarGroup(body: UL.()->Unit): Unit = ul(s("nav navbar-nav"), contents = body)
-public fun HtmlBodyTag.navbarGroupRight(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-right pull-right"), contents = body)
-public fun HtmlBodyTag.navbarGroupLeft(body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-left"), contents = body)
+public fun HtmlBodyTag.navbarGroup(c: StyleClass? = null, body: UL.()->Unit): Unit = ul(s("nav navbar-nav") + c, contents = body)
+public fun HtmlBodyTag.navbarGroupRight(c: StyleClass? = null, body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-right pull-right") + c, contents = body)
+public fun HtmlBodyTag.navbarGroupLeft(c: StyleClass? = null, body: UL.()->Unit): Unit = ul(s("nav navbar-nav navbar-left") + c, contents = body)
 
 public fun HtmlBodyTag.breadcrumb(c: StyleClass? = null, body: UL.()->Unit): Unit = ul(s("breadcrumb") + c, contents = body)

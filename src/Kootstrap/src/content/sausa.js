@@ -161,7 +161,7 @@ function fetch(node) {
         .fail(function () {
             retry = retry + 1;
             setTimeout(function () {
-                fetch($(this))
+                fetch(node)
             }, 10000 * retry);
         });
 }
