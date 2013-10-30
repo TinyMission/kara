@@ -1832,7 +1832,7 @@ textarea.input-sm {
 
 .input-lg {
   height: 32px;
-  padding: 16px 16px;
+  padding: 4px 8px;
   font-size: 16px;
   line-height: 1.33;
   border-radius: 4px;
@@ -2942,7 +2942,7 @@ input[type="button"].btn-block {
 .input-group-lg > .input-group-addon,
 .input-group-lg > .input-group-btn > .btn {
   height: 32px;
-  padding: 16px 16px;
+  padding: 4px 8px;
   font-size: 16px;
   line-height: 1.33;
   border-radius: 4px;
@@ -3022,7 +3022,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .input-group-addon.input-lg {
-  padding: 16px 16px;
+  padding: 4px 8px;
   font-size: 16px;
   border-radius: 4px;
 }
@@ -4065,7 +4065,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 
 .pagination-lg > li > a,
 .pagination-lg > li > span {
-  padding: 16px 16px;
+  padding: 4px 8px;
   font-size: 16px;
 }
 
