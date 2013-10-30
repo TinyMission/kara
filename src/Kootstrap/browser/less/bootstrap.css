@@ -349,7 +349,6 @@ img {
   margin: auto;
   line-height: 1.5384615384615385;
   background-color: #ffffff;
-  border: 1px solid #dddddd;
   border-radius: 3px;
   -webkit-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
@@ -4302,7 +4301,6 @@ a.list-group-item.active > .badge,
   margin-bottom: 20px;
   line-height: 1.5384615384615385;
   background-color: #ffffff;
-  border: 1px solid #dddddd;
   border-radius: 3px;
   -webkit-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
@@ -4563,6 +4561,7 @@ a.thumbnail:focus {
 
 .media,
 .media-body {
+  position: relative;
   overflow: hidden;
   zoom: 1;
 }
