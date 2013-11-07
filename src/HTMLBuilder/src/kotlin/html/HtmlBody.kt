@@ -66,6 +66,7 @@ fun HtmlBodyTag.div(c: StyleClass? = null, id: String? = null, contents: DIV.() 
 fun HtmlBodyTag.b(c: StyleClass? = null, id: String? = null, contents: B.() -> Unit = empty_contents) = contentTag(B(this), c, id, contents)
 fun HtmlBodyTag.i(c: StyleClass? = null, id: String? = null, contents: I.() -> Unit = empty_contents) = contentTag(I(this), c, id, contents)
 fun HtmlBodyTag.p(c: StyleClass? = null, id: String? = null, contents: P.() -> Unit = empty_contents) = contentTag(P(this), c, id, contents)
+fun HtmlBodyTag.pre(c: StyleClass? = null, id: String? = null, contents: PRE.() -> Unit = empty_contents) = contentTag(PRE(this), c, id, contents)
 fun HtmlBodyTag.span(c: StyleClass? = null, id: String? = null, contents: SPAN.() -> Unit = empty_contents) = contentTag(SPAN(this), c, id, contents)
 fun HtmlBodyTag.strong(c: StyleClass? = null, id: String? = null, contents: STRONG.() -> Unit = empty_contents) = contentTag(STRONG(this), c, id, contents)
 fun HtmlBodyTag.small(c: StyleClass? = null, id: String? = null, contents: SMALL.() -> Unit = empty_contents) = contentTag(SMALL(this), c, id, contents)
@@ -84,6 +85,8 @@ open class I(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "i", conte
 open class B(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "b", contentStyle = ContentStyle.propagate) {
 }
 open class P(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "p") {
+}
+open class PRE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "pre") {
 }
 open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "span", contentStyle = ContentStyle.propagate) {
 }
