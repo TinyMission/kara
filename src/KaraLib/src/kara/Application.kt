@@ -31,9 +31,19 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
             if (config.isDevelopment()) {
                 val changes = watchKeys.flatMap { it.pollEvents()!! }
                 if (changes.size() > 0) {
-                    changes.take(5).forEach {
-                        logger.info("Change to ${it.context()} caused ApplicationContext restart.")
+                    logger.info("Changes in application detected.")
+                    var count = changes.size()
+                    while (true) {
+                        Thread.sleep(200)
+                        val moreChanges = watchKeys.flatMap { it.pollEvents()!! }
+                        if (moreChanges.size() == 0)
+                            break
+                        logger.info("Waiting for more changes.")
+                        count += moreChanges.size()
                     }
+
+                    logger.info("Changes to ${count} files caused ApplicationContext restart.")
+                    changes.take(5).forEach { logger.info("...  ${it.context()}") }
                     destroyContext()
                     _context = null
                 }
@@ -66,7 +76,13 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
     }
 
     open fun destroyContext() {
-        _context?.dispose()
+        try {
+            _context?.dispose()
+        } catch(e: Throwable) {
+            println("Failed to destroy application context.")
+            println(e.getMessage())
+            println(e.printStackTrace())
+        }
         watchKeys.forEach { it.cancel() }
         watchKeys.clear()
     }
