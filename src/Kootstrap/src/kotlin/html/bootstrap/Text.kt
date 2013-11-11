@@ -24,4 +24,4 @@ public fun HtmlBodyTag.jumbo(body: DIV.()->Unit) : Unit = div(s("jumbotron"), co
 public fun HtmlBodyTag.muted(c : StyleClass? = null, body: SPAN.()->Unit) : Unit = span(s("text-muted")+c, contents = body)
 public fun HtmlBodyTag.mutedSmall(c : StyleClass? = null, body: SMALL.()->Unit) : Unit = small(s("text-muted")+c, contents = body)
 
-public fun HtmlBodyTag.icon(name : String, c : StyleClass? = null) : Unit = i(s("icon-$name") + c)
+
