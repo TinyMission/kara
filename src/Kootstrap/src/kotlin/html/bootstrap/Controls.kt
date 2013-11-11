@@ -18,7 +18,7 @@ public fun HtmlBodyTag.actionGroup(c: StyleClass? = null, body: HtmlBodyTag.()->
 public fun HtmlBodyTag.blockButton(h: highlight, body: BUTTON.()->Unit): Unit = button(s("btn btn-block btn-${h.name()}"), contents = body)
 
 public fun HtmlBodyTag.controlWithIcon(iconName: String, body: DIV.()->Unit): Unit = div(s("input-group")) { span(s("input-group-addon")) { icon(iconName) }; body() }
-public fun HtmlBodyTag.controlGroup(body: DIV.()->Unit): Unit = div(s("form-group"), contents = body)
-public fun HtmlBodyTag.controlLabel(body: LABEL.()->Unit): Unit = label(s("control-label")) { body() }
+public fun HtmlBodyTag.controlGroup(c: StyleClass? = null, body: DIV.()->Unit): Unit = div(s("form-group") + c, contents = body)
+public fun HtmlBodyTag.controlLabel(c: StyleClass? = null, body: LABEL.()->Unit): Unit = label(s("control-label") + c) { body() }
 
 public fun HtmlBodyTag.icon(name : String, c : StyleClass? = null) : Unit = i(s("icon icon-$name") + c)
