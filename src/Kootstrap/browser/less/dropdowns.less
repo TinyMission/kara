@@ -16,7 +16,6 @@
   // Firefox fix for https://github.com/twbs/bootstrap/issues/9538. Once fixed,
   // we can just straight up remove this.
   border-bottom: 0 dotted;
-  content: "";
 }
 
 // The dropdown wrapper (div)
@@ -67,7 +66,11 @@
     clear: both;
     font-weight: normal;
     line-height: @line-height-base;
-    color: @dropdown-link-color;
+
+    &.action {
+      color: @dropdown-link-color;
+    }
+
     white-space: nowrap; // prevent links from randomly breaking onto new lines
   }
 }
@@ -77,7 +80,9 @@
   &:hover,
   &:focus {
     text-decoration: none;
+    &.action {
     color: @dropdown-link-hover-color;
+    }
     background-color: @dropdown-link-hover-bg;
   }
 }
