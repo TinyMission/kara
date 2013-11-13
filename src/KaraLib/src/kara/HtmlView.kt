@@ -22,10 +22,6 @@ abstract class HtmlView(val layout: HtmlLayout? = null) : ActionResult {
         writer.flush()
     }
 
-    fun <T : Any> with(t: T, body: T.() -> Unit) {
-        t.body()
-    }
-
     fun renderWithoutLayout(): String {
         val root = object: HtmlBodyTag(null, "view") {
         }
