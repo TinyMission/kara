@@ -150,26 +150,37 @@ function executeData(node, data) {
 
 function fetch(node) {
     var retry = 0;
-    $.ajax({
-        url: node.attr("data-url"),
-        context: node,
-        dataType: node.attr("data-type") || "json"
-    })
-        .done(function (data) {
-            executeData($(this), data);
-            var interval = node.attr("data-interval");
-            if (interval != undefined) {
-                setTimeout(function () {
-                    fetch(node)
-                }, parseInt(interval) * 1000);
-            }
-        })
-        .fail(function () {
-            retry = retry + 1;
-            setTimeout(function () {
-                fetch(node)
-            }, 10000 * retry);
-        });
+    var use = node.attr("data-use");
+    switch (use) {
+        case "bind":
+            $.ajax({
+                url: node.attr("data-url"),
+                context: node,
+                dataType: node.attr("data-type") || "json"
+            })
+                .done(function (data) {
+                    executeData($(this), data);
+                    var interval = node.attr("data-interval");
+                    if (interval != undefined) {
+                        setTimeout(function () {
+                            fetch(node)
+                        }, parseInt(interval) * 1000);
+                    }
+                })
+                .fail(function () {
+                    retry = retry + 1;
+                    setTimeout(function () {
+                        fetch(node)
+                    }, 10000 * retry);
+                });
+            break;
+        case "modal":
+            node.on("click", function () {
+                node.next(".modal").modal({ remote: node.attr("data-url") });
+            });
+            break;
+    }
+
 }
 
 $(function () {
@@ -250,3 +261,4 @@ $(function () {
         e.preventDefault()
     })
 });
+

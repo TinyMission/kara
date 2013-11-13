@@ -1,31 +1,39 @@
 package kotlin.html.bootstrap
 
+import kara.*
+import javax.servlet.http.*
 import kotlin.html.*
 
 class ModalBuilder() {
-    var button: (A.()->Unit)? = null
+    var button: (A.() -> Unit)? = null
     var h: highlight = highlight.default
     var c: caliber = caliber.default
-    fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.()->Unit) {
+    fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.() -> Unit) {
         button = b
         this.h = h
         this.c = size
     }
 
-    var header: (HtmlBodyTag.()->Unit)? = null
-    fun header(content: HtmlBodyTag.()->Unit) { header = content }
+    var header: (HtmlBodyTag.() -> Unit)? = null
+    fun header(content: HtmlBodyTag.() -> Unit) {
+        header = content
+    }
 
-    var body: (HtmlBodyTag.()->Unit)? = null
-    fun body(c: HtmlBodyTag.()->Unit) { body = c }
+    var body: (HtmlBodyTag.() -> Unit)? = null
+    fun body(c: HtmlBodyTag.() -> Unit) {
+        body = c
+    }
 
-    var save: (BUTTON.()->Unit)? = null
-    fun save(c: BUTTON.()->Unit) { save = c }
+    var save: (BUTTON.() -> Unit)? = null
+    fun save(c: BUTTON.() -> Unit) {
+        save = c
+    }
 }
 
 private var unique: Int = 0
 private val uniqueId: String get() = "__mdl${unique++}"
 
-fun HtmlBodyTag.modalShow(id : String, h: highlight = highlight.default, c: caliber = caliber.default, button : A.()->Unit) {
+fun HtmlBodyTag.modalShow(id: String, h: highlight = highlight.default, c: caliber = caliber.default, button: A.() -> Unit) {
     action("#$id".link(), h, c) {
         this["role"] = "button"
         this["data-toggle"] = "modal"
@@ -33,7 +41,7 @@ fun HtmlBodyTag.modalShow(id : String, h: highlight = highlight.default, c: cali
     }
 }
 
-fun HtmlBodyTag.modalDialog(id : String, content: ModalBuilder.()->Unit) {
+fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit) {
     val builder = ModalBuilder()
     builder.content()
     div(s("modal fade"), id) {
@@ -48,7 +56,7 @@ fun HtmlBodyTag.modalDialog(id : String, content: ModalBuilder.()->Unit) {
     }
 }
 
-fun HtmlBodyTag.modalFrame(content: ModalBuilder.()->Unit, body: DIV.(ModalBuilder)->Unit) {
+fun HtmlBodyTag.modalFrame(content: ModalBuilder.() -> Unit, body: DIV.(ModalBuilder) -> Unit) {
     val builder = ModalBuilder()
     builder.content()
     val id = uniqueId
@@ -65,13 +73,13 @@ fun HtmlBodyTag.modalFrame(content: ModalBuilder.()->Unit, body: DIV.(ModalBuild
     }
 }
 
-fun HtmlBodyTag.modal(content: ModalBuilder.()->Unit) {
+fun HtmlBodyTag.modal(content: ModalBuilder.() -> Unit) {
     modalFrame(content) {
         modalBody(it)
     }
 }
 
-fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.()->Unit) {
+fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit) {
     modalFrame(content) {
         form(form_horizontal) {
             this.action = action
@@ -93,7 +101,9 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
             +"&times;"
         }
 
-        head()
+        h4(s("modal-title")) {
+            head()
+        }
     }
 
     div(s("modal-body")) {
@@ -115,6 +125,50 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
                 submitButton()
             }
         }
+    }
+}
+
+class MODAL() : HtmlBodyTag(null, "div") {
+}
+
+fun <T : HtmlBodyTag> T.modal(dataUrl: Link, effect: String = "fade", content: T.() -> Unit) {
+    withAttributes(content) {
+        attribute("data-url", dataUrl.href())
+        attribute("data-use", "modal")
+    }
+    div(s("modal $effect")) { }
+}
+
+fun dialog(content: ModalBuilder.() -> Unit): ActionResult {
+    val builder = ModalBuilder()
+    builder.content()
+    return ModalResult() {
+        div(s("modal-dialog")) {
+            div(s("modal-content")) {
+                modalBody(builder)
+            }
+        }
+    }
+}
+
+class ModalResult(val content: HtmlBodyTag.() -> Unit) : ActionResult {
+    fun sendHtml(html: String, response: HttpServletResponse) {
+        response.setContentType("text/html")
+        val writer = response.getWriter()!!
+        writer.write(html)
+        writer.flush()
+    }
+
+    override fun writeResponse(context: ActionContext) {
+        val modal = MODAL()
+        with(modal) {
+            c = s("modal-dialog")
+            attribute("tabindex", "-1")
+            attribute("role", "dialog")
+            attribute("aria-hidden", "true")
+            content()
+        }
+        sendHtml(modal.toString(), context.response)
     }
 }
 
