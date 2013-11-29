@@ -4,23 +4,25 @@ import kotlin.html.*
 import java.util.ArrayList
 
 open public class TemplatePlaceholder<TOuter, TTemplate>() {
-    private var content: TTemplate.() -> Unit = { }
+    private var content: (TTemplate.() -> Unit)? = null
     fun invoke(content: TTemplate.() -> Unit) {
         this.content = content
     }
     fun TTemplate.render() {
-        content()
+        content?.let {it()}
     }
+    fun isEmpty(): Boolean = content == null
 }
 
 open public class Placeholder<TOuter>() {
-    private var content: TOuter.() -> Unit = { }
+    private var content: (TOuter.() -> Unit)? = null
     fun invoke(content: TOuter.() -> Unit) {
         this.content = content
     }
     fun TOuter.render() {
-        content()
+        content?.let {it()}
     }
+    fun isEmpty(): Boolean = content == null
 }
 
 public class PlaceholderItem<TOuter>(val index : Int, val collection : List<PlaceholderItem<TOuter>>) : Placeholder<TOuter>() {
