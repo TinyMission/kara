@@ -50,7 +50,7 @@ class BASE(containingTag: HEAD) : HtmlTag(containingTag, "base") {
     public var target: String by StringAttribute("target")
 }
 
-class _LINK(containingTag: HEAD) : HtmlTag(containingTag, "link", RenderStyle.empty) {
+class _LINK(containingTag: HEAD) : HtmlTag(containingTag, "link", RenderStyle._empty) {
     public var href: Link by Attributes.href
     public var rel: String by Attributes.rel
     public var mimeType: String by Attributes.mimeType

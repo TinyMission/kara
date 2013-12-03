@@ -74,9 +74,9 @@ fun HtmlBodyTag.blockquote(c: StyleClass? = null, id: String? = null, contents: 
 fun HtmlBodyTag.address(c: StyleClass? = null, id: String? = null, contents: ADDRESS.() -> Unit = empty_contents) = contentTag(ADDRESS(this), c, id, contents)
 fun HtmlBodyTag.em(c: StyleClass? = null, id: String? = null, contents: EM.() -> Unit = empty_contents) = contentTag(EM(this), c, id, contents)
 
-open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle.empty) {
+open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle._empty) {
 }
-open class HR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "hr", RenderStyle.empty) {
+open class HR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "hr", RenderStyle._empty) {
 }
 open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "div") {
 }
@@ -132,7 +132,7 @@ open class H4(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h4") {
 }
 open class H5(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h5") {
 }
-open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", RenderStyle.empty, ContentStyle.text) {
+open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", RenderStyle._empty, ContentStyle.text) {
     public var width: Int by Attributes.width
     public var height: Int by Attributes.height
     public var src: Link by Attributes.src

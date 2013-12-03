@@ -23,7 +23,7 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 enum class RenderStyle {
     adaptive
     expanded
-    empty
+    _empty
 }
 
 enum class ContentStyle {
@@ -58,7 +58,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
             count == 0 && renderStyle != RenderStyle.expanded -> {
                 builder.append("<$tagName${renderAttributes()}/>")
             }
-            count != 0 && renderStyle == RenderStyle.empty -> {
+            count != 0 && renderStyle == RenderStyle._empty -> {
                 throw InvalidHtmlException("Empty tag has children")
             }
             children.all { it.computeContentStyle() == ContentStyle.text } -> {
