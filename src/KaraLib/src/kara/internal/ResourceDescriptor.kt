@@ -88,39 +88,9 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
     }
 
     fun buildRouteInstance(params: RouteParameters): Resource {
-        fun find(list: Array<Annotation>): JetValueParameter {
-            for (a in list) {
-                if (a is JetValueParameter) return a
-            }
-            throw RuntimeException("Missing Kotlin runtime annotations!");
+        return resourceClass.buildBeanInstance {
+            params[it]
         }
-
-        val objectInstance = resourceClass.objectInstance()
-        if (objectInstance != null)
-            return objectInstance as Resource
-
-        val constructors = resourceClass.getConstructors()
-        val routeConstructor = constructors[0] as Constructor<Resource>
-
-        val paramTypes = routeConstructor.getParameterTypes()!!
-        val annotations = routeConstructor.getParameterAnnotations()
-
-        val arguments: Array<Any?> = Array(paramTypes.size) { i ->
-            val annotation = find(annotations[i]!!)
-            val paramName = annotation.name()!!
-            val optional = annotation.`type`()?.startsWith("?") ?: false
-
-            params[paramName]?.let {
-                ParamSerializer.deserialize(it, paramTypes[i] as Class<Any>)
-            } ?: if (optional) {
-                null
-            }
-            else {
-                throw InvalidRouteException("Required argument $paramName is missing")
-            }
-        }
-
-        return routeConstructor.newInstance(*arguments)!!
     }
 
     /** Execute the action based on the given request and populate the response. */

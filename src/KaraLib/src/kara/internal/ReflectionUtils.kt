@@ -4,6 +4,8 @@ import java.util.*
 import java.lang.reflect.*
 import java.beans.Introspector
 import kara.*
+import jet.runtime.typeinfo.JetValueParameter
+import jet.Array
 
 fun Class<*>.objectInstance(): Any? {
     try {
@@ -104,4 +106,40 @@ fun Any.properties(): List<String> {
     }
 
     return answer.sort()
+}
+
+fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
+    fun find(list: Array<Annotation>): JetValueParameter {
+        for (a in list) {
+            if (a is JetValueParameter) return a
+        }
+        throw RuntimeException("Missing Kotlin runtime annotations!");
+    }
+
+    val objectInstance = this.objectInstance()
+    if (objectInstance != null)
+        return objectInstance as T
+
+    val constructors = this.getConstructors()
+    val ktor = constructors[0] as Constructor<T>
+
+    val paramTypes = ktor.getParameterTypes()!!
+    val annotations = ktor.getParameterAnnotations()
+
+    val arguments: Array<Any?> = Array(paramTypes.size) { i ->
+        val annotation = find(annotations[i]!!)
+        val paramName = annotation.name()!!
+        val optional = annotation.`type`()?.startsWith("?") ?: false
+
+        params(paramName)?.let {
+            ParamSerializer.deserialize(it, paramTypes[i] as Class<Any>)
+        } ?: if (optional) {
+            null
+        }
+        else {
+            throw InvalidRouteException("Required argument $paramName is missing")
+        }
+    }
+
+    return ktor.newInstance(*arguments)
 }
