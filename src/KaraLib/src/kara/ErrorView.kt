@@ -3,7 +3,7 @@ package kara
 import java.io.*
 import kotlin.html.*
 
-fun Throwable.getStackTrace(): String {
+fun Throwable.getStackTraceString(): String {
     val os = ByteArrayOutputStream()
     this.printStackTrace(PrintStream(os))
     return os.toString()
@@ -79,7 +79,7 @@ fun ErrorView(ex: Throwable) = HtmlTemplateView<ErrorTemplate>(ErrorTemplate()) 
             }
         }
 
-        val stackTrace = ex.getStackTrace()
+        val stackTrace = ex.getStackTraceString()
         h2 { +"Stack Trace" }
         div(id = "stacktrace") {
             +stackTrace.replace("\n", "<br/>")
