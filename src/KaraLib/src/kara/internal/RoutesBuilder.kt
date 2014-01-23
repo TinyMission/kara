@@ -1,6 +1,7 @@
 package kara.internal
 
 import org.reflections.Reflections
+import kotlnx.reflection.*
 import java.util.ArrayList
 import kara.*
 import org.reflections.util.ClasspathHelper

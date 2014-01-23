@@ -2,7 +2,7 @@ package kotlin.html.bootstrap
 
 import kotlin.html.*
 import kara.*
-import java.net.URL
+import kotlnx.reflection.*
 
 private val empty: JsonObject.()->Unit = {}
 public fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String {
@@ -15,7 +15,7 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
 
     val params = JsonObject()
     for ((key, value) in parts.second) {
-        params.jsonValue(key, ParamSerializer.serialize(value)!!)
+        params.jsonValue(key, Serialization.serialize(value)!!)
     }
     params.paramsBuilder()
 

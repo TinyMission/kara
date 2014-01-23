@@ -82,7 +82,9 @@ fun ErrorView(ex: Throwable) = HtmlTemplateView<ErrorTemplate>(ErrorTemplate()) 
         val stackTrace = ex.getStackTraceString()
         h2 { +"Stack Trace" }
         div(id = "stacktrace") {
-            +stackTrace.replace("\n", "<br/>")
+            pre {
+                +stackTrace
+            }
         }
     }
 }

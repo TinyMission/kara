@@ -15,6 +15,7 @@
           <element id="dir-copy" path="$PROJECT_DIR$/src/Kootstrap/src" />
         </element>
         <element id="module-output" name="Kootstrap" />
+        <element id="module-output" name="ReflectionUtil" />
       </element>
       <element id="library" level="project" name="Jackson" />
       <element id="library" level="project" name="Logging" />
@@ -23,6 +24,9 @@
       <element id="library" level="project" name="Jetty" />
       <element id="library" level="project" name="ServletAPI" />
       <element id="library" level="project" name="commons-io-2.4" />
+      <element id="archive" name="reflections.jar">
+        <element id="module-output" name="ReflectionUtil" />
+      </element>
     </root>
   </artifact>
 </component>
