@@ -2,7 +2,7 @@ package kotlin.html.bootstrap
 
 import kotlin.html.*
 import kara.*
-import kotlnx.reflection.*
+import kotlinx.reflection.*
 
 private val empty: JsonObject.()->Unit = {}
 public fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String {

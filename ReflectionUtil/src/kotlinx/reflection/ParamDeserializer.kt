@@ -1,4 +1,4 @@
-package kotlnx.reflection
+package kotlinx.reflection
 
 import java.util.*
 import java.net.*
