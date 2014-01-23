@@ -24,7 +24,7 @@
       <element id="library" level="project" name="Jetty" />
       <element id="library" level="project" name="ServletAPI" />
       <element id="library" level="project" name="commons-io-2.4" />
-      <element id="archive" name="reflections.jar">
+      <element id="archive" name="kotlinx.reflection.jar">
         <element id="module-output" name="ReflectionUtil" />
       </element>
     </root>
