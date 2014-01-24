@@ -7,6 +7,7 @@ import kara.tests.mock.*
 import org.junit.Test
 import org.junit.Before
 import org.apache.log4j.BasicConfigurator
+import kotlin.html.htmlEscape
 
 
 /** Tests for executing actions */
@@ -53,6 +54,10 @@ class ActionTests() {
         assertEquals("/foo/bar", Routes.Foo.Bar().href())
         assertEquals("/foo/compute?aFloat=3.1415&anInt=42", Routes.Foo.ComputeQuery(42, 3.1415.toFloat()).href())
         assertEquals("/foo/compute/42/3.1415", Routes.Foo.Compute(42, 3.1415.toFloat()).href())
+    }
+
+    Test fun htmlReplacement() {
+        assertEquals("foo&lt;x&gt;bar", "foo<x>bar".htmlEscape())
     }
 
     fun assertResponse(expected : String, url : String) {

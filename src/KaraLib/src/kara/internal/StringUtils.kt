@@ -34,7 +34,3 @@ fun List<String>.join(separator : String) : String {
     }
     return builder.toString()
 }
-
-fun String.htmlEscape() : String {
-    return replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;")
-}

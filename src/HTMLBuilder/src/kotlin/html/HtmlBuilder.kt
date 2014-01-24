@@ -1,6 +1,7 @@
 package kotlin.html
 
 import java.util.*
+import java.text.StringCharacterIterator
 
 abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle: ContentStyle = ContentStyle.block) {
     {
@@ -39,8 +40,34 @@ private fun HtmlElement.computeContentStyle(): ContentStyle {
     }
 }
 
-private fun String.htmlEscape(): String {
-    return replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;")
+fun String.htmlEscape(): String {
+    var answer : StringBuilder? = null
+
+    val len = length()
+
+    for (i in 0..len - 1) {
+        val c = charAt(i)
+        val quotation = when (c) {
+            '<' -> "&lt;"
+            '>' -> "&gt;"
+            '\"' -> "&quot;"
+            else -> null
+        }
+
+        if (quotation != null) {
+            if (answer == null) {
+                answer = StringBuilder(len + 10)
+                answer?.append(substring(0, i))
+            }
+
+            answer?.append(quotation)
+        }
+        else {
+            answer?.append(c)
+        }
+    }
+
+    return answer?.toString() ?: this
 }
 
 abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
