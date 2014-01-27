@@ -50,7 +50,9 @@ class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTag(contain
     }
 
     override fun renderElement(builder: StringBuilder, indent: String) {
-        builder.append("$indent<$tagName${renderAttributes()}>\n")
+        builder.append("$indent<$tagName")
+        renderAttributes(builder)
+        builder.append(">\n")
         builder.append(stylesheet.toString())
         builder.append("$indent</$tagName>\n")
     }

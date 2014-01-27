@@ -7,7 +7,7 @@ import kara.tests.mock.*
 import org.junit.Test
 import org.junit.Before
 import org.apache.log4j.BasicConfigurator
-import kotlin.html.htmlEscape
+import kotlin.html.htmlEscapeTo
 
 
 /** Tests for executing actions */
@@ -57,7 +57,9 @@ class ActionTests() {
     }
 
     Test fun htmlReplacement() {
-        assertEquals("foo&lt;x&gt;bar", "foo<x>bar".htmlEscape())
+        val builder = StringBuilder()
+        "foo<x>bar".htmlEscapeTo(builder)
+        assertEquals("foo&lt;x&gt;bar", builder.toString())
     }
 
     fun assertResponse(expected : String, url : String) {

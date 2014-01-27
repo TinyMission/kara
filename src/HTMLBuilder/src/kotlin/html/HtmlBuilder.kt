@@ -40,34 +40,18 @@ private fun HtmlElement.computeContentStyle(): ContentStyle {
     }
 }
 
-fun String.htmlEscape(): String {
-    var answer : StringBuilder? = null
-
+fun String.htmlEscapeTo(builder: StringBuilder) {
     val len = length()
 
     for (i in 0..len - 1) {
         val c = charAt(i)
-        val quotation = when (c) {
-            '<' -> "&lt;"
-            '>' -> "&gt;"
-            '\"' -> "&quot;"
-            else -> null
-        }
-
-        if (quotation != null) {
-            if (answer == null) {
-                answer = StringBuilder(len + 10)
-                answer?.append(substring(0, i))
-            }
-
-            answer?.append(quotation)
-        }
-        else {
-            answer?.append(c)
+        when (c) {
+            '<' -> builder.append("&lt;")
+            '>' -> builder.append("&gt;")
+            '\"' -> builder.append("&quot;")
+            else -> builder.append(c)
         }
     }
-
-    return answer?.toString() ?: this
 }
 
 abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
@@ -80,45 +64,55 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
 
     override fun renderElement(builder: StringBuilder, indent: String) {
         val count = children.size()
-        builder.append(indent)
+        builder.append(indent).append('<').append(tagName)
+        renderAttributes(builder)
+
         when {
             count == 0 && renderStyle != RenderStyle.expanded -> {
-                builder.append("<$tagName${renderAttributes()}/>")
+                builder.append('/')
             }
             count != 0 && renderStyle == RenderStyle._empty -> {
                 throw InvalidHtmlException("Empty tag has children")
             }
             children.all { it.computeContentStyle() == ContentStyle.text } -> {
-                builder.append("<$tagName${renderAttributes()}>")
+                builder.append(">")
                 for (c in children) {
                     c.renderElement(builder, "")
                 }
-                builder.append("</$tagName>")
+                builder.append("</")
+                builder.append(tagName)
             }
             count == 0 -> {
-                builder.append("<$tagName${renderAttributes()}></$tagName>")
+                builder.append("></")
+                builder.append(tagName)
             }
             else -> {
-                builder.append("<$tagName${renderAttributes()}>\n")
+                builder.append(">\n")
+                val childIndent = indent + "  "
                 for (c in children) {
-                    c.renderElement(builder, indent + "  ")
+                    c.renderElement(builder, childIndent)
                 }
-                builder.append("$indent</$tagName>")
+                builder.append(indent)
+                builder.append("</")
+                builder.append(tagName)
             }
         }
-        if (indent != "")
+        builder.append('>')
+
+        if (indent.isNotEmpty()) {
             builder.append("\n")
+        }
     }
 
-    protected fun renderAttributes(): String? {
-        val builder = StringBuilder()
+    protected fun renderAttributes(builder: StringBuilder) {
         for (a in attributes.keySet()) {
             val attr = attributes[a]!!
             if (attr.length > 0) {
-                builder.append(" $a=\"${attr.htmlEscape()}\"")
+                builder.append(' ').append(a).append("=\"")
+                attr.htmlEscapeTo(builder)
+                builder.append("\"")
             }
         }
-        return builder.toString()
     }
 
     public fun attribute(name: String, value: String) {
@@ -186,12 +180,10 @@ class RawHtml(containingTag: HtmlTag?, private val html: String) : HtmlElement(c
 class HtmlText(containingTag: HtmlTag?, private val text: String) : HtmlElement(containingTag, ContentStyle.text) {
     override fun renderElement(builder: StringBuilder, indent: String) {
         builder.append(indent)
-        builder.append(escapedText())
+        text.htmlEscapeTo(builder)
         if (indent != "")
             builder.append("\n")
     }
-
-    public fun escapedText(): String = text.htmlEscape()
 }
 
 class InvalidHtmlException(val message: String) : RuntimeException(message) {
