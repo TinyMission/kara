@@ -53,6 +53,22 @@ class BooleanSerializer: TypeSerializer() {
     }
 }
 
+trait DataClass
+
+class DataClassSerializer: TypeSerializer() {
+    override fun serialize(param: Any): String {
+        return param.serialize()
+    }
+
+    override fun deserialize(param: String, paramType: Class<*>): Any? {
+        return (paramType as Class<Any>).parse(param)
+    }
+
+    override fun isThisType(testType: Class<out Any?>): Boolean {
+        return javaClass<DataClass>().isAssignableFrom(testType)
+    }
+}
+
 public object Serialization {
     val serializer = ArrayList<TypeSerializer>();
 
@@ -68,6 +84,7 @@ public object Serialization {
         register(IntSerializer())
         register(FloatSerializer())
         register(BooleanSerializer())
+        register(DataClassSerializer())
     }
 
     public fun deserialize(param : String, paramType : Class<Any>) : Any? {
@@ -101,7 +118,7 @@ public object Serialization {
 fun <T> Class<T>.parse(params: String) : T {
     val map = HashMap<String, String>()
 
-    val queryComponents = params.split("\\&") map { URLDecoder.decode(it, "UTF-8") }
+    val queryComponents = params.split("\\&")
     for (component in queryComponents) {
         val nvp = component.split("=")
         if (nvp.size > 1)
@@ -111,7 +128,9 @@ fun <T> Class<T>.parse(params: String) : T {
     }
 
     return buildBeanInstance {
-        map[it]
+        map[it]?.let {
+            URLDecoder.decode(it, "UTF-8")
+        }
     }
 }
 
