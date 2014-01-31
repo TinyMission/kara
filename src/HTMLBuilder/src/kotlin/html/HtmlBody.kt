@@ -138,7 +138,7 @@ open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", R
     public var src: Link by Attributes.src
     public var alt: String by Attributes.alt
 }
-open class INPUT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "input") {
+open class INPUT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "input", RenderStyle.adaptive, ContentStyle.propagate) {
     public var alt: String by Attributes.alt
     public var autocomplete: Boolean by Attributes.autocomplete
     public var autofocus: Boolean by Attributes.autofocus
