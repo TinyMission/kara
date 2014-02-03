@@ -53,6 +53,20 @@ class BooleanSerializer: TypeSerializer() {
     }
 }
 
+class EnumSerializer: TypeSerializer() {
+    override fun serialize(param: Any): String {
+        return (param as Enum<*>).ordinal().toString()
+    }
+
+    override fun deserialize(param: String, paramType: Class<*>): Any? {
+        return paramType.getEnumConstants()?.get(param.toInt())
+    }
+
+    override fun isThisType(testType: Class<out Any?>): Boolean {
+        return testType.isEnum()
+    }
+}
+
 trait DataClass
 
 class DataClassSerializer: TypeSerializer() {
@@ -85,6 +99,7 @@ public object Serialization {
         register(FloatSerializer())
         register(BooleanSerializer())
         register(DataClassSerializer())
+        register(EnumSerializer())
     }
 
     public fun deserialize(param : String, paramType : Class<Any>) : Any? {
@@ -135,7 +150,7 @@ fun <T> Class<T>.parse(params: String) : T {
 }
 
 fun Any.serialize(): String {
-    val names = LinkedHashSet(properties())
+    val names = LinkedHashSet(primaryProperties())
     return names.map { it to propertyValue(it) }.
     filter {it.second != null}.
     map { "${it.first}=${URLEncoder.encode(Serialization.serialize(it.second)!!, "UTF-8")}"}.

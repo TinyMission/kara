@@ -32,7 +32,7 @@ fun Class<*>.classObjectInstance(): Any? {
     }
 }
 
-fun Class<Any>.propertyGetter(property: String): Method {
+fun Class<out Any>.propertyGetter(property: String): Method? {
     try {
         return getMethod("get${when {
             property.length == 1 && property[0].isLowerCase() -> property.capitalize()
@@ -41,12 +41,12 @@ fun Class<Any>.propertyGetter(property: String): Method {
         }}")
     }
     catch (e: Exception) {
-        error("Invalid property ${property} on type ${getName()}");
+        return null
     }
 }
 
 fun Any.propertyValue(property: String): Any? {
-    val getter = javaClass.propertyGetter(property)
+    val getter = javaClass.propertyGetter(property) ?: error("Invalid property ${property} on type ${javaClass.getName()}")
     return getter.invoke(this)
 }
 
@@ -63,21 +63,21 @@ fun Any.properties(): List<String> {
     return answer.sort()
 }
 
+private fun find(list: Array<Annotation>): JetValueParameter {
+    for (a in list) {
+        if (a is JetValueParameter) return a
+    }
+    throw RuntimeException("Missing Kotlin runtime annotations!");
+}
+
+
 [suppress("UNCHECKED_CAST")]
 fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
-    fun find(list: Array<Annotation>): JetValueParameter {
-        for (a in list) {
-            if (a is JetValueParameter) return a
-        }
-        throw RuntimeException("Missing Kotlin runtime annotations!");
-    }
-
     val objectInstance = this.objectInstance()
     if (objectInstance != null)
         return objectInstance as T
 
-    val constructors = this.getConstructors()
-    val ktor = constructors[0] as Constructor<T>
+    val ktor = primaryConstructor()
 
     val paramTypes = ktor.getParameterTypes()!!
     val annotations = ktor.getParameterAnnotations()
@@ -98,4 +98,25 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     }
 
     return ktor.newInstance(*arguments)
+}
+
+fun Any.primaryProperties() : List<String> {
+    val ktor = javaClass.primaryConstructor()
+    val annotations = ktor.getParameterAnnotations()
+
+    return annotations map {
+        val name = find(it).name()
+
+        if (javaClass.propertyGetter(name) == null) {
+            error("'$name' is missing val in ${javaClass.getName()}'s primary constructor")
+        }
+
+        name
+    }
+}
+
+[suppress("UNCHECKED_CAST")]
+fun <T> Class<out T>.primaryConstructor() : Constructor<T> {
+    val constructors = this.getConstructors()
+    return constructors[0] as Constructor<T>
 }
