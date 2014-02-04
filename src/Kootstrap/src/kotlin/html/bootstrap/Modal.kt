@@ -8,6 +8,7 @@ class ModalBuilder() {
     var button: (A.() -> Unit)? = null
     var h: highlight = highlight.default
     var c: caliber = caliber.default
+
     fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.() -> Unit) {
         button = b
         this.h = h
@@ -27,6 +28,16 @@ class ModalBuilder() {
     var save: (BUTTON.() -> Unit)? = null
     fun save(c: BUTTON.() -> Unit) {
         save = c
+    }
+
+    var footer: (HtmlBodyTag.()->Unit)? = null
+    fun footer(c: HtmlBodyTag.()->Unit) {
+        footer = c
+    }
+
+    var dialogStyle: (StyledElement.() -> Unit)? = null
+    fun dialogStyle(s: StyledElement.() -> Unit) {
+        dialogStyle = s
     }
 }
 
@@ -49,6 +60,12 @@ fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit) {
         this["role"] = "dialog"
         this["aria-hidden"] = "true"
         div(s("modal-dialog")) {
+            builder.dialogStyle ?. let {
+                style {
+                    it()
+                }
+            }
+
             div(s("modal-content")) {
                 modalBody(builder)
             }
@@ -92,6 +109,8 @@ fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post
 fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
     val head = builder.header ?: throw RuntimeException("No header provided")
     val body = builder.body ?: throw RuntimeException("No content provided")
+    val foot = builder.footer // Optional
+    val submitButton = builder.save // Optional
 
     div(s("modal-header")) {
         a(close) {
@@ -111,18 +130,23 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
     }
 
     div(s("modal-footer")) {
-        button(highlight.default) {
-            buttonType = ButtonType.button
-            this["aria-hidden"] = "true"
-            this["data-dismiss"] = "modal"
-            +"Close"
+        if (foot != null) {
+            if (submitButton != null) error("'save {}' won't work if 'footer {}' is defined")
+            foot()
         }
+        else {
+            button(highlight.default) {
+                buttonType = ButtonType.button
+                this["aria-hidden"] = "true"
+                this["data-dismiss"] = "modal"
+                +"Close"
+            }
 
-        val submitButton = builder.save
-        if (submitButton != null) {
-            button(highlight.primary) {
-                buttonType = ButtonType.submit
-                submitButton()
+            if (submitButton != null) {
+                button(highlight.primary) {
+                    buttonType = ButtonType.submit
+                    submitButton()
+                }
             }
         }
     }
