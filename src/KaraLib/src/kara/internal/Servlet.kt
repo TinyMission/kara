@@ -4,25 +4,19 @@ import javax.servlet.http.*
 import java.io.IOException
 import kara.*
 import javax.servlet.ServletConfig
+import kotlin.properties.Delegates
 
 open class Servlet() : HttpServlet() {
-    private var _application: Application? = null
-
-    val application: Application get() = _application ?: run {
-        _application = loadApp()
-        _application!!
-    }
-
-    private fun loadApp(): Application {
+    val application: Application by Delegates.blockingLazy {
         val config: ApplicationConfig = ApplicationConfig(getInitParameter("environment") ?: "development")
         getInitParameter("host")?.let { config.set("host", it) }
         getInitParameter("port")?.let { config.set("port", it) }
 
-        return ApplicationLoader(config).load()
+        ApplicationLoader(config).load()
     }
 
     public override fun destroy() {
-        _application?.shutDown()
+        application.shutDown()
     }
 
     protected override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
