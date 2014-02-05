@@ -13,12 +13,11 @@ import org.apache.log4j.Logger
 import java.io.IOException
 import kotlin.properties.*
 
+val logger = Logger.getLogger(javaClass<ResourceDescriptor>())!!
+
 /** Contains all the information necessary to match a route and execute an action.
  */
 class ResourceDescriptor(val route: String, val resourceClass: Class<out Resource>) {
-    class object {
-        val logger = Logger.getLogger(this.javaClass)!!
-    }
 
     private val routeComponents = route.toRouteComponents()
 
@@ -105,8 +104,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
                 result = routeInstance.handle(actionContext)
             }
             catch (ex: Throwable) {
-                logger.warn("exec error: ${ex.getMessage()}");
-                ex.printStackTrace()
+                logger.error("exec error: ${ex.getMessage()}", ex);
                 // write the standard error page
                 var error: Throwable = ex
                 if (ex.getCause() != null)
