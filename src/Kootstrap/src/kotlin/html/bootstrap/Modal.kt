@@ -175,6 +175,22 @@ fun dialog(content: ModalBuilder.() -> Unit): ActionResult {
     }
 }
 
+fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit): ActionResult {
+    val builder = ModalBuilder()
+    builder.content()
+    return ModalResult() {
+        div(s("modal-dialog")) {
+            div(s("modal-content")) {
+                form(form_horizontal) {
+                    this.action = action
+                    this.method = formMethod
+                    modalBody(builder)
+                }
+            }
+        }
+    }
+}
+
 class ModalResult(val content: HtmlBodyTag.() -> Unit) : ActionResult {
     fun sendHtml(html: String, response: HttpServletResponse) {
         response.setContentType("text/html")
