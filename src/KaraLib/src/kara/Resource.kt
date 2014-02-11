@@ -19,7 +19,7 @@ public abstract class Resource() : Link {
     fun requestParts(): Pair<String, Map<String, Any>> {
         val route = javaClass.fastRoute()
 
-        val path = StringBuilder()
+        val path = StringBuilder(contextPath())
 
         val properties = LinkedHashSet(properties())
         val components = route.toRouteComponents().map({
@@ -76,3 +76,18 @@ public fun Class<out Resource>.baseLink(): Link {
     return route.link()
 }
 
+public fun String.link(): Link {
+    return DirectLink(appendContext())
+}
+
+public fun contextPath(): String {
+    return ActionContext.tryGet()?.request?.getContextPath() ?: ""
+}
+
+public fun String.appendContext(): String {
+    if (startsWith("/") && !startsWith("//")) {
+        return contextPath() + this
+    }
+
+    return this
+}

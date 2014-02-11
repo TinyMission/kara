@@ -2,6 +2,7 @@ package kotlin.html.bootstrap
 
 import kotlin.html.*
 import java.util.ArrayList
+import kara.link
 
 public fun HtmlBodyTag.pills(c: StyleClass? = null, body: UL.()->Unit): Unit = ul(s("nav nav-pills") + c, contents = body)
 public fun HtmlBodyTag.content(body: DIV.()->Unit): Unit = div(s("tab-content"), contents = body)
