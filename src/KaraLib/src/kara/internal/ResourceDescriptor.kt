@@ -40,7 +40,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
     }
 
     public fun buildParams(request: HttpServletRequest): RouteParameters {
-        val url = request.getRequestURI()!!
+        val url = request.getRequestURI()?.trimLeading(request.getContextPath() ?: "")!!
         val query = request.getQueryString()
         val params = RouteParameters()
 

@@ -46,7 +46,7 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
         val url = request.getRequestURI() as String
         val query = request.getQueryString()
         val method = request.getMethod()
-        val resourceDescriptor = findDescriptor(method!!, url)
+        val resourceDescriptor = findDescriptor(method!!, url.trimLeading(request.getContextPath() ?: ""))
         if (resourceDescriptor != null) {
             resourceDescriptor.exec(context, request, response)
             return true
