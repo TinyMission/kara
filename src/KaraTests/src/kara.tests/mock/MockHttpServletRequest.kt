@@ -115,7 +115,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getContextPath() : String? {
-        throw UnsupportedOperationException()
+        return ""
     }
     public override fun getIntHeader(p0 : String?) : Int {
         throw UnsupportedOperationException()
