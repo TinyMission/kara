@@ -27,7 +27,7 @@ class ActionContext(val application: ApplicationContext,
     }
 
     fun redirect(url : String) : ActionResult {
-        return RedirectResult(url)
+        return RedirectResult(url.appendContext())
     }
 
     class object {
