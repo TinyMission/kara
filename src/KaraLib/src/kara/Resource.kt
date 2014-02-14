@@ -14,12 +14,25 @@ import java.util.LinkedHashMap
 public abstract class Resource() : Link {
     abstract  fun handle(context: ActionContext): ActionResult
 
-    override fun href() = toExternalForm()
+    override fun href(): String = href(contextPath())
 
-    fun requestParts(): Pair<String, Map<String, Any>> {
+    fun href(context: String): String {
+        val url = requestParts(context)
+        if (url.second.size() == 0) return url.first
+
+        val answer = StringBuilder()
+
+        answer.append(url.first)
+        answer.append("?")
+        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)}" } join("&"))
+
+        return answer.toString()
+    }
+
+    fun requestParts(context: String = contextPath()): Pair<String, Map<String, Any>> {
         val route = javaClass.fastRoute()
 
-        val path = StringBuilder(contextPath())
+        val path = StringBuilder(context)
 
         val properties = LinkedHashSet(properties())
         val components = route.toRouteComponents().map({
@@ -47,19 +60,6 @@ public abstract class Resource() : Link {
         }
 
         return Pair(path.toString(), queryArgs)
-    }
-
-    private fun toExternalForm(): String {
-        val url = requestParts()
-        if (url.second.size() == 0) return url.first
-
-        val answer = StringBuilder()
-
-        answer.append(url.first)
-        answer.append("?")
-        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)}" } join("&"))
-
-        return answer.toString()
     }
 }
 
