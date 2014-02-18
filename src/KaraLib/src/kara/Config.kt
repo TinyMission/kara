@@ -2,15 +2,13 @@ package kara
 
 import java.util.HashMap
 import javax.naming.*
+import java.util.concurrent.ConcurrentHashMap
 
-/**
- * Base class for config classes that use the Kara JSON config system.
- * Values are stored in a flat key/value map, and can be accessed like an array.
- */
 open class Config() {
     public class MissingException(desc: String) : RuntimeException(desc)
 
     val data = HashMap<String, String>()
+    val cache = ConcurrentHashMap<String, String?>()
 
     /**
      * Gets the value for the given key.
@@ -21,7 +19,19 @@ open class Config() {
     }
 
     fun tryGet(name: String): String? {
-        return lookupJNDI(name) ?: data[name]
+        return lookupCache(name) {
+            lookupContext(name) ?: lookupJNDI(name) ?: data[name]
+        }
+    }
+
+    fun lookupCache(name: String, eval: (String)->String?): String? {
+        return cache[name] ?: run {
+            val answer = eval(name)
+            if (answer != null) {
+                cache.putIfAbsent(name, answer)
+            }
+            answer
+        }
     }
 
     /** Sets a value for the given key. */
@@ -53,6 +63,12 @@ open class Config() {
         }
         catch(e: NamingException) {
             return null
+        }
+    }
+
+    private fun lookupContext(name: String): String? {
+        return ActionContext.tryGet()?.let {
+            it.request.getServletContext()?.getInitParameter(name)
         }
     }
 }
