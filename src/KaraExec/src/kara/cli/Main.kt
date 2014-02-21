@@ -4,13 +4,9 @@ import java.util.HashMap
 import kara.*
 import kara.internal.*
 import kara.server.JettyRunner
-import org.apache.log4j.BasicConfigurator
-import org.apache.log4j.Logger
-import org.apache.log4j.Level
-import org.apache.log4j.LogManager
+import org.apache.log4j.*
 import java.util.ArrayList
 import java.net.URL
-import org.apache.log4j.PropertyConfigurator
 import java.io.File
 
 fun server(appConfig : ApplicationConfig) {

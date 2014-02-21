@@ -2,7 +2,7 @@
   <configuration default="false" name="KaraTests" type="JUnit" factoryName="JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="karatests.*" />
+        <option name="PATTERN" value="kara.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
