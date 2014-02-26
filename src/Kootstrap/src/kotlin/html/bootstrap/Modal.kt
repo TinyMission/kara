@@ -52,7 +52,7 @@ fun HtmlBodyTag.modalShow(id: String, h: highlight = highlight.default, c: calib
     }
 }
 
-fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit) {
+fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit, body: (DIV.(ModalBuilder) -> Unit)? = null) {
     val builder = ModalBuilder()
     builder.content()
     div(s("modal fade"), id) {
@@ -67,8 +67,23 @@ fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit) {
             }
 
             div(s("modal-content")) {
-                modalBody(builder)
+
+                if (body == null) {
+                    modalBody(builder)
+                } else {
+                    body(builder)
+                }
             }
+        }
+    }
+}
+
+fun HtmlBodyTag.modalDialogForm(id: String, action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit) {
+    modalDialog(id, content) {
+        form(form_horizontal) {
+            this.action = action
+            this.method = formMethod
+            modalBody(it)
         }
     }
 }
