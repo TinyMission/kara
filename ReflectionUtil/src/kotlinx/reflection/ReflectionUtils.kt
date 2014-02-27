@@ -83,7 +83,7 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     val annotations = ktor.getParameterAnnotations()
 
     val arguments: Array<Any?> = Array(paramTypes.size) { i ->
-        val annotation = find(annotations[i])
+        val annotation = find(annotations[i]!!)
         val paramName = annotation.name()
         val optional = annotation.`type`().startsWith("?")
 
@@ -105,7 +105,7 @@ fun Any.primaryProperties() : List<String> {
     val annotations = ktor.getParameterAnnotations()
 
     return annotations map {
-        val name = find(it).name()
+        val name = find(it!!).name()
 
         if (javaClass.propertyGetter(name) == null) {
             error("'$name' is missing val in ${javaClass.getName()}'s primary constructor")
