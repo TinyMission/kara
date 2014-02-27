@@ -21,7 +21,6 @@ import java.nio.file.attribute.BasicFileAttributes
 /** The base Kara application class.
  */
 abstract class Application(val config: ApplicationConfig, private vararg val routes: Any) {
-    val logger = Logger.getLogger(this.javaClass)!!
     private var _context: ApplicationContext? = null
     private val watchKeys = ArrayList<WatchKey>()
     private val contextLock = Object()
@@ -79,9 +78,7 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
         try {
             _context?.dispose()
         } catch(e: Throwable) {
-            println("Failed to destroy application context.")
-            println(e.getMessage())
-            println(e.printStackTrace())
+            logger.error("Failed to destroy application context", e)
         }
         watchKeys.forEach { it.cancel() }
         watchKeys.clear()
@@ -131,5 +128,9 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
 
     open fun shutDown() {
         destroyContext()
+    }
+
+    class object {
+        val logger = Logger.getLogger(this.javaClass)!!
     }
 }

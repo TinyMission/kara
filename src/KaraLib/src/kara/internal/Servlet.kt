@@ -33,7 +33,7 @@ open class Servlet() : HttpServlet() {
             }
         }
         catch (ex: Throwable) {
-            println(ex.printStackTrace())
+            logger.error(ex)
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
         }
     }

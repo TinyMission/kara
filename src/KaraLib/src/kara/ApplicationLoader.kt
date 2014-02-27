@@ -33,7 +33,7 @@ class ApplicationLoader(val applicationConfig: ApplicationConfig)  {
         val applicationClass = appClassObject as Class<Application>
         val cons = applicationClass.getConstructor(javaClass<ApplicationConfig>())
         val application = cons.newInstance(applicationConfig) as Application
-        application.logger.debug("Application class: ${application.javaClass.toString()}")
+        Application.logger.debug("Application class: ${application.javaClass.toString()}")
         application.start()
         for (loadedHandler in loadedHandlers) {
             loadedHandler(application)
