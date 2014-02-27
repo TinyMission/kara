@@ -15,6 +15,12 @@ open class Servlet() : HttpServlet() {
         ApplicationLoader(config).load()
     }
 
+
+    override fun init() {
+        super<HttpServlet>.init()
+        application.config // Just to make sure application is eagerly loaded when servlet is initialized.
+    }
+
     public override fun destroy() {
         application.shutDown()
     }
