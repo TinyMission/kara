@@ -14,8 +14,8 @@ fun server(appConfig : ApplicationConfig) {
     jettyRunner.start()
 }
 
-fun config(appCongig : ApplicationConfig) {
-    println(appCongig.toString())
+fun config(appConfig: ApplicationConfig) {
+    println(appConfig.toString())
 }
 
 fun main(args: Array<String>) {
