@@ -2,22 +2,27 @@ package kara
 
 import kotlin.html.*
 import kara.internal.*
+import javax.servlet.http.HttpServletResponse
 
 /** Base class for html views.
  */
 abstract class HtmlView(val layout: HtmlLayout? = null) : ActionResult {
     override fun writeResponse(context: ActionContext): Unit {
-        context.response.setContentType("text/html")
-        val writer = context.response.getWriter()!!
+        writeResponse(context.response)
+    }
+
+    fun writeResponse(response: HttpServletResponse) {
+        response.setContentType("text/html")
+        val writer = response.getWriter()!!
         if (layout == null) {
             writer.write(renderWithoutLayout())
         }
         else {
             val page = HTML()
-            with(layout!!) {
+            with(layout) {
                 page.render(this@HtmlView)
             }
-            writer.write(page.toString()!!)
+            writer.write(page.toString())
         }
         writer.flush()
     }

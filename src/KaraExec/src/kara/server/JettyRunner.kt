@@ -8,6 +8,8 @@ import org.eclipse.jetty.server.handler.*
 import org.eclipse.jetty.server.session.*
 import org.apache.log4j.Logger
 import java.util.ArrayList
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
@@ -48,11 +50,8 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
                 }
             }
             catch(ex: Throwable) {
-                logger.warn("dispatch error: ${ex.getMessage()}");
-                ex.printStackTrace()
-                val out = response.getWriter()
-                out?.print(ex.getMessage())
-                out?.flush()
+                logger.error("dispatch error: ${ex.getMessage()}");
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorDescr(ex, request, request.getSession()!!))
             }
         }
     }
@@ -102,4 +101,22 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         this.start()
     }
 
+}
+
+
+fun Throwable.getStackTraceString(): String {
+    val os = ByteArrayOutputStream()
+    this.printStackTrace(PrintStream(os))
+    return os.toString()
+}
+
+fun errorDescr(ex: Throwable, request: HttpServletRequest, session: HttpSession): String {
+    return with (StringBuilder()) {
+        append("\nRequest: ${request.getRequestURI()}")
+        append("\nSession: ${session.getDescription()}")
+        append("\n\nStack Trace:\n")
+        append(ex.getStackTraceString())
+
+        toString()
+    }
 }

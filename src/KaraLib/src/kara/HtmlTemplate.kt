@@ -2,6 +2,7 @@ package kara
 
 import kotlin.html.*
 import java.util.ArrayList
+import javax.servlet.http.HttpServletResponse
 
 open public class TemplatePlaceholder<TOuter, TTemplate>() {
     private var content: (TTemplate.() -> Unit)? = null
@@ -58,8 +59,12 @@ public fun <TTemplate, TOuter> TOuter.insert(template: TTemplate, placeholder: T
 
 public open class HtmlTemplateView<Template : HtmlTemplate<Template, HTML>>(val template: Template, val build: Template.() -> Unit) : ActionResult {
     override fun writeResponse(context: ActionContext) {
-        context.response.setContentType("text/html")
-        val writer = context.response.getWriter()!!
+        writeResponse(context.response)
+    }
+
+    fun writeResponse(response: HttpServletResponse) {
+        response.setContentType("text/html")
+        val writer = response.getWriter()!!
         val view = this@HtmlTemplateView
         val page = HTML()
         with(template) {

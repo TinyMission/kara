@@ -99,20 +99,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
         val routeInstance = buildRouteInstance(params)
         val actionContext = ActionContext(context, request, response, params)
         actionContext.withContext {
-            var result: ActionResult? = null
-            try {
-                result = routeInstance.handle(actionContext)
-            }
-            catch (ex: Throwable) {
-                logger.error("exec error: ${ex.getMessage()}", ex);
-                // write the standard error page
-                var error: Throwable = ex
-                if (ex.getCause() != null)
-                    error = ex.getCause()!!
-                ErrorView(error).writeResponse(actionContext)
-            }
-
-            result?.tryWriteResponse(actionContext)
+            routeInstance.handle(actionContext).tryWriteResponse(actionContext)
         }
     }
 

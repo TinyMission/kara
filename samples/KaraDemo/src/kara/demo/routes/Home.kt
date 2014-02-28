@@ -13,6 +13,11 @@ object Home {
         TextResult("This is a test action, yo")
     })
 
+    Get("/crash")
+    class Crash() : Request({
+        error("This resource crashes")
+    })
+
     Post("/updatebook")
     class Update() : Request({
         println("parameters:")
