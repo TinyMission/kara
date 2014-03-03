@@ -96,7 +96,7 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
     val hexString: String
         get() = "#${redInt.twoDigitHex()}${greenInt.twoDigitHex()}${blueInt.twoDigitHex()}"
 
-    fun toString(): String {
+    override fun toString(): String {
         if (alpha < 1.0) {
             return "rgba($redInt, $greenInt, $blueInt, ${java.lang.String.format(Locale.ENGLISH, "%.3f", alpha)})"
         }

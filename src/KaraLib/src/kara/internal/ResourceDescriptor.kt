@@ -103,7 +103,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
         }
     }
 
-    public fun toString(): String {
+    public override fun toString(): String {
         return "Resource<${resourceClass}> at $route"
     }
 

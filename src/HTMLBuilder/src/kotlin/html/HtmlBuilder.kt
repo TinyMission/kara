@@ -14,7 +14,7 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 
     abstract fun renderElement(builder: StringBuilder, indent: String)
 
-    open fun toString(): String {
+    override fun toString(): String {
         val builder = StringBuilder()
         renderElement(builder, "")
         return builder.toString()

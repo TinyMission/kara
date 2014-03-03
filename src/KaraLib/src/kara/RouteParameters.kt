@@ -55,7 +55,7 @@ class RouteParameters() {
         return map
     }
 
-    public fun toString() : String {
+    public override fun toString() : String {
         val pairs = _map.iterator().map { it ->
             "${it.getKey()}: ${it.getValue()}"
         }.toArrayList()

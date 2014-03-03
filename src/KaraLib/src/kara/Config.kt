@@ -45,7 +45,7 @@ open class Config() {
     }
 
     /** Prints the entire config to a nicely formatted string. */
-    fun toString(): String {
+    override fun toString(): String {
         val builder = StringBuilder()
         for (name in data.keySet()) {
             builder.append("$name: ${data[name]}\n")

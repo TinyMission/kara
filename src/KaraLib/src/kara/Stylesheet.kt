@@ -11,7 +11,7 @@ abstract class Stylesheet(var namespace : String = "") : CachedResource() {
     */
     abstract fun CssElement.render()
 
-    fun toString() : String {
+    override fun toString() : String {
         val element = CssElement()
         element.render()
         val builder = StringBuilder()

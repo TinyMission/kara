@@ -4,7 +4,7 @@ import java.util.*
 import java.lang.reflect.*
 import java.beans.Introspector
 import jet.runtime.typeinfo.JetValueParameter
-import jet.Array
+import kotlin.Array
 
 fun Class<*>.objectInstance(): Any? {
     try {

@@ -9,7 +9,7 @@ enum class LinearUnits(val value: String) {
     _em : LinearUnits("em")
     _px : LinearUnits("px")
     auto: LinearUnits("auto")
-    fun toString(): String {
+    override fun toString(): String {
         return value
     }
 }
@@ -32,7 +32,7 @@ class LinearDimension(var value: Double, var units: LinearUnits) {
         val x = 0.em
     }
 
-    fun toString(): String {
+    override fun toString(): String {
         if (units == LinearUnits.auto)
             return "auto"
         return "${DecimalFormat("#").format(value)}$units"
@@ -87,7 +87,7 @@ val Int.percent: LinearDimension
  */
 class BoxDimensions(var top: LinearDimension, var right: LinearDimension, var bottom: LinearDimension, var left: LinearDimension) {
 
-    fun toString(): String {
+    override fun toString(): String {
         return "$top $right $bottom $left"
     }
 }
