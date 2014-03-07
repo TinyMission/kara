@@ -50,7 +50,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
                 }
             }
             catch(ex: Throwable) {
-                logger.error("dispatch error: ${ex.getMessage()}");
+                logger.error("dispatch error: ${ex.getMessage()}", ex);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorDescr(ex, request, request.getSession()!!))
             }
         }
