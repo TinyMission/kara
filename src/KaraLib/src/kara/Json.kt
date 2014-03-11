@@ -94,54 +94,55 @@ fun JsonObject.jsonValue(name: String, value: String) = put(name, jsonString(val
 fun JsonObject.jsonValue(name: String, value: Number) = put(name, JsonValue(value))
 fun JsonObject.jsonValue(name: String, value: Boolean) = put(name, JsonValue(value))
 
-fun JsonArray.jsonObject(body: JsonObject.() -> Unit) {
+inline fun JsonArray.jsonObject(body: JsonObject.() -> Unit) {
     val value = JsonObject()
     value.body()
     add(value)
 }
 
-fun JsonArray.jsonArray(body: JsonArray.() -> Unit) {
+inline fun JsonArray.jsonArray(body: JsonArray.() -> Unit) {
     val value = JsonArray()
     value.body()
     add(value)
 }
-fun JsonObject.jsonObject(name: String, body: JsonObject.() -> Unit) {
+
+inline fun JsonObject.jsonObject(name: String, body: JsonObject.() -> Unit) {
     val value = JsonObject()
     value.body()
     put(name, value)
 }
 
-fun JsonObject.jsonArray(name: String, body: JsonArray.() -> Unit) {
+inline fun JsonObject.jsonArray(name: String, body: JsonArray.() -> Unit) {
     val value = JsonArray()
     value.body()
     put(name, value)
 }
 
-fun JsonRoot.jsonArray(body: JsonArray.() -> Unit) {
+inline fun JsonRoot.jsonArray(body: JsonArray.() -> Unit) {
     val array = JsonArray()
     array.body()
     set(array)
 }
 
-fun JsonRoot.jsonObject(body: JsonObject.() -> Unit){
+inline fun JsonRoot.jsonObject(body: JsonObject.() -> Unit){
     val obj = JsonObject()
     obj.body()
     set(obj)
 }
 
-fun jsonArray(body: JsonArray.() -> Unit) : JsonElement {
+inline fun jsonArray(body: JsonArray.() -> Unit) : JsonElement {
     val array = JsonArray()
     array.body()
     return array
 }
 
-fun jsonObject(body: JsonObject.() -> Unit) : JsonElement {
+inline fun jsonObject(body: JsonObject.() -> Unit) : JsonElement {
     val obj = JsonObject()
     obj.body()
     return obj
 }
 
-fun json(body: JsonRoot.() -> Unit) : JsonResult {
+inline fun json(body: JsonRoot.() -> Unit) : JsonResult {
     val json = JsonRoot()
     json.body()
     return JsonResult(json)
