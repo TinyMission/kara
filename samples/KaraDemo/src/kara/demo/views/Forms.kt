@@ -11,9 +11,11 @@ fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
         h2 { +"Forms" }
         formForBean(book, Home.Update(), FormMethod.post) {
 
-            table(fields) {
+            table {
+                setClass(fields)
                 tr {
-                    td(cLabel) {
+                    td {
+                        setClass(cLabel)
                         labelFor("title")
                     }
                     td {
@@ -21,7 +23,8 @@ fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
                     }
                 }
                 tr {
-                    td(cLabel) {
+                    td {
+                        setClass(cLabel)
                         labelFor("author")
                     }
                     td {
@@ -29,7 +32,8 @@ fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
                     }
                 }
                 tr {
-                    td(cLabel) {
+                    td {
+                        setClass(cLabel)
                         labelFor("isPublished", "Is Published?")
                     }
                     td {
@@ -37,7 +41,8 @@ fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
                     }
                 }
                 tr {
-                    td(cLabel + top) {
+                    td {
+                        setClass(cLabel + top)
                         labelFor("description")
                     }
                     td {
@@ -45,7 +50,8 @@ fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
                     }
                 }
                 tr {
-                    td(cLabel) {
+                    td {
+                        setClass(cLabel)
                         labelFor("category")
                     }
                     td {
@@ -54,7 +60,8 @@ fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
                     }
                 }
                 tr {
-                    td(cLabel) {
+                    td {
+                        setClass(cLabel)
                     }
                     td {
                         submitButton("Submit")

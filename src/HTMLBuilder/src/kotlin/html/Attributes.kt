@@ -3,7 +3,6 @@ package kotlin.html
 import kotlin.html.*
 
 object Attributes {
-    val c = ClassAttribute("class")
     val id = IdAttribute("id")
     val style = StringAttribute("style")
 

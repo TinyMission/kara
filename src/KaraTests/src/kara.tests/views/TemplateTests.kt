@@ -30,9 +30,9 @@ class TemplateTests() {
     }
 }
 
-class MenuTemplate : HtmlTemplate<MenuTemplate, HtmlBodyTag>() {
+class MenuTemplate : Template<HtmlBodyTag>() {
     val header = Placeholder<HtmlBodyTag>()
-    val item = Placeholders<UL>()
+    val item = Placeholders<UL, LI>()
 
     override fun HtmlBodyTag.render() {
         div {
@@ -48,7 +48,7 @@ class MenuTemplate : HtmlTemplate<MenuTemplate, HtmlBodyTag>() {
     }
 }
 
-class ContentTemplate : HtmlTemplate<ContentTemplate, BODY>() {
+class ContentTemplate : Template<BODY>() {
     val left = Placeholder<DIV>()
     val right = Placeholder<DIV>()
 
@@ -62,7 +62,7 @@ class ContentTemplate : HtmlTemplate<ContentTemplate, BODY>() {
     }
 }
 
-class PageTemplate : HtmlTemplate<PageTemplate, HTML>() {
+class PageTemplate : Template<HTML>() {
     val header = Placeholder<BODY>()
     val content = TemplatePlaceholder<BODY, ContentTemplate>()
     val menu = TemplatePlaceholder<HtmlBodyTag, MenuTemplate>()

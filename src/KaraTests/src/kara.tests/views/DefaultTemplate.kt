@@ -3,7 +3,7 @@ package kara.tests.views
 import kara.*
 import kotlin.html.*
 
-class DefaultTemplate : HtmlTemplate<DefaultTemplate, HTML>() {
+class DefaultTemplate : Template<HTML>() {
     val content = Placeholder<BODY>()
 
     override fun HTML.render() {

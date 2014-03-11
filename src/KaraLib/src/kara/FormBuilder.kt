@@ -72,7 +72,8 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
      * @param text the text to use for the label (defaults to the property name)
      */
     public fun HtmlBodyTag.labelFor(property: P, text : String? = null, c : StyleClass? = null) {
-        label(c) {
+        label {
+            setClass(c)
             forId = propertyId(property)
             +(text ?: model.propertyName(property).decamel().capitalize())
         }
@@ -85,7 +86,8 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
      */
     public fun HtmlBodyTag.inputFor(inputType : InputType, property: P, contents : INPUT.() -> Unit = empty_contents) {
         val value = propertyValue(property)
-        input(id = propertyId(property)) {
+        input {
+            this.id = propertyId(property)
             this.inputType = inputType
             this.name = propertyName(property)
             this.value = value
@@ -98,7 +100,8 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
      */
     public fun HtmlBodyTag.textAreaFor(property: P, contents : TEXTAREA.() -> Unit = empty_contents) {
         val value = propertyValue(property)
-        textarea(id=propertyId(property)) {
+        textarea {
+            this.id=propertyId(property)
             this.name=propertyName(property)
             this.text=value
             this.contents()
@@ -231,7 +234,8 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
      */
     public fun HtmlBodyTag.radioFor(property: P, value : String, contents : INPUT.() -> Unit = empty_contents) {
         val modelValue = propertyValue(property)
-        input(id = propertyId(property)) {
+        input {
+            this.id = propertyId(property)
             this.name = propertyName(property)
             this.inputType = radio
             this.value = value
@@ -245,7 +249,8 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
      */
     public fun HtmlBodyTag.checkBoxFor(property: P, contents : INPUT.() -> Unit = empty_contents) {
         val modelValue = propertyValue(property)
-        input(id = propertyId(property)) {
+        input {
+            this.id = propertyId(property)
             this.inputType = checkbox
             this.name = propertyName(property)
             checked = modelValue == "true"

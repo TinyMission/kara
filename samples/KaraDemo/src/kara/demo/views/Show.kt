@@ -9,7 +9,8 @@ import kotlin.html.*
 fun Show(post: Post) = HtmlTemplateView(DetailsTemplate()) {
     caption {
         h3 { +"Show Post" }
-        div(c = date) {
+        div{
+            setClass(date)
             label { +"Date:" }
             +"${post.date}"
         }

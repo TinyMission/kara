@@ -55,7 +55,7 @@ fun ActionResult.tryWriteResponse(context: ActionContext) {
         // All kinds of EOFs and Broken Pipes can be safely ignored
     }
     catch(ex: Throwable) {
-        Application.logger.error(ex)
+        Application.logger.error("Error processing request", ex)
         context.response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
     }
 }

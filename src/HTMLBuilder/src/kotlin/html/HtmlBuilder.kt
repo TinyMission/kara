@@ -57,7 +57,7 @@ fun String.htmlEscapeTo(builder: StringBuilder) {
 abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
     private val attributes = HashMap<String, String>()
 
-    public fun build<T : HtmlTag>(tag: T, contents: T.() -> Unit): T {
+    public inline fun build<T : HtmlTag>(tag: T, contents: T.() -> Unit): T {
         tag.contents()
         return tag
     }
@@ -121,6 +121,10 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
 
     public fun tryGet(attributeName: String): String? {
         return attributes[attributeName]
+    }
+
+    public fun hasAttribute(attributeName: String): Boolean {
+        return attributes.containsKey(attributeName)
     }
 
     public fun get(attributeName: String): String {

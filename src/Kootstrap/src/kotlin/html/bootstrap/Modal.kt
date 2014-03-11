@@ -8,6 +8,7 @@ class ModalBuilder() {
     var button: (A.() -> Unit)? = null
     var h: highlight = highlight.default
     var c: caliber = caliber.default
+    var form_style: StyleClass? = form_horizontal
 
     fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.() -> Unit) {
         button = b
@@ -55,19 +56,22 @@ fun HtmlBodyTag.modalShow(id: String, h: highlight = highlight.default, c: calib
 fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit, body: (DIV.(ModalBuilder) -> Unit)? = null) {
     val builder = ModalBuilder()
     builder.content()
-    div(s("modal fade"), id) {
+    div {
+        this.id = id
+        addClass("modal fade")
         this["tabindex"] = "-1"
         this["role"] = "dialog"
         this["aria-hidden"] = "true"
-        div(s("modal-dialog")) {
+        div {
+            addClass("modal-dialog")
             builder.dialogStyle ?. let {
                 style {
                     it()
                 }
             }
 
-            div(s("modal-content")) {
-
+            div{
+                addClass("modal-content")
                 if (body == null) {
                     modalBody(builder)
                 } else {
@@ -80,7 +84,8 @@ fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit, body: 
 
 fun HtmlBodyTag.modalDialogForm(id: String, action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit) {
     modalDialog(id, content) {
-        form(form_horizontal) {
+        form{
+            addClass(it.form_style)
             this.action = action
             this.method = formMethod
             modalBody(it)
@@ -93,12 +98,16 @@ fun HtmlBodyTag.modalFrame(content: ModalBuilder.() -> Unit, body: DIV.(ModalBui
     builder.content()
     val id = uniqueId
     modalShow(id, builder.h, builder.c, builder.button!!)
-    div(s("modal fade"), id) {
+    div {
+        addClass("modal fade")
+        this.id = id
         this["tabindex"] = "-1"
         this["role"] = "dialog"
         this["aria-hidden"] = "true"
-        div(s("modal-dialog")) {
-            div(s("modal-content")) {
+        div {
+            addClass("modal-dialog")
+            div {
+                addClass("modal-content")
                 body(builder)
             }
         }
@@ -113,7 +122,8 @@ fun HtmlBodyTag.modal(content: ModalBuilder.() -> Unit) {
 
 fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit) {
     modalFrame(content) {
-        form(form_horizontal) {
+        form {
+            addClass(it.form_style)
             this.action = action
             this.method = formMethod
             modalBody(it)
@@ -127,30 +137,35 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
     val foot = builder.footer // Optional
     val submitButton = builder.save // Optional
 
-    div(s("modal-header")) {
-        a(close) {
+    div {
+        addClass("modal-header")
+        a {
+            addClass(close)
             this["type"] = "button"
             this["aria-hidden"] = "true"
             this["data-dismiss"] = "modal"
             +"&times;"
         }
 
-        h4(s("modal-title")) {
+        h4 {
+            addClass("modal-title")
             head()
         }
     }
 
-    div(s("modal-body")) {
+    div {
+        addClass("modal-body")
         body()
     }
 
-    div(s("modal-footer")) {
+    div {
+        addClass("modal-footer")
         if (foot != null) {
             if (submitButton != null) error("'save {}' won't work if 'footer {}' is defined")
             foot()
         }
         else {
-            button(highlight.default) {
+            bt_button(highlight.default) {
                 buttonType = ButtonType.button
                 this["aria-hidden"] = "true"
                 this["data-dismiss"] = "modal"
@@ -158,7 +173,7 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
             }
 
             if (submitButton != null) {
-                button(highlight.primary) {
+                bt_button(highlight.primary) {
                     buttonType = ButtonType.submit
                     submitButton()
                 }
@@ -175,15 +190,19 @@ fun <T : HtmlBodyTag> T.modal(dataUrl: Link, effect: String = "fade", content: T
         attribute("data-url", dataUrl.href())
         attribute("data-use", "modal")
     }
-    div(s("modal $effect")) { }
+    div {
+        addClass("modal $effect")
+    }
 }
 
 fun dialog(content: ModalBuilder.() -> Unit): ActionResult {
     val builder = ModalBuilder()
     builder.content()
     return ModalResult() {
-        div(s("modal-dialog")) {
-            div(s("modal-content")) {
+        div {
+            addClass("modal-dialog")
+            div {
+                addClass("modal-content")
                 modalBody(builder)
             }
         }
@@ -194,9 +213,12 @@ fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, content: 
     val builder = ModalBuilder()
     builder.content()
     return ModalResult() {
-        div(s("modal-dialog")) {
-            div(s("modal-content")) {
-                form(form_horizontal) {
+        div {
+            addClass("modal-dialog")
+            div {
+                addClass("modal-content")
+                form {
+                    addClass(builder.form_style)
                     this.action = action
                     this.method = formMethod
                     modalBody(builder)
@@ -217,7 +239,7 @@ class ModalResult(val content: HtmlBodyTag.() -> Unit) : ActionResult {
     override fun writeResponse(context: ActionContext) {
         val modal = MODAL()
         with(modal) {
-            c = s("modal-dialog")
+            addClass("modal-dialog")
             attribute("tabindex", "-1")
             attribute("role", "dialog")
             attribute("aria-hidden", "true")

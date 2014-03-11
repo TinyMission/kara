@@ -25,6 +25,12 @@ public trait StyleClass : SelectorTrait, Selector {
     }
 }
 
+public class SimpleClassStyle(val name : String) : StyleClass {
+    override fun name(): String {
+        return name
+    }
+}
+
 class CompositeStyleClass(val a: StyleClass, val b: StyleClass) : StyleClass {
     override fun name(): String {
         return "${a.name()} ${b.name()}"

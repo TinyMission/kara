@@ -7,7 +7,6 @@ class BODY(containingTag: HTML) : HtmlBodyTag(containingTag, "body")
 
 public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlTag(containingTag, name, renderStyle, contentStyle) {
     public var id: String by Attributes.id
-    public var c: StyleClass by Attributes.c
     public var style: String by Attributes.style
 
     fun style(init: StyledElement.()->Unit) {
@@ -20,33 +19,53 @@ public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderS
 
         this["style"] = builder.toString()
     }
+
+    fun addClass(c: StyleClass?) {
+        if (c != null) {
+            addClass(c.name())
+        }
+    }
+
+    fun addClass(c: String) {
+        val old = tryGet("class")
+        setClass(if (old.isNotEmpty()) "$old $c" else c)
+    }
+
+    fun setClass(c: StyleClass?) {
+        setClass(c?.name() ?: "")
+    }
+
+    fun setClass(c: String) {
+        attribute("class", c)
+    }
 }
 
-
-fun <T : HtmlBodyTag> HtmlBodyTag.contentTag(tag: T, c: StyleClass? = null, id: String? = null, contents: T.() -> Unit = empty_contents) {
-    if (id != null) tag.id = id
-    if (c != null) tag.c = c
-    build(tag, contents)
+inline fun <T : HtmlBodyTag> HtmlBodyTag.contentTag(tag: T, contents: T.() -> Unit) {
+    tag.contents()
 }
 
-fun HtmlBodyTag.button(c: StyleClass? = null, id: String? = null, contents: BUTTON.() -> Unit = empty_contents) = contentTag(BUTTON(this), c, id, contents)
+inline fun HtmlBodyTag.button(contents: BUTTON.() -> Unit) = contentTag(BUTTON(this), contents)
 
-fun HtmlBodyTag.dl(c: StyleClass? = null, id: String? = null, contents: DL.() -> Unit = empty_contents) = contentTag(DL(this), c, id, contents)
-fun DL.dt(c: StyleClass? = null, id: String? = null, contents: DT.() -> Unit = empty_contents) = contentTag(DT(this), c, id, contents)
-fun DL.dd(c: StyleClass? = null, id: String? = null, contents: DD.() -> Unit = empty_contents) = contentTag(DD(this), c, id, contents)
+inline fun HtmlBodyTag.dl(contents:  DL.() -> Unit) = contentTag(DL(this), contents)
+inline fun DL.dt(contents:  DT.() -> Unit) = contentTag(DT(this), contents)
+inline fun DL.dd(contents:  DD.() -> Unit) = contentTag(DD(this), contents)
 
-fun HtmlBodyTag.h1(c: StyleClass? = null, id: String? = null, contents: H1.() -> Unit = empty_contents) = contentTag(H1(this), c, id, contents)
-fun HtmlBodyTag.h2(c: StyleClass? = null, id: String? = null, contents: H2.() -> Unit = empty_contents) = contentTag(H2(this), c, id, contents)
-fun HtmlBodyTag.h3(c: StyleClass? = null, id: String? = null, contents: H3.() -> Unit = empty_contents) = contentTag(H3(this), c, id, contents)
-fun HtmlBodyTag.h4(c: StyleClass? = null, id: String? = null, contents: H4.() -> Unit = empty_contents) = contentTag(H4(this), c, id, contents)
-fun HtmlBodyTag.h5(c: StyleClass? = null, id: String? = null, contents: H5.() -> Unit = empty_contents) = contentTag(H5(this), c, id, contents)
-fun HtmlBodyTag.img(c: StyleClass? = null, id: String? = null, contents: IMG.() -> Unit = empty_contents) = contentTag(IMG(this), c, id, contents)
-fun HtmlBodyTag.input(c: StyleClass? = null, id: String? = null, contents: INPUT.() -> Unit = empty_contents) = contentTag(INPUT(this), c, id, contents)
-fun HtmlBodyTag.label(c: StyleClass? = null, id: String? = null, contents: LABEL.() -> Unit = empty_contents) = contentTag(LABEL(this), c, id, contents)
-fun HtmlBodyTag.select(c: StyleClass? = null, id: String? = null, contents: SELECT.() -> Unit = empty_contents) = contentTag(SELECT(this), c, id, contents)
-fun HtmlBodyTag.textarea(c: StyleClass? = null, id: String? = null, contents: TEXTAREA.() -> Unit = empty_contents) = contentTag(TEXTAREA(this), c, id, contents)
+inline fun HtmlBodyTag.h1(contents:  H1.() -> Unit) = contentTag(H1(this), contents)
+inline fun HtmlBodyTag.h2(contents:  H2.() -> Unit) = contentTag(H2(this), contents)
+inline fun HtmlBodyTag.h3(contents:  H3.() -> Unit) = contentTag(H3(this), contents)
+inline fun HtmlBodyTag.h4(contents:  H4.() -> Unit) = contentTag(H4(this), contents)
+inline fun HtmlBodyTag.h5(contents:  H5.() -> Unit) = contentTag(H5(this), contents)
+inline fun HtmlBodyTag.img(contents:  IMG.() -> Unit) = contentTag(IMG(this), contents)
+inline fun HtmlBodyTag.input(contents:  INPUT.() -> Unit) = contentTag(INPUT(this), contents)
+inline fun HtmlBodyTag.label(contents:  LABEL.() -> Unit) = contentTag(LABEL(this), contents)
+inline fun HtmlBodyTag.select(contents:  SELECT.() -> Unit) = contentTag(SELECT(this), contents)
+inline fun HtmlBodyTag.textarea(contents:  TEXTAREA.() -> Unit) = contentTag(TEXTAREA(this), contents)
 
-fun HtmlBodyTag.a(c: StyleClass? = null, id: String? = null, contents: A.() -> Unit = empty_contents) = contentTag(A(this), c, id, contents)
+inline fun HtmlBodyTag.a(contents:  A.() -> Unit) = contentTag(A(this), contents)
+inline fun HtmlBodyTag.a(style:StyleClass?, contents:  A.() -> Unit) = a {
+    addClass(style)
+    contents()
+}
 open class A(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "a", contentStyle = ContentStyle.propagate) {
     public var href: Link by Attributes.href
     public var rel: String by Attributes.rel
@@ -60,78 +79,80 @@ open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "butt
     public var href: Link by Attributes.href
 }
 
-fun HtmlBodyTag.hr(c: StyleClass? = null, id: String? = null) = contentTag(HR(this), c, id)
-fun HtmlBodyTag.br(c: StyleClass? = null, id: String? = null) = contentTag(BR(this), c, id)
-fun HtmlBodyTag.div(c: StyleClass? = null, id: String? = null, contents: DIV.() -> Unit = empty_contents) = contentTag(DIV(this), c, id, contents)
-fun HtmlBodyTag.b(c: StyleClass? = null, id: String? = null, contents: B.() -> Unit = empty_contents) = contentTag(B(this), c, id, contents)
-fun HtmlBodyTag.i(c: StyleClass? = null, id: String? = null, contents: I.() -> Unit = empty_contents) = contentTag(I(this), c, id, contents)
-fun HtmlBodyTag.p(c: StyleClass? = null, id: String? = null, contents: P.() -> Unit = empty_contents) = contentTag(P(this), c, id, contents)
-fun HtmlBodyTag.pre(c: StyleClass? = null, id: String? = null, contents: PRE.() -> Unit = empty_contents) = contentTag(PRE(this), c, id, contents)
-fun HtmlBodyTag.span(c: StyleClass? = null, id: String? = null, contents: SPAN.() -> Unit = empty_contents) = contentTag(SPAN(this), c, id, contents)
-fun HtmlBodyTag.strong(c: StyleClass? = null, id: String? = null, contents: STRONG.() -> Unit = empty_contents) = contentTag(STRONG(this), c, id, contents)
-fun HtmlBodyTag.small(c: StyleClass? = null, id: String? = null, contents: SMALL.() -> Unit = empty_contents) = contentTag(SMALL(this), c, id, contents)
-fun HtmlBodyTag.blockquote(c: StyleClass? = null, id: String? = null, contents: BLOCKQUOTE.() -> Unit = empty_contents) = contentTag(BLOCKQUOTE(this), c, id, contents)
-fun HtmlBodyTag.address(c: StyleClass? = null, id: String? = null, contents: ADDRESS.() -> Unit = empty_contents) = contentTag(ADDRESS(this), c, id, contents)
-fun HtmlBodyTag.em(c: StyleClass? = null, id: String? = null, contents: EM.() -> Unit = empty_contents) = contentTag(EM(this), c, id, contents)
+fun HtmlBodyTag.hr() = contentTag(HR(this), {})
+fun HtmlBodyTag.br() = contentTag(BR(this), {})
 
-open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle._empty) {
+inline fun HtmlBodyTag.div(contents:  DIV.() -> Unit) = contentTag(DIV(this), contents)
+inline fun HtmlBodyTag.div(style: StyleClass?, contents:  DIV.() -> Unit) = div {
+    addClass(style)
+    contents()
 }
-open class HR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "hr", RenderStyle._empty) {
+
+inline fun HtmlBodyTag.b(contents:  B.() -> Unit) = contentTag(B(this), contents)
+inline fun HtmlBodyTag.i(contents:  I.() -> Unit) = contentTag(I(this), contents)
+inline fun HtmlBodyTag.p(contents:  P.() -> Unit) = contentTag(P(this), contents)
+inline fun HtmlBodyTag.p(styleClass: StyleClass?, contents:  P.() -> Unit) = p {
+    addClass(styleClass)
+    contents()
 }
-open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "div") {
+inline fun HtmlBodyTag.pre(contents:  PRE.() -> Unit) = contentTag(PRE(this), contents)
+inline fun HtmlBodyTag.span(contents:  SPAN.() -> Unit) = contentTag(SPAN(this), contents)
+inline fun HtmlBodyTag.span(style: StyleClass?, contents:  SPAN.() -> Unit) = span {
+    addClass(style)
+    contents()
 }
-open class I(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "i", contentStyle = ContentStyle.propagate) {
-}
-open class B(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "b", contentStyle = ContentStyle.propagate) {
-}
-open class P(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "p") {
-}
-open class PRE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "pre") {
-}
-open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "span", contentStyle = ContentStyle.propagate) {
-}
-open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "strong", contentStyle = ContentStyle.propagate) {
-}
-open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "small", contentStyle = ContentStyle.propagate) {
-}
-open class EM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "em", contentStyle = ContentStyle.propagate) {
-}
-open class ADDRESS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "address") {
-}
+
+inline fun HtmlBodyTag.strong(contents:  STRONG.() -> Unit) = contentTag(STRONG(this), contents)
+inline fun HtmlBodyTag.small(contents:  SMALL.() -> Unit) = contentTag(SMALL(this), contents)
+inline fun HtmlBodyTag.blockquote(contents:  BLOCKQUOTE.() -> Unit) = contentTag(BLOCKQUOTE(this), contents)
+inline fun HtmlBodyTag.address(contents:  ADDRESS.() -> Unit) = contentTag(ADDRESS(this), contents)
+inline fun HtmlBodyTag.em(contents:  EM.() -> Unit) = contentTag(EM(this), contents)
+
+open class BR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "br", RenderStyle._empty)
+open class HR(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "hr", RenderStyle._empty)
+open class DIV(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "div")
+open class I(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "i", contentStyle = ContentStyle.propagate)
+open class B(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "b", contentStyle = ContentStyle.propagate)
+open class P(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "p")
+open class PRE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "pre")
+open class SPAN(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "span", contentStyle = ContentStyle.propagate)
+open class STRONG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "strong", contentStyle = ContentStyle.propagate)
+open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "small", contentStyle = ContentStyle.propagate)
+open class EM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "em", contentStyle = ContentStyle.propagate)
+open class ADDRESS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "address")
 open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "blockquote") {
     public var cite: Link by Attributes.cite
 }
 
 
-open class DL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "dl") {
+open class DL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "dl")
+open class DD(containingTag: DL) : HtmlBodyTag(containingTag, "dd", contentStyle = ContentStyle.propagate)
+open class DT(containingTag: DL) : HtmlBodyTag(containingTag, "dt", contentStyle = ContentStyle.propagate)
+
+abstract class ListTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name)
+open class OL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ol")
+open class UL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ul")
+open class LI(containingTag: ListTag) : HtmlBodyTag(containingTag, "li")
+
+inline fun HtmlBodyTag.ul(contents:  UL.() -> Unit) = contentTag(UL(this), contents)
+inline fun HtmlBodyTag.ul(styleClass: StyleClass?, contents:  UL.() -> Unit) = ul {
+    addClass(styleClass)
+    contents()
 }
-open class DD(containingTag: DL) : HtmlBodyTag(containingTag, "dd", contentStyle = ContentStyle.propagate) {
-}
-open class DT(containingTag: DL) : HtmlBodyTag(containingTag, "dt", contentStyle = ContentStyle.propagate) {
+inline fun HtmlBodyTag.ol(contents:  OL.() -> Unit) = contentTag(OL(this), contents)
+
+inline fun ListTag.li(contents:  LI.() -> Unit) = contentTag(LI(this), contents)
+inline fun ListTag.li(style: StyleClass?, contents:  LI.() -> Unit) = li {
+    addClass(style)
+    contents()
 }
 
-abstract class ListTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name) {
-}
-open class OL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ol") {
-}
-open class UL(containingTag: HtmlBodyTag) : ListTag(containingTag, "ul") {
-}
-open class LI(containingTag: ListTag) : HtmlBodyTag(containingTag, "li") {
-}
-fun HtmlBodyTag.ul(c: StyleClass? = null, id: String? = null, contents: UL.() -> Unit = empty_contents) = contentTag(UL(this), c, id, contents)
-fun HtmlBodyTag.ol(c: StyleClass? = null, id: String? = null, contents: OL.() -> Unit = empty_contents) = contentTag(OL(this), c, id, contents)
-fun ListTag.li(c: StyleClass? = null, id: String? = null, contents: LI.() -> Unit = empty_contents) = contentTag(LI(this), c, id, contents)
+open class H1(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h1")
+open class H2(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h2")
+open class H3(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h3")
+open class H4(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h4")
+open class H5(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h5")
 
-open class H1(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h1") {
-}
-open class H2(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h2") {
-}
-open class H3(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h3") {
-}
-open class H4(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h4") {
-}
-open class H5(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h5") {
-}
 open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", RenderStyle._empty, ContentStyle.text) {
     public var width: Int by Attributes.width
     public var height: Int by Attributes.height
@@ -160,39 +181,31 @@ open class INPUT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "input
     public var width: Int by Attributes.width
 }
 
-abstract class TableTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name) {
-}
-open class TABLE(containingTag: HtmlBodyTag) : TableTag(containingTag, "table") {
-}
-open class THEAD(containingTag: TABLE) : TableTag(containingTag, "thead") {
-}
-open class TFOOT(containingTag: TABLE) : TableTag(containingTag, "tfoot") {
-}
-open class TBODY(containingTag: TABLE) : TableTag(containingTag, "tbody") {
-}
-open class TR(containingTag: TableTag) : HtmlBodyTag(containingTag, "tr"){
-}
-open class TH(containingTag: TR) : HtmlBodyTag(containingTag, "th") {
-}
-open class TD(containingTag: TR) : HtmlBodyTag(containingTag, "td") {
-}
+abstract class TableTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name)
+open class TABLE(containingTag: HtmlBodyTag) : TableTag(containingTag, "table")
+open class THEAD(containingTag: TABLE) : TableTag(containingTag, "thead")
+open class TFOOT(containingTag: TABLE) : TableTag(containingTag, "tfoot")
+open class TBODY(containingTag: TABLE) : TableTag(containingTag, "tbody")
+open class TR(containingTag: TableTag) : HtmlBodyTag(containingTag, "tr")
+open class TH(containingTag: TR) : HtmlBodyTag(containingTag, "th")
+open class TD(containingTag: TR) : HtmlBodyTag(containingTag, "td")
 
-fun HtmlBodyTag.table(c: StyleClass? = null, id: String? = null, contents: TABLE.() -> Unit = empty_contents) = contentTag(TABLE(this), c, id, contents)
-fun TABLE.tbody(c: StyleClass? = null, id: String? = null, contents: TBODY.() -> Unit = empty_contents) = contentTag(TBODY(this), c, id, contents)
-fun TABLE.thead(c: StyleClass? = null, id: String? = null, contents: THEAD.() -> Unit = empty_contents) = contentTag(THEAD(this), c, id, contents)
-fun TABLE.tfoot(c: StyleClass? = null, id: String? = null, contents: TFOOT.() -> Unit = empty_contents) = contentTag(TFOOT(this), c, id, contents)
-fun TableTag.tr(c: StyleClass? = null, id: String? = null, contents: TR.() -> Unit = empty_contents) = contentTag(TR(this), c, id, contents)
-fun TR.th(c: StyleClass? = null, id: String? = null, contents: TH.() -> Unit = empty_contents) = contentTag(TH(this), c, id, contents)
-fun TR.td(c: StyleClass? = null, id: String? = null, contents: TD.() -> Unit = empty_contents) = contentTag(TD(this), c, id, contents)
+inline fun HtmlBodyTag.table(contents:  TABLE.() -> Unit) = contentTag(TABLE(this), contents)
+inline fun TABLE.tbody(contents:  TBODY.() -> Unit) = contentTag(TBODY(this), contents)
+inline fun TABLE.thead(contents:  THEAD.() -> Unit) = contentTag(THEAD(this), contents)
+inline fun TABLE.tfoot(contents:  TFOOT.() -> Unit) = contentTag(TFOOT(this), contents)
+inline fun TableTag.tr(contents:  TR.() -> Unit) = contentTag(TR(this), contents)
+inline fun TR.th(contents:  TH.() -> Unit) = contentTag(TH(this), contents)
+inline fun TR.td(contents:  TD.() -> Unit) = contentTag(TD(this), contents)
 
 
-fun HtmlBodyTag.form(c: StyleClass? = null, id: String? = null, contents: FORM.() -> Unit = empty_contents) = contentTag(FORM(this), c, id, contents)
+inline fun HtmlBodyTag.form(contents:  FORM.() -> Unit) = contentTag(FORM(this), contents)
 
-fun SELECT.option(c: StyleClass? = null, id: String? = null, contents: OPTION.() -> Unit = empty_contents) = contentTag(OPTION(this), c, id, contents)
-fun SELECT.optiongroup(c: StyleClass? = null, id: String? = null, contents: OPTGROUP.() -> Unit = empty_contents) = contentTag(OPTGROUP(this), c, id, contents)
+inline fun SELECT.option(contents:  OPTION.() -> Unit) = contentTag(OPTION(this), contents)
+inline fun SELECT.optiongroup(contents:  OPTGROUP.() -> Unit) = contentTag(OPTGROUP(this), contents)
 
-open class FIELDSET(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "fieldset") {
-}
+open class FIELDSET(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "fieldset")
+
 public open class FORM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "form") {
     public var action: Link by Attributes.action
     public var enctype: EncodingType by Attributes.enctype
@@ -229,16 +242,15 @@ open class TEXTAREA(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "te
     public var wrap: Wrap by Attributes.wrap
 }
 
-fun HtmlBodyTag.fieldset(c: StyleClass? = null, id: String? = null, contents: FIELDSET.() -> Unit = empty_contents) = contentTag(FIELDSET(this), c, id, contents)
-fun FIELDSET.legend(c: StyleClass? = null, id: String? = null, contents: LEGEND.() -> Unit = empty_contents) = contentTag(LEGEND(this), c, id, contents)
+inline fun HtmlBodyTag.fieldset(contents:  FIELDSET.() -> Unit) = contentTag(FIELDSET(this), contents)
+inline fun FIELDSET.legend(contents:  LEGEND.() -> Unit) = contentTag(LEGEND(this), contents)
 
 open class LABEL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "label") {
     public var forId: String by Attributes.forId
 }
-open class LEGEND(containingTag: FIELDSET) : HtmlBodyTag(containingTag, "legend") {
-}
+open class LEGEND(containingTag: FIELDSET) : HtmlBodyTag(containingTag, "legend")
 
-fun HtmlBodyTag.canvas(c: StyleClass? = null, id: String? = null, contents: CANVAS.() -> Unit = empty_contents) = contentTag(CANVAS(this), c, id, contents)
+inline fun HtmlBodyTag.canvas(contents:  CANVAS.() -> Unit) = contentTag(CANVAS(this), contents)
 open class CANVAS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "canvas") {
     public var width: Int by Attributes.width
     public var height: Int by Attributes.height

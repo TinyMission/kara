@@ -6,7 +6,7 @@ import kara.demo.styles.StyleClasses.*
 import kotlin.html.*
 import javax.swing.text.DefaultEditorKit.InsertBreakAction
 
-class DetailsTemplate : HtmlTemplate<DetailsTemplate, HTML>() {
+class DetailsTemplate : Template<HTML>() {
     val caption = Placeholder<HtmlBodyTag>()
     val subject = Placeholder<HtmlBodyTag>()
     val message = Placeholder<HtmlBodyTag>()

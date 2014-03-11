@@ -86,31 +86,27 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
 
     fun watchUrls(resourceTypes: List<Class<out Resource>>) {
         val paths = HashSet<Path>()
+        val visitor = object : SimpleFileVisitor<Path?>() {
+            override fun preVisitDirectory(dir: Path?, attrs: BasicFileAttributes): FileVisitResult {
+                paths.add(dir!!)
+                return FileVisitResult.CONTINUE
+            }
+            override fun visitFile(file: Path?, attrs: BasicFileAttributes): FileVisitResult {
+                val dir = file?.getParent()
+                if (dir != null)
+                    paths.add(dir)
+                return FileVisitResult.CONTINUE
+            }
+        }
         val loaders = resourceTypes.map { it.getClassLoader() }.toSet()
         for (loader in loaders) {
             if (loader is URLClassLoader) {
                 val loaderUrls = loader.getURLs()
-                if (loaderUrls != null) {
-                    loaderUrls.forEach {
-                        logger.debug("Evaluating URL '${it}' to watch for changes.")
-                    }
-                    for (url in loaderUrls) {
-                        url.getPath()?.let {
-                            val folder = File(URLDecoder.decode(it, "utf-8")).toPath()
-                            val visitor = object : SimpleFileVisitor<Path?>() {
-                                override fun preVisitDirectory(dir: Path?, attrs: BasicFileAttributes): FileVisitResult {
-                                    paths.add(dir!!)
-                                    return FileVisitResult.CONTINUE
-                                }
-                                override fun visitFile(file: Path?, attrs: BasicFileAttributes): FileVisitResult {
-                                    val dir = file?.getParent()
-                                    if (dir != null)
-                                        paths.add(dir)
-                                    return FileVisitResult.CONTINUE
-                                }
-                            }
-                            Files.walkFileTree(folder, visitor)
-                        }
+                for (url in loaderUrls) {
+                    logger.debug("Evaluating URL '${url}' to watch for changes.")
+                    url.getPath()?.let {
+                        val folder = File(URLDecoder.decode(it, "utf-8")).toPath()
+                        Files.walkFileTree(folder, visitor)
                     }
                 }
             }

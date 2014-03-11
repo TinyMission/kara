@@ -4,7 +4,7 @@ import kara.*
 import kara.demo.styles.DefaultStyles
 import kotlin.html.*
 
-class DefaultTemplate : HtmlTemplate<DefaultTemplate, HTML>() {
+class DefaultTemplate : Template<HTML>() {
     val content = Placeholder<BODY>()
     override fun HTML.render() {
         head {
@@ -13,7 +13,8 @@ class DefaultTemplate : HtmlTemplate<DefaultTemplate, HTML>() {
         }
         body {
             h1 { +"Kara Demo Site" }
-            div(id = "main") {
+            div {
+                this.id = "main"
                 insert(content)
             }
             +"Kara is devloped by: "

@@ -2,12 +2,6 @@ package kotlin.html.bootstrap
 
 import kotlin.html.*
 
-public class SimpleClassStyle(val name : String) : StyleClass {
-    override fun name(): String {
-        return name
-    }
-}
-
 public fun s(name : String) : StyleClass = SimpleClassStyle(name)
 
 val muted = s("text-muted")
