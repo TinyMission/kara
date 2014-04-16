@@ -29,13 +29,9 @@ public fun Config.readConfig(path: String, baseFile: File? = null) {
             }
 
             else -> {
-                val data = line.split('=')
-                if (data.size == 2) {
-                    set(data[0].trim(), evalVars(data[1].trim()))
-                }
-                else {
-                    error("Cannot parse line '$line' in file '${file.getAbsolutePath()}'")
-                }
+                val eq = line.indexOf('=')
+                if (eq <= 0) error("Cannot parse line '$line' in file '${file.getAbsolutePath()}'")
+                set(line.substring(0, eq).trim(), evalVars(line.substring(eq + 1).trim()))
             }
         }
     }
