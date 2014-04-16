@@ -53,7 +53,7 @@ public open class ApplicationConfig(configPath: String) : Config() {
         get() {
             val urls = ArrayList<URL>()
             tryGet("kara.classpath")?.let {
-                urls.addAll(it.split(':') map {URL(it)})
+                urls.addAll(it.split(':') map {File(it).toURL()})
             }
             return urls.copyToArray()
         }
