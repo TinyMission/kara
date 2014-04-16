@@ -18,6 +18,7 @@
         </element>
         <element id="file-copy" path="$PROJECT_DIR$/src/KaraLib/src/WEB-INF/web.xml" />
       </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/samples/KaraDemo/web" />
     </root>
   </artifact>
 </component>

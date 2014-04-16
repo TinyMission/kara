@@ -10,24 +10,19 @@ import java.net.URLClassLoader
 /**
  * Store application configuration.
  */
-public open class ApplicationConfig(val environment: String, val classPathUrl: URL? = null) : Config() {
+public open class ApplicationConfig(configPath: String) : Config() {
     {
-        val classLoader = URLClassLoader(classPath, javaClass.getClassLoader())
-        val configResolver: (jsonFile: String) -> URL? = { classLoader.getResource("config/$it") }
-
-        // read the main appconfig file and also look for an environment-specific one
-        configResolver("appconfig.json")?.let { ConfigReader(this).read(it) }
-        configResolver("appconfig.${environment}.json")?.let { ConfigReader(this).read(it) }
+        readConfig(configPath)
     }
 
     /** Returns true if the application is running in the development environment. */
-    fun isDevelopment(): Boolean = environment == "development" || tryGet("kara.environment") == "development"
+    fun isDevelopment(): Boolean = get("kara.environment") == "development"
 
     /** Returns true if the application is running in the test environment. */
-    fun isTest(): Boolean = environment == "test" || tryGet("kara.environment") == "test"
+    fun isTest(): Boolean = get("kara.environment") == "test"
 
     /** Returns true if the application is running in the production environment. */
-    fun isProduction(): Boolean = environment == "production" || tryGet("kara.environment") == "production"
+    fun isProduction(): Boolean = get("kara.environment") == "production"
 
     public val applicationPackageName: String
         get() = this["kara.appPackage"]
@@ -55,5 +50,11 @@ public open class ApplicationConfig(val environment: String, val classPathUrl: U
         get() = tryGet("kara.port") ?: "8080"
 
     public open val classPath : Array<URL>
-        get() = if (classPathUrl == null) array<URL>() else array<URL>(classPathUrl)
+        get() {
+            val urls = ArrayList<URL>()
+            tryGet("kara.classpath")?.let {
+                urls.addAll(it.split(':') map {URL(it)})
+            }
+            return urls.copyToArray()
+        }
 }

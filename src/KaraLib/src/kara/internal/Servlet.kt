@@ -8,10 +8,7 @@ import kotlin.properties.Delegates
 
 open class Servlet() : HttpServlet() {
     val application: Application by Delegates.blockingLazy {
-        val config: ApplicationConfig = ApplicationConfig(getInitParameter("environment") ?: "development")
-        getInitParameter("host")?.let { config.set("host", it) }
-        getInitParameter("port")?.let { config.set("port", it) }
-
+        val config: ApplicationConfig = ApplicationConfig(getServletContext()?.getInitParameter("kara.config") ?: error("kara.config context parameter is required."))
         ApplicationLoader(config).load()
     }
 

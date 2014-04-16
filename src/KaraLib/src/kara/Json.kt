@@ -1,9 +1,7 @@
 package kara
 
 import javax.servlet.http.HttpServletResponse
-import org.codehaus.jackson.map.ObjectMapper
 import java.util.*
-import org.codehaus.jackson.map.annotate.JsonRootName
 
 /** JSON Action Result.
  */

@@ -19,15 +19,7 @@ fun config(appConfig: ApplicationConfig) {
 }
 
 fun main(args: Array<String>) {
-    val map = HashMap<String, String>()
-    for (arg in args) {
-        val data = arg.split('=')
-        if (data.size == 2) {
-            map[data[0]] = data[1]
-        }
-    }
-
-    val appConfig = ApplicationConfig(map["-env"] ?: "development", map["-jar"]?.let {File(it).toURI().toURL()})
+    val appConfig = ApplicationConfig(if (args.size > 0) args[0] else "development.conf")
 
     val logPath = appConfig.tryGet("kara.logPropertiesPath")
 
