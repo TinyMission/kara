@@ -20,7 +20,7 @@ open class Config() {
 
     fun tryGet(name: String): String? {
         return lookupCache(name) {
-            lookupContext(name) ?: lookupJNDI(name) ?: data[name]
+            lookupJNDI(name) ?: data[name]
         }
     }
 
@@ -63,12 +63,6 @@ open class Config() {
         }
         catch(e: NamingException) {
             return null
-        }
-    }
-
-    private fun lookupContext(name: String): String? {
-        return ActionContext.tryGet()?.let {
-            it.request.getServletContext()?.getInitParameter(name)
         }
     }
 }
