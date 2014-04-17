@@ -6,18 +6,36 @@ import java.net.URL
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-public fun Config.readConfig(path: String, baseFile: File? = null) {
+public fun Config.readConfig(path: String, classloader: ClassLoader, baseFile: File? = null) {
     val resolvedPath = evalVars(path)
+
     val file = if (resolvedPath.startsWith('/') || baseFile == null) File(resolvedPath) else File(baseFile, resolvedPath)
+    var text: String? = null
+    var base: File? = null
+    if (file.exists()) {
+        base = file.getParentFile()
+        text = file.readText("UTF-8")
+        logger.info("Reading ${file.getAbsolutePath()}")
+    }
+    else {
+        val resource = classloader.getResourceAsStream(path)
+        if (resource != null) {
+            logger.info("Reading classpath resource $path")
+            base = null
+            text = resource.reader("UTF-8").readText()
+        }
+    }
 
-    logger.info("Reading ${file.getAbsolutePath()}")
+    if (text == null) {
+        error("$path cannot be found")
+    }
 
-    file.forEachLine {
+    text!!.reader.forEachLine {
         val line = it.trim()
 
         when {
             line.startsWith("include ") -> {
-                readConfig(line.trimLeading("include "), file.getParentFile())
+                readConfig(line.trimLeading("include "), classloader, file.getParentFile())
             }
 
             line.startsWith("log ") -> {

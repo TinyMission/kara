@@ -12,7 +12,7 @@ import java.net.URLClassLoader
  */
 public open class ApplicationConfig(configPath: String) : Config() {
     {
-        readConfig(configPath)
+        readConfig(configPath, javaClass.getClassLoader()!!)
     }
 
     /** Returns true if the application is running in the development environment. */
