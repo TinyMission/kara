@@ -9,6 +9,7 @@ public enum class HttpMethod {
 
     // WebDav
     PROPFIND
+    PROPPATCH
     REPORT
 }
 
@@ -19,6 +20,7 @@ fun String.asHttpMethod(): HttpMethod = when (this) {
     "DELETE" -> HttpMethod.DELETE
     "OPTIONS" -> HttpMethod.OPTIONS
     "PROPFIND" -> HttpMethod.PROPFIND
+    "PROPPATCH" -> HttpMethod.PROPPATCH
     "REPORT" -> HttpMethod.REPORT
     else -> throw RuntimeException("Unknown $this as HTTP method")
 }
