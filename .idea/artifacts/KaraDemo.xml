@@ -8,6 +8,7 @@
           <element id="module-output" name="KaraLib" />
           <element id="module-output" name="HTMLBuilder" />
           <element id="module-output" name="ReflectionUtil" />
+          <element id="module-output" name="ConfigReader" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="KotlinJavaRuntime" />

@@ -8,14 +8,6 @@
         </element>
         <element id="module-output" name="KaraExec" />
         <element id="module-output" name="KaraLib" />
-        <element id="module-output" name="HTMLBuilder" />
-        <element id="directory" name="src">
-          <element id="dir-copy" path="$PROJECT_DIR$/src/KaraLib/src" />
-          <element id="dir-copy" path="$PROJECT_DIR$/src/HTMLBuilder/src" />
-          <element id="dir-copy" path="$PROJECT_DIR$/src/Kootstrap/src" />
-        </element>
-        <element id="module-output" name="Kootstrap" />
-        <element id="module-output" name="ReflectionUtil" />
       </element>
       <element id="library" level="project" name="Jackson" />
       <element id="library" level="project" name="Logging" />
@@ -26,6 +18,25 @@
       <element id="library" level="project" name="commons-io-2.4" />
       <element id="archive" name="kotlinx.reflection.jar">
         <element id="module-output" name="ReflectionUtil" />
+      </element>
+      <element id="archive" name="kotlinx.html.jar">
+        <element id="module-output" name="HTMLBuilder" />
+      </element>
+      <element id="archive" name="kara.config.jar">
+        <element id="module-output" name="ConfigReader" />
+      </element>
+      <element id="archive" name="kara-src.zip">
+        <element id="directory" name="src">
+          <element id="dir-copy" path="$PROJECT_DIR$/src/KaraLib/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/HTMLBuilder/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/Kootstrap/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/ConfigReader/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/KaraExec/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/ReflectionUtil/src" />
+        </element>
+      </element>
+      <element id="archive" name="kootstrap.jar">
+        <element id="module-output" name="Kootstrap" />
       </element>
     </root>
   </artifact>

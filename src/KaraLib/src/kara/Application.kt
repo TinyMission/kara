@@ -105,8 +105,10 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
                 for (url in loaderUrls) {
                     logger.debug("Evaluating URL '${url}' to watch for changes.")
                     url.getPath()?.let {
-                        val folder = File(URLDecoder.decode(it, "utf-8")).toPath()
-                        Files.walkFileTree(folder, visitor)
+                        val folder = File(URLDecoder.decode(it, "utf-8"))
+                        if (folder.exists()) {
+                            Files.walkFileTree(folder.toPath(), visitor)
+                        }
                     }
                 }
             }

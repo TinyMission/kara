@@ -6,13 +6,14 @@ import kara.internal.*
 import java.net.URL
 import java.util.ArrayList
 import java.net.URLClassLoader
+import kara.config.Config
 
 /**
  * Store application configuration.
  */
 public open class ApplicationConfig(configPath: String) : Config() {
     {
-        readConfig(configPath, javaClass.getClassLoader()!!)
+        Config.readConfig(this, configPath, javaClass.getClassLoader()!!)
     }
 
     /** Returns true if the application is running in the development environment. */
