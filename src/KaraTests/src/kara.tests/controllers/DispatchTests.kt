@@ -15,8 +15,7 @@ class DispatchTests() {
     }
 
     Test fun runDispatchTests() {
-        val appConfig = ApplicationConfig("test")
-        appConfig["kara.appPackage"] = "kara.tests.controllers"
+        val appConfig = ApplicationConfig("src/KaraTests/src/kara.tests/test.conf")
 
         val app = object : Application(appConfig) {}
 
