@@ -52,7 +52,7 @@ class ActionTests() {
     Test fun externalForm() {
         assertEquals("/test", Routes.Test().href())
         assertEquals("/foo/bar", Routes.Foo.Bar().href())
-        assertEquals("/foo/compute?aFloat=3.1415&anInt=42", Routes.Foo.ComputeQuery(42, 3.1415.toFloat()).href())
+        assertEquals("/foo/compute?anInt=42&aFloat=3.1415", Routes.Foo.ComputeQuery(42, 3.1415.toFloat()).href())
         assertEquals("/foo/compute/42/3.1415", Routes.Foo.Compute(42, 3.1415.toFloat()).href())
     }
 

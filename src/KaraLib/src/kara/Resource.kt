@@ -34,7 +34,7 @@ public abstract class Resource() : Link {
 
         val path = StringBuilder(context)
 
-        val properties = LinkedHashSet(properties())
+        val properties = LinkedHashSet(primaryProperties())
         val components = route.toRouteComponents().map({
             when (it) {
                 is StringRouteComponent -> it.componentText

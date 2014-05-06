@@ -5,44 +5,64 @@ import java.lang.reflect.*
 import java.beans.Introspector
 import jet.runtime.typeinfo.JetValueParameter
 import kotlin.Array
+import java.util.concurrent.ConcurrentHashMap
+import kotlinx.reflection
+
+object ReflectionCache {
+    val objects = ConcurrentHashMap<Class<*>, Any>()
+    val classObjects = ConcurrentHashMap<Class<*>, Any>()
+    val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>?, Array<Class<*>>, Array<Array<Annotation>?>>>()
+    val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
+    val properites = ConcurrentHashMap<Class<*>, List<String>>()
+    val propertyGetters = ConcurrentHashMap<Pair<Class<*>, String>, Any>()
+}
+
+private object NullMask
+private fun Any.unmask():Any? = if (this == NullMask) null else this
 
 fun Class<*>.objectInstance(): Any? {
-    try {
-        val field = getDeclaredField("instance\$")
-        if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-            return field.get(null)!!
+    return ReflectionCache.objects.getOrPut(this) {
+        try {
+            val field = getDeclaredField("instance\$")
+            if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
+                field[null]!!
+            }
+            else NullMask
         }
-        return null
-    }
-    catch (e: NoSuchFieldException) {
-        return null
-    }
+        catch (e: NoSuchFieldException) {
+            NullMask
+        }
+    }.unmask()
 }
 
 fun Class<*>.classObjectInstance(): Any? {
-    try {
-        val field = getDeclaredField("object\$")
-        if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-            return field.get(null)!!
+    return ReflectionCache.classObjects.getOrPut(this) {
+        try {
+            val field = getDeclaredField("object\$")
+            if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
+                field[null]!!
+            }
+            else NullMask
         }
-        return null
-    }
-    catch (e: NoSuchFieldException) {
-        return null
-    }
+        catch (e: NoSuchFieldException) {
+            NullMask
+        }
+    }.unmask()
 }
 
 fun Class<out Any>.propertyGetter(property: String): Method? {
-    try {
-        return getMethod("get${when {
-            property.length == 1 && property[0].isLowerCase() -> property.capitalize()
-            property.length > 2 && property[1].isLowerCase() -> property.capitalize()
-            else -> property
-        }}")
-    }
-    catch (e: Exception) {
-        return null
-    }
+    return ReflectionCache.propertyGetters.getOrPut(Pair(this, property)) {
+        try {
+            getMethod("get${when {
+                property.length == 1 && property[0].isLowerCase() -> property.capitalize()
+                property.length > 2 && property[1].isLowerCase() -> property.capitalize()
+                else -> property
+            }}")
+        }
+        catch (e: Exception) {
+            NullMask
+        }
+    }.unmask() as Method?
 }
 
 fun Any.propertyValue(property: String): Any? {
@@ -51,16 +71,18 @@ fun Any.propertyValue(property: String): Any? {
 }
 
 fun Any.properties(): List<String> {
-    val answer = ArrayList<String>()
+    return ReflectionCache.properites.getOrPut(javaClass) {
+        val answer = ArrayList<String>()
 
-    for (method in javaClass.getDeclaredMethods()) {
-        val name = method.getName()!!
-        if (name.startsWith("get") && method.getParameterTypes()?.size == 0) {
-            answer.add(Introspector.decapitalize(name.substring(3))!!)
+        for (method in javaClass.getDeclaredMethods()) {
+            val name = method.getName()!!
+            if (name.startsWith("get") && method.getParameterTypes()?.size == 0) {
+                answer.add(Introspector.decapitalize(name.substring(3))!!)
+            }
         }
-    }
 
-    return answer.sort()
+        answer.sort()
+    }
 }
 
 private fun find(list: Array<Annotation>): JetValueParameter {
@@ -70,6 +92,17 @@ private fun find(list: Array<Annotation>): JetValueParameter {
     throw RuntimeException("Missing Kotlin runtime annotations!");
 }
 
+private fun Class<*>.consMetaData(): Triple<Constructor<*>?, Array<Class<*>>, Array<Array<Annotation>?>> {
+    return ReflectionCache.consMetadata.getOrPut(this) {
+        val ktor = primaryConstructor()
+
+        val paramTypes = ktor?.getParameterTypes() ?: array()
+        val annotations = ktor?.getParameterAnnotations() ?: array()
+
+        Triple(ktor, paramTypes, annotations)
+    }
+}
+
 
 [suppress("UNCHECKED_CAST")]
 fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
@@ -77,10 +110,8 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     if (objectInstance != null)
         return objectInstance as T
 
-    val ktor = primaryConstructor()
-
-    val paramTypes = ktor.getParameterTypes()!!
-    val annotations = ktor.getParameterAnnotations()
+    val (ktor, paramTypes, annotations) = consMetaData()
+    if (ktor == null) return objectInstance() as T
 
     val arguments: Array<Any?> = Array(paramTypes.size) { i ->
         val annotation = find(annotations[i]!!)
@@ -97,26 +128,26 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
         }
     }
 
-    return ktor.newInstance(*arguments)
+    return ktor.newInstance(*arguments) as T
 }
 
 fun Any.primaryProperties() : List<String> {
-    val ktor = javaClass.primaryConstructor()
-    val annotations = ktor.getParameterAnnotations()
+    return ReflectionCache.primaryProperites.getOrPut(javaClass) {
+        val (ktor, paramTypes, annotations) = javaClass.consMetaData()
 
-    return annotations map {
-        val name = find(it!!).name()
+        annotations map {
+            val name = find(it!!).name()
 
-        if (javaClass.propertyGetter(name) == null) {
-            error("'$name' is missing val in ${javaClass.getName()}'s primary constructor")
+            if (javaClass.propertyGetter(name) == null) {
+                error("'$name' is missing val in ${javaClass.getName()}'s primary constructor")
+            }
+
+            name
         }
-
-        name
     }
 }
 
 [suppress("UNCHECKED_CAST")]
-fun <T> Class<out T>.primaryConstructor() : Constructor<T> {
-    val constructors = this.getConstructors()
-    return constructors[0] as Constructor<T>
+fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
+    return getConstructors().firstOrNull() as? Constructor<T>
 }
