@@ -7,6 +7,7 @@ import javax.servlet.http.*
 import java.util.*
 import org.apache.log4j.Logger
 import org.reflections.Reflections
+import java.io.IOException
 
 /** Current application execution context
  */
@@ -46,7 +47,18 @@ class ApplicationContext(packages: List<String>, val classLoader: ClassLoader, v
             }
         }
 
-        return dispatch(0, request, response)
+        try {
+            return dispatch(0, request, response)
+        }
+        catch(ex: IOException) {
+            // All kinds of EOFs and Broken Pipes can be safely ignored
+        }
+        catch(ex: Throwable) {
+            Application.logger.error("Error processing request", ex)
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+        }
+
+        return true
     }
 
     fun dispose() = monitorInstances.forEach { it.destroyed(this) }

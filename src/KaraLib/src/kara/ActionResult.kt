@@ -47,19 +47,6 @@ open class RequestAuthentication(val realm: String) : ErrorResult(401, "Not auth
     }
 }
 
-fun ActionResult.tryWriteResponse(context: ActionContext) {
-    try {
-        writeResponse(context)
-    }
-    catch(ex: IOException) {
-        // All kinds of EOFs and Broken Pipes can be safely ignored
-    }
-    catch(ex: Throwable) {
-        Application.logger.error("Error processing request", ex)
-        context.response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
-    }
-}
-
 open class XmlResult(val xml: String) : ActionResult {
     fun prettyFormat(input: String, indent: Int): String {
         val xmlInput = StreamSource(StringReader(input));

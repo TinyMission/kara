@@ -99,7 +99,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
         val routeInstance = buildRouteInstance(params)
         val actionContext = ActionContext(context, request, response, params)
         actionContext.withContext {
-            routeInstance.handle(actionContext).tryWriteResponse(actionContext)
+            routeInstance.handle(actionContext).writeResponse(actionContext)
         }
     }
 
