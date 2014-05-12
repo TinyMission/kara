@@ -10,6 +10,7 @@ import java.util.HashSet
 import java.util.LinkedHashSet
 import kotlin.html.*
 import java.util.LinkedHashMap
+import java.net.URLEncoder
 
 public abstract class Resource() : Link {
     abstract  fun handle(context: ActionContext): ActionResult
@@ -24,7 +25,7 @@ public abstract class Resource() : Link {
 
         answer.append(url.first)
         answer.append("?")
-        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)}" } join("&"))
+        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)?.let{URLEncoder.encode(it, "UTF-8")}}" } join("&"))
 
         return answer.toString()
     }
