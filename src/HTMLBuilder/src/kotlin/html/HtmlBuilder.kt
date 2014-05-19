@@ -174,10 +174,15 @@ open class TransparentTag(containtingTag: HtmlTag?): HtmlBodyTag(containtingTag,
 
 class RawHtml(containingTag: HtmlTag?, private val html: String) : HtmlElement(containingTag, ContentStyle.text) {
     override fun renderElement(builder: StringBuilder, indent: String) {
-        builder.append(indent)
-        builder.append(html)
-        if (indent != "")
-            builder.append("\n")
+        if (html.contains("\n")) {
+            builder.append(indent)
+            builder.append(html)
+            if (indent != "")
+                builder.append("\n")
+        }
+        else {
+            builder.append(html)
+        }
     }
 }
 
