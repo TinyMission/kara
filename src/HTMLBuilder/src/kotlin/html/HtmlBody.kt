@@ -72,7 +72,7 @@ open class A(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "a", conte
     public var target: String by Attributes.target
 }
 
-open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "button") {
+open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "button", RenderStyle.adaptive, ContentStyle.propagate) {
     public var name: String by Attributes.name
     public var value: String by Attributes.value
     public var buttonType: ButtonType by Attributes.buttonType
