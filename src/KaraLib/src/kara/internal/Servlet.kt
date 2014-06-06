@@ -43,7 +43,9 @@ open class Servlet() : HttpServlet() {
         }
         catch (ex: Throwable) {
             logger.error("Error processing request: ${req.getRequestURI()}", ex)
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+            if (!resp.isCommitted()) {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+            }
         }
     }
 
