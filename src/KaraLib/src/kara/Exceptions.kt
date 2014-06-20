@@ -3,7 +3,7 @@ package kara
 /**
  * If thrown during the handling of a request, a 404 response will be returned.
  */
-class NotFoundException(val message : String) : RuntimeException(message) {
+class NotFoundException(message : String) : RuntimeException(message) {
 
 }
 
