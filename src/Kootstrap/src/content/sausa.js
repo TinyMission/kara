@@ -190,6 +190,13 @@ $(function () {
     })
 });
 
+var roundtripListeners = [];
+var roundtripVersion = 0;
+
+function onRoundtrip(l) {
+    roundtripListeners = roundtripListeners.concat(l)
+}
+
 $(function () {
     function appendAttributes(data, node, attributes) {
         if (attributes == undefined) return;
@@ -216,6 +223,10 @@ $(function () {
     }
 
     function roundTripData(node, data, done) {
+        roundtripListeners.forEach(function(l) {
+            l.roundtripBegan(++roundtripVersion)
+        });
+
         $.ajax({
             url: node.attr('send-url'),
             cache: false,
@@ -230,24 +241,29 @@ $(function () {
                     fetch($(fetchSelector))
                 }
                 if (done != undefined)
-                    done(node, data)
+                    done(node, data);
+            roundtripListeners.forEach(function(l) {
+                l.roundtripDone(roundtripVersion)
             });
+
+        }).fail(function (data){
+            roundtripListeners.forEach(function(l) {
+                l.roundtripFailed(roundtripVersion)
+            });
+        });
     }
 
     // submit json on link
-    $(document).on('click', 'a[send-url]', function (e) {
+    var updater = function (e) {
         var data = { };
         appendAttributes(data, $(this), $(this).attr('send-values'));
         roundTripData($(this), data);
         e.preventDefault()
-    });
+    };
 
-    $(document).on('change', 'input[send-url]', function (e) {
-        var data = { };
-        appendAttributes(data, $(this), $(this).attr('send-values'));
-        roundTripData($(this), data);
-        e.preventDefault()
-    });
+    $(document).on('click', 'a[send-url]', updater);
+    $(document).on('change', 'input[send-url]', updater);
+    $(document).on('keyup', 'input[send-url]', updater);
 
     // submit json on form.submit
     $(document).on('submit', 'form[send-url]', function (e) {
