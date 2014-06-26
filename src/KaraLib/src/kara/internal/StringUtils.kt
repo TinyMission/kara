@@ -21,16 +21,3 @@ fun Array<String>.join(separator : String) : String {
     }
     return builder.toString()
 }
-
-/** Joins a list of strings with a separator. */
-fun List<String>.join(separator : String) : String {
-    val builder = StringBuilder()
-    var first = true
-    for (item in this) {
-        if (!first)
-            builder.append(separator)
-        builder.append(item)
-        first = false
-    }
-    return builder.toString()
-}
