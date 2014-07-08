@@ -144,7 +144,7 @@ fun HtmlBodyTag.modalBody(builder: ModalBuilder) {
             this["type"] = "button"
             this["aria-hidden"] = "true"
             this["data-dismiss"] = "modal"
-            +"&times;"
+            !"&times;"
         }
 
         h4 {
