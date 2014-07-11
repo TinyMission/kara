@@ -96,7 +96,13 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
     /** Execute the action based on the given request and populate the response. */
     public fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
-        val routeInstance = buildRouteInstance(params)
+        val routeInstance = try {
+            buildRouteInstance(params)
+        }
+        catch (e: Exception) {
+            throw RuntimeException("Error processing ${request.getRequestURI()}", e)
+        }
+
         val actionContext = ActionContext(context, request, response, params)
         actionContext.withContext {
             routeInstance.handle(actionContext).writeResponse(actionContext)
