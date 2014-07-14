@@ -39,7 +39,6 @@ fun Class<out Resource>.route(): Pair<String, HttpMethod> {
             is Put -> return Pair(p(ann.route), HttpMethod.PUT)
             is Delete -> return Pair(p(ann.route), HttpMethod.DELETE)
             is Route -> return Pair(p(ann.route), ann.method)
-            else -> Unit.VALUE
         }
     }
 
