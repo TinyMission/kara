@@ -49,7 +49,6 @@ fun String.htmlEscapeTo(builder: StringBuilder) {
             '<' -> builder.append("&lt;")
             '>' -> builder.append("&gt;")
             '\"' -> builder.append("&quot;")
-            '&' -> builder.append("&amp;")
             else -> builder.append(c)
         }
     }

@@ -1,18 +1,16 @@
 package kara.config
 
-import java.util.HashMap
+import java.util.*
 import javax.naming.*
-import java.util.concurrent.ConcurrentHashMap
-import org.apache.log4j.Logger
-import java.io.File
-import java.net.URL
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import java.util.concurrent.*
+import org.apache.log4j.*
+import java.io.*
+import java.util.regex.*
 
 open class Config() {
     public class MissingException(desc: String) : RuntimeException(desc)
 
-    val data = HashMap<String, String>()
+    val data = LinkedHashMap<String, String>()
     val cache = ConcurrentHashMap<String, String?>()
 
     /**
@@ -29,7 +27,7 @@ open class Config() {
         }
     }
 
-    fun lookupCache(name: String, eval: (String)->String?): String? {
+    fun lookupCache(name: String, eval: (String) -> String?): String? {
         return cache[name] ?: run {
             val answer = eval(name)
             if (answer != null) {
@@ -65,8 +63,7 @@ open class Config() {
 
             val folder = envCtx.lookup(name)
             return (folder as String)
-        }
-        catch(e: NamingException) {
+        } catch(e: NamingException) {
             return null
         }
     }
@@ -88,8 +85,7 @@ open class Config() {
                 base = file.getParentFile()
                 text = file.readText("UTF-8")
                 Config.logger.info("Reading ${file.getAbsolutePath()}")
-            }
-            else {
+            } else {
                 val resource = classloader.getResourceAsStream(path)
                 if (resource != null) {
                     Config.logger.info("Reading classpath resource $path")
@@ -127,7 +123,7 @@ open class Config() {
             }
         }
 
-        val varPattern =  Pattern.compile("\\$\\{([^\\}]*)\\}")
+        val varPattern = Pattern.compile("\\$\\{([^\\}]*)\\}")
         fun evalVars(line: String, eval: (String) -> String): String {
             val matcher = varPattern.matcher(line)
             val answer = StringBuilder()

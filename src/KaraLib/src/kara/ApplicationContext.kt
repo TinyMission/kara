@@ -11,7 +11,10 @@ import java.io.IOException
 
 /** Current application execution context
  */
-class ApplicationContext(packages: List<String>, val classLoader: ClassLoader, val resourceTypes: List<Class<out Resource>>) {
+class ApplicationContext(public val application : Application,
+                         packages: List<String>,
+                         val classLoader: ClassLoader,
+                         val resourceTypes: List<Class<out Resource>>) {
     val logger = Logger.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>();

@@ -1,19 +1,21 @@
 package kara
 
 import java.io.File
-import java.util.HashMap
-import kara.internal.*
 import java.net.URL
 import java.util.ArrayList
-import java.net.URLClassLoader
 import kara.config.Config
 
 /**
  * Store application configuration.
  */
-public open class ApplicationConfig(configPath: String) : Config() {
-    {
-        Config.readConfig(this, configPath, javaClass.getClassLoader()!!)
+public open class ApplicationConfig() : Config() {
+
+    class object {
+        public fun loadFrom(configPath: String): ApplicationConfig {
+            val config = ApplicationConfig()
+            Config.readConfig(config, configPath, javaClass.getClassLoader()!!)
+            return config
+        }
     }
 
     /** Returns true if the application is running in the development environment. */
@@ -37,24 +39,24 @@ public open class ApplicationConfig(configPath: String) : Config() {
 
     public val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
-        ?: listOf("${applicationPackageName}.routes", "${applicationPackageName}.styles")
+                ?: listOf("${applicationPackageName}.routes", "${applicationPackageName}.styles")
 
 
     public val hotPackages: List<String>
-        get() = tryGet("kara.hotPackages")?.split(',')?.toList()?.map { "${it.trim()}.*" }  ?: listOf<String>()
+        get() = tryGet("kara.hotPackages")?.split(',')?.toList()?.map { "${it.trim()}.*" } ?: listOf<String>()
 
     public val staticPackages: List<String>
-        get() = tryGet("kara.staticPackages")?.split(',')?.toList()?.map { "${it.trim()}.*" }  ?: listOf<String>()
+        get() = tryGet("kara.staticPackages")?.split(',')?.toList()?.map { "${it.trim()}.*" } ?: listOf<String>()
 
     /** The port to run the server on. */
     public val port: String
         get() = tryGet("kara.port") ?: "8080"
 
-    public open val classPath : Array<URL>
+    public open val classPath: Array<URL>
         get() {
             val urls = ArrayList<URL>()
             tryGet("kara.classpath")?.let {
-                urls.addAll(it.split(':') map {File(it).toURL()})
+                urls.addAll(it.split(':') map { File(it).toURL() })
             }
             return urls.copyToArray()
         }

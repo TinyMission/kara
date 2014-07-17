@@ -20,12 +20,12 @@ import java.nio.file.attribute.BasicFileAttributes
 
 /** The base Kara application class.
  */
-abstract class Application(val config: ApplicationConfig, private vararg val routes: Any) {
+abstract class Application(public val config: ApplicationConfig, private vararg val routes: Any) {
     private var _context: ApplicationContext? = null
     private val watchKeys = ArrayList<WatchKey>()
     private val contextLock = Object()
 
-    val context: ApplicationContext
+    open val context: ApplicationContext
         get() = synchronized(contextLock) {
             if (config.isDevelopment()) {
                 val changes = watchKeys.flatMap { it.pollEvents()!! }
@@ -71,7 +71,7 @@ abstract class Application(val config: ApplicationConfig, private vararg val rou
         }
         if (config.isDevelopment())
             watchUrls(resourceTypes)
-        return ApplicationContext(config.routePackages, classLoader, resourceTypes)
+        return ApplicationContext(this, config.routePackages, classLoader, resourceTypes)
     }
 
     open fun destroyContext() {

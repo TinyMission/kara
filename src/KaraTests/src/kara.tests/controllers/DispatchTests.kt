@@ -3,10 +3,9 @@ package kara.tests.controllers
 import kotlin.test.*
 import kara.*
 import kara.internal.*
-import kara.tests.mock.mockRequest
-import org.apache.log4j.BasicConfigurator
-import org.junit.Before
-import org.junit.Test
+import kara.tests.mock.*
+import org.apache.log4j.*
+import org.junit.*
 
 /** Tests for dispatching routes to get action info. */
 class DispatchTests() {
@@ -15,7 +14,7 @@ class DispatchTests() {
     }
 
     Test fun runDispatchTests() {
-        val appConfig = ApplicationConfig("src/KaraTests/src/kara.tests/test.conf")
+        val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")
 
         val app = object : Application(appConfig) {}
 

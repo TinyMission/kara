@@ -5,11 +5,14 @@ import java.io.IOException
 import kara.*
 import javax.servlet.ServletConfig
 import kotlin.properties.Delegates
+import org.apache.log4j.Logger
 
 open class Servlet() : HttpServlet() {
+    val logger = Logger.getLogger(javaClass<Servlet>())!!
+
     val application: Application by Delegates.blockingLazy {
         val servletContext = getServletContext()!!
-        val config: ApplicationConfig = ApplicationConfig(servletContext.getInitParameter("kara.config") ?: error("kara.config context parameter is required."))
+        val config: ApplicationConfig = ApplicationConfig.loadFrom(servletContext.getInitParameter("kara.config") ?: error("kara.config context parameter is required."))
 
         for (name in servletContext.getInitParameterNames()) {
             config[name] = servletContext.getInitParameter(name)!!
@@ -37,8 +40,12 @@ open class Servlet() : HttpServlet() {
         req.setCharacterEncoding("UTF-8")
 
         try {
+            val query = req.getQueryString()
             if (!application.context.dispatch(req, resp)) {
+                logger.trace("${req.getMethod()} -- ${req.getRequestURL()}${if (query != null) "?" + query else ""} -- FAILED")
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND)
+            } else {
+                logger.trace("${req.getMethod()} -- ${req.getRequestURL()}${if (query != null) "?" + query else ""} -- OK")
             }
         }
         catch (ex: Throwable) {
