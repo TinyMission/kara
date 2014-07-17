@@ -24,8 +24,7 @@ class DispatchTests() {
         var actionInfo = dispatcher.findDescriptor("GET", "/")!!
         assertNotNull(actionInfo)
 
-        fails( {dispatcher.findDescriptor("GET", "/invalid_path")} )
-
+        assertNull(dispatcher.findDescriptor("GET", "/invalid_path"))
 
         // foo controller
         actionInfo = dispatcher.findDescriptor("GET", "/foo/bar")!!
