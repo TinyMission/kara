@@ -23,7 +23,7 @@ private fun Any.unmask():Any? = if (this == NullMask) null else this
 fun Class<*>.objectInstance(): Any? {
     return ReflectionCache.objects.getOrPut(this) {
         try {
-            val field = getDeclaredField("instance\$")
+            val field = getDeclaredField("INSTANCE\$")
             if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
                 field[null]!!
             }
@@ -38,7 +38,7 @@ fun Class<*>.objectInstance(): Any? {
 fun Class<*>.classObjectInstance(): Any? {
     return ReflectionCache.classObjects.getOrPut(this) {
         try {
-            val field = getDeclaredField("object\$")
+            val field = getDeclaredField("OBJECT\$")
             if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
                 field[null]!!
             }
