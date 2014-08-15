@@ -19,6 +19,7 @@ trait ActionResult {
  */
 open class TextResult(val text: String) : ActionResult {
     override fun writeResponse(context: ActionContext) {
+        context.response.setContentType("text/plain")
         val out = context.response.getWriter()
         out?.print(text)
         out?.flush()

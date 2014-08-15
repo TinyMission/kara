@@ -7,6 +7,8 @@ import java.util.*
  */
 class JsonResult(val json: JsonElement) : ActionResult {
     override fun writeResponse(context: ActionContext) {
+        context.response.setContentType("application/json")
+
         val out = context.response.getWriter()
         val result = StringBuilder()
         json.build(result)
