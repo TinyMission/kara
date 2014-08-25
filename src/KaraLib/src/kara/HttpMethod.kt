@@ -14,7 +14,7 @@ public enum class HttpMethod {
 }
 
 fun String.asHttpMethod(): HttpMethod = when (this) {
-    "GET" -> HttpMethod.GET
+    "GET", "HEAD" -> HttpMethod.GET
     "POST" -> HttpMethod.POST
     "PUT" -> HttpMethod.PUT
     "DELETE" -> HttpMethod.DELETE
