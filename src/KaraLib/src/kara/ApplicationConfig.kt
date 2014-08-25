@@ -10,7 +10,7 @@ import kara.config.Config
  */
 public open class ApplicationConfig() : Config() {
 
-    class object {
+    public class object {
         public fun loadFrom(configPath: String): ApplicationConfig {
             val config = ApplicationConfig()
             Config.readConfig(config, configPath, javaClass.getClassLoader()!!)
@@ -19,13 +19,13 @@ public open class ApplicationConfig() : Config() {
     }
 
     /** Returns true if the application is running in the development environment. */
-    fun isDevelopment(): Boolean = get("kara.environment") == "development"
+    public fun isDevelopment(): Boolean = get("kara.environment") == "development"
 
     /** Returns true if the application is running in the test environment. */
-    fun isTest(): Boolean = get("kara.environment") == "test"
+    public fun isTest(): Boolean = get("kara.environment") == "test"
 
     /** Returns true if the application is running in the production environment. */
-    fun isProduction(): Boolean = get("kara.environment") == "production"
+    public fun isProduction(): Boolean = get("kara.environment") == "production"
 
     public val applicationPackageName: String
         get() = this["kara.appPackage"]

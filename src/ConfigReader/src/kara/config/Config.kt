@@ -7,7 +7,7 @@ import org.apache.log4j.*
 import java.io.*
 import java.util.regex.*
 
-open class Config() {
+public open class Config() {
     public class MissingException(desc: String) : RuntimeException(desc)
 
     val data = LinkedHashMap<String, String>()
@@ -17,17 +17,17 @@ open class Config() {
      * Gets the value for the given key.
      * Will raise an exception if the value isn't present. Try calling contains(key) first if you're unsure.
      */
-    fun get(name: String): String {
+    public fun get(name: String): String {
         return tryGet(name) ?: throw MissingException("Could not find config value for key $name")
     }
 
-    fun tryGet(name: String): String? {
+    public fun tryGet(name: String): String? {
         return lookupCache(name) {
             lookupJNDI(name) ?: data[name]
         }
     }
 
-    fun lookupCache(name: String, eval: (String) -> String?): String? {
+    private fun lookupCache(name: String, eval: (String) -> String?): String? {
         return cache[name] ?: run {
             val answer = eval(name)
             if (answer != null) {
@@ -38,17 +38,17 @@ open class Config() {
     }
 
     /** Sets a value for the given key. */
-    fun set(name: String, value: String) {
+    public fun set(name: String, value: String) {
         data[name] = value
     }
 
     /** Returns true if the config contains a value for the given key. */
-    fun contains(name: String): Boolean {
+    public fun contains(name: String): Boolean {
         return data.containsKey(name) || lookupJNDI(name) != null
     }
 
     /** Prints the entire config to a nicely formatted string. */
-    override fun toString(): String {
+    public override fun toString(): String {
         val builder = StringBuilder()
         for (name in data.keySet()) {
             builder.append("$name: ${data[name]}\n")
@@ -68,7 +68,7 @@ open class Config() {
         }
     }
 
-    class object {
+    public class object {
         val logger = Logger.getLogger(javaClass<Config>())!!
 
         public fun readConfig(config: Config, path: String, classloader: ClassLoader, baseFile: File? = null) {
