@@ -100,7 +100,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
             buildRouteInstance(params)
         }
         catch (e: Exception) {
-            throw RuntimeException("Error processing ${request.getRequestURI()}", e)
+            throw RuntimeException("Error processing ${request.getMethod()} ${request.getRequestURI()}, parameters={${params.toString()}}", e)
         }
 
         val actionContext = ActionContext(context, request, response, params)
