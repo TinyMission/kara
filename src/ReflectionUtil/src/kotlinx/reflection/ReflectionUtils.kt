@@ -103,6 +103,7 @@ private fun Class<*>.consMetaData(): Triple<Constructor<*>?, Array<Class<*>>, Ar
     }
 }
 
+public class MissingArgumentException(val name: String) : RuntimeException("Required argument $name is missing")
 
 [suppress("UNCHECKED_CAST")]
 fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
@@ -124,7 +125,7 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
             null
         }
         else {
-            error("Required argument $paramName is missing")
+            throw MissingArgumentException(paramName)
         }
     }
 
