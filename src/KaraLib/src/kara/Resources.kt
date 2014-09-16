@@ -33,7 +33,7 @@ public open class EmbeddedResource(val mime : String, val name: String) : Cached
 }
 
 fun String.tryMinified(): String {
-    if (true) return this // Replace true to 'isDevelopment'
+    if (Application.current.config.isDevelopment()) return this
 
     return when {
         endsWith(".js") -> "${trimTrailing(".js")}.min.js"
