@@ -7,16 +7,16 @@ import org.apache.commons.io.IOUtils
 public data class ResourceContent(val mime: String, val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream)
 
 public abstract class DynamicResource() : Resource() {
-    abstract fun content(): ResourceContent
+    abstract fun content(context: ActionContext): ResourceContent
 
-    override fun handle(context: ActionContext): ActionResult = content().let { BinaryResponse(it.mime, it.length, it.lastModified, it.data) }
+    override fun handle(context: ActionContext): ActionResult = content(context).let { BinaryResponse(it.mime, it.length, it.lastModified, it.data) }
 }
 
 public abstract class CachedResource() : DynamicResource() {
     var cache: Triple<String, ByteArray, Long>? = null
 
     override fun handle(context: ActionContext): ActionResult {
-        val (mime, bytes, stamp) = cache ?: content().let {
+        val (mime, bytes, stamp) = cache ?: content(context).let {
             cache = with(context) { Triple(it.mime, IOUtils.toByteArray(it.data())!!, it.lastModified) }
             cache!!
         }
@@ -26,14 +26,14 @@ public abstract class CachedResource() : DynamicResource() {
 }
 
 public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
-    override fun content(): ResourceContent {
-        val bytes = javaClass.getClassLoader()?.getResourceAsStream(name.tryMinified())?.let { IOUtils.toByteArray(it) } ?: ByteArray(0)
+    override fun content(context: ActionContext): ResourceContent {
+        val bytes = javaClass.getClassLoader()?.getResourceAsStream(name.tryMinified(context))?.let { IOUtils.toByteArray(it) } ?: ByteArray(0)
         return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
     }
 }
 
-fun String.tryMinified(): String {
-    if (Application.current.config.isDevelopment()) return this
+fun String.tryMinified(context: ActionContext): String {
+    if (context.application.application.config.isDevelopment()) return this
 
     return when {
         endsWith(".js") -> "${trimTrailing(".js")}.min.js"

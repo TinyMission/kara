@@ -21,7 +21,7 @@ abstract class Stylesheet(var namespace : String = "") : CachedResource() {
         return builder.toString()
     }
 
-    override fun content(): ResourceContent {
+    override fun content(context: ActionContext): ResourceContent {
         val bytes = toString().toByteArray("UTF-8")
         return ResourceContent("text/css", System.currentTimeMillis(), bytes.size, {bytes.inputStream})
     }

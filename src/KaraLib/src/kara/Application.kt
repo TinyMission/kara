@@ -1,11 +1,17 @@
 package kara
 
+import java.util.regex.Pattern
 import java.util.ArrayList
 import java.net.URLClassLoader
 import kara.internal.*
+import java.net.URL
 
+import javax.servlet.*
 import java.io.File
 import org.apache.log4j.Logger
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.properties.*
 import java.util.HashSet
 import java.nio.file.*
 import java.nio.file.StandardWatchEventKinds.*
@@ -15,15 +21,6 @@ import java.nio.file.attribute.BasicFileAttributes
 /** The base Kara application class.
  */
 abstract class Application(public val config: ApplicationConfig, private vararg val routes: Any) {
-
-    {
-        if (appRef != null) {
-            error("Application is already created. Multiple applications in single VM are not supported!")
-        }
-
-        appRef = this
-    }
-
     private var _context: ApplicationContext? = null
     private val watchKeys = ArrayList<WatchKey>()
     private val contextLock = Object()
@@ -133,8 +130,5 @@ abstract class Application(public val config: ApplicationConfig, private vararg 
 
     class object {
         val logger = Logger.getLogger(this.javaClass)!!
-
-        var appRef: Application? = null
-        val current: Application get() = appRef ?: error("Application hasn't been initialized yet")
     }
 }
