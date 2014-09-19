@@ -64,6 +64,15 @@ class ApplicationContext(public val application : Application,
         return true
     }
 
+    fun minifyResrouces(): Boolean {
+        val explicit = application.config.tryGet("kara.minifyResources")
+        return when {
+            explicit == "true", explicit == "yes" -> true
+            explicit == "false", explicit == "no" -> false
+            else -> application.config.isProduction()
+        }
+    }
+
     fun dispose() = monitorInstances.forEach { it.destroyed(this) }
 
     private var _dispatcher: ResourceDispatcher? = null

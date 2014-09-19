@@ -16,6 +16,7 @@
           <element id="library" level="project" name="Logging" />
           <element id="library" level="project" name="Jackson" />
           <element id="library" level="project" name="commons-io-2.4" />
+          <element id="library" level="project" name="YuiCompressor" />
         </element>
         <element id="file-copy" path="$PROJECT_DIR$/src/KaraLib/src/WEB-INF/web.xml" />
       </element>

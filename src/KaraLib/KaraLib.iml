@@ -15,6 +15,7 @@
     <orderEntry type="library" name="commons-io-2.4" level="project" />
     <orderEntry type="module" module-name="ReflectionUtil" exported="" />
     <orderEntry type="module" module-name="ConfigReader" exported="" />
+    <orderEntry type="library" name="YuiCompressor" level="project" />
   </component>
 </module>
 

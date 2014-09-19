@@ -17,7 +17,7 @@ public abstract class CachedResource() : DynamicResource() {
 
     override fun handle(context: ActionContext): ActionResult {
         val (mime, bytes, stamp) = cache ?: content(context).let {
-            cache = with(context) { Triple(it.mime, IOUtils.toByteArray(it.data())!!, it.lastModified) }
+            cache = with(context) { Triple(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified) }
             cache!!
         }
 
@@ -27,22 +27,8 @@ public abstract class CachedResource() : DynamicResource() {
 
 public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        fun loadBytesFromResources(name: String): ByteArray? {
-            return javaClass.getClassLoader()?.getResourceAsStream(name)?.let { IOUtils.toByteArray(it) }
-        }
-
-        val bytes = loadBytesFromResources(name.tryMinified(context)) ?: loadBytesFromResources(name) ?: ByteArray(0)
+        val bytes = javaClass.getClassLoader()?.getResourceAsStream(name)?.let { IOUtils.toByteArray(it) } ?: ByteArray(0)
         return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
-    }
-}
-
-fun String.tryMinified(context: ActionContext): String {
-    if (context.application.application.config.isDevelopment()) return this
-
-    return when {
-        endsWith(".js") -> "${trimTrailing(".js")}.min.js"
-        endsWith(".css") -> "${trimTrailing(".css")}.min.css"
-        else -> this
     }
 }
 

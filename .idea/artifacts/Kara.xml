@@ -38,6 +38,7 @@
       <element id="archive" name="kootstrap.jar">
         <element id="module-output" name="Kootstrap" />
       </element>
+      <element id="library" level="project" name="YuiCompressor" />
     </root>
   </artifact>
 </component>
