@@ -3,6 +3,8 @@ package kara
 import javax.servlet.http.*
 import kara.internal.*
 import kotlin.html.Link
+import java.util.HashMap
+import java.io.Serializable
 
 
 fun HttpSession.getDescription() : String {
@@ -20,6 +22,7 @@ class ActionContext(val application: ApplicationContext,
                     val response : HttpServletResponse,
                     val params : RouteParameters) {
     public val session : HttpSession = request.getSession(true)!!
+    public val data: HashMap<Any, Any?> = HashMap()
     public val startedAt : Long = System.currentTimeMillis()
 
     fun redirect(link: Link): ActionResult {
@@ -43,6 +46,29 @@ class ActionContext(val application: ApplicationContext,
         fun tryGet(): ActionContext? {
             return contexts.get()
         }
+    }
+}
+
+class RequestScope<T>() {
+    fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
+        val data = ActionContext.current().data
+        return data.get(desc) as T
+    }
+
+    private fun set(o : Any?, desc: kotlin.PropertyMetadata, value: T) {
+        ActionContext.current().data.put(desc, value)
+    }
+}
+
+
+class LazyRequestScope<T:Any>(val initial: () -> T) {
+    fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
+        val data = ActionContext.current().data
+        if (!data.containsKey(desc)) {
+            val eval = initial()
+            data.put(desc, eval)
+        }
+        return data.get(desc) as T
     }
 }
 
