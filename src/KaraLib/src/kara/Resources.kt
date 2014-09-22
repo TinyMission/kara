@@ -31,9 +31,10 @@ public abstract class CachedResource() : DynamicResource() {
     }
 }
 
-public abstract class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
+public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        val bytes = (javaClass.getClassLoader()?.getResourceAsStream(name)  ?: context.request.getServletContext()?.getResourceAsStream(name))?.
+        val classloader = context.application.classLoader
+        val bytes = (classloader.getResourceAsStream(name)  ?: context.request.getServletContext()?.getResourceAsStream(name))?.
                 let { IOUtils.toByteArray(it) } ?: ByteArray(0)
         return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
     }
