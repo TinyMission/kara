@@ -12,12 +12,18 @@ public abstract class DynamicResource() : Resource() {
     override fun handle(context: ActionContext): ActionResult = content(context).let { BinaryResponse(it.mime, it.length, it.lastModified, it.data) }
 }
 
+private data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long, val appVersion: Int)
+
 public abstract class CachedResource() : DynamicResource() {
-    var cache: Triple<String, ByteArray, Long>? = null
+    var cache: ResourceCache? = null
 
     override fun handle(context: ActionContext): ActionResult {
+        if (cache?.appVersion != context.application.version) {
+            cache = null
+        }
+
         val (mime, bytes, stamp) = cache ?: content(context).let {
-            cache = with(context) { Triple(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified) }
+            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.application.version) }
             cache!!
         }
 
@@ -25,9 +31,10 @@ public abstract class CachedResource() : DynamicResource() {
     }
 }
 
-public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
+public abstract class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        val bytes = javaClass.getClassLoader()?.getResourceAsStream(name)?.let { IOUtils.toByteArray(it) } ?: ByteArray(0)
+        val bytes = (javaClass.getClassLoader()?.getResourceAsStream(name)  ?: context.request.getServletContext()?.getResourceAsStream(name))?.
+                let { IOUtils.toByteArray(it) } ?: ByteArray(0)
         return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
     }
 }

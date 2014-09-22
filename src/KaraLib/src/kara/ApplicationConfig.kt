@@ -42,12 +42,6 @@ public open class ApplicationConfig() : Config() {
                 ?: listOf("${applicationPackageName}.routes", "${applicationPackageName}.styles")
 
 
-    public val hotPackages: List<String>
-        get() = tryGet("kara.hotPackages")?.split(',')?.toList()?.map { "${it.trim()}.*" } ?: listOf<String>()
-
-    public val staticPackages: List<String>
-        get() = tryGet("kara.staticPackages")?.split(',')?.toList()?.map { "${it.trim()}.*" } ?: listOf<String>()
-
     /** The port to run the server on. */
     public val port: String
         get() = tryGet("kara.port") ?: "8080"

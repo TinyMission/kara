@@ -23,10 +23,7 @@ class ApplicationLoader(val applicationConfig: ApplicationConfig)  {
      */
     public fun load(): Application {
         val defaultClassLoader = javaClass.getClassLoader()!!
-        val classLoader = if (applicationConfig.isDevelopment())
-            RestrictedClassLoader(applicationConfig.hotPackages, applicationConfig.staticPackages, applicationConfig.classPath, defaultClassLoader)
-        else
-            URLClassLoader(applicationConfig.classPath, defaultClassLoader)
+        val classLoader = URLClassLoader(applicationConfig.classPath, defaultClassLoader)
         val appClassObject = classLoader.loadClass(applicationConfig.applicationClassName)
         if (appClassObject == null)
             throw RuntimeException("Expected class ${applicationConfig.applicationClassName} to be defined")

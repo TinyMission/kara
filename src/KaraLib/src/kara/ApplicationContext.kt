@@ -19,6 +19,8 @@ class ApplicationContext(public val application : Application,
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>();
 
+    public val version: Int = ++versionCounter;
+
     {
         packages.flatMap { scanPackageForMonitors(it) }.forEach {
             val objectInstance = it.objectInstance()
@@ -96,5 +98,9 @@ class ApplicationContext(public val application : Application,
             e.printStackTrace()
             return listOf<Class<ApplicationContextMonitor>>()
         }
+    }
+
+    class object {
+        var versionCounter: Int = 0
     }
 }
