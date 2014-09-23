@@ -33,11 +33,18 @@ public abstract class CachedResource() : DynamicResource() {
 
 public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        val classloader = context.application.classLoader
-        val bytes = (classloader.getResourceAsStream(name)  ?: context.request.getServletContext()?.getResourceAsStream(name))?.
-                let { IOUtils.toByteArray(it) } ?: ByteArray(0)
+        val bytes = context.loadResource(name)
         return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
     }
+}
+
+public fun ActionContext.resourceStream(name: String): InputStream? {
+    return application.classLoader.getResourceAsStream(name) ?: request.getServletContext()?.getResourceAsStream(name)
+}
+
+public fun ActionContext.loadResource(name: String): ByteArray {
+    val stream = resourceStream(name)  ?: error("Cannot find $name in classpath or servlet context resources")
+    return stream.readBytes()
 }
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Resource(){

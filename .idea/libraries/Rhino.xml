@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="YuiCompressor">
+  <library name="Rhino">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/yuicompressor-2.4.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/js.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="YuiCompressor">
+  <library name="LessCompiler">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/yuicompressor-2.4.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lesscss-1.7.0.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

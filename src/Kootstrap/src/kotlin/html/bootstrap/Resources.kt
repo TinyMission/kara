@@ -9,4 +9,4 @@ Get("/resources/scripts/bootstrap.js")
 object BootstrapJS : EmbeddedResource("text/javascript", "content/bootstrap.js")
 
 Get("/resources/css/bootstrap.css")
-object Bootstrap : EmbeddedResource("text/css", "content/bootstrap.css")
+object Bootstrap : EmbeddedLessResource("content/less/bootstrap.less")

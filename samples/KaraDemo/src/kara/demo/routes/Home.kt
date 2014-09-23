@@ -57,6 +57,8 @@ object Home {
         }
     })
 
+    Get("/resources/less.css") object LessResource: EmbeddedLessResource("less/root.less")
+
     object Posts {
         Get("get/:id") class GetPost(id: Int) : Request({
             val post = kara.demo.models.Post(Date(), "Post ${id}")

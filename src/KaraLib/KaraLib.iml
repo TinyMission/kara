@@ -16,6 +16,8 @@
     <orderEntry type="module" module-name="ReflectionUtil" exported="" />
     <orderEntry type="module" module-name="ConfigReader" exported="" />
     <orderEntry type="library" name="YuiCompressor" level="project" />
+    <orderEntry type="library" name="LessCompiler" level="project" />
+    <orderEntry type="library" name="Rhino" level="project" />
   </component>
 </module>
 

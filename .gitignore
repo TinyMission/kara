@@ -17,6 +17,4 @@ lib/kotlin-runtime.jar
 lib/kotlin-runtime-sources.jar
 **/kotlin-runtime.jar
 samples/kara/demo/bin
-src/Kootstrap/browser/less/*.css
-!src/Kootstrap/browser/less/bootstrap.min.css
-!src/Kootstrap/browser/less/bootstrap.css
+src/Kootstrap/content/less/*.css
