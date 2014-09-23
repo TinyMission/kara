@@ -1,9 +1,8 @@
 package kara;
 
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor
-import org.mozilla.javascript.ErrorReporter
 import java.io.ByteArrayOutputStream
-import org.mozilla.javascript.EvaluatorException
+import jj.org.mozilla.javascript.*
 import org.apache.log4j.Logger
 import kara.config.Config
 import com.yahoo.platform.yui.compressor.CssCompressor
