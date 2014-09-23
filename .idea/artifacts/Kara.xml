@@ -39,6 +39,8 @@
         <element id="module-output" name="Kootstrap" />
       </element>
       <element id="library" level="project" name="YuiCompressor" />
+      <element id="library" level="project" name="LessCompiler" />
+      <element id="library" level="project" name="Rhino" />
     </root>
   </artifact>
 </component>
