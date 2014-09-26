@@ -9,9 +9,7 @@ import java.io.ObjectOutputStream
 
 
 fun HttpSession.getDescription() : String {
-    return this.getAttributeNames()!!.iterator().map { it ->
-        "${it}: ${this.getAttribute(it)}"
-    }.toArrayList().join(", ")
+    return this.getAttributeNames()!!.toList().map { "${it}: ${this.getAttribute(it)}" }.join()
 }
 
 /** This contains information about the current rendering action.
@@ -72,7 +70,7 @@ class ActionContext(val application: ApplicationContext,
     }
 }
 
-class RequestScope<T>() {
+public class RequestScope<T>() {
     fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
         val data = ActionContext.current().data
         return data.get(desc) as T
@@ -84,7 +82,7 @@ class RequestScope<T>() {
 }
 
 
-class LazyRequestScope<T:Any>(val initial: () -> T) {
+public class LazyRequestScope<T:Any>(val initial: () -> T) {
     fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
         val data = ActionContext.current().data
         if (!data.containsKey(desc)) {
@@ -95,7 +93,7 @@ class LazyRequestScope<T:Any>(val initial: () -> T) {
     }
 }
 
-class ContextException(msg : String) : Exception(msg) {}
+public class ContextException(msg : String) : Exception(msg) {}
 
 public fun <T> ActionContext.withContext(body: () -> T): T {
     try {
