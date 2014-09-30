@@ -29,14 +29,14 @@ private fun ByteArray.compressJavascript(): ByteArray {
 
     compressor.compress(answer, 160, true, false, true, false)
 
-    return answer.toString().getBytes("UTF-8")
+    return answer.toString().toByteArray()
 }
 
 private fun ByteArray.compressCss(): ByteArray {
     val compressor = CssCompressor(this.inputStream.reader())
     val answer = StringWriter()
     compressor.compress(answer, 160)
-    return answer.toString().getBytes("UTF-8")
+    return answer.toString().toByteArray()
 }
 
 object MinifierReporter : ErrorReporter {
