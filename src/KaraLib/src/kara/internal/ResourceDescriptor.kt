@@ -103,7 +103,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
             throw e
         }
         catch (e: Exception) {
-            throw RuntimeException("Error processing ${request.getMethod()} ${request.getRequestURI()}, parameters={${params.toString()}}", e)
+            throw RuntimeException("Error processing ${request.getMethod()} ${request.getRequestURI()}, parameters={${params.toString()}}, User agent: ${request.getHeader("User-Agent")}", e)
         }
 
         val actionContext = ActionContext(context, request, response, params)

@@ -49,7 +49,7 @@ open class Servlet() : HttpServlet() {
             }
         }
         catch (ex: Throwable) {
-            logger.error("Error processing request: ${req.getRequestURI()}", ex)
+            logger.error("Error processing request: ${req.getRequestURI()}, User agent: ${req.getHeader("User-Agent")}", ex)
             if (!resp.isCommitted()) {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
             }

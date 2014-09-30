@@ -59,7 +59,7 @@ class ApplicationContext(public val application : Application,
             // All kinds of EOFs and Broken Pipes can be safely ignored
         }
         catch(ex: Throwable) {
-            Application.logger.error("Error processing ${request.getMethod()} ${request.getRequestURI()}", ex)
+            Application.logger.error("Error processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", ex)
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
         }
 
