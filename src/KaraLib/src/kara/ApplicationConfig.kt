@@ -30,9 +30,6 @@ public open class ApplicationConfig() : Config() {
     public val applicationPackageName: String
         get() = this["kara.appPackage"]
 
-    public val applicationClassName: String
-        get() = tryGet("kara.appClass") ?: "$applicationPackageName.Application"
-
     /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
     public val publicDirectories: Array<String>
         get() = tryGet("kara.publicDir")?.split(';') ?: array<String>()

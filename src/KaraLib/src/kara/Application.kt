@@ -20,7 +20,7 @@ import java.nio.file.attribute.BasicFileAttributes
 
 /** The base Kara application class.
  */
-abstract class Application(public val config: ApplicationConfig, private vararg val routes: Any) {
+open class Application(public val config: ApplicationConfig) {
     private var _context: ApplicationContext? = null
     private val watchKeys = ArrayList<WatchKey>()
     private val contextLock = Object()
@@ -56,21 +56,15 @@ abstract class Application(public val config: ApplicationConfig, private vararg 
             context!!
         }
 
-    public fun requestClassloader(current: ClassLoader): ClassLoader =
-            if (config.isDevelopment()) {
-                URLClassLoader(config.classPath, current)
-            } else
-                current
+    public fun requestClassloader(): ClassLoader = classLoader(config)
 
     open fun createContext(): ApplicationContext {
-        val classLoader = requestClassloader(javaClass.getClassLoader()!!)
-        val resourceTypes = if (routes.size != 0) {
-            scanObjects(routes, classLoader)
-        } else {
-            config.routePackages.flatMap { scanPackageForResources(it, classLoader) }
-        }
+        val classLoader = requestClassloader()
+        val resourceTypes = config.routePackages.flatMap { scanPackageForResources(it, classLoader) }
+
         if (config.isDevelopment())
             watchUrls(resourceTypes)
+
         return ApplicationContext(this, config.routePackages, classLoader, resourceTypes)
     }
 
@@ -129,6 +123,21 @@ abstract class Application(public val config: ApplicationConfig, private vararg 
     }
 
     class object {
-        val logger = Logger.getLogger(this.javaClass)!!
+        val logger = Logger.getLogger(javaClass)!!
+
+        fun classLoader(config: ApplicationConfig): ClassLoader {
+            val rootClassloader = javaClass.getClassLoader()!!
+            val classPath = config.classPath
+            return when {
+                classPath.isEmpty() -> rootClassloader
+                else -> URLClassLoader(classPath, rootClassloader)
+            }
+        }
+
+        public fun load(config: ApplicationConfig): Application {
+            val application = Application(config)
+            application.start()
+            return application
+        }
     }
 }

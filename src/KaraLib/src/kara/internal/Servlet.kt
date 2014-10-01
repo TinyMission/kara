@@ -18,7 +18,7 @@ open class Servlet() : HttpServlet() {
             config[name] = servletContext.getInitParameter(name)!!
         }
 
-        ApplicationLoader(config).load()
+        Application.load(config)
     }
 
 

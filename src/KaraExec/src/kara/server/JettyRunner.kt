@@ -18,13 +18,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
     var server: Server? = null
     val resourceHandlers = ArrayList<ResourceHandler>()
 
-    val application: Application;
-    {
-        val logger = Logger.getLogger(this.javaClass)!!
-        val applicationLoader = ApplicationLoader(applicationConfig)
-        applicationLoader.loaded { logger.info("Application ${it.javaClass} loaded into the jetty runner") }
-        application = applicationLoader.load()
-    }
+    val application: Application = Application.load(applicationConfig)
 
     inner class Handler() : AbstractHandler() {
         public override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
