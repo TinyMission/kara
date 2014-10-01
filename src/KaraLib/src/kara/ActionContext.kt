@@ -1,10 +1,11 @@
 package kara
 
 import javax.servlet.http.*
-import kara.internal.*
 import kotlin.html.Link
 import java.util.HashMap
 import java.io.Serializable
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
 
 
 fun HttpSession.getDescription() : String {
@@ -12,7 +13,6 @@ fun HttpSession.getDescription() : String {
         "${it}: ${this.getAttribute(it)}"
     }.toArrayList().join(", ")
 }
-
 
 /** This contains information about the current rendering action.
  * An action context is provided by the dispatcher to the action result when it's rendered.
@@ -31,6 +31,29 @@ class ActionContext(val application: ApplicationContext,
 
     fun redirect(url : String) : ActionResult {
         return RedirectResult(url.appendContext())
+    }
+
+    private fun Serializable.toBytes(): ByteArray {
+        val baos = ByteArrayOutputStream()
+        ObjectOutputStream(baos).writeObject(this)
+        return baos.toByteArray()
+    }
+
+    private fun ByteArray.readObject(): Any? {
+        return CustomClassloaderObjectInputStream(inputStream, application.classLoader).readObject()
+    }
+
+    fun toSession(key: String, value: Any?) {
+        if (value !is Serializable?) error("Non serializable value to session: key=$key, value=$value")
+        session.setAttribute(key, (value as? Serializable)?.toBytes())
+    }
+
+    fun fromSession(key: String): Any? {
+        val raw = session.getAttribute(key)
+        return when (raw) {
+            is ByteArray -> raw.readObject()
+            else -> raw
+        }
     }
 
     class object {
