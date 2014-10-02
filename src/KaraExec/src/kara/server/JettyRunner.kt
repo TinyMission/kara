@@ -52,6 +52,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
 
     public fun start() {
         logger.info("Starting server...")
+        application.context // Init context eagerly
 
         var port: Int
         try {
@@ -80,7 +81,10 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
 
         server?.start()
         logger.info("Server running.")
-        server?.join()
+
+        if (applicationConfig.tryGet("kara.jetty.dontJoinServer") != "true") {
+            server?.join()
+        }
     }
 
     public fun stop() {
