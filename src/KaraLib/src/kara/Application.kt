@@ -116,6 +116,7 @@ open class Application(public val config: ApplicationConfig) {
     }
 
     open fun start() {
+        context // Init context eagerly
     }
 
     open fun shutDown() {

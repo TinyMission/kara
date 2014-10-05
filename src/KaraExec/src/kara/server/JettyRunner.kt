@@ -52,7 +52,6 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
 
     public fun start() {
         logger.info("Starting server...")
-        application.context // Init context eagerly
 
         var port: Int
         try {
