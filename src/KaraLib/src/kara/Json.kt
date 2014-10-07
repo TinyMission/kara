@@ -15,7 +15,7 @@ class JsonResult(val json: JsonElement) : ActionResult {
     }
 }
 
-fun jsonString(value: String): JsonValue = JsonValue(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n"))
+fun jsonString(value: String): JsonValue = JsonValue(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n").replace("\t", "    "))
 
 trait JsonElement {
     fun build(builder: StringBuilder)
