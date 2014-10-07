@@ -19,6 +19,4 @@ class JsonValidatorTest() {
         val outputJsonWithoutTab = jsonString(inputStringWithTabs)
         assertEquals("Actually these types of questions could be solved using different kinds of pre- and post release researches. We can offer the next options:\\n-    Usability testing\\n-    A/B testing", outputJsonWithoutTab.value)
     }
-
-
 }
