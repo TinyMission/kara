@@ -1,12 +1,8 @@
 import kotlin.test.*
 import kara.*
-import org.apache.log4j.*
 import org.junit.*
 
 class JsonValidatorTest() {
-    Before fun setUp() {
-        BasicConfigurator.configure()
-    }
 
     Test fun ensureNoTabsInJson1() {
         val inputStringWithTab = "емнадцати лет;?	акт органа опек"
