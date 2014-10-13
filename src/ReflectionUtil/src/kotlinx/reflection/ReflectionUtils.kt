@@ -92,12 +92,15 @@ private fun find(list: Array<Annotation>): JetValueParameter {
     throw RuntimeException("Missing Kotlin runtime annotations!");
 }
 
+val emptyClasses : Array<Class<*>> = array()
+val emptyAnnotations: Array<Array<Annotation>?> = array()
+
 private fun Class<*>.consMetaData(): Triple<Constructor<*>?, Array<Class<*>>, Array<Array<Annotation>?>> {
     return ReflectionCache.consMetadata.getOrPut(this) {
         val ktor = primaryConstructor()
 
-        val paramTypes = ktor?.getParameterTypes() ?: array()
-        val annotations = ktor?.getParameterAnnotations() ?: array()
+        val paramTypes = ktor?.getParameterTypes() ?: emptyClasses
+        val annotations = ktor?.getParameterAnnotations() ?: emptyAnnotations
 
         Triple(ktor, paramTypes, annotations)
     }
