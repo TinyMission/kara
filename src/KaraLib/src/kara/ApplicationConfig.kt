@@ -47,7 +47,26 @@ public open class ApplicationConfig() : Config() {
         get() {
             val urls = ArrayList<URL>()
             tryGet("kara.classpath")?.let {
-                urls.addAll(it.split(':') map { File(it).toURL() })
+                urls.addAll(it.split(':')
+                        .flatMap {
+                            val item = File(it)
+                            when {
+                                it.endsWith("/**") -> {
+                                    val answer = ArrayList<File>()
+                                    item.recurse { file -> if (file.isFile() && file.getName().endsWith(".jar"))  answer.add(file) }
+                                    answer
+                                }
+
+                                it.endsWith("/*") -> {
+                                    item.listFiles { it.isFile() && it.getName().endsWith(".jar") }?.toList() ?: listOf()
+                                }
+
+                                else -> {
+                                    listOf(item)
+                                }
+                            }
+                        }
+                        .map { it.toURL() })
             }
             return urls.copyToArray()
         }
