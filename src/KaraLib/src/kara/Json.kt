@@ -7,11 +7,16 @@ import java.util.*
  */
 class JsonResult(val json: JsonElement) : ActionResult {
     override fun writeResponse(context: ActionContext) {
-        val out = context.response.getWriter()
+        val jsonpCallback = context.params.optStringParam("callback")
         val result = StringBuilder()
+
+        if (jsonpCallback != null) result.append(jsonpCallback).append("(")
         json.build(result)
-        out?.print(result.toString())
-        out?.flush()
+        if (jsonpCallback != null) result.append(")")
+
+        val out = context.response.getWriter()
+        out.print(result.toString())
+        out.flush()
     }
 }
 
