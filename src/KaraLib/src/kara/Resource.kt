@@ -82,7 +82,13 @@ public fun String.link(): Link {
 }
 
 public fun contextPath(): String {
-    return ActionContext.tryGet()?.request?.getContextPath() ?: ""
+    val request = ActionContext.tryGet()?.request
+    if (request == null) return ""
+    return request.getAttribute("CONTEXT_PATH") as? String ?: request.getContextPath() ?: ""
+}
+
+public fun HttpServletRequest.setContextPath(path: String) {
+    setAttribute("CONTEXT_PATH", path)
 }
 
 public fun String.appendContext(): String {
