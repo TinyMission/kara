@@ -127,8 +127,9 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getHeader(p0 : String?) : String? {
-        throw UnsupportedOperationException()
+        return null
     }
+
     public override fun isRequestedSessionIdFromURL() : Boolean {
         throw UnsupportedOperationException()
     }
@@ -142,7 +143,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getAttribute(p0 : String?) : Any? {
-        throw UnsupportedOperationException()
+        return null;
     }
     public override fun getParameter(p0 : String?) : String? {
         return params[p0]
