@@ -9,7 +9,7 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
     val parts = requestParts()
 
     val answer = StringBuilder()
-    answer.append("$.post('")
+    answer.append("jQuery.post('")
     answer.append(parts.first)
     answer.append("'")
 
