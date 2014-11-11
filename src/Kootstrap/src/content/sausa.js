@@ -223,8 +223,8 @@ $(function () {
     }
 
     function roundTripData(node, data, done) {
-        roundtripListeners.forEach(function(l) {
-            l.roundtripBegan(++roundtripVersion)
+        roundtripListeners.forEach(function(listener) {
+            listener.roundtripBegan(++roundtripVersion, node)
         });
 
         $.ajax({
@@ -242,13 +242,13 @@ $(function () {
                 }
                 if (done != undefined)
                     done(node, data);
-            roundtripListeners.forEach(function(l) {
-                l.roundtripDone(roundtripVersion)
+            roundtripListeners.forEach(function(listener) {
+                listener.roundtripDone(roundtripVersion, node)
             });
 
         }).fail(function (data){
-            roundtripListeners.forEach(function(l) {
-                l.roundtripFailed(roundtripVersion)
+            roundtripListeners.forEach(function(listener) {
+                listener.roundtripFailed(roundtripVersion, node)
             });
         });
     }
