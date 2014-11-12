@@ -5,5 +5,6 @@ package kara
 trait ApplicationContextMonitor {
     fun created(context: ApplicationContext)
     fun destroyed(context: ApplicationContext)
+    val priority : Int get() = 100
 }
 

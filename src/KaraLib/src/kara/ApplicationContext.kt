@@ -22,19 +22,20 @@ class ApplicationContext(public val application : Application,
     public val version: Int = ++versionCounter;
 
     {
+        val monitors = arrayListOf<ApplicationContextMonitor>()
         packages.flatMap { scanPackageForMonitors(it) }.forEach {
             val objectInstance = it.objectInstance()
             if (objectInstance != null) {
-                logger.info("Executing startup sequence on $objectInstance")
-                val monitor = objectInstance as ApplicationContextMonitor
-                monitor.created(this);
-                monitorInstances.add(monitor)
+                monitors.add(objectInstance as ApplicationContextMonitor)
             } else {
-                val instance = it.newInstance()
-                logger.info("Executing startup sequence on new instance of $it")
-                instance.created(this)
-                monitorInstances.add(instance)
+                monitors.add(it.newInstance())
             }
+        }
+
+        for (monitor in monitors.sortBy { it.priority }) {
+            logger.info("Executing startup sequence on ${monitor.javaClass}")
+            monitor.created(this)
+            monitorInstances.add(monitor)
         }
     }
 
