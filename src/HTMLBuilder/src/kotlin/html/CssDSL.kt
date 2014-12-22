@@ -213,7 +213,7 @@ open class CssElement() {
         return UnionSelector(selectors)
     }
 
-    class UnionSelector(val selectors: Array<Selector>) : Selector {
+    class UnionSelector(val selectors: Array<out Selector>) : Selector {
         override fun toExternalForm(): String {
             return "(${selectors.map ({ it.toExternalForm() }).makeString(",")})"
         }
