@@ -8,7 +8,11 @@ class ModalBuilder() {
     var button: (A.() -> Unit)? = null
     var h: highlight = highlight.default
     var c: caliber = caliber.default
-    var form_style: StyleClass? = form_horizontal
+
+    var form : (FORM.() -> Unit)? = null
+    fun form(content: FORM.() -> Unit) {
+        form = content
+    }
 
     fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.() -> Unit) {
         button = b
@@ -85,7 +89,8 @@ fun HtmlBodyTag.modalDialog(id: String, content: ModalBuilder.() -> Unit, body: 
 fun HtmlBodyTag.modalDialogForm(id: String, action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit) {
     modalDialog(id, content) {
         form{
-            addClass(it.form_style)
+            addClass(form_horizontal)
+            it.form ?. let {it()}
             this.action = action
             this.method = formMethod
             modalBody(it)
@@ -123,7 +128,8 @@ fun HtmlBodyTag.modal(content: ModalBuilder.() -> Unit) {
 fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post, content: ModalBuilder.() -> Unit) {
     modalFrame(content) {
         form {
-            addClass(it.form_style)
+            addClass(form_horizontal)
+            it.form ?. let {it()}
             this.action = action
             this.method = formMethod
             modalBody(it)
@@ -218,7 +224,9 @@ fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: 
             div {
                 addClass("modal-content")
                 form {
-                    addClass(builder.form_style)
+                    addClass(form_horizontal)
+                    builder.form ?. let {it()}
+
                     this.action = action
                     this.method = formMethod
                     this.enctype = enctype
