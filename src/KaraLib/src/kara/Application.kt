@@ -1,17 +1,11 @@
 package kara
 
-import java.util.regex.Pattern
 import java.util.ArrayList
 import java.net.URLClassLoader
 import kara.internal.*
-import java.net.URL
 
-import javax.servlet.*
 import java.io.File
 import org.apache.log4j.Logger
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import kotlin.properties.*
 import java.util.HashSet
 import java.nio.file.*
 import java.nio.file.StandardWatchEventKinds.*

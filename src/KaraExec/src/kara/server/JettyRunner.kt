@@ -10,6 +10,7 @@ import org.apache.log4j.Logger
 import java.util.ArrayList
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import org.eclipse.jetty.server.Request
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
