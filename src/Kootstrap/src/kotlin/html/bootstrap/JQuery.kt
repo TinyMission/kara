@@ -45,7 +45,11 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
 public fun HtmlBodyTag.post(link: Request, done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty, content: A.()->Unit) {
     a {
         href="#".link()
-        onClick = link.jQueryPost(done ?: "location.reload()",fail, always, paramsBuilder)
+
+        val before = "if ($(this).hasClass('spinner')) return false; $(this).addClass('spinner');"
+        val after = "$(this).removeClass('spinner');" + (always ?: "")
+
+        onClick = before + link.jQueryPost(done ?: "location.reload()",fail, after, paramsBuilder)
 
         content()
     }
