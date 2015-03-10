@@ -38,7 +38,7 @@ enum class caliber(val value: String) {
 }
 
 enum class highlight {
-    default
+    `default`
     muted
     primary
     success

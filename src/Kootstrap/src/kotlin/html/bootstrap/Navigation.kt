@@ -41,7 +41,7 @@ public fun DIV.linkDivider(): Unit = span(s("list-group-divider")) {}
 inline  fun HtmlBodyTag.menu(body: UL.()->Unit): Unit = ul(s("dropdown-menu"), contents = body)
 
 public enum class navbarPosition {
-    default top bottom static
+    `default` top bottom static
 }
 
 public fun HtmlBodyTag.navbar(position: navbarPosition, body: DIV.()->Unit): Unit = div(s("navbar navbar-default") + when(position) {
