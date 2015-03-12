@@ -215,7 +215,7 @@ fun dialog(content: ModalBuilder.() -> Unit): ActionResult {
     }
 }
 
-fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: EncodingType = EncodingType.plain, content: ModalBuilder.() -> Unit): ActionResult {
+fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: EncodingType = EncodingType.urlencoded, content: ModalBuilder.() -> Unit): ActionResult {
     val builder = ModalBuilder()
     builder.content()
     return ModalResult() {
