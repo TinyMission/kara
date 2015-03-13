@@ -10,7 +10,7 @@ import kara.config.Config
  */
 public open class ApplicationConfig() : Config() {
 
-    public class object {
+    public default object {
         public fun loadFrom(configPath: String): ApplicationConfig {
             val config = ApplicationConfig()
             Config.readConfig(config, configPath, javaClass.getClassLoader()!!)

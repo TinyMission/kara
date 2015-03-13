@@ -17,7 +17,7 @@ enum class LinearUnits(val value: String) {
 /** Represents a single linear dimension.
  */
 class LinearDimension(var value: Double, var units: LinearUnits) {
-    class object {
+    default object {
         /** Creates a linear dimension froma string literal */
         fun fromString(s: String): LinearDimension {
             if (s.endsWith("em"))
