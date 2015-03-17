@@ -68,7 +68,7 @@ public open class Config() {
         }
     }
 
-    public default object {
+    public companion object {
         val logger = Logger.getLogger(javaClass<Config>())!!
 
         public fun readConfig(config: Config, path: String, classloader: ClassLoader, baseFile: File? = null) {

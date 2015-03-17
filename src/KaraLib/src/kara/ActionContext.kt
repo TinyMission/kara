@@ -54,7 +54,7 @@ class ActionContext(val application: ApplicationContext,
         }
     }
 
-    default object {
+    companion object {
         val contexts = ThreadLocal<ActionContext?>()
 
         public fun current(): ActionContext {

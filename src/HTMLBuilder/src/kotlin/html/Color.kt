@@ -21,7 +21,7 @@ class HslValues(var hue: Double, var saturation: Double, var lightness: Double) 
 /** A general color class that stores colors as floating point RGBA values.
  */
 class Color(var red: Double, var green: Double, var blue: Double, var alpha: Double = 1.0) {
-    default object {
+    companion object {
 
         /** Creates a color from integer RGBA values between 0 and 255. */
         public fun fromRgb(red: Int, green: Int, blue: Int, alpha: Int = 255): Color {

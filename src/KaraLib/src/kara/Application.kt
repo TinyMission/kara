@@ -117,7 +117,7 @@ open class Application(public val config: ApplicationConfig) {
         destroyContext()
     }
 
-    default object {
+    companion object {
         val logger = Logger.getLogger(javaClass)!!
 
         fun classLoader(config: ApplicationConfig): ClassLoader {

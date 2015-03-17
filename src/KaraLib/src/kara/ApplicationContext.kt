@@ -101,7 +101,7 @@ class ApplicationContext(public val application : Application,
         }
     }
 
-    default object {
+    companion object {
         var versionCounter: Int = 0
     }
 }

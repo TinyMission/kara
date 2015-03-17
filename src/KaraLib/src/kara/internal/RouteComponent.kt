@@ -6,7 +6,7 @@ fun String.toRouteComponents(): List<RouteComponent> = split("/").map { RouteCom
 
 /** Base class for objects that represent a single component of a route. */
 abstract class RouteComponent(val componentText: String) {
-    default object {
+    companion object {
         fun create(component: String): RouteComponent {
             if (component.length > 1 && component.charAt(0) == ':' && component.lastIndexOf(':') == 0)
                 return ParamRouteComponent(component)
