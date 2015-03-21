@@ -1,0 +1,28 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="KaraDemo">
+    <output-path>$PROJECT_DIR$/out/artifacts/KaraDemo</output-path>
+    <root id="archive" name="KaraDemo.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="KaraDemo" />
+          <element id="module-output" name="KaraLib" />
+          <element id="module-output" name="HTMLBuilder" />
+          <element id="module-output" name="ReflectionUtil" />
+          <element id="module-output" name="ConfigReader" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="KotlinJavaRuntime" />
+          <element id="library" level="project" name="Reflections" />
+          <element id="library" level="project" name="Logging" />
+          <element id="library" level="project" name="Jackson" />
+          <element id="library" level="project" name="commons-io-2.4" />
+          <element id="library" level="project" name="YuiCompressor" />
+          <element id="library" level="project" name="LessCompiler" />
+          <element id="library" level="project" name="Rhino" />
+        </element>
+        <element id="file-copy" path="$PROJECT_DIR$/src/KaraLib/src/WEB-INF/web.xml" />
+      </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/samples/KaraDemo/web" />
+    </root>
+  </artifact>
+</component>

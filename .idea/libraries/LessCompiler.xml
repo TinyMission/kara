@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="LessCompiler">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/lesscss-1.7.0.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

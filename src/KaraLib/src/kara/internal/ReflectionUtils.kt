@@ -1,40 +1,44 @@
 package kara.internal
 
-import java.lang.reflect.Modifier
 import kara.*
 
-fun Class<*>.objectInstance() : Any? {
-    try {
-        val field = getDeclaredField("instance\$")
-        if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-            return field.get(null)!!
-        }
-        return null
+fun String?.asNotEmpty(): String? = if (this == null) null else if (!isEmpty()) this else null
+
+fun String.appendPathElement(part : String) : String {
+    val b = StringBuilder()
+    b.append(this)
+    if (!this.endsWith("/")) {
+        b.append("/")
     }
-    catch (e : NoSuchFieldException) {
-        return null
+
+    if (part.startsWith('/')) {
+        b.append(part.substring(1))
     }
+    else {
+        b.append(part)
+    }
+
+    return b.toString()
 }
 
-fun Class<*>.routePrefix() : String {
+fun Class<*>.routePrefix(): String {
     val owner = getEnclosingClass()
     val defaultPart = if (owner == null) "" else getSimpleName().toLowerCase()
-    val annotatedPath = getAnnotation(javaClass<Path>())?.path
-    val part = if (annotatedPath == null || annotatedPath.isEmpty()) defaultPart else annotatedPath
+    val part = getAnnotation(javaClass<Location>())?.path.asNotEmpty() ?: defaultPart
 
     val base = if (owner == null) "" else owner.routePrefix()
     return base.appendPathElement(part)
 }
 
-fun Class<out Request>.route() : Pair<String, HttpMethod> {
-    fun p(part : String) = (getEnclosingClass()?.routePrefix()?:"").appendPathElement(part.replace("#", getSimpleName().toLowerCase()))
+fun Class<out Resource>.route(): Pair<String, HttpMethod> {
+    fun p(part: String) = (getEnclosingClass()?.routePrefix()?:"").appendPathElement(part.replace("#", getSimpleName().toLowerCase()))
     for (ann in getAnnotations()) {
         when (ann) {
             is Get -> return Pair(p(ann.route), HttpMethod.GET)
             is Post -> return Pair(p(ann.route), HttpMethod.POST)
             is Put -> return Pair(p(ann.route), HttpMethod.PUT)
             is Delete -> return Pair(p(ann.route), HttpMethod.DELETE)
-            else -> Unit.VALUE
+            is Route -> return Pair(p(ann.route), ann.method)
         }
     }
 

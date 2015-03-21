@@ -1,24 +1,36 @@
 package kara.internal
 
 import org.reflections.Reflections
+import kotlinx.reflection.*
 import java.util.ArrayList
 import kara.*
+import org.reflections.util.ClasspathHelper
 
-fun scanPackage(prefix : String, classloader : ClassLoader) : List<Class<out Request>> {
-    return Reflections(prefix, classloader).getSubTypesOf(javaClass<Request>())!!.toList()
+fun scanPackageForResources(prefix : String, classloader : ClassLoader) : List<Class<out Resource>> {
+    try {
+        val reflections = Reflections(prefix, classloader)
+        return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>()).flatMap {
+            reflections.getTypesAnnotatedWith(it)!!.toList().filter { javaClass<Resource>().isAssignableFrom(it) }.map { it as Class<Resource> }
+        }
+    }
+    catch(e: Throwable) {
+        e.printStackTrace()
+        throw RuntimeException("I'm totally failed to start up. See log :(")
+    }
 }
 
-fun scanObjects(vararg objects : Any) : List<Class<out Request>> {
-    val answer = ArrayList<Class<out Request>>()
+fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<Class<out Resource>> {
+    val answer = ArrayList<Class<out Resource>>()
 
     fun scan(routesObject : Any) {
-        for (innerClass in routesObject.javaClass.getDeclaredClasses()) {
+        val newClass = classloader?.loadClass(routesObject.javaClass.getName()) ?: routesObject.javaClass
+        for (innerClass in newClass.getDeclaredClasses()) {
             val objectInstance = innerClass.objectInstance()
             if (objectInstance != null) {
                 scan(objectInstance)
             }
-            else if (javaClass<Request>().isAssignableFrom(innerClass)) {
-                answer.add(innerClass as Class<Request>)
+            else if (javaClass<Resource>().isAssignableFrom(innerClass)) {
+                answer.add(innerClass as Class<Resource>)
             }
         }
     }

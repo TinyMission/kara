@@ -1,0 +1,46 @@
+<component name="ArtifactManager">
+  <artifact name="Kara">
+    <output-path>$PROJECT_DIR$/out/artifacts/Kara</output-path>
+    <root id="root">
+      <element id="archive" name="kara.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/KaraExec/src/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="KaraExec" />
+        <element id="module-output" name="KaraLib" />
+      </element>
+      <element id="library" level="project" name="Jackson" />
+      <element id="library" level="project" name="Logging" />
+      <element id="library" level="project" name="KotlinJavaRuntime" />
+      <element id="library" level="project" name="Reflections" />
+      <element id="library" level="project" name="Jetty" />
+      <element id="library" level="project" name="ServletAPI" />
+      <element id="library" level="project" name="commons-io-2.4" />
+      <element id="archive" name="kotlinx.reflection.jar">
+        <element id="module-output" name="ReflectionUtil" />
+      </element>
+      <element id="archive" name="kotlinx.html.jar">
+        <element id="module-output" name="HTMLBuilder" />
+      </element>
+      <element id="archive" name="kara.config.jar">
+        <element id="module-output" name="ConfigReader" />
+      </element>
+      <element id="archive" name="kara-src.zip">
+        <element id="directory" name="src">
+          <element id="dir-copy" path="$PROJECT_DIR$/src/KaraLib/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/HTMLBuilder/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/Kootstrap/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/ConfigReader/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/KaraExec/src" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/ReflectionUtil/src" />
+        </element>
+      </element>
+      <element id="archive" name="kootstrap.jar">
+        <element id="module-output" name="Kootstrap" />
+      </element>
+      <element id="library" level="project" name="YuiCompressor" />
+      <element id="library" level="project" name="LessCompiler" />
+      <element id="library" level="project" name="Rhino" />
+    </root>
+  </artifact>
+</component>

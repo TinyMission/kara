@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Rhino">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/js.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

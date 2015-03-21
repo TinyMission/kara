@@ -1,17 +1,15 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Samples Server" type="JetRunConfigurationType" factoryName="Kotlin" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <option name="MAIN_CLASS_NAME" value="kara.setup.SetupPackage" />
+    <option name="MAIN_CLASS_NAME" value="kara.cli.CliPackage" />
     <option name="VM_PARAMETERS" value="-Dkara.development.dist=$PROJECT_DIR$/out/artifacts/kara_dist" />
-    <option name="PROGRAM_PARAMETERS" value="s" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/out/artifacts/kara_dist/samples" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="file://samples/KaraDemo" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PASS_PARENT_ENVS" value="true" />
-    <module name="KaraExec" />
-    <envs>
-      <env name="KARA_HOME" value="$PROJECT_DIR$/out/artifacts/kara_dist/samples" />
-    </envs>
+    <module name="KaraDemo" />
+    <envs />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
@@ -20,10 +18,6 @@
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
-    <method>
-      <option name="BuildArtifacts" enabled="true">
-        <artifact name="kara-dist" />
-      </option>
-    </method>
+    <method />
   </configuration>
 </component>

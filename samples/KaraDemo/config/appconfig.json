@@ -1,8 +1,0 @@
-{
-    "kara": {
-        "appPackage": "karademo",
-        "publicDir": "public",
-        "stylesheetDir": "stylesheets",
-        "sessionDir": "tmp/sessions"
-    }
-}

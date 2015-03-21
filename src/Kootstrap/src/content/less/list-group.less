@@ -1,0 +1,100 @@
+//
+// List groups
+// --------------------------------------------------
+
+// Base class
+//
+// Easily usable on <ul>, <ol>, or <div>.
+.list-group {
+  // No need to set list-style: none; since .list-group-item is block level
+  margin-bottom: @margin-large;
+  padding-left: 0; // reset padding because ul and ol
+
+    // Dividers (basically an hr) within the dropdown
+  .list-group-divider {
+    .nav-divider(@dropdown-divider-bg);
+    display: block;
+  }
+}
+
+// Individual list items
+// -------------------------
+
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: 2px @margin-large;
+  // Place the border on the list items and negative margin up for better styling
+  background-color: @list-group-bg;
+  border: 0px solid @list-group-border;
+
+  // Round the first and last items
+  &:first-child {
+    .border-top-radius(@list-group-border-radius);
+  }
+  &:last-child {
+    margin-bottom: 0;
+    .border-bottom-radius(@list-group-border-radius);
+  }
+
+  // Align badges within list items
+  > .badge {
+    float: right;
+  }
+  > .badge + .badge {
+    margin-right: @margin-small;
+  }
+
+  // Linked list items
+  a& {
+    // Hover state
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      background-color: @list-group-hover-bg;
+    }
+  }
+
+  // Active class on item itself, not parent
+  &.active,
+  &.active:hover,
+  &.active:focus {
+    z-index: 2; // Place active items above their siblings for proper border styling
+    color: @list-group-active-color;
+    background-color: @list-group-active-bg;
+    border-color: @list-group-active-border;
+
+    a {
+      color: inherit;
+    }
+
+    // Force color to inherit for custom content
+    .list-group-item-heading {
+      color: inherit;
+    }
+    .list-group-item-text {
+      color: lighten(@list-group-active-bg, 40%);
+    }
+  }
+}
+
+.panel .list-group .list-group-item {
+  border: none;
+  border-top: 0px solid @list-group-border;
+}
+
+.panel .list-group .list-group-item:first-child {
+  border-top: none;
+}
+
+// Custom content options
+// -------------------------
+
+.list-group-item-heading {
+  margin-top: 0;
+  margin-bottom: @margin-small;
+}
+.list-group-item-text {
+  margin-bottom: 0;
+  line-height: 1.3;
+}
