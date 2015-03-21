@@ -16,5 +16,5 @@ kara-SNAPSHOT.zip
 lib/kotlin-runtime.jar
 lib/kotlin-runtime-sources.jar
 **/kotlin-runtime.jar
-samples/kara/demo/bin
+samples/KaraDemo/bin
 src/Kootstrap/content/less/*.css
