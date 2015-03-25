@@ -62,7 +62,7 @@ class JsonArray : JsonElement {
 }
 
 class JsonObject : JsonElement {
-    private val properties = HashMap<String, JsonElement>()
+    private val properties = LinkedHashMap<String, JsonElement>()
     fun put(name: String, value: JsonElement) = properties.put(name, value)
 
     override fun build(builder: StringBuilder) {
