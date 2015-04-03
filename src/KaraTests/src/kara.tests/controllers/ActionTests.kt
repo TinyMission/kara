@@ -1,12 +1,15 @@
 package kara.tests.controllers
 
 
+import kara.Application
 import kotlin.test.*
 import javax.servlet.http.*
 import kara.tests.mock.*
+import org.apache.log4j.AppenderSkeleton
 import org.junit.Test
 import org.junit.Before
 import org.apache.log4j.BasicConfigurator
+import org.apache.log4j.spi.LoggingEvent
 import kotlin.html.htmlEscapeTo
 
 
@@ -62,8 +65,42 @@ class ActionTests() {
         assertEquals("foo&lt;x&gt;bar", builder.toString())
     }
 
+    Test fun errorLogged() {
+        TestAppender.register()
+        val response = mockDispatch("GET", Routes.Error(false).href())
+        assertTrue(TestAppender.smthWasLogged)
+        assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response._status)
+    }
+
+    Test fun socketErrorNotLogged() {
+        TestAppender.register()
+        val response = mockDispatch("GET", Routes.Error(true).href())
+        assertFalse(TestAppender.smthWasLogged)
+        assertEquals(HttpServletResponse.SC_OK, response._status)
+    }
+
     fun assertResponse(expected : String, url : String) {
         val response = mockDispatch("GET", url)
         assertEquals(expected, response.stringOutput())
+    }
+
+    object TestAppender : AppenderSkeleton() {
+
+        var smthWasLogged: Boolean = false
+
+        override fun close() {
+            Application.logger.removeAppender(this)
+        }
+
+        override fun requiresLayout(): Boolean = false
+
+        override fun append(p0: LoggingEvent?) {
+            smthWasLogged = true
+        }
+
+        fun register() {
+            smthWasLogged = false
+            Application.logger.addAppender(this)
+        }
     }
 }

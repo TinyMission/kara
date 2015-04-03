@@ -44,7 +44,7 @@ class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTag(contain
     public var media : String by StringAttribute("media")
     public var mimeType : String by Attributes.mimeType
 
-    {
+    init {
         media = "all"
         mimeType = "text/css"
     }
@@ -62,7 +62,7 @@ class STYLESHEETLINK(containingTag : HEAD, var stylesheet : Stylesheet) : HtmlTa
     public var href : Link by Attributes.href
     public var rel : String by Attributes.rel
     public var mimeType : String by Attributes.mimeType
-    {
+    init {
         rel = "stylesheet"
         mimeType = "text/css"
     }
