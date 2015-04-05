@@ -4,7 +4,7 @@ import java.util.*
 import java.text.StringCharacterIterator
 
 abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle: ContentStyle = ContentStyle.block) {
-    {
+    init {
         appendTo(containingElement)
     }
 

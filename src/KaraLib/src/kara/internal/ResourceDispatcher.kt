@@ -15,9 +15,9 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
     private val httpMethods = Array(HttpMethod.values().size) {
         ArrayList<ResourceDescriptor>()
     };
-    private val resources = HashMap<Class<out Resource>, String>();
+    private val resources = HashMap<Class<out Resource>, String>()
 
-    {
+    init {
         for (routeType in resourceTypes) {
             val (route, httpMethod) = routeType.route()
             resources[routeType] = route

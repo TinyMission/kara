@@ -3,6 +3,7 @@ package kara.tests.controllers
 import kara.*
 import kara.internal.*
 import kara.tests.views.*
+import java.net.SocketException
 import kotlin.html.*
 
 object Routes {
@@ -18,6 +19,14 @@ object Routes {
     Get("/optional/?p")
     class Optional(val p: String?) : Request({
         TextResult("optional/${p}")
+    })
+
+    Get("/error/:brokenPipe")
+    class Error(val brokenPipe: Boolean) : Request({
+        if (brokenPipe) {
+            throw SocketException("Broken Pipe")
+        }
+        throw RuntimeException("Something went wrong")
     })
 
     Get("/template/:n")

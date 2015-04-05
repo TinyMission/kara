@@ -84,9 +84,9 @@ class DataClassSerializer: TypeSerializer() {
 }
 
 public object Serialization {
-    val serializer = ArrayList<TypeSerializer>();
+    val serializer = ArrayList<TypeSerializer>()
 
-    {
+    init {
         this.loadDefaults()
     }
 

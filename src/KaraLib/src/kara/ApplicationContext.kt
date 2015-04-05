@@ -8,6 +8,8 @@ import java.util.*
 import org.apache.log4j.Logger
 import org.reflections.Reflections
 import java.io.IOException
+import java.net.Socket
+import java.net.SocketException
 
 /** Current application execution context
  */
@@ -19,9 +21,9 @@ class ApplicationContext(public val application : Application,
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>();
 
-    public val version: Int = ++versionCounter;
+    public val version: Int = ++versionCounter
 
-    {
+    init {
         val monitors = arrayListOf<ApplicationContextMonitor>()
         packages.flatMap { scanPackageForMonitors(it) }.forEach {
             val objectInstance = it.objectInstance()
@@ -56,7 +58,7 @@ class ApplicationContext(public val application : Application,
         try {
             return dispatch(0, request, response)
         }
-        catch(ex: IOException) {
+        catch(ex: SocketException) {
             // All kinds of EOFs and Broken Pipes can be safely ignored
         }
         catch(ex: Throwable) {

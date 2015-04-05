@@ -6,9 +6,9 @@ import kara.internal.*
 
 object MockApplication : Application(ApplicationConfig()) {
 
-    override val context: ApplicationContext;
+    override val context: ApplicationContext
 
-    {
+    init {
         val classLoader = javaClass.getClassLoader()!!
         context = ApplicationContext(this, listOf<String>(), classLoader, scanObjects(array(Routes), classLoader))
     }

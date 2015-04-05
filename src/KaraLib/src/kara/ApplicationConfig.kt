@@ -31,8 +31,8 @@ public open class ApplicationConfig() : Config() {
         get() = this["kara.appPackage"]
 
     /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
-    public val publicDirectories: Array<String>
-        get() = tryGet("kara.publicDir")?.split(';') ?: array<String>()
+    public val publicDirectories: List<String>
+        get() = tryGet("kara.publicDir")?.split(';') ?: emptyList<String>()
 
     public val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }

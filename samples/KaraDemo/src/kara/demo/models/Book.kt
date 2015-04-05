@@ -21,7 +21,7 @@ class Book(var title : String = "", init : Book.() -> Unit = {}) {
 
     var category : BookCategory = BookCategory.Fiction
 
-    {
+    init {
         this.init()
     }
 }
