@@ -155,3 +155,5 @@ fun Any.primaryProperties() : List<String> {
 fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
     return getConstructors().firstOrNull() as? Constructor<T>
 }
+
+public fun Class<*>.isEnumClass(): Boolean = javaClass<Enum<*>>().isAssignableFrom(this)
