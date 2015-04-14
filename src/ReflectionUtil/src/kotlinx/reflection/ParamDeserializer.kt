@@ -59,11 +59,15 @@ class EnumSerializer: TypeSerializer() {
     }
 
     override fun deserialize(param: String, paramType: Class<*>): Any? {
-        return paramType.getEnumConstants()?.get(param.toInt())
+        return if (paramType.isEnum()) {
+            paramType.getEnumConstants()?.get(param.toInt())
+        } else if (paramType.isEnumClass()) {
+            paramType.getEnclosingClass().getEnumConstants()?.get(param.toInt())
+        }
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
-        return testType.isEnum()
+        return testType.isEnum() || testType.isEnumClass()
     }
 }
 

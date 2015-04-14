@@ -27,7 +27,7 @@ public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderS
     }
 
     fun addClass(c: String) {
-        val old = tryGet("class")
+        val old = get("class")
         setClass(if (old.isNotEmpty()) "$old $c" else c)
     }
 
@@ -210,6 +210,7 @@ public open class FORM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, 
     public var action: Link by Attributes.action
     public var enctype: EncodingType by Attributes.enctype
     public var method: FormMethod by Attributes.method
+    public var novalidate: Boolean by Attributes.novalidate
 }
 
 open class SELECT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "select") {

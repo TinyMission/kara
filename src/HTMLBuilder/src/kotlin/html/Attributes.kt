@@ -21,6 +21,7 @@ object Attributes {
     val alt = TextAttribute("alt")
     val autocomplete = BooleanAttribute("autocomplete", "on", "off")
     val autofocus = TickerAttribute("autofocus")
+    val novalidate = TickerAttribute("novalidate")
     val checked = TickerAttribute("checked")
     val disabled = TickerAttribute("disabled")
     val maxlength = IntAttribute("maxlength")

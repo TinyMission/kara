@@ -56,7 +56,7 @@ fun String.htmlEscapeTo(builder: StringBuilder) {
 }
 
 abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
-    private val attributes = HashMap<String, String>()
+    private val attributes = HashMap<String, String?>()
 
     public inline fun build<T : HtmlTag>(tag: T, contents: T.() -> Unit): T {
         tag.contents()
@@ -106,11 +106,11 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     }
 
     protected fun renderAttributes(builder: StringBuilder) {
-        for (a in attributes.keySet()) {
-            val attr = attributes[a]!!
-            if (attr.length > 0) {
-                builder.append(' ').append(a).append("=\"")
-                attr.htmlEscapeTo(builder)
+        for ((name, value) in attributes.entrySet()) {
+            builder.append(' ').append(name)
+            value?.let {
+                builder.append("=\"")
+                it.htmlEscapeTo(builder)
                 builder.append("\"")
             }
         }
@@ -120,22 +120,20 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         attributes[name] = value
     }
 
-    public fun tryGet(attributeName: String): String? {
-        return attributes[attributeName]
-    }
-
     public fun hasAttribute(attributeName: String): Boolean {
         return attributes.containsKey(attributeName)
     }
 
-    public fun get(attributeName: String): String {
-        val answer = attributes[attributeName]
-        if (answer == null) throw RuntimeException("Atrribute $attributeName is missing")
-        return answer
+    public fun get(attributeName: String): String? {
+        return attributes[attributeName]
     }
 
-    public fun set(attName: String, attValue: String) {
+    public fun set(attName: String, attValue: String?) {
         attributes[attName] = attValue
+    }
+
+    public fun removeAttribute(attributeName: String) {
+        attributes.remove(attributeName)
     }
 
     /**
