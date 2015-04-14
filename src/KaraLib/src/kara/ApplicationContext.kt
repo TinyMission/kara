@@ -62,11 +62,13 @@ class ApplicationContext(public val application : Application,
             // All kinds of EOFs and Broken Pipes can be safely ignored
         }
         catch(ex: Throwable) {
-            if (ex.javaClass.getName() == "org.apache.catalina.connector.ClientAbortException") {
-                // do nothing for tomcat specific exception
+            when {
+                ex.javaClass.getName() == "org.apache.catalina.connector.ClientAbortException" -> {} // do nothing for tomcat specific exception
+                else -> {
+                    Application.logger.error("Error processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", ex)
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+                }
             }
-            Application.logger.error("Error processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", ex)
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
         }
 
         return true
