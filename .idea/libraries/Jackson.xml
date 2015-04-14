@@ -1,8 +1,9 @@
 <component name="libraryTable">
   <library name="Jackson">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/jackson-core-asl-1.9.9.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jackson-mapper-asl-1.9.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-databind-2.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.5.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
