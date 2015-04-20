@@ -79,7 +79,7 @@ class DataClassSerializer: TypeSerializer() {
     }
 
     override fun deserialize(param: String, paramType: Class<*>): Any? {
-        return (paramType as Class<Any>).parse(param)
+        return paramType.parse(param)
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
@@ -158,6 +158,6 @@ fun Any.serialize(): String {
     return names.map { it to propertyValue(it) }.
     filter {it.second != null}.
     map { "${it.first}=${URLEncoder.encode(Serialization.serialize(it.second)!!, "UTF-8")}"}.
-    makeString("&")
+    join("&")
 
 }

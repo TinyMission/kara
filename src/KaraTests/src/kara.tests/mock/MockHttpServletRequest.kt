@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Hashtable
+import javax.servlet.http.HttpUpgradeHandler
 
 
 class MockHttpServletRequest(method : String, url : String) : HttpServletRequest {
@@ -191,7 +192,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getParameterMap() : MutableMap<String, Array<String>?>? {
-        throw UnsupportedOperationException()
+        return params.map {it.getKey() to array(it.getValue())}.toMap().toLinkedMap()
     }
     public override fun getInputStream() : ServletInputStream? {
         throw UnsupportedOperationException()
@@ -227,4 +228,15 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
 
+    override fun getContentLengthLong(): Long {
+        throw UnsupportedOperationException()
+    }
+
+    override fun <T : HttpUpgradeHandler?> upgrade(p0: Class<T>?): T? {
+        throw UnsupportedOperationException()
+    }
+
+    override fun changeSessionId(): String? {
+        throw UnsupportedOperationException()
+    }
 }

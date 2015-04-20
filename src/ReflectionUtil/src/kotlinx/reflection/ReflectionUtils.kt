@@ -2,19 +2,23 @@ package kotlinx.reflection
 
 import java.util.*
 import java.lang.reflect.*
-import java.beans.Introspector
-import jet.runtime.typeinfo.JetValueParameter
 import kotlin.Array
 import java.util.concurrent.ConcurrentHashMap
-import kotlinx.reflection
+import org.jetbrains.kotlin.name.Name
+import kotlin.reflect.KClass
+import kotlin.reflect.KMemberProperty
+import kotlin.reflect.jvm.*
+import kotlin.reflect.jvm.internal.DescriptorBasedProperty
+import kotlin.reflect.jvm.internal.KClassImpl
+
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
     val classObjects = ConcurrentHashMap<Class<*>, Any>()
-    val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>?, Array<Class<*>>, Array<Array<Annotation>?>>>()
+    val consMetadata = ConcurrentHashMap<Class<*>, Pair<Constructor<*>?, Array<Class<*>>>>()
     val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
     val properites = ConcurrentHashMap<Class<*>, List<String>>()
-    val propertyGetters = ConcurrentHashMap<Pair<Class<*>, String>, Any>()
+    val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KMemberProperty<Any, Any?>?>()
 }
 
 private object NullMask
@@ -35,6 +39,7 @@ fun Class<*>.objectInstance(): Any? {
     }.unmask()
 }
 
+deprecated("use #companionObjectInstance() method instead")
 fun Class<*>.classObjectInstance(): Any? {
     return ReflectionCache.classObjects.getOrPut(this) {
         try {
@@ -50,59 +55,39 @@ fun Class<*>.classObjectInstance(): Any? {
     }.unmask()
 }
 
-fun Class<out Any>.propertyGetter(property: String): Method? {
+fun Class<*>.companionObjectInstance(): Any? {
+    return ReflectionCache.classObjects.getOrPut(this) {
+        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.isCompanionObject() }?.get(null)
+    }
+}
+
+[suppress("UNCHECKED_CAST")]
+fun <T> KClass<out T>.propertyGetter(property: String): KMemberProperty<Any, *>? {
     return ReflectionCache.propertyGetters.getOrPut(Pair(this, property)) {
-        try {
-            getMethod("get${when {
-                property.length == 1 && property[0].isLowerCase() -> property.capitalize()
-                property.length > 2 && property[1].isLowerCase() -> property.capitalize()
-                else -> property
-            }}")
-        }
-        catch (e: Exception) {
-            NullMask
-        }
-    }.unmask() as Method?
+        return properties.singleOrNull {
+            property == it.javaField?.getName() ?: it.javaGetter?.getName()?.removePrefix("get")
+        } as KMemberProperty<Any, *>?
+    }
 }
 
 fun Any.propertyValue(property: String): Any? {
-    val getter = javaClass.propertyGetter(property) ?: error("Invalid property ${property} on type ${javaClass.getName()}")
-    return getter.invoke(this)
-}
-
-fun Any.properties(): List<String> {
-    return ReflectionCache.properites.getOrPut(javaClass) {
-        val answer = ArrayList<String>()
-
-        for (method in javaClass.getDeclaredMethods()) {
-            val name = method.getName()!!
-            if (name.startsWith("get") && method.getParameterTypes()?.size == 0) {
-                answer.add(Introspector.decapitalize(name.substring(3))!!)
-            }
+    with(javaClass.kotlin) {
+        return propertyGetter(property)!!.get(this@propertyValue)
+            ?: if ((this as KClassImpl).scope.getProperties(Name.identifier(property)).first().getType().isMarkedNullable()) {
+                null
+            } else {
+            error("Invalid property ${property} on type ${javaClass.getName()}")
         }
-
-        answer.sort()
     }
-}
-
-private fun find(list: Array<Annotation>): JetValueParameter {
-    for (a in list) {
-        if (a is JetValueParameter) return a
-    }
-    throw RuntimeException("Missing Kotlin runtime annotations!");
 }
 
 val emptyClasses : Array<Class<*>> = array()
-val emptyAnnotations: Array<Array<Annotation>?> = array()
 
-private fun Class<*>.consMetaData(): Triple<Constructor<*>?, Array<Class<*>>, Array<Array<Annotation>?>> {
+private fun Class<*>.consMetaData(): Pair<Constructor<*>?, Array<Class<*>>> {
     return ReflectionCache.consMetadata.getOrPut(this) {
-        val ktor = primaryConstructor()
-
-        val paramTypes = ktor?.getParameterTypes() ?: emptyClasses
-        val annotations = ktor?.getParameterAnnotations() ?: emptyAnnotations
-
-        Triple(ktor, paramTypes, annotations)
+        with(primaryConstructor()) {
+            return this to (this?.getParameterTypes() ?: emptyClasses)
+        }
     }
 }
 
@@ -110,44 +95,33 @@ public class MissingArgumentException(val name: String) : RuntimeException("Requ
 
 [suppress("UNCHECKED_CAST")]
 fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
-    val objectInstance = this.objectInstance()
-    if (objectInstance != null)
-        return objectInstance as T
-
-    val (ktor, paramTypes, annotations) = consMetaData()
-    if (ktor == null) return objectInstance() as T
-
-    val arguments: Array<Any?> = Array(paramTypes.size) { i ->
-        val annotation = find(annotations[i]!!)
-        val paramName = annotation.name()
-        val optional = annotation.`type`().startsWith("?")
-
-        params(paramName)?.let {
-            Serialization.deserialize(it, paramTypes[i] as Class<Any>)
-        } ?: if (optional) {
-            null
-        }
-        else {
-            throw MissingArgumentException(paramName)
-        }
+    objectInstance()?.let {
+        return@let it as T
     }
 
-    return ktor.newInstance(*arguments) as T
+    val (ktor, paramTypes) = consMetaData()
+    if (ktor == null) return objectInstance() as T
+
+    val args = (this.kotlin as KClassImpl<T>).descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.mapIndexed { i, param ->
+        params(param.getName().asString())?.let {
+            Serialization.deserialize(it, paramTypes[i] as Class<Any>)
+        } ?: if (param.getType().isMarkedNullable()) {
+            null
+        } else {
+            throw MissingArgumentException(param.getName().asString())
+
+        }
+    }?.copyToArray() ?: array()
+
+
+    return ktor.newInstance(*args) as T
 }
 
 fun Any.primaryProperties() : List<String> {
     return ReflectionCache.primaryProperites.getOrPut(javaClass) {
-        val (ktor, paramTypes, annotations) = javaClass.consMetaData()
-
-        annotations map {
-            val name = find(it!!).name()
-
-            if (javaClass.propertyGetter(name) == null) {
-                error("'$name' is missing val in ${javaClass.getName()}'s primary constructor")
-            }
-
-            name
-        }
+        (javaClass.kotlin as KClassImpl<*>).descriptor
+                .getUnsubstitutedPrimaryConstructor()?.getValueParameters()
+                ?.map { it.getName().asString() }
     }
 }
 
@@ -157,3 +131,14 @@ fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
 }
 
 public fun Class<*>.isEnumClass(): Boolean = javaClass<Enum<*>>().isAssignableFrom(this)
+
+fun ClassLoader.loadedClasses(prefix: String ="") : List<Class<*>> {
+    return  ClassLoader::class.java.getDeclaredField("classes").let {
+        it.setAccessible(true);
+        val result = it.get(this)
+        it.setAccessible(false)
+        (result as Vector<Class<*>>).toArrayList()
+    }.filter{
+        !prefix.isNullOrBlank() && it.getPackage()?.getName().orEmpty().startsWith(prefix)
+    }
+}

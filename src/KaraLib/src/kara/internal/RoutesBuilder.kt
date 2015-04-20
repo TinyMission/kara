@@ -1,23 +1,28 @@
 package kara.internal
 
-import org.reflections.Reflections
 import kotlinx.reflection.*
 import java.util.ArrayList
 import kara.*
-import org.reflections.util.ClasspathHelper
+import org.jetbrains.kotlin.load.java.reflect.tryLoadClass
+import java.lang.instrument.Instrumentation
+import kotlin.reflect.jvm.kotlin
+
+val karaAnnotations = listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>())
 
 fun scanPackageForResources(prefix : String, classloader : ClassLoader) : List<Class<out Resource>> {
     try {
-        val reflections = Reflections(prefix, classloader)
-        return listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>()).flatMap {
-            reflections.getTypesAnnotatedWith(it)!!.toList().filter { javaClass<Resource>().isAssignableFrom(it) }.map { it as Class<Resource> }
-        }
+        return classloader.loadedClasses(prefix).filter {
+            it.getDeclaredAnnotations().any { it in karaAnnotations }
+        }.map { it as? Class<Resource> }.filterNotNull()
+
     }
     catch(e: Throwable) {
         e.printStackTrace()
         throw RuntimeException("I'm totally failed to start up. See log :(")
     }
 }
+
+
 
 fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<Class<out Resource>> {
     val answer = ArrayList<Class<out Resource>>()

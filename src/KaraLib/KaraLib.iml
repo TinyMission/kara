@@ -22,7 +22,6 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="HTMLBuilder" exported="" />
     <orderEntry type="library" name="ServletAPI" level="project" />
-    <orderEntry type="library" name="Reflections" level="project" />
     <orderEntry type="library" name="Logging" level="project" />
     <orderEntry type="library" name="commons-io-2.4" level="project" />
     <orderEntry type="module" module-name="ReflectionUtil" exported="" />
@@ -30,5 +29,6 @@
     <orderEntry type="library" name="YuiCompressor" level="project" />
     <orderEntry type="library" name="LessCompiler" level="project" />
     <orderEntry type="library" name="Rhino" level="project" />
+    <orderEntry type="library" name="KotlinReflect" level="project" />
   </component>
 </module>
