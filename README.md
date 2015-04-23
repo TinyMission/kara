@@ -1,10 +1,10 @@
 # Kara Web Framework
 
-Kara is a web framework for the JVM using the [Kotlin programming language](http://kotlinlang.org/). It uses Kotlin's unique syntax to allow developers to write succinct, statically-typed HTML and CSS all in one language.
+Kara is a web framework for the JVM written in [Kotlin](http://kotlinlang.org/). It enables developers to build succinct, type-safe HTML and CSS all in one language.
 
-The benefits of a web framework like Kara are excellently illustrated in the article ["Type-safe Web with Kotlin"](http://jaxenter.com/type-safe-web-with-kotlin-106187.html) by Andrey Breslav.
+The article [*Type-safe Web with Kotlin*](http://jaxenter.com/type-safe-web-with-kotlin-106187.html) by Andrey Breslav  illustrates the benefits of such a framework.
 
-To get a quick overview over the project, check out [karaframework.com](http://karaframework.com/). (Caution: Some contents are outdated.)
+Check out [karaframework.com](http://karaframework.com/) to get a quick overview of the project. (Caution: Some contents are outdated.)
 
 ## Authors
 
