@@ -1,5 +1,7 @@
 package kotlinx.reflection
 
+import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.load.java.reflect.tryLoadClass
 import java.util.*
 import java.lang.reflect.*
 import kotlin.Array
@@ -10,7 +12,8 @@ import kotlin.reflect.KMemberProperty
 import kotlin.reflect.jvm.*
 import kotlin.reflect.jvm.internal.DescriptorBasedProperty
 import kotlin.reflect.jvm.internal.KClassImpl
-
+import java.io.File
+import java.net.URL
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
@@ -24,11 +27,14 @@ object ReflectionCache {
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
 
-fun Class<*>.objectInstance(): Any? {
+fun Class<*>.objectInstance0(): Any? {
     return ReflectionCache.objects.getOrPut(this) {
         try {
             val field = getDeclaredField("INSTANCE\$")
             if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
+                if (!field.isAccessible()) {
+                    field.setAccessible(true)
+                }
                 field[null]!!
             }
             else NullMask
@@ -38,6 +44,13 @@ fun Class<*>.objectInstance(): Any? {
         }
     }.unmask()
 }
+
+fun Class<*>.objectInstance(): Any? {
+    return ReflectionCache.classObjects.getOrPut(this) {
+        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.getKind() == ClassKind.OBJECT }?.get(null)
+    }
+}
+
 
 deprecated("use #companionObjectInstance() method instead")
 fun Class<*>.classObjectInstance(): Any? {
@@ -100,7 +113,6 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     }
 
     val (ktor, paramTypes) = consMetaData()
-    if (ktor == null) return objectInstance() as T
 
     val args = (this.kotlin as KClassImpl<T>).descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.mapIndexed { i, param ->
         params(param.getName().asString())?.let {
@@ -111,10 +123,10 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
             throw MissingArgumentException(param.getName().asString())
 
         }
-    }?.copyToArray() ?: array()
+    }?.toTypedArray() ?: arrayOf()
 
 
-    return ktor.newInstance(*args) as T
+    return ktor!!.newInstance(*args) as T
 }
 
 fun Any.primaryProperties() : List<String> {
@@ -142,3 +154,31 @@ fun ClassLoader.loadedClasses(prefix: String ="") : List<Class<*>> {
         !prefix.isNullOrBlank() && it.getPackage()?.getName().orEmpty().startsWith(prefix)
     }
 }
+
+fun ClassLoader.findClasses(prefix: String = "") : List<Class<*>> {
+    val urls = arrayListOf<URL>()
+    val enumeration = this.getResources("")
+    while(enumeration.hasMoreElements()) {
+        urls.add(enumeration.nextElement())
+    }
+
+    val prefixPath = prefix.replace(".", File.separator) + File.separator
+
+    return urls.map {
+        val root = File(it.getPath())
+        FileTreeWalk(root, filter = {
+            it.isDirectory() || (it.isFile() && it.extension == "class")
+        }).toList()
+        .filter{
+              it.isFile() && it.getAbsolutePath().contains(prefixPath)
+        }.map {
+            Class.forName(prefix +"." + it.getAbsolutePath().substringAfterLast(prefixPath).removeSuffix(".class").replace(File.separator, "."))
+        }.filterNotNull().toList()
+    }.flatten()
+}
+
+suppress("UNCHECKED_CAST")
+fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> = filter { clazz.isAssignableFrom(it) } as List<Class<T>>
+
+suppress("UNCHECKED_CAST")
+inline fun <reified T> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(javaClass<T>())

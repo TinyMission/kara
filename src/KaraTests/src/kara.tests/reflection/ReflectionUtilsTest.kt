@@ -1,9 +1,6 @@
 package kara.tests.reflection
 
-import kotlinx.reflection.ReflectionCache
-import kotlinx.reflection.classObjectInstance
-import kotlinx.reflection.companionObjectInstance
-import kotlinx.reflection.primaryProperties
+import kotlinx.reflection.*
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -14,13 +11,29 @@ open class Foo {
     object Baz : Foo () {}
 }
 
-Test class CompanionObject() {
+object Foo2 {
+    object Test {}
+}
+
+Test class ObjectInstances() {
 
     Before
     fun cleanUpReflectionCache() {
         ReflectionCache.classObjects.clear()
         ReflectionCache.objects.clear()
     }
+
+    Test fun testDeprecatedObjectInstance() {
+        assertNotNull(javaClass<Foo2>().objectInstance0())
+        assertNotNull(javaClass<Foo2.Test>().objectInstance0())
+    }
+
+    Test fun testObjectInstance() {
+        assertNotNull(javaClass<Foo2>().objectInstance())
+        assertNotNull(javaClass<Foo2.Test>().objectInstance())
+        assertEquals(javaClass<Foo2.Test>().objectInstance(), javaClass<Foo2.Test>().objectInstance0())
+    }
+
 
     Test fun testDeprecatedClassObjectViaReflection() {
         val companion = javaClass<Foo>().classObjectInstance()

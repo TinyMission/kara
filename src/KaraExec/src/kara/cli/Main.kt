@@ -6,8 +6,6 @@ import kara.internal.*
 import kara.server.JettyRunner
 import org.apache.log4j.*
 import java.util.ArrayList
-import java.net.URL
-import java.io.File
 
 fun server(appConfig : ApplicationConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -19,7 +17,7 @@ fun config(appConfig: ApplicationConfig) {
 }
 
 fun main(args: Array<String>) {
-    val appConfig = ApplicationConfig.loadFrom(if (args.size > 0) args[0] else "development.conf")
+    val appConfig = ApplicationConfig.loadFrom(if (args.size() > 0) args[0] else "development.conf")
 
     val logPath = appConfig.tryGet("kara.logPropertiesPath")
 

@@ -99,9 +99,7 @@ class ApplicationContext(public val application : Application,
 
     fun scanPackageForMonitors(prefix: String): List<Class<out ApplicationContextMonitor>> {
         try {
-            return  classLoader.loadedClasses(prefix).filter {
-                it.isAssignableFrom(javaClass<ApplicationContextMonitor>())
-            } as List<Class<out ApplicationContextMonitor>>
+            return classLoader.loadedClasses(prefix).filterIsAssignable<ApplicationContextMonitor>()
         }
         catch(e: Throwable) {
             e.printStackTrace()

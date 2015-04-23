@@ -9,12 +9,14 @@ import kotlin.reflect.jvm.kotlin
 
 val karaAnnotations = listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>())
 
+[suppress("UNCHECKED_CAST")]
 fun scanPackageForResources(prefix : String, classloader : ClassLoader) : List<Class<out Resource>> {
     try {
-        return classloader.loadedClasses(prefix).filter {
-            it.getDeclaredAnnotations().any { it in karaAnnotations }
-        }.map { it as? Class<Resource> }.filterNotNull()
-
+        return classloader.findClasses(prefix)
+                .filterIsAssignable<Resource>()
+                .filter {
+                    clazz -> karaAnnotations.any { clazz.isAnnotationPresent(it) }
+                }
     }
     catch(e: Throwable) {
         e.printStackTrace()
@@ -30,12 +32,12 @@ fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<C
     fun scan(routesObject : Any) {
         val newClass = classloader?.loadClass(routesObject.javaClass.getName()) ?: routesObject.javaClass
         for (innerClass in newClass.getDeclaredClasses()) {
-            val objectInstance = innerClass.objectInstance()
-            if (objectInstance != null) {
-                scan(objectInstance)
-            }
-            else if (javaClass<Resource>().isAssignableFrom(innerClass)) {
-                answer.add(innerClass as Class<Resource>)
+            innerClass.objectInstance()?.let {
+                scan(it)
+            } ?: run {
+                if (javaClass<Resource>().isAssignableFrom(innerClass)) {
+                    answer.add(innerClass as Class<Resource>)
+                }
             }
         }
     }
