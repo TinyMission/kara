@@ -18,7 +18,7 @@ class DispatchTests() {
 
         val app = object : Application(appConfig) {}
 
-        val dispatcher = ResourceDispatcher(app.context, scanObjects(array(Routes)))
+        val dispatcher = ResourceDispatcher(app.context, scanObjects(arrayOf(Routes)))
 
         var actionInfo = dispatcher.findDescriptor("GET", "/")!!
         assertNotNull(actionInfo)

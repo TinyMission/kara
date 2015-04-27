@@ -7,6 +7,7 @@ import java.lang.reflect.*
 import kotlin.Array
 import java.util.concurrent.ConcurrentHashMap
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.utils.addIfNotNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KMemberProperty
 import kotlin.reflect.jvm.*
@@ -14,13 +15,14 @@ import kotlin.reflect.jvm.internal.DescriptorBasedProperty
 import kotlin.reflect.jvm.internal.KClassImpl
 import java.io.File
 import java.net.URL
+import java.net.URLClassLoader
+import java.util.jar.JarFile
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
     val classObjects = ConcurrentHashMap<Class<*>, Any>()
     val consMetadata = ConcurrentHashMap<Class<*>, Pair<Constructor<*>?, Array<Class<*>>>>()
     val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
-    val properites = ConcurrentHashMap<Class<*>, List<String>>()
     val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KMemberProperty<Any, Any?>?>()
 }
 
@@ -47,8 +49,11 @@ fun Class<*>.objectInstance0(): Any? {
 
 fun Class<*>.objectInstance(): Any? {
     return ReflectionCache.classObjects.getOrPut(this) {
-        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.getKind() == ClassKind.OBJECT }?.get(null)
-    }
+        getFields().firstOrNull {
+            with(it.getType().kotlin as KClassImpl<*>) {
+                descriptor.getKind() == ClassKind.OBJECT && !descriptor.isCompanionObject()
+        }}?.get(null)?:NullMask
+    }.unmask()
 }
 
 
@@ -70,14 +75,14 @@ fun Class<*>.classObjectInstance(): Any? {
 
 fun Class<*>.companionObjectInstance(): Any? {
     return ReflectionCache.classObjects.getOrPut(this) {
-        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.isCompanionObject() }?.get(null)
-    }
+        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.isCompanionObject() }?.get(null) ?: NullMask
+    }.unmask()
 }
 
 [suppress("UNCHECKED_CAST")]
 fun <T> KClass<out T>.propertyGetter(property: String): KMemberProperty<Any, *>? {
     return ReflectionCache.propertyGetters.getOrPut(Pair(this, property)) {
-        return properties.singleOrNull {
+        properties.singleOrNull {
             property == it.javaField?.getName() ?: it.javaGetter?.getName()?.removePrefix("get")
         } as KMemberProperty<Any, *>?
     }
@@ -114,19 +119,21 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
 
     val (ktor, paramTypes) = consMetaData()
 
-    val args = (this.kotlin as KClassImpl<T>).descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.mapIndexed { i, param ->
-        params(param.getName().asString())?.let {
-            Serialization.deserialize(it, paramTypes[i] as Class<Any>)
-        } ?: if (param.getType().isMarkedNullable()) {
-            null
-        } else {
-            throw MissingArgumentException(param.getName().asString())
 
-        }
-    }?.toTypedArray() ?: arrayOf()
+    return ktor?.let {
+        val args = (this.kotlin as KClassImpl<T>).descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.mapIndexed { i, param ->
+            params(param.getName().asString())?.let {
+                Serialization.deserialize(it, paramTypes[i] as Class<Any>)
+            } ?: if (param.getType().isMarkedNullable()) {
+                null
+            } else {
+                throw MissingArgumentException(param.getName().asString())
 
+            }
+        }?.toTypedArray() ?: arrayOf()
 
-    return ktor!!.newInstance(*args) as T
+        ktor?.newInstance(*args) as T
+    } ?: objectInstance() as T
 }
 
 fun Any.primaryProperties() : List<String> {
@@ -157,24 +164,60 @@ fun ClassLoader.loadedClasses(prefix: String ="") : List<Class<*>> {
 
 fun ClassLoader.findClasses(prefix: String = "") : List<Class<*>> {
     val urls = arrayListOf<URL>()
-    val enumeration = this.getResources("")
-    while(enumeration.hasMoreElements()) {
-        urls.add(enumeration.nextElement())
+    val clazzz = arrayListOf<Class<*>>()
+    getParent()?.let {
+        if (it != ClassLoader.getSystemClassLoader()) {
+            clazzz.addAll(it.findClasses(prefix))
+        }
     }
 
-    val prefixPath = prefix.replace(".", File.separator) + File.separator
+    (this as? URLClassLoader)?.getURLs()?.let {
+        urls.addAll(it)
+    } ?: run {
+        val enumeration = this.getResources("")
+        while(enumeration.hasMoreElements()) {
+            urls.add(enumeration.nextElement())
+        }
+    }
+    clazzz.addAll(urls.map {
+            it.scanForClasses(prefix, this@findClasses)
+        }.flatten())
+    return clazzz
+}
 
-    return urls.map {
-        val root = File(it.getPath())
-        FileTreeWalk(root, filter = {
-            it.isDirectory() || (it.isFile() && it.extension == "class")
-        }).toList()
-        .filter{
-              it.isFile() && it.getAbsolutePath().contains(prefixPath)
-        }.map {
-            Class.forName(prefix +"." + it.getAbsolutePath().substringAfterLast(prefixPath).removeSuffix(".class").replace(File.separator, "."))
-        }.filterNotNull().toList()
-    }.flatten()
+private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): List<Class<*>> {
+    return when {
+        getFile().endsWith(".jar") -> JarFile(getPath()).scanForClasses(prefix, classLoader)
+        else -> File(getPath()).scanForClasses(prefix, classLoader)
+    }
+}
+
+private fun String.packageToPath() = replace(".", File.separator) + File.separator
+
+private fun File.scanForClasses(prefix: String, classLoader: ClassLoader): List<Class<*>> {
+    val path = prefix.packageToPath()
+    return FileTreeWalk(this, filter = {
+        it.isDirectory() || (it.isFile() && it.extension == "class")
+    }).toList()
+    .filter{
+        it.isFile() && it.getAbsolutePath().contains(path)
+    }.map {
+        classLoader.tryLoadClass(prefix +"." + it.getAbsolutePath().substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
+    }.filterNotNull().toList()
+}
+
+private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): List<Class<*>> {
+    val classes = arrayListOf<Class<*>>()
+    val path = prefix.replace(".", "/") + "/"
+    val entries = this.entries()
+    while(entries.hasMoreElements()) {
+        entries.nextElement().let {
+            if (!it.isDirectory() && it.getName().endsWith(".class") && it.getName().contains(path)) {
+                classes.addIfNotNull(classLoader.tryLoadClass(prefix + "." + it.getName().substringAfterLast(path).removeSuffix(".class").replace(File.separator, ".")))
+            }
+        }
+    }
+    return classes
 }
 
 suppress("UNCHECKED_CAST")
