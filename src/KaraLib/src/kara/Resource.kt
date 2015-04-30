@@ -25,7 +25,7 @@ public abstract class Resource() : Link {
 
         answer.append(url.first)
         answer.append("?")
-        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)?.let{URLEncoder.encode(it, "UTF-8")}}" } join("&"))
+        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" } join("&"))
 
         return answer.toString()
     }

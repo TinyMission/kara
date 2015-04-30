@@ -3,6 +3,7 @@ package kara
 import java.util.ArrayList
 import java.net.URLClassLoader
 import kara.internal.*
+import kotlinx.reflection.urlDecode
 
 import java.io.File
 import org.apache.log4j.Logger
@@ -93,7 +94,7 @@ open class Application(public val config: ApplicationConfig) {
                 for (url in loaderUrls) {
                     logger.debug("Evaluating URL '${url}' to watch for changes.")
                     url.getPath()?.let {
-                        val folder = File(URLDecoder.decode(it, "utf-8"))
+                        val folder = File(urlDecode(it))
                         if (folder.exists()) {
                             Files.walkFileTree(folder.toPath(), visitor)
                         }

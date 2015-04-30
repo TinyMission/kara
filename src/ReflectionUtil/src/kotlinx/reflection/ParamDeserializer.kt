@@ -147,9 +147,7 @@ fun <T> Class<T>.parse(params: String) : T {
     }
 
     return buildBeanInstance {
-        map[it]?.let {
-            URLDecoder.decode(it, "UTF-8")
-        }
+        map[it]?.let { urlDecode(it) }
     }
 }
 
@@ -157,7 +155,25 @@ fun Any.serialize(): String {
     val names = LinkedHashSet(primaryProperties())
     return names.map { it to propertyValue(it) }.
     filter {it.second != null}.
-    map { "${it.first}=${URLEncoder.encode(Serialization.serialize(it.second)!!, "UTF-8")}"}.
+    map { "${it.first}=${urlEncode(Serialization.serialize(it.second)!!)}"}.
     join("&")
 
+}
+
+public fun urlEncode(value: String): String {
+    try {
+        return URLEncoder.encode(value, "UTF-8")
+    }
+    catch(e: Exception) {
+        return value
+    }
+}
+
+public fun urlDecode(encoded: String): String {
+    try {
+        return URLDecoder.decode(encoded, "UTF-8")
+    }
+    catch(e: Exception) {
+        return encoded
+    }
 }
