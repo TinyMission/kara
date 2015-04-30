@@ -46,7 +46,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
 
         // parse the query string
         if (query != null) {
-            val queryComponents = query.split("\\&") map { URLDecoder.decode(it, "UTF-8") }
+            val queryComponents = query.split("\\&") map { urlDecode(it) }
             for (component in queryComponents) {
                 val nvp = component.split("=")
                 if (nvp.size > 1)
@@ -57,7 +57,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
         }
 
         // parse the route parameters
-        val pathComponents = url.split("/") map { URLDecoder.decode(it, "UTF-8") }
+        val pathComponents = url.split("/") map { urlDecode(it) }
         if (pathComponents.size < routeComponents.size() - optionalComponents.size())
             throw InvalidRouteException("URL has less components than mandatory parameters of the route")
         for (i in pathComponents.indices) {
