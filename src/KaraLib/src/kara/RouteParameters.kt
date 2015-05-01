@@ -2,6 +2,7 @@ package kara
 
 import java.util.*
 import kara.internal.*
+import kotlinx.reflection.MissingArgumentException
 
 /** Contains all of the parameters for a matched route. */
 class RouteParameters() {
@@ -72,11 +73,11 @@ class RouteParameters() {
     }
 
     fun intParam(name: String): Int {
-        return optIntParam(name) ?: throw RuntimeException("Required parameter $name is missing in request")
+        return optIntParam(name) ?: throw MissingArgumentException(name)
     }
 
     fun stringParam(name: String): String {
-        return optStringParam(name) ?: throw RuntimeException("Required parameter $name is missing in request")
+        return optStringParam(name) ?: throw MissingArgumentException(name)
     }
 
     fun optStringParam(name: String): String? {
