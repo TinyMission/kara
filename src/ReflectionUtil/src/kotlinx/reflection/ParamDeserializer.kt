@@ -1,5 +1,6 @@
 package kotlinx.reflection
 
+import java.math.BigDecimal
 import java.util.*
 import java.net.*
 
@@ -41,7 +42,7 @@ class FloatSerializer() : TypeSerializer() {
 
 class BooleanSerializer: TypeSerializer() {
     override fun deserialize(param: String, paramType: Class<out Any?>): Any? {
-        return !(param.equalsIgnoreCase("false"))
+        return !(param.equals("false", true))
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
@@ -50,6 +51,28 @@ class BooleanSerializer: TypeSerializer() {
 
     override fun serialize(param: Any): String {
         return if (param as Boolean) "true" else "false"
+    }
+}
+
+class LongSerializer: TypeSerializer() {
+    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+        if (param.isEmpty()) return null
+        return param.toLong()
+    }
+
+    override fun isThisType(testType : Class<*>) : Boolean {
+        return testType.toString() == "long" || testType.getName() == "java.lang.Long"
+    }
+}
+
+class BigDecimalSerializer: TypeSerializer() {
+    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+        if (param.isEmpty()) return null
+        return BigDecimal(param)
+    }
+
+    override fun isThisType(testType : Class<*>) : Boolean {
+        return javaClass<BigDecimal>().isAssignableFrom(testType)
     }
 }
 
@@ -102,6 +125,8 @@ public object Serialization {
         register(IntSerializer())
         register(FloatSerializer())
         register(BooleanSerializer())
+        register(LongSerializer())
+        register(BigDecimalSerializer())
         register(DataClassSerializer())
         register(EnumSerializer())
     }
