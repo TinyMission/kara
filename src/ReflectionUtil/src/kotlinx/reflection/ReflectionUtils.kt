@@ -114,7 +114,7 @@ public class MissingArgumentException(val name: String) : RuntimeException("Requ
 [suppress("UNCHECKED_CAST")]
 fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     objectInstance()?.let {
-        return@let it as T
+        return it as T
     }
 
     val (ktor, paramTypes) = consMetaData()
