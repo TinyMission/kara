@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Rhino">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/js.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/rhino-js-1.7R5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

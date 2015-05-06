@@ -4,7 +4,6 @@ import java.lang.reflect.Method
 import javax.servlet.http.*
 import java.util.ArrayList
 import java.lang.reflect.Type
-import jet.runtime.typeinfo.JetValueParameter
 import java.lang.reflect.Constructor
 import java.net.URLDecoder
 import kara.*
@@ -40,25 +39,34 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
     }
 
     public fun buildParams(request: HttpServletRequest): RouteParameters {
-        val url = request.getRequestURI()?.trimLeading(request.getContextPath() ?: "")!!
+        val url = request.getRequestURI()?.removePrefix(request.getContextPath().orEmpty())!!
         val query = request.getQueryString()
         val params = RouteParameters()
 
-        // parse the query string
+        query?.split("[$&]")?.forEach {
+            val (name, value) = it.split("=")
+            params[name] = value.orEmpty()
+        }
+
+        /*// parse the query string
         if (query != null) {
             val queryComponents = query.split("\\&") map { URLDecoder.decode(it, "UTF-8") }
-            for (component in queryComponents) {
-                val nvp = component.split("=")
-                if (nvp.size > 1)
+            queryComponents.forEach { component ->
+                component.partition { it == '='}.let { nvp ->
+                    params[]
+                }
+                    params[nvp[0]] = nvp[1]
+                }
+                if (nvp.size() > 1)
                     params[nvp[0]] = nvp[1]
                 else
                     params[nvp[0]] = ""
             }
-        }
+        }*/
 
         // parse the route parameters
-        val pathComponents = url.split("/") map { URLDecoder.decode(it, "UTF-8") }
-        if (pathComponents.size < routeComponents.size() - optionalComponents.size())
+        val pathComponents = url.split("/") map { urlDecode(it) }
+        if (pathComponents.size() < routeComponents.size() - optionalComponents.size())
             throw InvalidRouteException("URL has less components than mandatory parameters of the route")
         for (i in pathComponents.indices) {
             val component = pathComponents[i]
@@ -72,14 +80,11 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
             params[formParameterName] = value
         }
 
-        val contentType = request.getContentType()
-        if (contentType != null) {
-            if (contentType.startsWith("multipart/form-data")) {
-                for (part in request.getParts()!!) {
-                    if (part.getSize() < 4192) {
-                        val name = part.getName()!!
-                        params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
-                    }
+        if (request.getContentType()?.startsWith("multipart/form-data")?:false) {
+            for (part in request.getParts()!!) {
+                if (part.getSize() < 4192) {
+                    val name = part.getName()!!
+                    params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
                 }
             }
         }

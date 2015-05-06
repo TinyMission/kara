@@ -8,9 +8,9 @@ fun String.toRouteComponents(): List<RouteComponent> = split("/").map { RouteCom
 abstract class RouteComponent(val componentText: String) {
     companion object {
         fun create(component: String): RouteComponent {
-            if (component.length > 1 && component.charAt(0) == ':' && component.lastIndexOf(':') == 0)
+            if (component.length() > 1 && component.charAt(0) == ':' && component.lastIndexOf(':') == 0)
                 return ParamRouteComponent(component)
-            else if (component.length > 1 && component.charAt(0) == '?' && component.lastIndexOf('?') == 0)
+            else if (component.length() > 1 && component.charAt(0) == '?' && component.lastIndexOf('?') == 0)
                 return OptionalParamRouteComponent(component)
             else if (component == "*")
                 return WildcardRouteComponent(component)

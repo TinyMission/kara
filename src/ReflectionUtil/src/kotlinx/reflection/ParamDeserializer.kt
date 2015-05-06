@@ -1,5 +1,6 @@
 package kotlinx.reflection
 
+import java.math.BigDecimal
 import java.util.*
 import java.net.*
 
@@ -41,7 +42,7 @@ class FloatSerializer() : TypeSerializer() {
 
 class BooleanSerializer: TypeSerializer() {
     override fun deserialize(param: String, paramType: Class<out Any?>): Any? {
-        return !(param.equalsIgnoreCase("false"))
+        return !(param.equals("false", true))
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
@@ -50,6 +51,28 @@ class BooleanSerializer: TypeSerializer() {
 
     override fun serialize(param: Any): String {
         return if (param as Boolean) "true" else "false"
+    }
+}
+
+class LongSerializer: TypeSerializer() {
+    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+        if (param.isEmpty()) return null
+        return param.toLong()
+    }
+
+    override fun isThisType(testType : Class<*>) : Boolean {
+        return testType.toString() == "long" || testType.getName() == "java.lang.Long"
+    }
+}
+
+class BigDecimalSerializer: TypeSerializer() {
+    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+        if (param.isEmpty()) return null
+        return BigDecimal(param)
+    }
+
+    override fun isThisType(testType : Class<*>) : Boolean {
+        return javaClass<BigDecimal>().isAssignableFrom(testType)
     }
 }
 
@@ -79,7 +102,7 @@ class DataClassSerializer: TypeSerializer() {
     }
 
     override fun deserialize(param: String, paramType: Class<*>): Any? {
-        return (paramType as Class<Any>).parse(param)
+        return paramType.parse(param)
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
@@ -102,6 +125,8 @@ public object Serialization {
         register(IntSerializer())
         register(FloatSerializer())
         register(BooleanSerializer())
+        register(LongSerializer())
+        register(BigDecimalSerializer())
         register(DataClassSerializer())
         register(EnumSerializer())
     }
@@ -147,9 +172,7 @@ fun <T> Class<T>.parse(params: String) : T {
     }
 
     return buildBeanInstance {
-        map[it]?.let {
-            URLDecoder.decode(it, "UTF-8")
-        }
+        map[it]?.let { urlDecode(it) }
     }
 }
 
@@ -157,7 +180,25 @@ fun Any.serialize(): String {
     val names = LinkedHashSet(primaryProperties())
     return names.map { it to propertyValue(it) }.
     filter {it.second != null}.
-    map { "${it.first}=${URLEncoder.encode(Serialization.serialize(it.second)!!, "UTF-8")}"}.
-    makeString("&")
+    map { "${it.first}=${urlEncode(Serialization.serialize(it.second)!!)}"}.
+    join("&")
 
+}
+
+public fun urlEncode(value: String): String {
+    try {
+        return URLEncoder.encode(value, "UTF-8")
+    }
+    catch(e: Exception) {
+        return value
+    }
+}
+
+public fun urlDecode(encoded: String): String {
+    try {
+        return URLDecoder.decode(encoded, "UTF-8")
+    }
+    catch(e: Exception) {
+        return encoded
+    }
 }
