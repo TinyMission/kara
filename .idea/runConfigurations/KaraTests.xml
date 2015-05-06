@@ -31,6 +31,11 @@
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
-    <method />
+    <method>
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="kara-test-related" />
+      </option>
+      <option name="Make" enabled="true" />
+    </method>
   </configuration>
 </component>

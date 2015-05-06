@@ -136,4 +136,7 @@ class MockHttpServletResponse() : HttpServletResponse {
         throw UnsupportedOperationException()
     }
 
+    override fun setContentLengthLong(p0: Long) {
+        throw UnsupportedOperationException()
+    }
 }

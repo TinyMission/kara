@@ -52,12 +52,12 @@ public open class ApplicationConfig() : Config() {
                             when {
                                 it.endsWith("/**") -> {
                                     val answer = ArrayList<File>()
-                                    File(it.trimTrailing("/**")).recurse { file -> if (file.isFile() && file.getName().endsWith(".jar"))  answer.add(file) }
+                                    File(it.removeSuffix("/**")).recurse { file -> if (file.isFile() && file.getName().endsWith(".jar"))  answer.add(file) }
                                     answer
                                 }
 
                                 it.endsWith("/*") -> {
-                                    File(it.trimTrailing("/*")).listFiles { it.isFile() && it.getName().endsWith(".jar") }?.toList() ?: listOf()
+                                    File(it.removeSuffix("/*")).listFiles { it.isFile() && it.getName().endsWith(".jar") }?.toList() ?: listOf()
                                 }
 
                                 else -> {
@@ -65,8 +65,8 @@ public open class ApplicationConfig() : Config() {
                                 }
                             }
                         }
-                        .map { it.toURL() })
+                        .map { it.toURI().toURL() })
             }
-            return urls.copyToArray()
+            return urls.toTypedArray()
         }
 }

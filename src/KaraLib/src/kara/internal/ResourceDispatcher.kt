@@ -33,7 +33,7 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
      */
     fun findDescriptor(httpMethod: String, url: String): ResourceDescriptor? {
         val httpMethodIndex = httpMethod.asHttpMethod().ordinal()
-        val matches = ArrayList<ResourceDescriptor>(httpMethods[httpMethodIndex].filter { it.matches(url) })
+        val matches = ArrayList(httpMethods[httpMethodIndex].filter { it.matches(url) })
 
         return when (matches.size()) {
             1 -> matches[0]
@@ -43,10 +43,9 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
     }
 
     fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
-        val url = request.getRequestURI() as String
-        val query = request.getQueryString()
+        val url = request.getRequestURI()
         val method = request.getMethod()
-        val resourceDescriptor = findDescriptor(method!!, url.trimLeading(request.getContextPath() ?: ""))
+        val resourceDescriptor = findDescriptor(method!!, url.removePrefix(request.getContextPath().orEmpty()))
         if (resourceDescriptor != null) {
             resourceDescriptor.exec(context, request, response)
             return true

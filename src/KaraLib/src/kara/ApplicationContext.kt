@@ -6,10 +6,11 @@ import kotlin.properties.Delegates
 import javax.servlet.http.*
 import java.util.*
 import org.apache.log4j.Logger
-import org.reflections.Reflections
 import java.io.IOException
 import java.net.Socket
 import java.net.SocketException
+import kotlin.jvm.internal.Reflection
+import kotlin.reflect.jvm.internal.KPackageImpl
 
 /** Current application execution context
  */
@@ -100,7 +101,7 @@ class ApplicationContext(public val application : Application,
 
     fun scanPackageForMonitors(prefix: String): List<Class<out ApplicationContextMonitor>> {
         try {
-            return Reflections(prefix, classLoader).getSubTypesOf(javaClass<ApplicationContextMonitor>())!!.toList()
+            return classLoader.loadedClasses(prefix).filterIsAssignable<ApplicationContextMonitor>()
         }
         catch(e: Throwable) {
             e.printStackTrace()
