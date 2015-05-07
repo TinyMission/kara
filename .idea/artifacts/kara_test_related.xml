@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="kara-test-related">
-    <output-path>$PROJECT_DIR$/out/artifacts/kara_test_related</output-path>
-    <root id="archive" name="kara-test-related.jar">
-      <element id="module-output" name="Kootstrap" />
-    </root>
-  </artifact>
-</component>
