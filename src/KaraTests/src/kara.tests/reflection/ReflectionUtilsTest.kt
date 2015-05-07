@@ -23,7 +23,7 @@ Test class ObjectInstances() {
 
     Before
     fun cleanUpReflectionCache() {
-        ReflectionCache.classObjects.clear()
+        ReflectionCache.companionObjects.clear()
         ReflectionCache.objects.clear()
     }
 
@@ -42,17 +42,11 @@ Test class ObjectInstances() {
         assertNull(javaClass<Foo>().objectInstance())
     }
 
-    Test fun testDeprecatedClassObjectViaReflection() {
-        val companion = javaClass<Foo>().classObjectInstance()
-        assertNotNull(companion)
-        assert(companion is Foo.Bar)
-    }
 
     Test fun testCompanionObjectViaReflection() {
         val companion = javaClass<Foo>().companionObjectInstance()
         assertNotNull(companion)
         assert(companion is Foo.Bar)
-        assertEquals(companion, javaClass<Foo>().classObjectInstance())
     }
 }
 
@@ -62,6 +56,6 @@ Test class ClassLoaderFunctionsTest() {
         val app = Application.load(ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf"))
         val classLoader = app.requestClassloader()
         assertTrue((classLoader as URLClassLoader).getURLs().any{ it.getFile().endsWith("kara-test-related.jar")}, "Can't find test jar file in classpath")
-        assertTrue(scanPackageForResources("kotlin.html.bootstrap", classLoader).isNotEmpty())
+        assertTrue(scanPackageForResources("kotlin.html.bootstrap", classLoader, hashMapOf()).isNotEmpty())
     }
 }

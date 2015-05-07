@@ -1,6 +1,8 @@
 package kotlinx.reflection
 
 import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.load.java.reflect.tryLoadClass
 import java.util.*
 import java.lang.reflect.*
@@ -20,8 +22,8 @@ import java.util.jar.JarFile
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
-    val classObjects = ConcurrentHashMap<Class<*>, Any>()
-    val consMetadata = ConcurrentHashMap<Class<*>, Pair<Constructor<*>?, Array<Class<*>>>>()
+    val companionObjects = ConcurrentHashMap<Class<*>, Any>()
+    val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>>>()
     val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
     val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KMemberProperty<Any, Any?>?>()
 }
@@ -48,7 +50,7 @@ fun Class<*>.objectInstance0(): Any? {
 }
 
 fun Class<*>.objectInstance(): Any? {
-    return ReflectionCache.classObjects.getOrPut(this) {
+    return ReflectionCache.companionObjects.getOrPut(this) {
         getFields().firstOrNull {
             with(it.getType().kotlin as KClassImpl<*>) {
                 descriptor.getKind() == ClassKind.OBJECT && !descriptor.isCompanionObject()
@@ -56,25 +58,8 @@ fun Class<*>.objectInstance(): Any? {
     }.unmask()
 }
 
-
-deprecated("use #companionObjectInstance() method instead")
-fun Class<*>.classObjectInstance(): Any? {
-    return ReflectionCache.classObjects.getOrPut(this) {
-        try {
-            val field = getDeclaredField("OBJECT\$")
-            if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-                field[null]!!
-            }
-            else NullMask
-        }
-        catch (e: NoSuchFieldException) {
-            NullMask
-        }
-    }.unmask()
-}
-
 fun Class<*>.companionObjectInstance(): Any? {
-    return ReflectionCache.classObjects.getOrPut(this) {
+    return ReflectionCache.companionObjects.getOrPut(this) {
         getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.isCompanionObject() }?.get(null) ?: NullMask
     }.unmask()
 }
@@ -89,23 +74,15 @@ fun <T> KClass<out T>.propertyGetter(property: String): KMemberProperty<Any, *>?
 }
 
 fun Any.propertyValue(property: String): Any? {
-    with(javaClass.kotlin) {
-        return propertyGetter(property)!!.get(this@propertyValue)
-            ?: if ((this as KClassImpl).scope.getProperties(Name.identifier(property)).first().getType().isMarkedNullable()) {
-                null
-            } else {
-            error("Invalid property ${property} on type ${javaClass.getName()}")
-        }
-    }
+    val getter = javaClass.kotlin.propertyGetter(property) ?: error("Invalid property ${property} on type ${javaClass.getName()}")
+    return getter.get(this)
 }
 
-val emptyClasses : Array<Class<*>> = array()
-
-private fun Class<*>.consMetaData(): Pair<Constructor<*>?, Array<Class<*>>> {
+private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>> {
     return ReflectionCache.consMetadata.getOrPut(this) {
-        with(primaryConstructor()) {
-            return this to (this?.getParameterTypes() ?: emptyClasses)
-        }
+        val cons = primaryConstructor() ?: error("Expecting single constructor for the bean")
+        val consDesc = (this.kotlin as KClassImpl<*>).descriptor.getUnsubstitutedPrimaryConstructor()!!
+        return Triple(cons, cons.getParameterTypes(), consDesc.getValueParameters())
     }
 }
 
@@ -117,23 +94,20 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
         return it as T
     }
 
-    val (ktor, paramTypes) = consMetaData()
+    val (ktor, paramTypes, valueParams) = consMetaData()
 
+    val args = valueParams.mapIndexed { i, param ->
+        params(param.getName().asString())?.let {
+            Serialization.deserialize(it, paramTypes[i] as Class<Any>)
+        } ?: if (param.getType().isMarkedNullable()) {
+            null
+        } else {
+            throw MissingArgumentException(param.getName().asString())
 
-    return ktor?.let {
-        val args = (this.kotlin as KClassImpl<T>).descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.mapIndexed { i, param ->
-            params(param.getName().asString())?.let {
-                Serialization.deserialize(it, paramTypes[i] as Class<Any>)
-            } ?: if (param.getType().isMarkedNullable()) {
-                null
-            } else {
-                throw MissingArgumentException(param.getName().asString())
+        }
+    }.toTypedArray()
 
-            }
-        }?.toTypedArray() ?: arrayOf()
-
-        ktor?.newInstance(*args) as T
-    } ?: objectInstance() as T
+    return ktor.newInstance(*args) as T
 }
 
 fun Any.primaryProperties() : List<String> {
@@ -146,30 +120,23 @@ fun Any.primaryProperties() : List<String> {
 
 [suppress("UNCHECKED_CAST")]
 fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
-    return getConstructors().firstOrNull() as? Constructor<T>
+    return getConstructors().singleOrNull() as? Constructor<T>
 }
 
 public fun Class<*>.isEnumClass(): Boolean = javaClass<Enum<*>>().isAssignableFrom(this)
 
-fun ClassLoader.loadedClasses(prefix: String ="") : List<Class<*>> {
-    return  ClassLoader::class.java.getDeclaredField("classes").let {
-        it.setAccessible(true);
-        val result = it.get(this)
-        it.setAccessible(false)
-        (result as Vector<Class<*>>).toArrayList()
-    }.filter{
-        !prefix.isNullOrBlank() && it.getPackage()?.getName().orEmpty().startsWith(prefix)
+fun ClassLoader?.findClasses(prefix: String, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<*>> {
+    synchronized(cache) {
+        if (this == null) return emptyList()
+        return cache.getOrPut(this.hashCode() to prefix) {
+            getParent().findClasses(prefix, cache) + scanForClasses(prefix)
+        }
     }
 }
 
-fun ClassLoader.findClasses(prefix: String = "") : List<Class<*>> {
+fun ClassLoader.scanForClasses(prefix: String) : List<Class<*>> {
     val urls = arrayListOf<URL>()
     val clazzz = arrayListOf<Class<*>>()
-    getParent()?.let {
-        if (it != ClassLoader.getSystemClassLoader()) {
-            clazzz.addAll(it.findClasses(prefix))
-        }
-    }
 
     (this as? URLClassLoader)?.getURLs()?.let {
         urls.addAll(it)
@@ -180,15 +147,16 @@ fun ClassLoader.findClasses(prefix: String = "") : List<Class<*>> {
         }
     }
     clazzz.addAll(urls.map {
-            it.scanForClasses(prefix, this@findClasses)
+            it.scanForClasses(prefix, this@scanForClasses)
         }.flatten())
     return clazzz
 }
 
 private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): List<Class<*>> {
+    val path = urlDecode(getPath())
     return when {
-        getFile().endsWith(".jar") -> JarFile(getPath()).scanForClasses(prefix, classLoader)
-        else -> File(getPath()).scanForClasses(prefix, classLoader)
+        getFile().endsWith(".jar") -> JarFile(path).scanForClasses(prefix, classLoader)
+        else -> File(path).scanForClasses(prefix, classLoader)
     }
 }
 

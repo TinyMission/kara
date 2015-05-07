@@ -17,6 +17,7 @@ import kotlin.reflect.jvm.internal.KPackageImpl
 class ApplicationContext(public val application : Application,
                          packages: List<String>,
                          val classLoader: ClassLoader,
+                         val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
                          val resourceTypes: List<Class<out Resource>>) {
     val logger = Logger.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse) -> Boolean) -> Boolean>()
@@ -101,7 +102,7 @@ class ApplicationContext(public val application : Application,
 
     fun scanPackageForMonitors(prefix: String): List<Class<out ApplicationContextMonitor>> {
         try {
-            return classLoader.loadedClasses(prefix).filterIsAssignable<ApplicationContextMonitor>()
+            return classLoader.findClasses(prefix, reflectionCache).filterIsAssignable<ApplicationContextMonitor>()
         }
         catch(e: Throwable) {
             e.printStackTrace()

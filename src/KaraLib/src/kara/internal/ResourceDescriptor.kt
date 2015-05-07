@@ -43,35 +43,20 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
         val query = request.getQueryString()
         val params = RouteParameters()
 
-        query?.split("[$&]")?.forEach {
-            val (name, value) = it.split("=")
-            params[name] = value.orEmpty()
-        }
-
-        /*// parse the query string
-        if (query != null) {
-            val queryComponents = query.split("\\&") map { URLDecoder.decode(it, "UTF-8") }
-            queryComponents.forEach { component ->
-                component.partition { it == '='}.let { nvp ->
-                    params[]
-                }
-                    params[nvp[0]] = nvp[1]
-                }
-                if (nvp.size() > 1)
-                    params[nvp[0]] = nvp[1]
-                else
-                    params[nvp[0]] = ""
-            }
-        }*/
-
         // parse the route parameters
-        val pathComponents = url.split("/") map { urlDecode(it) }
+        val pathComponents = url.substringBefore('?').split("/").map { urlDecode(it) }
         if (pathComponents.size() < routeComponents.size() - optionalComponents.size())
             throw InvalidRouteException("URL has less components than mandatory parameters of the route")
         for (i in pathComponents.indices) {
             val component = pathComponents[i]
             val routeComponent = routeComponents[i]
             routeComponent.setParameter(params, component)
+        }
+
+        // parse query parameters
+        query?.split('&')?.map {urlDecode(it)}?.forEach {
+            val (name, value) = it.partition('=')
+            params[name] = value.orEmpty()
         }
 
         // parse the form parameters
