@@ -27,7 +27,7 @@ public abstract class CachedResource() : DynamicResource() {
     var cache: ResourceCache? = null
 
     override fun href(): String {
-        return super.href() + versionHash()
+        return super.href() + "?v=${versionHash()}"
     }
 
     open fun validateCache(context: ActionContext, cache: ResourceCache): Boolean = true
@@ -38,10 +38,7 @@ public abstract class CachedResource() : DynamicResource() {
         return BinaryResponse(result.mime, result.bytes.size(), result.lastModified, result.contentHash, { result.bytes.inputStream })
     }
 
-    fun versionHash() : String {
-        val content = ensureCachedResource(ActionContext.current())
-        return "?v=${content.contentHash}"
-    }
+    public fun versionHash() : String = ensureCachedResource(ActionContext.current()).contentHash
 
     private fun ensureCachedResource(context: ActionContext): ResourceCache {
         cache?.let {
