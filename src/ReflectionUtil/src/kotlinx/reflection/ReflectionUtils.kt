@@ -50,7 +50,7 @@ fun Class<*>.objectInstance0(): Any? {
 }
 
 fun Class<*>.objectInstance(): Any? {
-    return ReflectionCache.companionObjects.getOrPut(this) {
+    return ReflectionCache.objects.getOrPut(this) {
         getFields().firstOrNull {
             with(it.getType().kotlin as KClassImpl<*>) {
                 descriptor.getKind() == ClassKind.OBJECT && !descriptor.isCompanionObject()
