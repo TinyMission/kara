@@ -5,7 +5,9 @@ import kotlin.html.*
 import org.apache.commons.io.IOUtils
 import java.util.*
 
-public data class ResourceContent(val mime: String, val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream)
+public data class ResourceContent(val mime: String, val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream) {
+    public constructor(mime: String, bytes: ByteArray) : this(mime, 0, bytes.size(), {bytes.inputStream})
+}
 
 public abstract class DynamicResource() : Resource() {
     abstract fun content(context: ActionContext): ResourceContent
@@ -48,8 +50,7 @@ public abstract class CachedResource() : DynamicResource() {
 
 public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        val bytes = context.loadResource(name)
-        return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
+        return ResourceContent(mime, context.loadResource(name))
     }
 }
 

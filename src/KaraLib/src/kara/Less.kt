@@ -10,8 +10,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
         synchronized(this) {
             val css = compiler.compile(LessSource(ClasspathResource(name, context))) ?: error("$name can't be compiled")
-            val bytes =  css.toByteArray("UTF-8")
-            return ResourceContent("text/css", System.currentTimeMillis(), bytes.size) { bytes.inputStream }
+            return ResourceContent("text/css", css.toByteArray("UTF-8"))
         }
     }
 }
