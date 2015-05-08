@@ -9,32 +9,24 @@ private val compiler = LessCompiler()
 public open class EmbeddedLessResource(val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
         synchronized(this) {
-            val css = compiler.compile(LessSource(ClasspathResource(name, context))) ?: error("$name can't be compiled")
-            return ResourceContent("text/css", css.toByteArray("UTF-8"))
+            val (lessSource, combinedModification) = resourceAndModification(context)
+            val css = compiler.compile(lessSource) ?: error("$name can't be compiled")
+
+            val bytes = css.toByteArray("UTF-8")
+            return ResourceContent("text/css", combinedModification, bytes.size(), {bytes.inputStream})
         }
     }
-}
 
-public class ClasspathResource(val path: String, val context: ActionContext): org.lesscss.Resource {
-    override fun exists(): Boolean {
-        return context.resourceStream(path) != null
+    private fun resourceAndModification(context: ActionContext): Pair<LessSource, Long?> {
+        val (modification, root) = context.loadResource(name)
+
+        val lessSource = LessSource(HttpResource(root.toURI()))
+        val combinedModification = if (modification == null) null else lessSource.getLastModifiedIncludingImports()
+        return Pair(lessSource, combinedModification)
     }
 
-    override fun lastModified(): Long {
-        return System.currentTimeMillis() // TODO??
-    }
-
-    override fun getInputStream(): InputStream? {
-        return context.resourceStream(path)
-    }
-
-    override fun createRelative(name: String?): org.lesscss.Resource? {
-        val components = path.split('/')
-        return ClasspathResource("${components.take(components.size - 1).join("/")}/$name", context)
-    }
-
-    override fun getName(): String? {
-        return path.split('/').last()
+    override fun validateCache(context: ActionContext, cache: ResourceCache): Boolean {
+        val (lessSource, combinedModification) = resourceAndModification(context)
+        return combinedModification == cache.lastModified
     }
 }
-

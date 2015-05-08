@@ -3,10 +3,12 @@ package kara
 import java.io.InputStream
 import kotlin.html.*
 import org.apache.commons.io.IOUtils
+import java.io.File
+import java.net.URL
 import java.util.*
 
-public data class ResourceContent(val mime: String, val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream) {
-    public constructor(mime: String, bytes: ByteArray) : this(mime, 0, bytes.size(), {bytes.inputStream})
+public data class ResourceContent(val mime: String, val lastModified: Long?, val length: Int?, val data: ActionContext.() -> InputStream) {
+    public constructor(mime: String, bytes: ByteArray) : this(mime, null, bytes.size(), {bytes.inputStream})
 }
 
 public abstract class DynamicResource() : Resource() {
@@ -17,7 +19,7 @@ public abstract class DynamicResource() : Resource() {
     }
 }
 
-private data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long, val appVersion: Int) {
+data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long?, val appVersion: Int) {
     val contentHash = Integer.toHexString(Arrays.hashCode(bytes))
 }
 
@@ -25,22 +27,29 @@ public abstract class CachedResource() : DynamicResource() {
     var cache: ResourceCache? = null
 
     override fun href(): String {
-        return super.href() + "?v=${hash()}"
+        return super.href() + versionHash()
     }
 
-    override fun handle(context: ActionContext): ActionResult {
-        if (cache?.appVersion != context.application.version) {
-            cache = null
-        }
+    open fun validateCache(context: ActionContext, cache: ResourceCache): Boolean = true
 
+    override fun handle(context: ActionContext): ActionResult {
         val result = ensureCachedResource(context)
 
         return BinaryResponse(result.mime, result.bytes.size(), result.lastModified, result.contentHash, { result.bytes.inputStream })
     }
 
-    fun hash() : String = ensureCachedResource(ActionContext.current()).contentHash
+    fun versionHash() : String {
+        val content = ensureCachedResource(ActionContext.current())
+        return "?v=${content.contentHash}"
+    }
 
     private fun ensureCachedResource(context: ActionContext): ResourceCache {
+        cache?.let {
+            if (it.appVersion != context.application.version || it.lastModified != null && !validateCache(context, it)) {
+                cache = null
+            }
+        }
+
         return cache ?: content(context).let {
             cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.application.version) }
             cache!!
@@ -50,17 +59,29 @@ public abstract class CachedResource() : DynamicResource() {
 
 public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        return ResourceContent(mime, context.loadResource(name))
+        val (modification, content) = context.loadResource(name)
+        return ResourceContent(mime, modification, null, {content.openStream()})
     }
 }
 
-public fun ActionContext.resourceStream(name: String): InputStream? {
-    return application.classLoader.getResourceAsStream(name) ?: request.getServletContext()?.getResourceAsStream(name)
+public fun ActionContext.resourceURL(name: String): URL? {
+    return application.classLoader.getResource(name) ?: request.getServletContext()?.getResource(name)
 }
 
-public fun ActionContext.loadResource(name: String): ByteArray {
-    val stream = resourceStream(name)  ?: error("Cannot find $name in classpath or servlet context resources")
-    return stream.readBytes()
+public fun ActionContext.publicDirectoryResource(name: String): Pair<Long?, URL>? {
+    for (dir in application.application.config.publicDirectories) {
+        val candidate = File(dir, name)
+        if (candidate.exists()) {
+            return candidate.lastModified() to candidate.toURI().toURL()
+        }
+    }
+
+    return null
+}
+
+public fun ActionContext.loadResource(name: String): Pair<Long?, URL> {
+    return publicDirectoryResource(name) ?:
+            null to (resourceURL(name) ?: error("Cannot find $name in classpath or servlet context resources"))
 }
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Resource(){
