@@ -3,31 +3,46 @@ package kara
 import java.io.InputStream
 import kotlin.html.*
 import org.apache.commons.io.IOUtils
+import java.util.*
 
 public data class ResourceContent(val mime: String, val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream)
 
 public abstract class DynamicResource() : Resource() {
     abstract fun content(context: ActionContext): ResourceContent
 
-    override fun handle(context: ActionContext): ActionResult = content(context).let { BinaryResponse(it.mime, it.length, it.lastModified, it.data) }
+    override fun handle(context: ActionContext): ActionResult {
+        return content(context).let { BinaryResponse(it.mime, it.length, it.lastModified, null, it.data) }
+    }
 }
 
-private data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long, val appVersion: Int)
+private data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long, val appVersion: Int) {
+    val contentHash = Integer.toHexString(Arrays.hashCode(bytes))
+}
 
 public abstract class CachedResource() : DynamicResource() {
     var cache: ResourceCache? = null
+
+    override fun href(): String {
+        return super.href() + "?v=${hash()}"
+    }
 
     override fun handle(context: ActionContext): ActionResult {
         if (cache?.appVersion != context.application.version) {
             cache = null
         }
 
-        val (mime, bytes, stamp) = cache ?: content(context).let {
+        val result = ensureCachedResource(context)
+
+        return BinaryResponse(result.mime, result.bytes.size(), result.lastModified, result.contentHash, { result.bytes.inputStream })
+    }
+
+    fun hash() : String = ensureCachedResource(ActionContext.current()).contentHash
+
+    private fun ensureCachedResource(context: ActionContext): ResourceCache {
+        return cache ?: content(context).let {
             cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.application.version) }
             cache!!
         }
-
-        return BinaryResponse(mime, bytes.size, stamp, { bytes.inputStream })
     }
 }
 
