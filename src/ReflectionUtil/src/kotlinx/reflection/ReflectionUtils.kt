@@ -181,7 +181,7 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     while(entries.hasMoreElements()) {
         entries.nextElement().let {
             if (!it.isDirectory() && it.getName().endsWith(".class") && it.getName().contains(path)) {
-                classes.addIfNotNull(classLoader.tryLoadClass(prefix + "." + it.getName().substringAfterLast(path).removeSuffix(".class").replace(File.separator, ".")))
+                classes.addIfNotNull(classLoader.tryLoadClass(prefix + "." + it.getName().substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
             }
         }
     }

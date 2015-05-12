@@ -24,7 +24,7 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
     private val optionalComponents by Delegates.lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
 
     public fun matches(url: String): Boolean {
-        val path = url.split("?")[0]
+        val path = url.substringBefore("?")
         val components = path.split("/")
         if (components.size() > routeComponents.size() || components.size() < routeComponents.size() - optionalComponents.size())
             return false

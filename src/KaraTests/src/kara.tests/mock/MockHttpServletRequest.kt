@@ -102,7 +102,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     }
     public override fun getQueryString() : String? {
         val comps = _url.split("?")
-        if (comps.size > 1)
+        if (comps.size() > 1)
             return comps[1]
         return null
     }

@@ -96,7 +96,7 @@ class ApplicationContext(public val application : Application,
                 d = ResourceDispatcher(this, resourceTypes)
                 _dispatcher = d
             }
-            return d!!
+            return d
         }
 
 
