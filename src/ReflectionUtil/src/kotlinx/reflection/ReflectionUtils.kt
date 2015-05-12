@@ -68,7 +68,7 @@ fun Class<*>.companionObjectInstance(): Any? {
 fun <T> KClass<out T>.propertyGetter(property: String): KMemberProperty<Any, *>? {
     return ReflectionCache.propertyGetters.getOrPut(Pair(this, property)) {
         properties.singleOrNull {
-            property == it.javaField?.getName() ?: it.javaGetter?.getName()?.removePrefix("get")
+            property == it.javaField?.getName() ?: it.javaGetter?.getName()?.removePrefix("get")?.decapitalize()
         } as KMemberProperty<Any, *>?
     }
 }
