@@ -30,15 +30,15 @@ fun Class<*>.routePrefix(): String {
     return base.appendPathElement(part)
 }
 
-fun Class<out Resource>.route(): Pair<String, HttpMethod> {
+fun Class<out Resource>.route(): ResourceDescriptor {
     fun p(part: String) = (getEnclosingClass()?.routePrefix()?:"").appendPathElement(part.replace("#", getSimpleName().toLowerCase()))
     for (ann in getAnnotations()) {
         when (ann) {
-            is Get -> return Pair(p(ann.route), HttpMethod.GET)
-            is Post -> return Pair(p(ann.route), HttpMethod.POST)
-            is Put -> return Pair(p(ann.route), HttpMethod.PUT)
-            is Delete -> return Pair(p(ann.route), HttpMethod.DELETE)
-            is Route -> return Pair(p(ann.route), ann.method)
+            is Get -> return ResourceDescriptor(HttpMethod.GET, p(ann.route), this, ann.allowCrossOrigin)
+            is Post -> return ResourceDescriptor(HttpMethod.POST, p(ann.route), this, ann.allowCrossOrigin)
+            is Put -> return ResourceDescriptor(HttpMethod.PUT, p(ann.route), this, ann.allowCrossOrigin)
+            is Delete -> return ResourceDescriptor(HttpMethod.DELETE, p(ann.route), this, ann.allowCrossOrigin)
+            is Route -> return ResourceDescriptor(ann.method, p(ann.route), this, ann.allowCrossOrigin)
         }
     }
 

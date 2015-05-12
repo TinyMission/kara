@@ -16,7 +16,7 @@ val logger = Logger.getLogger(javaClass<ResourceDescriptor>())!!
 
 /** Contains all the information necessary to match a route and execute an action.
  */
-class ResourceDescriptor(val route: String, val resourceClass: Class<out Resource>) {
+class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val resourceClass: Class<out Resource>, val allowCrossOrigin: Boolean) {
 
     private val routeComponents = route.toRouteComponents()
 
@@ -97,8 +97,15 @@ class ResourceDescriptor(val route: String, val resourceClass: Class<out Resourc
         }
 
         val actionContext = ActionContext(context, request, response, params)
+
         actionContext.withContext {
-            routeInstance.handle(actionContext).writeResponse(actionContext)
+            val sessionToken = actionContext.sessionToken()
+            val actionResult = when {
+                !allowCrossOrigin && params[ActionContext.SESSION_TOKEN_PARAMETER] != sessionToken -> ErrorResult(403, "This request is only valid within same origin")
+                else -> routeInstance.handle(actionContext)
+            }
+
+            actionResult.writeResponse(actionContext)
         }
     }
 

@@ -6,6 +6,8 @@ import java.util.HashMap
 import java.io.Serializable
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
+import java.math.BigInteger
+import java.security.SecureRandom
 
 
 fun HttpSession.getDescription() : String {
@@ -54,7 +56,24 @@ class ActionContext(val application: ApplicationContext,
         }
     }
 
+    fun sessionToken(): String {
+        val existing = request.getCookies()?.firstOrNull { it.getName() == SESSION_TOKEN_PARAMETER }?.getValue()
+        if (existing != null) return existing
+
+        val newSession = BigInteger(128, rnd).toString(36).take(10)
+        val cookie = Cookie(SESSION_TOKEN_PARAMETER, newSession)
+        cookie.setPath("/")
+        cookie.setMaxAge(60*60*24*14) // Two weeks
+
+        response.addCookie(cookie)
+
+        return newSession
+    }
+
     companion object {
+        public val SESSION_TOKEN_PARAMETER: String = "_st"
+        private val rnd = SecureRandom()
+
         val contexts = ThreadLocal<ActionContext?>()
 
         public fun current(): ActionContext {

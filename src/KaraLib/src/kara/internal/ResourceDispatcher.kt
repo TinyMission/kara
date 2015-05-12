@@ -15,18 +15,18 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
     private val httpMethods = Array(HttpMethod.values().size()) {
         ArrayList<ResourceDescriptor>()
     };
-    private val resources = HashMap<Class<out Resource>, String>()
+    private val resources = HashMap<Class<out Resource>, ResourceDescriptor>()
 
     init {
         for (routeType in resourceTypes) {
-            val (route, httpMethod) = routeType.route()
-            resources[routeType] = route
-            httpMethods[httpMethod.ordinal()].add(ResourceDescriptor(route, routeType))
+            val descriptor = routeType.route()
+            resources[routeType] = descriptor
+            httpMethods[descriptor.httpMethod.ordinal()].add(descriptor)
         }
     }
 
-    fun route(requestType: Class<out Resource>): String {
-        return resources[requestType] ?: requestType.route().first
+    fun route(requestType: Class<out Resource>): ResourceDescriptor {
+        return resources[requestType] ?: requestType.route()
     }
 
     /** Matches an http method and url to an ActionInfo object. Returns null if no match is found.
