@@ -3,6 +3,8 @@ package kara;
 import org.lesscss.LessCompiler
 import java.io.InputStream
 import org.lesscss.*
+import java.net.URI
+import java.net.URL
 
 private val compiler = LessCompiler()
 
@@ -20,13 +22,22 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
     private fun resourceAndModification(context: ActionContext): Pair<LessSource, Long?> {
         val (modification, root) = context.loadResource(name)
 
-        val lessSource = LessSource(HttpResource(root.toURI()))
+        val lessSource = LessSource(URLResource(root.toURI()))
         val combinedModification = if (modification == null) null else lessSource.getLastModifiedIncludingImports()
         return Pair(lessSource, combinedModification)
     }
 
+
     override fun validateCache(context: ActionContext, cache: ResourceCache): Boolean {
         val (lessSource, combinedModification) = resourceAndModification(context)
         return combinedModification == cache.lastModified
+    }
+}
+
+public class URLResource(val uri: URI): org.lesscss.HttpResource(uri) {
+    override fun createRelative(name: String?): org.lesscss.Resource? {
+        val components = uri.toString().split('/')
+        val newPath = "${components.take(components.size() - 1).join("/")}/$name"
+        return URLResource(URI(newPath))
     }
 }
