@@ -36,7 +36,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
             try {
                 if (application.context.dispatch(request, response)) {
                     baseRequest!!.setHandled(true)
-                    logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- OK")
+                    logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- OK[${response.getStatus()}]")
                 }
                 else {
                     for (resourceHandler in resourceHandlers) {
