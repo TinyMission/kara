@@ -57,17 +57,18 @@ class ActionContext(val application: ApplicationContext,
     }
 
     fun sessionToken(): String {
-        val existing = request.getCookies()?.firstOrNull { it.getName() == SESSION_TOKEN_PARAMETER }?.getValue()
-        if (existing != null) return existing
+        return data.getOrPut(SESSION_TOKEN_PARAMETER) {
+            val cookie = request.getCookies()?.firstOrNull { it.getName() == SESSION_TOKEN_PARAMETER } ?: run {
+                val newSession = BigInteger(128, rnd).toString(36).take(10)
+                val cookie = Cookie(SESSION_TOKEN_PARAMETER, newSession)
+                cookie.setPath("/")
+                cookie
+            }
 
-        val newSession = BigInteger(128, rnd).toString(36).take(10)
-        val cookie = Cookie(SESSION_TOKEN_PARAMETER, newSession)
-        cookie.setPath("/")
-        cookie.setMaxAge(60*60*24*14) // Two weeks
-
-        response.addCookie(cookie)
-
-        return newSession
+            cookie.setMaxAge(60*60*24*2) // Two days
+            response.addCookie(cookie)
+            cookie.getValue()
+        } as String
     }
 
     companion object {
