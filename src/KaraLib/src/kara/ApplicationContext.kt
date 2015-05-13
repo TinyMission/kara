@@ -63,6 +63,16 @@ class ApplicationContext(public val application : Application,
         catch(ex: SocketException) {
             // All kinds of EOFs and Broken Pipes can be safely ignored
         }
+        catch(e400: MissingArgumentException) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.getMessage())
+            Application.logger.warn("400 processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", e400)
+        } catch(e400: InvalidRequestException) {
+            Application.logger.warn("400 processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", e400)
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.getMessage())
+        } catch(e404: NotFoundException) {
+            Application.logger.warn("404 processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", e404)
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, e404.getMessage())
+        }
         catch(ex: Throwable) {
             when {
                 ex.javaClass.getName() == "org.apache.catalina.connector.ClientAbortException" -> {} // do nothing for tomcat specific exception
