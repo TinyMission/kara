@@ -26,7 +26,7 @@ class MockHttpServletResponse() : HttpServletResponse {
         _status = p0
         _outSteam.reset()
         val writer = PrintWriter(_outSteam)
-        writer.write(p1!!)
+        p1?.let {writer.write(it)}
         writer.flush()
     }
     public override fun sendRedirect(p0 : String?) {
@@ -49,7 +49,6 @@ class MockHttpServletResponse() : HttpServletResponse {
         throw UnsupportedOperationException()
     }
     public override fun addCookie(p0 : Cookie?) {
-        throw UnsupportedOperationException()
     }
     public override fun setIntHeader(p0 : String?, p1 : Int) {
         throw UnsupportedOperationException()

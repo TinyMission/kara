@@ -95,7 +95,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getCookies() : Array<Cookie>? {
-        throw UnsupportedOperationException()
+        return emptyArray()
     }
     public override fun getRequestURI() : String? {
         return _url
