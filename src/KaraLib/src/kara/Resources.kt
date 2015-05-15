@@ -59,6 +59,10 @@ public open class EmbeddedResource(val mime : String, val name: String) : Cached
         val (modification, content) = context.loadResource(name)
         return ResourceContent(mime, modification, null, {content.openStream()})
     }
+
+    override fun validateCache(context: ActionContext, cache: ResourceCache): Boolean {
+        return context.loadResource(name).first == cache.lastModified
+    }
 }
 
 public fun ActionContext.resourceURL(name: String): URL? {
