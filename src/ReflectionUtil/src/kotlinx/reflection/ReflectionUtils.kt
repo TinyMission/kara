@@ -64,7 +64,7 @@ fun Class<*>.companionObjectInstance(): Any? {
     }.unmask()
 }
 
-[suppress("UNCHECKED_CAST")]
+@suppress("UNCHECKED_CAST")
 fun <T> KClass<out T>.propertyGetter(property: String): KMemberProperty<Any, *>? {
     return ReflectionCache.propertyGetters.getOrPut(Pair(this, property)) {
         properties.singleOrNull {
@@ -88,7 +88,7 @@ private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, Lis
 
 public class MissingArgumentException(val name: String) : RuntimeException("Required argument $name is missing")
 
-[suppress("UNCHECKED_CAST")]
+@suppress("UNCHECKED_CAST")
 fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     objectInstance()?.let {
         return it as T
@@ -118,7 +118,7 @@ fun Any.primaryProperties() : List<String> {
     }
 }
 
-[suppress("UNCHECKED_CAST")]
+@suppress("UNCHECKED_CAST")
 fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
     return getConstructors().singleOrNull() as? Constructor<T>
 }
@@ -137,26 +137,21 @@ fun ClassLoader?.findClasses(prefix: String, cache: MutableMap<Pair<Int, String>
 fun ClassLoader.scanForClasses(prefix: String) : List<Class<*>> {
     val urls = arrayListOf<URL>()
     val clazzz = arrayListOf<Class<*>>()
-
-    (this as? URLClassLoader)?.getURLs()?.let {
-        urls.addAll(it)
-    } ?: run {
-        val enumeration = this.getResources("")
-        while(enumeration.hasMoreElements()) {
-            urls.add(enumeration.nextElement())
-        }
+    val path = prefix.replace(".", "/")
+    val enumeration = this.getResources(path)
+    while(enumeration.hasMoreElements()) {
+        urls.add(enumeration.nextElement())
     }
     clazzz.addAll(urls.map {
-            it.scanForClasses(prefix, this@scanForClasses)
-        }.flatten())
+        it.scanForClasses(prefix, this@scanForClasses)
+    }.flatten())
     return clazzz
 }
 
 private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): List<Class<*>> {
-    val path = urlDecode(getPath())
     return when {
-        getFile().endsWith(".jar") -> JarFile(path).scanForClasses(prefix, classLoader)
-        else -> File(path).scanForClasses(prefix, classLoader)
+        getProtocol() == "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("/").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
+        else -> File(urlDecode(getPath())).scanForClasses(prefix, classLoader)
     }
 }
 
@@ -188,8 +183,8 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     return classes
 }
 
-suppress("UNCHECKED_CAST")
+@suppress("UNCHECKED_CAST")
 fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> = filter { clazz.isAssignableFrom(it) } as List<Class<T>>
 
-suppress("UNCHECKED_CAST")
+@suppress("UNCHECKED_CAST")
 inline fun <reified T> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(javaClass<T>())

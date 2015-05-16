@@ -56,9 +56,11 @@ open class Application(public val config: ApplicationConfig) {
     open fun createContext(): ApplicationContext {
         val classLoader = requestClassloader()
         val cache = hashMapOf<Pair<Int, String>, List<Class<*>>>()
+        val start = System.currentTimeMillis()
         val resourceTypes = config.routePackages.flatMap {
             scanPackageForResources(it, classLoader, cache)
         }
+        logger.info("Recources scan took " + (System.currentTimeMillis() - start))
 
         if (config.isDevelopment())
             watchUrls(resourceTypes)

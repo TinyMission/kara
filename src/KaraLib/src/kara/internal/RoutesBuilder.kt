@@ -9,7 +9,7 @@ import kotlin.reflect.jvm.kotlin
 
 val karaAnnotations = listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>())
 
-[suppress("UNCHECKED_CAST")]
+@suppress("UNCHECKED_CAST")
 fun scanPackageForResources(prefix: String, classloader: ClassLoader, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<out Resource>> {
     try {
         return classloader.findClasses(prefix, cache)
