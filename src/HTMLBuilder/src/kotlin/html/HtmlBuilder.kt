@@ -100,7 +100,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         }
         builder.append('>')
 
-        if (indent.isNotEmpty()) {
+        if (!indent.isNullOrEmpty()) {
             builder.append("\n")
         }
     }

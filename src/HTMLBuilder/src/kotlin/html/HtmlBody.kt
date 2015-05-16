@@ -28,7 +28,7 @@ public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderS
 
     fun addClass(c: String) {
         val old = get("class")
-        setClass(if (old.isNotEmpty()) "$old $c" else c)
+        setClass(if (!old.isNullOrEmpty()) "$old $c" else c)
     }
 
     fun setClass(c: StyleClass?) {
