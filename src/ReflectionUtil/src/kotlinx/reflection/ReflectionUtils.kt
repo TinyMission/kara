@@ -150,7 +150,7 @@ fun ClassLoader.scanForClasses(prefix: String) : List<Class<*>> {
 
 private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): List<Class<*>> {
     return when {
-        getProtocol() == "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("/").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
+        getProtocol() == "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("file:").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
         else -> File(urlDecode(getPath())).scanForClasses(prefix, classLoader)
     }
 }
