@@ -125,11 +125,10 @@ fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
 
 public fun Class<*>.isEnumClass(): Boolean = javaClass<Enum<*>>().isAssignableFrom(this)
 
-fun ClassLoader?.findClasses(prefix: String, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<*>> {
+fun ClassLoader.findClasses(prefix: String, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<*>> {
     synchronized(cache) {
-        if (this == null) return emptyList()
         return cache.getOrPut(this.hashCode() to prefix) {
-            getParent().findClasses(prefix, cache) + scanForClasses(prefix)
+            scanForClasses(prefix)
         }
     }
 }
