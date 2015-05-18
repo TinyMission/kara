@@ -6,7 +6,7 @@ import kara.tests.styles.SampleClasses.*
 import kotlin.html.*
 
 enum class SampleClasses : StyleClass {
-    c1 c2 c3
+    c1, c2, c3
 }
 
 class SelectorsTest {

@@ -1,8 +1,8 @@
 package kara.demo.models
 
 enum class BookCategory(val value : String) {
-    Fiction: BookCategory("fiction")
-    Nonfiction: BookCategory("nonfiction")
+    Fiction("fiction"),
+    Nonfiction("nonfiction");
     override fun toString() : String {
         return value
     }

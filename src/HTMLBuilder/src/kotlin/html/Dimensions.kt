@@ -5,10 +5,10 @@ import kotlin.html.LinearUnits.*
 
 
 enum class LinearUnits(val value: String) {
-    _percent : LinearUnits("%")
-    _em : LinearUnits("em")
-    _px : LinearUnits("px")
-    auto: LinearUnits("auto")
+    _percent("%"),
+    _em("em"),
+    _px("px"),
+    auto("auto");
     override fun toString(): String {
         return value
     }

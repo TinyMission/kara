@@ -1,15 +1,15 @@
 package kara
 
 public enum class HttpMethod {
-    GET
-    POST
-    PUT
-    DELETE
-    OPTIONS
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    OPTIONS,
 
     // WebDav
-    PROPFIND
-    PROPPATCH
+    PROPFIND,
+    PROPPATCH,
     REPORT
 }
 

@@ -33,7 +33,7 @@ class EndsWith(val value: String) : AttFilter {
 }
 
 enum class AttributeValueTokenizer {
-    Substring Hypen Spaces
+    Substring, Hypen, Spaces
 }
 // Substring: E[foo*="bar"]
 // Hypen:     E[foo|="bar"]

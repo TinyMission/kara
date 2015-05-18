@@ -1,7 +1,7 @@
 package kotlin.html
 
 public enum class EncodingType(override val value: String) : StringEnum<EncodingType> {
-    urlencoded : EncodingType("application/x-www-form-urlencoded")
-    multipart : EncodingType("multipart/form-data")
-    plain : EncodingType("text/plain")
+    urlencoded("application/x-www-form-urlencoded"),
+    multipart("multipart/form-data"),
+    plain("text/plain")
 }

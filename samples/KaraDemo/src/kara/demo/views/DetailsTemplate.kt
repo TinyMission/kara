@@ -17,10 +17,12 @@ class DetailsTemplate : Template<HTML>() {
                 h3 {
                     insert(caption)
                 }
-                p(title) {
+                p {
+                    addClass(title)
                     insert(subject)
                 }
-                div(body) {
+                div {
+                    addClass(body)
                     insert(message)
                 }
 

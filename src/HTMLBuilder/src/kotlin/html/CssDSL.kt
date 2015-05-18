@@ -49,8 +49,8 @@ public fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
 }
 
 public enum class PseudoClass : StyleClass {
-    root firstChild lastChild firstOfType lastOfType onlyChild onlyOfType
-    empty link visited active focus hover target enabled disabled checked
+    root, firstChild, lastChild, firstOfType, lastOfType, onlyChild, onlyOfType,
+    empty, link, visited, active, focus, hover, target, enabled, disabled, checked;
 
     override fun toExternalForm(): String {
         return ":${name()}"
@@ -84,6 +84,10 @@ open class CssElement() {
 
         fun invoke(vararg traits: SelectorTrait, body: StyledElement.() -> Unit) {
             s(SimpleSelector(this, traits).toExternalForm(), body)
+        }
+
+        fun invoke(classes: String, body: StyledElement.() -> Unit) {
+            s(SimpleSelector(this, arrayOf(SimpleClassStyle(classes))).toExternalForm(), body)
         }
 
         fun invoke(vararg t: SelectorTrait): Selector {

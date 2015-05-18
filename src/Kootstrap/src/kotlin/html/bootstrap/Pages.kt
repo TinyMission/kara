@@ -4,14 +4,14 @@ import kotlin.html.*
 import java.util.ArrayList
 import kara.link
 
-inline fun HtmlBodyTag.pills(body: UL.()->Unit): Unit = ul(s("nav nav-pills"), contents = body)
-inline fun HtmlBodyTag.content(body: DIV.()->Unit): Unit = div(s("tab-content"), contents = body)
-public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div(s("tab-pane") + if (active) s("active") else null) {
+inline fun HtmlBodyTag.pills(body: UL.()->Unit): Unit = ul("nav nav-pills", contents = body)
+inline fun HtmlBodyTag.content(body: DIV.()->Unit): Unit = div("tab-content", contents = body)
+public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div("tab-pane" + if (active) "active" else "") {
     this.id = name
     body()
 }
 
-public fun HtmlBodyTag.tabs(body: UL.()->Unit): Unit = ul(s("nav nav-tabs"), contents = body)
+public fun HtmlBodyTag.tabs(body: UL.()->Unit): Unit = ul("nav nav-tabs", contents = body)
 
 public class PagesBuilder() {
     class Item(val id: String, val title: String, val content: HtmlBodyTag.() -> Unit)

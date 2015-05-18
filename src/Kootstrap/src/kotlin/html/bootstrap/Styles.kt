@@ -4,45 +4,45 @@ import kotlin.html.*
 
 public fun s(name : String) : StyleClass = SimpleClassStyle(name)
 
-val muted = s("text-muted")
-val img_thumbnail = s("img-thumbnail")
+val muted = "text-muted"
+val img_thumbnail = "img-thumbnail"
 
-val media = s("media")
-val media_body = s("media-body")
-val media_object = s("media-object")
-val media_heading = s("media-heading")
+val media = "media"
+val media_body = "media-body"
+val media_object = "media-object"
+val media_heading = "media-heading"
 
-val collapse = s("collapse")
-val close = s("close")
-val active = s("active")
-val list_unstyled = s("list-unstyled")
+val collapse = "collapse"
+val close = "close"
+val active = "active"
+val list_unstyled = "list-unstyled"
 
-val pull_left = s("pull-left")
-val pull_right = s("pull-right")
+val pull_left = "pull-left"
+val pull_right = "pull-right"
 
-val hidden_tiny = s("hidden-xs")
-val hidden_small = s("hidden-sm")
-val hidden_medium = s("hidden-md")
-val hidden_large = s("hidden-lg")
-val visible_tiny = s("visible-xs")
-val visible_small = s("visible-sm")
-val visible_medium = s("visible-md")
-val visible_large = s("visible-lg")
+val hidden_tiny = "hidden-xs"
+val hidden_small = "hidden-sm"
+val hidden_medium = "hidden-md"
+val hidden_large = "hidden-lg"
+val visible_tiny = "visible-xs"
+val visible_small = "visible-sm"
+val visible_medium = "visible-md"
+val visible_large = "visible-lg"
 
 
 enum class caliber(val value: String) {
-    tiny : caliber("xs")
-    small : caliber("sm")
-    default : caliber("")
-    large : caliber("lg")
+    tiny("xs"),
+    small("sm"),
+    default(""),
+    large("lg")
 }
 
 enum class highlight {
-    `default`
-    muted
-    primary
-    success
-    info
-    warning
+    default,
+    muted,
+    primary,
+    success,
+    info,
+    warning,
     danger
 }

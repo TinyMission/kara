@@ -22,14 +22,14 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 }
 
 enum class RenderStyle {
-    adaptive
-    expanded
+    adaptive,
+    expanded,
     _empty
 }
 
 enum class ContentStyle {
-    block
-    text
+    block,
+    text,
     propagate
 }
 

@@ -1,9 +1,9 @@
 package kotlin.html
 
 enum class BackgroundAttachment(val value: String) {
-    scroll : BackgroundAttachment("scroll")
-    fixed : BackgroundAttachment("fixed")
-    inherit : BackgroundAttachment("inherit")
+    scroll("scroll"),
+    fixed("fixed"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -20,11 +20,11 @@ fun makeBackgroundAttachment(s: String): BackgroundAttachment {
 }
 
 enum class BackgroundRepeat(val value: String) {
-    repeat : BackgroundRepeat("repeat")
-    repeatX : BackgroundRepeat("repeat-x")
-    repeatY : BackgroundRepeat("repeat-y")
-    noRepeat : BackgroundRepeat("no-repeat")
-    inherit : BackgroundRepeat("inherit")
+    repeat("repeat"),
+    repeatX("repeat-x"),
+    repeatY("repeat-y"),
+    noRepeat("no-repeat"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -43,17 +43,17 @@ fun makeBackgroundRepeat(s: String): BackgroundRepeat {
 }
 
 enum class BorderStyle(val value: String) {
-    none : BorderStyle("none")
-    hidden : BorderStyle("hidden")
-    dotted : BorderStyle("dotted")
-    dashed : BorderStyle("dashed")
-    solid : BorderStyle("solid")
-    double : BorderStyle("double")
-    groove : BorderStyle("groove")
-    ridge : BorderStyle("ridge")
-    inset : BorderStyle("inset")
-    outset : BorderStyle("outset")
-    inherit : BorderStyle("inherit")
+    none("none"),
+    hidden("hidden"),
+    dotted("dotted"),
+    dashed("dashed"),
+    solid("solid"),
+    double("double"),
+    groove("groove"),
+    ridge("ridge"),
+    inset("inset"),
+    outset("outset"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -78,9 +78,9 @@ fun makeBorderStyle(s: String): BorderStyle {
 }
 
 enum class BoxDirection(val value: String) {
-    normal : BoxDirection("normal")
-    reverse : BoxDirection("reverse")
-    inherit : BoxDirection("inherit")
+    normal("normal"),
+    reverse("reverse"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -97,11 +97,11 @@ fun makeBoxDirection(s: String): BoxDirection {
 }
 
 enum class BoxAlign(val value: String) {
-    start : BoxAlign("start")
-    end : BoxAlign("end")
-    center : BoxAlign("center")
-    baseline : BoxAlign("baseline")
-    inherit : BoxAlign("inherit")
+    start("start"),
+    end("end"),
+    center("center"),
+    baseline("baseline"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -120,9 +120,9 @@ fun makeBoxAlign(s: String): BoxAlign {
 }
 
 enum class BoxLines(val value: String) {
-    single : BoxLines("single")
-    multiple : BoxLines("multiple")
-    inherit : BoxLines("inherit")
+    single("single"),
+    multiple("multiple"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -139,11 +139,11 @@ fun makeBoxLines(s: String): BoxLines {
 }
 
 enum class BoxOrient(val value: String) {
-    horizontal : BoxOrient("horizontal")
-    vertical : BoxOrient("vertical")
-    inlineAxis : BoxOrient("inline-axis")
-    blockAxis : BoxOrient("block-axis")
-    inherit : BoxOrient("inherit")
+    horizontal("horizontal"),
+    vertical("vertical"),
+    inlineAxis("inline-axis"),
+    blockAxis("block-axis"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -162,10 +162,10 @@ fun makeBoxOrient(s: String): BoxOrient {
 }
 
 enum class BoxPack(val value: String) {
-    start : BoxPack("start")
-    end : BoxPack("end")
-    center : BoxPack("center")
-    inherit : BoxPack("inherit")
+    start("start"),
+    end("end"),
+    center("center"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -183,9 +183,9 @@ fun makeBoxPack(s: String): BoxPack {
 }
 
 enum class BoxSizing(val value: String) {
-    contentBox : BoxSizing("content-box")
-    borderBox : BoxSizing("border-box")
-    inherit : BoxSizing("inherit")
+    contentBox("content-box"),
+    borderBox("border-box"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -202,9 +202,9 @@ fun makeBoxSizing(s: String): BoxSizing {
 }
 
 enum class CaptionSide(val value: String) {
-    top : CaptionSide("top")
-    bottom : CaptionSide("bottom")
-    inherit : CaptionSide("inherit")
+    top("top"),
+    bottom("bottom"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -221,11 +221,11 @@ fun makeCaptionSide(s: String): CaptionSide {
 }
 
 enum class Clear(val value: String) {
-    left : Clear("left")
-    right : Clear("right")
-    both : Clear("both")
-    none : Clear("none")
-    inherit : Clear("inherit")
+    left("left"),
+    right("right"),
+    both("both"),
+    none("none"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -244,9 +244,9 @@ fun makeClear(s: String): Clear {
 }
 
 enum class ColumnFill(val value: String) {
-    balance : ColumnFill("balance")
-    auto : ColumnFill("auto")
-    inherit : ColumnFill("inherit")
+    balance("balance"),
+    auto("auto"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -263,9 +263,9 @@ fun makeColumnFill(s: String): ColumnFill {
 }
 
 enum class Direction(val value: String) {
-    ltr : Direction("ltr")
-    rtl : Direction("rtl")
-    inherit : Direction("inherit")
+    ltr("ltr"),
+    rtl("rtl"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -282,22 +282,22 @@ fun makeDirection(s: String): Direction {
 }
 
 enum class Display(val value: String) {
-    none : Display("none")
-    block : Display("block")
-    inline : Display("inline")
-    inlineBlock : Display("inline-block")
-    inlineTable : Display("inline-table")
-    listItem : Display("list-item")
-    table : Display("table")
-    tableCaption : Display("table-caption")
-    tableCell : Display("table-cell")
-    tableColumn : Display("table-column")
-    tableColumnGroup : Display("table-column-group")
-    tableFooterGroup : Display("table-footer-group")
-    tableHeaderGroup : Display("table-header-group")
-    tableRow : Display("table-row")
-    tableRowGroup : Display("table-row-group")
-    inherit : Display("inherit")
+    none("none"),
+    block("block"),
+    inline("inline"),
+    inlineBlock("inline-block"),
+    inlineTable("inline-table"),
+    listItem("list-item"),
+    table("table"),
+    tableCaption("table-caption"),
+    tableCell("table-cell"),
+    tableColumn("table-column"),
+    tableColumnGroup("table-column-group"),
+    tableFooterGroup("table-footer-group"),
+    tableHeaderGroup("table-header-group"),
+    tableRow("table-row"),
+    tableRowGroup("table-row-group"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -327,9 +327,9 @@ fun makeDisplay(s: String): Display {
 }
 
 enum class EmptyCells(val value: String) {
-    hide : EmptyCells("hide")
-    show : EmptyCells("show")
-    inherit : EmptyCells("inherit")
+    hide("hide"),
+    show("show"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -346,10 +346,10 @@ fun makeEmptyCells(s: String): EmptyCells {
 }
 
 enum class FloatType(val value: String) {
-    left : FloatType("left")
-    right : FloatType("right")
-    none : FloatType("none")
-    inherit : FloatType("inherit")
+    left("left"),
+    right("right"),
+    none("none"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -367,10 +367,10 @@ fun makeFloat(s: String): FloatType {
 }
 
 enum class FontStyle(val value: String) {
-    normal : FontStyle("normal")
-    italic : FontStyle("italic")
-    oblique : FontStyle("oblique")
-    inherit : FontStyle("inherit")
+    normal("normal"),
+    italic("italic"),
+    oblique("oblique"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -388,9 +388,9 @@ fun makeFontStyle(s: String): FontStyle {
 }
 
 enum class FontVariant(val value: String) {
-    normal : FontVariant("normal")
-    smallCaps : FontVariant("small-caps")
-    inherit : FontVariant("inherit")
+    normal("normal"),
+    smallCaps("small-caps"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -407,11 +407,11 @@ fun makeFontVariant(s: String): FontVariant {
 }
 
 enum class FontWeight(val value: String) {
-    normal : FontWeight("normal")
-    bold : FontWeight("bold")
-    bolder : FontWeight("bolder")
-    lighter : FontWeight("lighter")
-    inherit : FontWeight("inherit")
+    normal("normal"),
+    bold("bold"),
+    bolder("bolder"),
+    lighter("lighter"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -430,18 +430,18 @@ fun makeFontWeight(s: String): FontWeight {
 }
 
 enum class FontStretch(val value: String) {
-    wider : FontStretch("wider")
-    narrower : FontStretch("narrower")
-    ultraCondensed : FontStretch("ultra-condensed")
-    extraCondensed : FontStretch("extra-condensed")
-    condensed : FontStretch("condensed")
-    semiCondensed : FontStretch("semi-condensed")
-    normal : FontStretch("normal")
-    semiExpanded : FontStretch("semi-expanded")
-    expanded : FontStretch("expanded")
-    extraExpanded : FontStretch("extra-expanded")
-    ultraExpanded : FontStretch("ultra-expanded")
-    inherit : FontStretch("inherit")
+    wider("wider"),
+    narrower("narrower"),
+    ultraCondensed("ultra-condensed"),
+    extraCondensed("extra-condensed"),
+    condensed("condensed"),
+    semiCondensed("semi-condensed"),
+    normal("normal"),
+    semiExpanded("semi-expanded"),
+    expanded("expanded"),
+    extraExpanded("extra-expanded"),
+    ultraExpanded("ultra-expanded"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -467,20 +467,20 @@ fun makeFontStretch(s: String): FontStretch {
 }
 
 enum class ListStyleType(val value: String) {
-    circle : ListStyleType("circle")
-    disc : ListStyleType("disc")
-    decimal : ListStyleType("decimal")
-    lowerAlpha : ListStyleType("lower-alpha")
-    lowerGreek : ListStyleType("lower-greek")
-    lowerLatin : ListStyleType("lower-latin")
-    lowerRoman : ListStyleType("lower-roman")
-    none : ListStyleType("none")
-    square : ListStyleType("square")
-    upperAlpha : ListStyleType("upper-alpha")
-    upper : ListStyleType("upper")
-    latin : ListStyleType("latin")
-    upperRoman : ListStyleType("upper-roman")
-    inherit : ListStyleType("inherit")
+    circle("circle"),
+    disc("disc"),
+    decimal("decimal"),
+    lowerAlpha("lower-alpha"),
+    lowerGreek("lower-greek"),
+    lowerLatin("lower-latin"),
+    lowerRoman("lower-roman"),
+    none("none"),
+    square("square"),
+    upperAlpha("upper-alpha"),
+    upper("upper"),
+    latin("latin"),
+    upperRoman("upper-roman"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -508,9 +508,9 @@ fun makeListStyleType(s: String): ListStyleType {
 }
 
 enum class ListStylePosition(val value: String) {
-    inside : ListStylePosition("inside")
-    outside : ListStylePosition("outside")
-    inherit : ListStylePosition("inherit")
+    inside("inside"),
+    outside("outside"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -527,13 +527,13 @@ fun makeListStylePosition(s: String): ListStylePosition {
 }
 
 enum class Overflow(val value: String) {
-    visible : Overflow("visible")
-    hidden : Overflow("hidden")
-    scroll : Overflow("scroll")
-    auto : Overflow("auto")
-    noDisplay : Overflow("no-display")
-    noContent : Overflow("no-content")
-    inherit : Overflow("inherit")
+    visible("visible"),
+    hidden("hidden"),
+    scroll("scroll"),
+    auto("auto"),
+    noDisplay("no-display"),
+    noContent("no-content"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -554,12 +554,12 @@ fun makeOverflow(s: String): Overflow {
 }
 
 enum class PageBreak(val value: String) {
-    auto : PageBreak("auto")
-    always : PageBreak("always")
-    avoid : PageBreak("avoid")
-    left : PageBreak("left")
-    right : PageBreak("right")
-    inherit : PageBreak("inherit")
+    auto("auto"),
+    always("always"),
+    avoid("avoid"),
+    left("left"),
+    right("right"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -579,11 +579,11 @@ fun makePageBreak(s: String): PageBreak {
 }
 
 enum class Position(val value: String) {
-    static : Position("static")
-    absolute : Position("absolute")
-    fixed : Position("fixed")
-    relative : Position("relative")
-    inherit : Position("inherit")
+    static("static"),
+    absolute("absolute"),
+    fixed("fixed"),
+    relative("relative"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -602,11 +602,11 @@ fun makePosition(s: String): Position {
 }
 
 enum class Resize(val value: String) {
-    none : Resize("none")
-    both : Resize("both")
-    horizontal : Resize("horizontal")
-    vertical : Resize("vertical")
-    inherit : Resize("inherit")
+    none("none"),
+    both("both"),
+    horizontal("horizontal"),
+    vertical("vertical"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -625,9 +625,9 @@ fun makeResize(s: String): Resize {
 }
 
 enum class TableLayout(val value: String) {
-    auto : TableLayout("auto")
-    fixed : TableLayout("fixed")
-    inherit : TableLayout("inherit")
+    auto("auto"),
+    fixed("fixed"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -644,11 +644,11 @@ fun makeTableLayout(s: String): TableLayout {
 }
 
 enum class TextAlign(val value: String) {
-    left : TextAlign("left")
-    right : TextAlign("right")
-    center : TextAlign("center")
-    justify : TextAlign("justify")
-    inherit : TextAlign("inherit")
+    left("left"),
+    right("right"),
+    center("center"),
+    justify("justify"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -667,10 +667,10 @@ fun makeTextAlign(s: String): TextAlign {
 }
 
 enum class VerticalAlign(val value: String) {
-    top : VerticalAlign("top")
-    bottom : VerticalAlign("bottom")
-    middle : VerticalAlign("middle")
-    inherit : VerticalAlign("inherit")
+    top("top"),
+    bottom("bottom"),
+    middle("middle"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -688,10 +688,10 @@ fun makeVerticalAlign(s: String): VerticalAlign {
 }
 
 enum class Visibility(val value: String) {
-    visible : Visibility("visible")
-    hidden : Visibility("hidden")
-    collapse : Visibility("collapse")
-    inherit : Visibility("inherit")
+    visible("visible"),
+    hidden("hidden"),
+    collapse("collapse"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -709,12 +709,12 @@ fun makeVisibility(s: String): Visibility {
 }
 
 enum class WhiteSpace(val value: String) {
-    normal : WhiteSpace("normal")
-    nowrap : WhiteSpace("nowrap")
-    pre : WhiteSpace("pre")
-    preLine : WhiteSpace("pre-line")
-    preWrap : WhiteSpace("pre-wrap")
-    inherit : WhiteSpace("inherit")
+    normal("normal"),
+    nowrap("nowrap"),
+    pre("pre"),
+    preLine("pre-line"),
+    preWrap("pre-wrap"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -734,10 +734,10 @@ fun makeWhiteSpace(s: String): WhiteSpace {
 }
 
 enum class WordBreak(val value: String) {
-    normal : WordBreak("normal")
-    breakAll : WordBreak("break-all")
-    hyphenate : WordBreak("hyphenate")
-    inherit : WordBreak("inherit")
+    normal("normal"),
+    breakAll("break-all"),
+    hyphenate("hyphenate"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
@@ -755,9 +755,9 @@ fun makeWordBreak(s: String): WordBreak {
 }
 
 enum class WordWrap(val value: String) {
-    normal : WordWrap("normal")
-    breakWord : WordWrap("break-word")
-    inherit : WordWrap("inherit")
+    normal("normal"),
+    breakWord("break-word"),
+    inherit("inherit");
     override fun toString(): String {
         return value
     }
