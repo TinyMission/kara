@@ -82,7 +82,7 @@ public fun ActionContext.publicDirectoryResource(name: String): Pair<Long?, URL>
 
 public fun ActionContext.loadResource(name: String): Pair<Long?, URL> {
     return publicDirectoryResource(name) ?:
-            null to (resourceURL(name) ?: error("Cannot find $name in classpath or servlet context resources"))
+            null to (resourceURL(name) ?: throw NotFoundException("Cannot find $name in classpath or servlet context resources"))
 }
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Resource(){
