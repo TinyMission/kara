@@ -1,9 +1,11 @@
 package kara
 
+import kara.config.Config
+import kara.internal.logger
 import java.io.File
 import java.net.URL
 import java.util.ArrayList
-import kara.config.Config
+import kotlin.properties.Delegates
 
 /**
  * Store application configuration.
@@ -31,8 +33,23 @@ public open class ApplicationConfig() : Config() {
         get() = this["kara.appPackage"]
 
     /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
-    public val publicDirectories: List<String>
-        get() = tryGet("kara.publicDir")?.split(';') ?: emptyList<String>()
+    public val publicDirectories: List<String> by Delegates.blockingLazy {
+        tryGet("kara.publicDir")?.split(';')?.map {
+            val dir = it.trim()
+            if (!File(dir).isDirectory()) {
+                logger.warn("Can't find public dir $dir. Trying to resolve it via servlet context.")
+                return@map ActionContext.current().request.getRealPath(dir)?.let { path ->
+                    if (File(path).isDirectory()) {
+                        path
+                    } else {
+                        logger.warn("Resolved path is not directory $path")
+                        null
+                    }
+                }.orEmpty()
+            }
+            it
+        }?.filterNot { it.isEmpty() } ?: emptyList<String>()
+    }
 
     public val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
