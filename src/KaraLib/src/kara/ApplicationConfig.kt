@@ -1,6 +1,7 @@
 package kara
 
 import kara.config.Config
+import kara.internal.Servlet
 import kara.internal.logger
 import java.io.File
 import java.net.URL
@@ -32,24 +33,30 @@ public open class ApplicationConfig() : Config() {
     public val applicationPackageName: String
         get() = this["kara.appPackage"]
 
-    /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
-    public val publicDirectories: List<String> by Delegates.blockingLazy {
-        tryGet("kara.publicDir")?.split(';')?.map {
-            val dir = it.trim()
-            if (!File(dir).isDirectory()) {
-                logger.warn("Can't find public dir $dir. Trying to resolve it via servlet context.")
-                return@map ActionContext.current().request.getRealPath(dir)?.let { path ->
+    private val _publicDirectories by Delegates.blockingLazy {
+        readPublicDirProperty().map {
+            val dirPath = it.trim()
+            val dir = File(dirPath)
+            val context = ActionContext.current().request?.getServletContext()
+            if ((dir.getParent() == null || !dir.isDirectory()) && context != null) {
+                logger.warn("Can't find public dir $dirPath. Trying to resolve it via servlet context.")
+                return@map context.getRealPath(dirPath)?.let { path ->
                     if (File(path).isDirectory()) {
                         path
                     } else {
                         logger.warn("Resolved path is not directory $path")
                         null
                     }
-                }.orEmpty()
+                }
             }
             it
-        }?.filterNot { it.isEmpty() } ?: emptyList<String>()
+        }.filterNotNull().orEmpty()
     }
+    /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
+    public val publicDirectories: List<String>
+        get() = ActionContext.tryGet()?.let { _publicDirectories } ?: readPublicDirProperty()
+
+    private fun readPublicDirProperty() = tryGet("kara.publicDir")?.split(';')?.filter { it.isNotBlank() }.orEmpty()
 
     public val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
