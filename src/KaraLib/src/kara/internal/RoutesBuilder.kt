@@ -3,7 +3,6 @@ package kara.internal
 import kotlinx.reflection.*
 import java.util.ArrayList
 import kara.*
-import org.jetbrains.kotlin.load.java.reflect.tryLoadClass
 import java.lang.instrument.Instrumentation
 import kotlin.reflect.jvm.kotlin
 

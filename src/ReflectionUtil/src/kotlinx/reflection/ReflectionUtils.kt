@@ -1,24 +1,22 @@
 package kotlinx.reflection
 
-import org.jetbrains.kotlin.descriptors.ClassKind
-import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
-import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
-import org.jetbrains.kotlin.load.java.reflect.tryLoadClass
-import java.util.*
-import java.lang.reflect.*
-import kotlin.Array
+import java.io.File
+import java.lang.reflect.Constructor
+import java.lang.reflect.Modifier
+import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.utils.addIfNotNull
+import java.util.jar.JarFile
 import kotlin.reflect.KClass
 import kotlin.reflect.KMemberProperty
-import kotlin.reflect.jvm.*
-import kotlin.reflect.jvm.internal.DescriptorBasedProperty
 import kotlin.reflect.jvm.internal.KClassImpl
-import java.io.File
-import java.net.URL
-import java.net.URLClassLoader
-import java.util.jar.JarFile
+import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
+import kotlin.reflect.jvm.internal.impl.descriptors.ClassKind
+import kotlin.reflect.jvm.internal.impl.descriptors.ValueParameterDescriptor
+import kotlin.reflect.jvm.internal.impl.load.java.reflect.ReflectPackage
+import kotlin.reflect.jvm.internal.impl.utils.UtilsPackage
+import kotlin.reflect.jvm.javaField
+import kotlin.reflect.jvm.javaGetter
+import kotlin.reflect.jvm.kotlin
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
@@ -53,14 +51,15 @@ fun Class<*>.objectInstance(): Any? {
     return ReflectionCache.objects.getOrPut(this) {
         getFields().firstOrNull {
             with(it.getType().kotlin as KClassImpl<*>) {
-                descriptor.getKind() == ClassKind.OBJECT && !descriptor.isCompanionObject()
-        }}?.get(null)?:NullMask
+                __descriptor.getKind() == ClassKind.OBJECT && !__descriptor.isCompanionObject()
+            }
+        }?.get(null) ?: NullMask
     }.unmask()
 }
 
 fun Class<*>.companionObjectInstance(): Any? {
     return ReflectionCache.companionObjects.getOrPut(this) {
-        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).descriptor.isCompanionObject() }?.get(null) ?: NullMask
+        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).__descriptor.isCompanionObject() }?.get(null) ?: NullMask
     }.unmask()
 }
 
@@ -81,7 +80,7 @@ fun Any.propertyValue(property: String): Any? {
 private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>> {
     return ReflectionCache.consMetadata.getOrPut(this) {
         val cons = primaryConstructor() ?: error("Expecting single constructor for the bean")
-        val consDesc = (this.kotlin as KClassImpl<*>).descriptor.getUnsubstitutedPrimaryConstructor()!!
+        val consDesc = (this.kotlin as KClassImpl<*>).__descriptor.getUnsubstitutedPrimaryConstructor()!!
         return Triple(cons, cons.getParameterTypes(), consDesc.getValueParameters())
     }
 }
@@ -112,9 +111,7 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
 
 fun Any.primaryProperties() : List<String> {
     return ReflectionCache.primaryProperites.getOrPut(javaClass) {
-        (javaClass.kotlin as KClassImpl<*>).descriptor
-                .getUnsubstitutedPrimaryConstructor()?.getValueParameters()
-                ?.map { it.getName().asString() }
+        (javaClass.kotlin as KClassImpl<*>).__descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.map { it.getName().asString() }
     }
 }
 
@@ -164,7 +161,7 @@ private fun File.scanForClasses(prefix: String, classLoader: ClassLoader): List<
     .filter{
         it.isFile() && it.getAbsolutePath().contains(path)
     }.map {
-        classLoader.tryLoadClass(prefix +"." + it.getAbsolutePath().substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
+        ReflectPackage.tryLoadClass(classLoader, prefix +"." + it.getAbsolutePath().substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
     }.filterNotNull().toList()
 }
 
@@ -175,7 +172,7 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     while(entries.hasMoreElements()) {
         entries.nextElement().let {
             if (!it.isDirectory() && it.getName().endsWith(".class") && it.getName().contains(path)) {
-                classes.addIfNotNull(classLoader.tryLoadClass(prefix + "." + it.getName().substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
+                UtilsPackage.addIfNotNull(classes, ReflectPackage.tryLoadClass(classLoader, prefix + "." + it.getName().substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
             }
         }
     }
@@ -187,3 +184,5 @@ fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> =
 
 @suppress("UNCHECKED_CAST")
 inline fun <reified T> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(javaClass<T>())
+
+val KClassImpl<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
