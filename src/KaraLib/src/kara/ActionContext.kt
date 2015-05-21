@@ -58,18 +58,28 @@ class ActionContext(val appContext: ApplicationContext,
     }
 
     fun sessionToken(): String {
-        return data.getOrPut(SESSION_TOKEN_PARAMETER) {
-            val cookie = request.getCookies()?.firstOrNull { it.getName() == SESSION_TOKEN_PARAMETER } ?: run {
-                val newSession = BigInteger(128, rnd).toString(36).take(10)
-                val cookie = Cookie(SESSION_TOKEN_PARAMETER, newSession)
-                cookie.setPath("/")
-                cookie
+        val attr = SESSION_TOKEN_PARAMETER
+
+        val cookie = request.getCookies()?.firstOrNull { it.getName() == attr }
+
+        fun HttpSession.getToken() = this.getAttribute(attr) ?. let { it as String }
+
+        return cookie?.getValue() ?: run {
+            val token = session.getToken() ?: synchronized(session.getId().intern()) {
+                session.getToken() ?: run {
+                    val token = BigInteger(128, rnd).toString(36).take(10)
+                    session.setAttribute(attr, token)
+                    token
+                }
             }
 
-            cookie.setMaxAge(60*60*24*2) // Two days
-            response.addCookie(cookie)
-            cookie.getValue()
-        } as String
+            val newCookie = Cookie(attr, token)
+            newCookie.setPath("/")
+
+            response.addCookie(newCookie)
+
+            token
+        }
     }
 
     companion object {
