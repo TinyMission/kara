@@ -14,7 +14,7 @@ import kotlin.reflect.jvm.internal.KPackageImpl
 
 /** Current application execution context
  */
-class ApplicationContext(public val application : Application,
+class ApplicationContext(public val config : ApplicationConfig,
                          packages: List<String>,
                          val classLoader: ClassLoader,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
@@ -84,15 +84,6 @@ class ApplicationContext(public val application : Application,
         }
 
         return true
-    }
-
-    fun minifyResrouces(): Boolean {
-        val explicit = application.config.tryGet("kara.minifyResources")
-        return when {
-            explicit == "true", explicit == "yes" -> true
-            explicit == "false", explicit == "no" -> false
-            else -> application.config.isProduction()
-        }
     }
 
     fun dispose() = monitorInstances.forEach { it.destroyed(this) }

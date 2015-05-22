@@ -93,4 +93,13 @@ public open class ApplicationConfig() : Config() {
             }
             return urls.toTypedArray()
         }
+
+    fun minifyResrouces(): Boolean {
+        val explicit = tryGet("kara.minifyResources")
+        return when {
+            explicit == "true", explicit == "yes" -> true
+            explicit == "false", explicit == "no" -> false
+            else -> isProduction()
+        }
+    }
 }

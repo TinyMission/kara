@@ -72,7 +72,7 @@ public abstract class Resource() : Link {
 }
 
 private fun Class<out Resource>.fastRoute(): ResourceDescriptor {
-    return ActionContext.tryGet()?.application?.dispatcher?.route(this) ?: route()
+    return ActionContext.tryGet()?.appContext?.dispatcher?.route(this) ?: route()
 }
 
 public fun KClass<out Resource>.baseLink(): Link = java.baseLink()

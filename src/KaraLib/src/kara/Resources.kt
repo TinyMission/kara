@@ -41,14 +41,16 @@ public abstract class CachedResource() : DynamicResource() {
     public fun versionHash() : String = ensureCachedResource(ActionContext.current()).contentHash
 
     private fun ensureCachedResource(context: ActionContext): ResourceCache {
-        cache?.let {
-            if (it.appVersion != context.application.version || it.lastModified != null && !validateCache(context, it)) {
-                cache = null
+        if (context.config.isDevelopment()) {
+            cache?.let {
+                if (it.appVersion != context.appContext.version || it.lastModified != null && !validateCache(context, it)) {
+                    cache = null
+                }
             }
         }
 
         return cache ?: content(context).let {
-            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.application.version) }
+            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.appContext.version) }
             cache!!
         }
     }
@@ -66,11 +68,11 @@ public open class EmbeddedResource(val mime : String, val name: String) : Cached
 }
 
 public fun ActionContext.resourceURL(name: String): URL? {
-    return application.classLoader.getResource(name) ?: request.getServletContext()?.getResource(name)
+    return appContext.classLoader.getResource(name) ?: request.getServletContext()?.getResource(name)
 }
 
 public fun ActionContext.publicDirectoryResource(name: String): Pair<Long?, URL>? {
-    for (dir in application.application.config.publicDirectories) {
+    for (dir in config.publicDirectories) {
         val candidate = File(dir, name)
         if (candidate.exists()) {
             return candidate.lastModified() to candidate.toURI().toURL()

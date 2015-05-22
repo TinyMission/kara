@@ -65,7 +65,7 @@ open class Application(public val config: ApplicationConfig) {
         if (config.isDevelopment())
             watchUrls(resourceTypes)
 
-        return ApplicationContext(this, config.routePackages, classLoader, cache, resourceTypes)
+        return ApplicationContext(config, config.routePackages, classLoader, cache, resourceTypes)
     }
 
     open fun destroyContext() {

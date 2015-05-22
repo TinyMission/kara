@@ -17,10 +17,11 @@ fun HttpSession.getDescription() : String {
 /** This contains information about the current rendering action.
  * An action context is provided by the dispatcher to the action result when it's rendered.
  */
-class ActionContext(val application: ApplicationContext,
+class ActionContext(val appContext: ApplicationContext,
                     val request : HttpServletRequest,
                     val response : HttpServletResponse,
                     val params : RouteParameters) {
+    public val config: ApplicationConfig = appContext.config
     public val session : HttpSession = request.getSession(true)!!
     public val data: HashMap<Any, Any?> = HashMap()
     public val startedAt : Long = System.currentTimeMillis()
@@ -40,7 +41,7 @@ class ActionContext(val application: ApplicationContext,
     }
 
     private fun ByteArray.readObject(): Any? {
-        return CustomClassloaderObjectInputStream(inputStream, application.classLoader).readObject()
+        return CustomClassloaderObjectInputStream(inputStream, appContext.classLoader).readObject()
     }
 
     fun toSession(key: String, value: Any?) {
