@@ -25,7 +25,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
 
     public fun matches(url: String): Boolean {
         val path = url.substringBefore("?")
-        val components = path.split("/")
+        val components = path.splitBy("/")
         if (components.size() > routeComponents.size() || components.size() < routeComponents.size() - optionalComponents.size())
             return false
 
