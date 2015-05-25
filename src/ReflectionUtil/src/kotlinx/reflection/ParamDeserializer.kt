@@ -162,9 +162,9 @@ public object Serialization {
 fun <T> Class<T>.parse(params: String) : T {
     val map = HashMap<String, String>()
 
-    val queryComponents = params.split("&")
+    val queryComponents = params.splitBy("&")
     for (component in queryComponents) {
-        val nvp = component.split("=")
+        val nvp = component.splitBy("=")
         if (nvp.size() > 1)
             map[nvp[0]] = nvp[1]
         else
