@@ -99,10 +99,11 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         val actionContext = ActionContext(context, request, response, params)
 
         actionContext.withContext {
-            val sessionToken = actionContext.sessionToken()
             val actionResult = when {
-                !allowCrossOrigin && params[ActionContext.SESSION_TOKEN_PARAMETER] != sessionToken -> ErrorResult(403, "This request is only valid within same origin")
-                else -> routeInstance.handle(actionContext)
+                !allowCrossOrigin && params[ActionContext.SESSION_TOKEN_PARAMETER] != actionContext.sessionToken() ->
+                    ErrorResult(403, "This request is only valid within same origin")
+                else ->
+                    routeInstance.handle(actionContext)
             }
 
             actionResult.writeResponse(actionContext)
