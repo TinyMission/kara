@@ -37,9 +37,9 @@ public open class ApplicationConfig() : Config() {
         readPublicDirProperty().map {
             val dirPath = it.trim()
             val dir = File(dirPath)
-            val context = ActionContext.current().request?.getServletContext()
+            val context = ActionContext.current().request.getServletContext()
             if ((dir.getParent() == null || !dir.isDirectory()) && context != null) {
-                logger.warn("Can't find public dir $dirPath. Trying to resolve it via servlet context.")
+                logger.info("Can't find public dir $dirPath. Trying to resolve it via servlet context.")
                 return@map context.getRealPath(dirPath)?.let { path ->
                     if (File(path).isDirectory()) {
                         path
