@@ -48,6 +48,9 @@ class ApplicationContext(public val config : ApplicationConfig,
     }
 
     public fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
+
+        fun formatLogErrorMsg(error: String, req: HttpServletRequest) = "$error processing ${req.getMethod()} ${req.getRequestURI()}. User agent: ${req.getHeader("User-Agent")}, Referer: ${req.getHeader("Referer")}"
+
         fun dispatch(index: Int, request: HttpServletRequest, response: HttpServletResponse): Boolean {
             return if (index in interceptors.indices) {
                 interceptors[index](request, response) { req, resp -> dispatch(index + 1, req, resp) }
@@ -65,19 +68,19 @@ class ApplicationContext(public val config : ApplicationConfig,
         }
         catch(e400: MissingArgumentException) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.getMessage())
-            Application.logger.warn("400 processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", e400)
+            Application.logger.warn(formatLogErrorMsg("400", request), e400)
         } catch(e400: InvalidRequestException) {
-            Application.logger.warn("400 processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", e400)
+            Application.logger.warn(formatLogErrorMsg("400", request), e400)
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.getMessage())
         } catch(e404: NotFoundException) {
-            Application.logger.warn("404 processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", e404)
+            Application.logger.warn(formatLogErrorMsg("404", request), e404)
             response.sendError(HttpServletResponse.SC_NOT_FOUND, e404.getMessage())
         }
         catch(ex: Throwable) {
             when {
                 ex.javaClass.getName() == "org.apache.catalina.connector.ClientAbortException" -> {} // do nothing for tomcat specific exception
                 else -> {
-                    Application.logger.error("Error processing ${request.getMethod()} ${request.getRequestURI()}. User agent: ${request.getHeader("User-Agent")}", ex)
+                    Application.logger.error(formatLogErrorMsg("Error", request), ex)
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
                 }
             }
