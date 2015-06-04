@@ -75,7 +75,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
             val resourceHandler = ResourceHandler()
             resourceHandler.setDirectoriesListed(false)
             resourceHandler.setResourceBase("./${it}")
-            resourceHandler.setWelcomeFiles(array("index.html"))
+            resourceHandler.setWelcomeFiles(arrayOf("index.html"))
             resourceHandlers.add(resourceHandler)
         }
 

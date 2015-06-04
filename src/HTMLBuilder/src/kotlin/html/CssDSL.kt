@@ -3,11 +3,11 @@ package kotlin.html
 import java.util.ArrayList
 import java.util.HashMap
 
-trait Selector {
+interface Selector {
     fun toExternalForm(): String
 }
 
-trait SelectorTrait {
+interface SelectorTrait {
     fun toExternalForm(): String
 }
 
@@ -17,7 +17,7 @@ object EmptyTrait : SelectorTrait {
     }
 }
 
-public trait StyleClass : SelectorTrait, Selector {
+public interface StyleClass : SelectorTrait, Selector {
     fun name(): String
 
     override fun toExternalForm(): String {
@@ -156,7 +156,7 @@ open class CssElement() {
 
     public fun att(name: String): Attribute = Attribute(name, HasAttribute(name))
 
-    public class Attribute internal (val name: String, val filter: AttFilter) : SelectorTrait {
+    public class Attribute internal constructor(val name: String, val filter: AttFilter) : SelectorTrait {
         public fun startsWith(value: String): Attribute {
             return Attribute(name, StartsWith(value))
         }

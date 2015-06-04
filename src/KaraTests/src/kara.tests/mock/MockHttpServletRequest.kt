@@ -192,7 +192,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getParameterMap() : MutableMap<String, Array<String>?>? {
-        return params.map {it.getKey() to array(it.getValue())}.toMap().toLinkedMap()
+        return params.map {it.getKey() to arrayOf(it.getValue()) }.toMap().toLinkedMap()
     }
     public override fun getInputStream() : ServletInputStream? {
         throw UnsupportedOperationException()

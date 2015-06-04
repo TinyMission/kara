@@ -94,7 +94,7 @@ class EnumSerializer: TypeSerializer() {
     }
 }
 
-trait DataClass
+interface DataClass
 
 class DataClassSerializer: TypeSerializer() {
     override fun serialize(param: Any): String {

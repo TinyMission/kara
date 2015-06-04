@@ -1,6 +1,6 @@
 package kotlin.html
 
-public trait AttFilter {
+public interface AttFilter {
     fun toExternalForm(): String
 }
 

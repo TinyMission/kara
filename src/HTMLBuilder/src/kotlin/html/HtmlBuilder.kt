@@ -151,7 +151,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
      */
     var text: String?
         get() {
-            if (children.size > 0)
+            if (children.size() > 0)
                 return children[0].toString()
             return ""
         }

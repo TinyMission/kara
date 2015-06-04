@@ -1,6 +1,6 @@
 package kotlin.html
 
-public trait Link {
+public interface Link {
     fun href(): String
 }
 

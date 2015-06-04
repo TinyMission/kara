@@ -10,7 +10,7 @@ object MockApplication : Application(ApplicationConfig()) {
 
     init {
         val classLoader = javaClass.getClassLoader()!!
-        context = ApplicationContext(config, listOf<String>(), classLoader, hashMapOf(), scanObjects(array(Routes), classLoader))
+        context = ApplicationContext(config, listOf<String>(), classLoader, hashMapOf(), scanObjects(arrayOf(Routes), classLoader))
     }
 }
 

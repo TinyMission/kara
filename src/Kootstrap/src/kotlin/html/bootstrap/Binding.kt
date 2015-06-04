@@ -18,13 +18,13 @@ fun HtmlTag.applyAttributes(apply: HtmlTag.() -> Unit): Boolean {
 }
 
 fun <T : HtmlTag> T.withAttributes(content: T.() -> Unit, apply: HtmlTag.() -> Unit) {
-    val curChildren = children.size
+    val curChildren = children.size()
     content()
-    if (curChildren + 1 != children.size) {
+    if (curChildren + 1 != children.size()) {
         throw Exception("Template tag must have single child tag")
     }
 
-    with(children.last as HtmlTag, apply)
+    with(children.lastOrNull() as HtmlTag, apply)
 }
 
 fun <T : HtmlTag> T.bind(property: String, content: T.() -> Unit) {
@@ -93,7 +93,7 @@ fun HtmlBodyTag.send(url: Link, httpMethod: FormMethod = FormMethod.post): SendC
 }
 
 fun HtmlBodyTag.send(url: LinkWithParameters): SendContext {
-    attribute("send-values", url.parameters.iterator().makeString(","))
+    attribute("send-values", url.parameters.asSequence().joinToString(","))
     return send(url.link)
 }
 

@@ -27,7 +27,7 @@ abstract class RouteComponent(val componentText: String) {
 /** Route component for a literal string. */
 class StringRouteComponent(componentText: String) : RouteComponent(componentText) {
     override fun matches(value: String): Boolean {
-        return value.equalsIgnoreCase(componentText)
+        return value.equals(componentText, ignoreCase = true)
     }
 
     override fun setParameter(params: RouteParameters, component: String) {
