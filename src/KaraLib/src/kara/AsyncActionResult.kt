@@ -44,15 +44,18 @@ private fun AsyncResult.execute() {
     if (timed_out) return
 
     val context = ActionContext(appContext, asyncContext.getRequest() as HttpServletRequest, asyncContext.getResponse() as HttpServletResponse, params)
-    val result = context.body()
+    context.withContext {
+        val result = context.body()
 
-    if (timed_out) return
-
-    try {
-        result.writeResponse(context)
-    } finally {
         if (!timed_out) {
-            asyncContext.complete()
+            try {
+                result.writeResponse(context)
+            }
+            finally {
+                if (!timed_out) {
+                    asyncContext.complete()
+                }
+            }
         }
     }
 }
