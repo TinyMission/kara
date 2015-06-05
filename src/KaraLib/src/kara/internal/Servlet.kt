@@ -7,7 +7,7 @@ import javax.servlet.ServletConfig
 import kotlin.properties.Delegates
 import org.apache.log4j.Logger
 
-open class Servlet() : HttpServlet() {
+public open class Servlet() : HttpServlet() {
     val logger = Logger.getLogger(javaClass<Servlet>())!!
 
     val application: Application by Delegates.blockingLazy {
