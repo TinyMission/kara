@@ -1,7 +1,7 @@
 package kara
 
+import kara.internal.logger
 import java.util.concurrent.Executors
-import java.util.concurrent.ThreadFactory
 import javax.servlet.AsyncContext
 import javax.servlet.AsyncEvent
 import javax.servlet.AsyncListener
@@ -41,21 +41,24 @@ private val asyncExecutors by Delegates.blockingLazy {
 }
 
 private fun AsyncResult.execute() {
-    if (timed_out) return
+    try {
+        if (timed_out) return
 
-    val context = ActionContext(appContext, asyncContext.getRequest() as HttpServletRequest, asyncContext.getResponse() as HttpServletResponse, params)
-    context.withContext {
-        val result = context.body()
+        val context = ActionContext(appContext, asyncContext.getRequest() as HttpServletRequest, asyncContext.getResponse() as HttpServletResponse, params)
+        context.withContext {
+            val result = context.body()
 
-        if (!timed_out) {
-            try {
+            if (!timed_out) {
                 result.writeResponse(context)
             }
-            finally {
-                if (!timed_out) {
-                    asyncContext.complete()
-                }
-            }
+        }
+    }
+    finally {
+        if (!timed_out) {
+            asyncContext.complete()
+        }
+        else {
+            logger.info("Asynchronous task timed out. See Connector's 'asyncTimeout' attribute in server.xml")
         }
     }
 }
