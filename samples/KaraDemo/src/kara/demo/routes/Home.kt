@@ -13,6 +13,13 @@ object Home {
         TextResult("This is a test action, yo")
     })
 
+    Get("/async")
+    class Async() : Request({
+        async {
+            TextResult("This've been rendered async.")
+        }
+    })
+
     Get("/crash")
     class Crash() : Request({
         error("This resource crashes")

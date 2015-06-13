@@ -13,7 +13,6 @@
         <element id="directory" name="lib">
           <element id="library" level="project" name="KotlinJavaRuntime" />
           <element id="library" level="project" name="Logging" />
-          <element id="library" level="project" name="Jackson" />
           <element id="library" level="project" name="commons-io-2.4" />
           <element id="library" level="project" name="YuiCompressor" />
           <element id="library" level="project" name="LessCompiler" />

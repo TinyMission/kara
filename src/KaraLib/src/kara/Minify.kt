@@ -11,7 +11,7 @@ import java.io.StringWriter
 fun ByteArray.minifyResource(context: ActionContext, mime: String): ByteArray {
     try {
         return when {
-            !context.application.minifyResrouces() -> return this
+            !context.config.minifyResrouces() -> return this
             mime == "text/javascript" -> compressJavascript()
             mime == "text/css" -> compressCss()
             else -> this

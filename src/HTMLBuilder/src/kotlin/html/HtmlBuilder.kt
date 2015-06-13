@@ -22,14 +22,14 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 }
 
 enum class RenderStyle {
-    adaptive
-    expanded
+    adaptive,
+    expanded,
     _empty
 }
 
 enum class ContentStyle {
-    block
-    text
+    block,
+    text,
     propagate
 }
 
@@ -100,7 +100,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         }
         builder.append('>')
 
-        if (indent.isNotEmpty()) {
+        if (!indent.isNullOrEmpty()) {
             builder.append("\n")
         }
     }
@@ -151,7 +151,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
      */
     var text: String?
         get() {
-            if (children.size > 0)
+            if (children.size() > 0)
                 return children[0].toString()
             return ""
         }

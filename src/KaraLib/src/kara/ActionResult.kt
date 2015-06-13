@@ -7,7 +7,7 @@ import java.io.*
 
 /** Base class for objects that are returned from actions.
  */
-trait ActionResult {
+interface ActionResult {
 
     /** Subclasses must implement this to write the action result to the HTTP response.
      */
@@ -69,7 +69,7 @@ open class XmlResult(val xml: String) : ActionResult {
     fun respondWithXml(context: ActionContext) {
         val text = prettyFormat(xml, 2)
         val content = text.toByteArray();
-        context.response.setContentLength(content.size)
+        context.response.setContentLength(content.size())
         context.response.setContentType("text/xml")
         context.response.setCharacterEncoding("UTF-8")
         val out = context.response.getOutputStream()

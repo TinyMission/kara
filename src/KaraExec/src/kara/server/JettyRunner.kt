@@ -11,6 +11,7 @@ import java.util.ArrayList
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import org.eclipse.jetty.server.Request
+import javax.servlet.MultipartConfigElement
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
@@ -22,14 +23,20 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
     val application: Application = Application.load(applicationConfig)
 
     inner class Handler() : AbstractHandler() {
+        val CONFIG = MultipartConfigElement(System.getProperty("java.io.tmpdir"))
+
         public override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
+            if (baseRequest?.getContentType()?.let { it.contains("multipart/form-data", ignoreCase = true) } ?: false) {
+                baseRequest?.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, CONFIG)
+            }
+
             response!!.setCharacterEncoding("UTF-8")
             val query = request!!.getQueryString()
             val method = request.getMethod()
             try {
                 if (application.context.dispatch(request, response)) {
                     baseRequest!!.setHandled(true)
-                    logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- OK")
+                    logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- OK[${response.getStatus()}]")
                 }
                 else {
                     for (resourceHandler in resourceHandlers) {
@@ -68,7 +75,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
             val resourceHandler = ResourceHandler()
             resourceHandler.setDirectoriesListed(false)
             resourceHandler.setResourceBase("./${it}")
-            resourceHandler.setWelcomeFiles(array("index.html"))
+            resourceHandler.setWelcomeFiles(arrayOf("index.html"))
             resourceHandlers.add(resourceHandler)
         }
 

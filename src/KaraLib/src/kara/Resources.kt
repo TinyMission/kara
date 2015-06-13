@@ -3,48 +3,88 @@ package kara
 import java.io.InputStream
 import kotlin.html.*
 import org.apache.commons.io.IOUtils
+import java.io.File
+import java.net.URL
+import java.util.*
 
-public data class ResourceContent(val mime: String, val lastModified: Long, val length: Int, val data: ActionContext.() -> InputStream)
+public data class ResourceContent(val mime: String, val lastModified: Long?, val length: Int?, val data: ActionContext.() -> InputStream) {
+    public constructor(mime: String, bytes: ByteArray) : this(mime, null, bytes.size(), {bytes.inputStream})
+}
 
 public abstract class DynamicResource() : Resource() {
     abstract fun content(context: ActionContext): ResourceContent
 
-    override fun handle(context: ActionContext): ActionResult = content(context).let { BinaryResponse(it.mime, it.length, it.lastModified, it.data) }
+    override fun handle(context: ActionContext): ActionResult {
+        return content(context).let { BinaryResponse(it.mime, it.length, it.lastModified, null, it.data) }
+    }
 }
 
-private data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long, val appVersion: Int)
+data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long?, val appVersion: Int) {
+    val contentHash = Integer.toHexString(Arrays.hashCode(bytes))
+}
 
 public abstract class CachedResource() : DynamicResource() {
     var cache: ResourceCache? = null
 
+    override fun href(): String {
+        return super.href() + "?v=${versionHash()}"
+    }
+
+    open fun validateCache(context: ActionContext, cache: ResourceCache): Boolean = true
+
     override fun handle(context: ActionContext): ActionResult {
-        if (cache?.appVersion != context.application.version) {
-            cache = null
+        val result = ensureCachedResource(context)
+
+        return BinaryResponse(result.mime, result.bytes.size(), result.lastModified, result.contentHash, { result.bytes.inputStream })
+    }
+
+    public fun versionHash() : String = ensureCachedResource(ActionContext.current()).contentHash
+
+    private fun ensureCachedResource(context: ActionContext): ResourceCache {
+        if (context.config.isDevelopment()) {
+            cache?.let {
+                if (it.appVersion != context.appContext.version || it.lastModified != null && !validateCache(context, it)) {
+                    cache = null
+                }
+            }
         }
 
-        val (mime, bytes, stamp) = cache ?: content(context).let {
-            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.application.version) }
+        return cache ?: content(context).let {
+            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray(it.data())!!.minifyResource(context, it.mime), it.lastModified, context.appContext.version) }
             cache!!
         }
-
-        return BinaryResponse(mime, bytes.size, stamp, { bytes.inputStream })
     }
 }
 
 public open class EmbeddedResource(val mime : String, val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
-        val bytes = context.loadResource(name)
-        return ResourceContent(mime, System.currentTimeMillis(), bytes.size) { bytes.inputStream }
+        val (modification, content) = context.loadResource(name)
+        return ResourceContent(mime, modification, null, {content.openStream()})
+    }
+
+    override fun validateCache(context: ActionContext, cache: ResourceCache): Boolean {
+        return context.loadResource(name).first == cache.lastModified
     }
 }
 
-public fun ActionContext.resourceStream(name: String): InputStream? {
-    return application.classLoader.getResourceAsStream(name) ?: request.getServletContext()?.getResourceAsStream(name)
+public fun ActionContext.resourceURL(name: String): URL? {
+    return appContext.classLoader.getResource(name) ?: request.getServletContext()?.getResource(name)
 }
 
-public fun ActionContext.loadResource(name: String): ByteArray {
-    val stream = resourceStream(name)  ?: error("Cannot find $name in classpath or servlet context resources")
-    return stream.readBytes()
+public fun ActionContext.publicDirectoryResource(name: String): Pair<Long?, URL>? {
+    for (dir in config.publicDirectories) {
+        val candidate = File(dir, name)
+        if (candidate.exists()) {
+            return candidate.lastModified() to candidate.toURI().toURL()
+        }
+    }
+
+    return null
+}
+
+public fun ActionContext.loadResource(name: String): Pair<Long?, URL> {
+    return publicDirectoryResource(name) ?:
+            null to (resourceURL(name) ?: throw NotFoundException("Cannot find $name in classpath or servlet context resources"))
 }
 
 public open class Request(private val handler: ActionContext.() -> ActionResult) : Resource(){

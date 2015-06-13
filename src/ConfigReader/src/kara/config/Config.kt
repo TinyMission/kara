@@ -98,16 +98,16 @@ public open class Config() {
                 error("$path cannot be found")
             }
 
-            text!!.reader.forEachLine {
+            text.reader.forEachLine {
                 val line = it.trim()
 
                 when {
                     line.startsWith("include ") -> {
-                        readConfig(config, line.trimLeading("include "), classloader, base)
+                        readConfig(config, line.removePrefix("include "), classloader, base)
                     }
 
                     line.startsWith("log ") -> {
-                        Config.logger.info(evalVars(line.trimLeading("log "), ::eval))
+                        Config.logger.info(evalVars(line.removePrefix("log "), ::eval))
                     }
 
                     line.startsWith("#") || line.isEmpty() -> {

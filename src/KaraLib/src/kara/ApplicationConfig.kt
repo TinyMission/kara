@@ -1,9 +1,12 @@
 package kara
 
+import kara.config.Config
+import kara.internal.Servlet
+import kara.internal.logger
 import java.io.File
 import java.net.URL
 import java.util.ArrayList
-import kara.config.Config
+import kotlin.properties.Delegates
 
 /**
  * Store application configuration.
@@ -30,9 +33,30 @@ public open class ApplicationConfig() : Config() {
     public val applicationPackageName: String
         get() = this["kara.appPackage"]
 
+    private val _publicDirectories by Delegates.blockingLazy {
+        readPublicDirProperty().map {
+            val dirPath = it.trim()
+            val dir = File(dirPath)
+            val context = ActionContext.current().request.getServletContext()
+            if ((dir.getParent() == null || !dir.isDirectory()) && context != null) {
+                logger.info("Can't find public dir $dirPath. Trying to resolve it via servlet context.")
+                return@map context.getRealPath(dirPath)?.let { path ->
+                    if (File(path).isDirectory()) {
+                        path
+                    } else {
+                        logger.warn("Resolved path is not directory $path")
+                        null
+                    }
+                }
+            }
+            it
+        }.filterNotNull().orEmpty()
+    }
     /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
     public val publicDirectories: List<String>
-        get() = tryGet("kara.publicDir")?.split(';')?.toList() ?: emptyList<String>()
+        get() = ActionContext.tryGet()?.let { _publicDirectories } ?: readPublicDirProperty()
+
+    private fun readPublicDirProperty() = tryGet("kara.publicDir")?.split(';')?.filter { it.isNotBlank() }.orEmpty()
 
     public val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
@@ -69,4 +93,13 @@ public open class ApplicationConfig() : Config() {
             }
             return urls.toTypedArray()
         }
+
+    fun minifyResrouces(): Boolean {
+        val explicit = tryGet("kara.minifyResources")
+        return when {
+            explicit == "true", explicit == "yes" -> true
+            explicit == "false", explicit == "no" -> false
+            else -> isProduction()
+        }
+    }
 }

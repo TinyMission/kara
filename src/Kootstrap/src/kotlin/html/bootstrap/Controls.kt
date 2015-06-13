@@ -2,8 +2,8 @@ package kotlin.html.bootstrap
 
 import kotlin.html.*
 
-val form_horizontal = s("form-horizontal")
-val form_control = s("form-control")
+val form_horizontal = "form-horizontal"
+val form_control = "form-control"
 
 public fun HtmlBodyTag.blockAction(h: highlight = highlight.default, body: A.()->Unit): Unit = a {
     addClass("btn btn-block btn-${h.name()}")
@@ -48,20 +48,14 @@ inline fun HtmlBodyTag.blockButton(h: highlight, body: BUTTON.()->Unit): Unit = 
     body()
 }
 
-inline fun HtmlBodyTag.controlWithIcon(iconName: String, body: DIV.()->Unit): Unit = div(s("input-group")) { span(s("input-group-addon")) { icon(iconName) }; body() }
-inline fun HtmlBodyTag.controlGroup(body: DIV.()->Unit): Unit = div {
-    addClass("form-group")
-    body()
-}
+inline fun HtmlBodyTag.controlWithIcon(iconName: String, body: DIV.()->Unit): Unit = div("input-group") { span("input-group-addon") { icon(iconName) }; body() }
+inline fun HtmlBodyTag.controlGroup(body: DIV.()->Unit): Unit = div("form-group", body)
 
-inline fun HtmlBodyTag.controlLabel(body: LABEL.()->Unit): Unit = label {
-    addClass("control-label")
-    body()
-}
+inline fun HtmlBodyTag.controlLabel(body: LABEL.()->Unit): Unit = label("control-label", body)
 
-fun HtmlBodyTag.icon(name : String) : Unit = icon(name, null)
-
-fun HtmlBodyTag.icon(name : String, style: StyleClass?) : Unit = i {
+fun HtmlBodyTag.icon(name : String, c: String?=null) : Unit = i {
     addClass("icon icon-$name")
-    addClass(style)
+    if (c != null) {
+        addClass(c)
+    }
 }

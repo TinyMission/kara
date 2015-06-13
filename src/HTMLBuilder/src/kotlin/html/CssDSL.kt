@@ -3,11 +3,11 @@ package kotlin.html
 import java.util.ArrayList
 import java.util.HashMap
 
-trait Selector {
+interface Selector {
     fun toExternalForm(): String
 }
 
-trait SelectorTrait {
+interface SelectorTrait {
     fun toExternalForm(): String
 }
 
@@ -17,7 +17,7 @@ object EmptyTrait : SelectorTrait {
     }
 }
 
-public trait StyleClass : SelectorTrait, Selector {
+public interface StyleClass : SelectorTrait, Selector {
     fun name(): String
 
     override fun toExternalForm(): String {
@@ -49,8 +49,8 @@ public fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
 }
 
 public enum class PseudoClass : StyleClass {
-    root firstChild lastChild firstOfType lastOfType onlyChild onlyOfType
-    empty link visited active focus hover target enabled disabled checked
+    root, firstChild, lastChild, firstOfType, lastOfType, onlyChild, onlyOfType,
+    empty, link, visited, active, focus, hover, target, enabled, disabled, checked;
 
     override fun toExternalForm(): String {
         return ":${name()}"
@@ -84,6 +84,10 @@ open class CssElement() {
 
         fun invoke(vararg traits: SelectorTrait, body: StyledElement.() -> Unit) {
             s(SimpleSelector(this, traits).toExternalForm(), body)
+        }
+
+        fun invoke(classes: String, body: StyledElement.() -> Unit) {
+            s(SimpleSelector(this, arrayOf(SimpleClassStyle(classes))).toExternalForm(), body)
         }
 
         fun invoke(vararg t: SelectorTrait): Selector {
@@ -152,7 +156,7 @@ open class CssElement() {
 
     public fun att(name: String): Attribute = Attribute(name, HasAttribute(name))
 
-    public class Attribute internal (val name: String, val filter: AttFilter) : SelectorTrait {
+    public class Attribute internal constructor(val name: String, val filter: AttFilter) : SelectorTrait {
         public fun startsWith(value: String): Attribute {
             return Attribute(name, StartsWith(value))
         }

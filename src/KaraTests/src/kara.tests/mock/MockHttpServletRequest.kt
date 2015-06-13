@@ -95,14 +95,14 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getCookies() : Array<Cookie>? {
-        throw UnsupportedOperationException()
+        return emptyArray()
     }
     public override fun getRequestURI() : String? {
         return _url
     }
     public override fun getQueryString() : String? {
-        val comps = _url.split("\\?")
-        if (comps.size > 1)
+        val comps = _url.splitBy("?")
+        if (comps.size() > 1)
             return comps[1]
         return null
     }
@@ -192,7 +192,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getParameterMap() : MutableMap<String, Array<String>?>? {
-        return params.map {it.getKey() to array(it.getValue())}.toMap().toLinkedMap()
+        return params.map {it.getKey() to arrayOf(it.getValue()) }.toMap().toLinkedMap()
     }
     public override fun getInputStream() : ServletInputStream? {
         throw UnsupportedOperationException()

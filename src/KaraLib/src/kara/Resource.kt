@@ -11,6 +11,8 @@ import java.util.LinkedHashSet
 import kotlin.html.*
 import java.util.LinkedHashMap
 import java.net.URLEncoder
+import kotlin.reflect.KClass
+import kotlin.reflect.jvm.java
 
 public abstract class Resource() : Link {
     abstract  fun handle(context: ActionContext): ActionResult
@@ -31,7 +33,8 @@ public abstract class Resource() : Link {
     }
 
     fun requestParts(context: String = contextPath()): Pair<String, Map<String, Any>> {
-        val route = javaClass.fastRoute()
+        val descriptor = javaClass.fastRoute()
+        val route = descriptor.route
 
         val path = StringBuilder(context)
 
@@ -60,21 +63,32 @@ public abstract class Resource() : Link {
             queryArgs[prop] = propertyValue(prop)!!
         }
 
+        if (!descriptor.allowCrossOrigin) {
+            queryArgs[ActionContext.SESSION_TOKEN_PARAMETER] = ActionContext.current().sessionToken()
+        }
+
         return Pair(path.toString(), queryArgs)
     }
 }
 
-private fun Class<out Resource>.fastRoute(): String {
-    return ActionContext.tryGet()?.application?.dispatcher?.route(this) ?: route().first
+private fun Class<out Resource>.fastRoute(): ResourceDescriptor {
+    return ActionContext.tryGet()?.appContext?.dispatcher?.route(this) ?: route()
 }
 
+public fun KClass<out Resource>.baseLink(): Link = java.baseLink()
+
 public fun Class<out Resource>.baseLink(): Link {
-    val route = fastRoute()
+    val descriptor = fastRoute()
+    val route = descriptor.route
     if (route.contains(":")) {
         throw RuntimeException("You can't have base link for the route with URL parameters")
     }
 
-    return route.link()
+    return (if (!descriptor.allowCrossOrigin) {
+        "$route?_st=${ActionContext.current().sessionToken()}"
+    }
+    else route).link()
+
 }
 
 public fun String.link(): Link {

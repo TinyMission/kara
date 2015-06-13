@@ -94,7 +94,7 @@ class EnumSerializer: TypeSerializer() {
     }
 }
 
-trait DataClass
+interface DataClass
 
 class DataClassSerializer: TypeSerializer() {
     override fun serialize(param: Any): String {
@@ -162,10 +162,10 @@ public object Serialization {
 fun <T> Class<T>.parse(params: String) : T {
     val map = HashMap<String, String>()
 
-    val queryComponents = params.split("\\&")
+    val queryComponents = params.splitBy("&")
     for (component in queryComponents) {
-        val nvp = component.split("=")
-        if (nvp.size > 1)
+        val nvp = component.splitBy("=")
+        if (nvp.size() > 1)
             map[nvp[0]] = nvp[1]
         else
             map[nvp[0]] = ""

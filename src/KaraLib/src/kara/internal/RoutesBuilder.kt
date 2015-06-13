@@ -3,16 +3,15 @@ package kara.internal
 import kotlinx.reflection.*
 import java.util.ArrayList
 import kara.*
-import org.jetbrains.kotlin.load.java.reflect.tryLoadClass
 import java.lang.instrument.Instrumentation
 import kotlin.reflect.jvm.kotlin
 
 val karaAnnotations = listOf(javaClass<Put>(), javaClass<Get>(), javaClass<Post>(), javaClass<Delete>(), javaClass<Route>(), javaClass<Location>())
 
-[suppress("UNCHECKED_CAST")]
-fun scanPackageForResources(prefix : String, classloader : ClassLoader) : List<Class<out Resource>> {
+@suppress("UNCHECKED_CAST")
+fun scanPackageForResources(prefix: String, classloader: ClassLoader, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<out Resource>> {
     try {
-        return classloader.findClasses(prefix)
+        return classloader.findClasses(prefix, cache)
                 .filterIsAssignable<Resource>()
                 .filter {
                     clazz -> karaAnnotations.any { clazz.isAnnotationPresent(it) }

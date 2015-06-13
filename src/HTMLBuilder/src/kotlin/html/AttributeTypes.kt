@@ -79,7 +79,7 @@ public class LinkAttribute(name: String) : Attribute<Link>(name) {
     }
 }
 
-public trait StringEnum<T : Enum<T>> : Enum<T> {
+public interface StringEnum<T : Enum<T>> : Enum<T> {
     val value: String get() = name()
 }
 

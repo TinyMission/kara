@@ -37,7 +37,7 @@ open public class Placeholder<TOuter>() {
 
 public class PlaceholderItem<TOuter>(val index: Int, val collection: List<PlaceholderItem<TOuter>>) : Placeholder<TOuter>() {
     val first: Boolean get() = index == 0
-    val last: Boolean get() = index == collection.size
+    val last: Boolean get() = index == collection.size()
 }
 
 open public class Placeholders<TOuter, TInner>() {

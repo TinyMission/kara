@@ -8,7 +8,7 @@ import kotlin.html.InputType.*
 import kotlinx.reflection.*
 
 
-public trait FormModel<P> {
+public interface FormModel<P> {
     fun modelName(): String
     fun propertyValue(property: P): String
     fun propertyName(property: P): String
@@ -239,7 +239,7 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
             this.name = propertyName(property)
             this.inputType = radio
             this.value = value
-            checked = value.equalsIgnoreCase(modelValue)
+            checked = value.equals(modelValue, ignoreCase = true)
             contents()
         }
     }

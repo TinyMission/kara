@@ -9,7 +9,6 @@
         <element id="module-output" name="KaraExec" />
         <element id="module-output" name="KaraLib" />
       </element>
-      <element id="library" level="project" name="Jackson" />
       <element id="library" level="project" name="Logging" />
       <element id="library" level="project" name="KotlinJavaRuntime" />
       <element id="library" level="project" name="Jetty" />

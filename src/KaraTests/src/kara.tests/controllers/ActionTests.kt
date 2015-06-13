@@ -34,6 +34,7 @@ class ActionTests() {
         assertResponse("bar", "/foo/bar")
         assertResponse("list: bar", "/foo/bar/list")
         assertResponse("complex: bar id = 42", "/foo/complex/bar/list/42")
+        assertResponse("complex: bar id = 42", "/foo/complex/bar/list/42?param")
         assertResponse("show 42", "/crud/42")
         assertResponse("compute: 42, 3.12", "/foo/compute/42/3.12")
         assertResponse("compute: 42, 3.12", "/foo/compute?anInt=42&aFloat=3.12")
