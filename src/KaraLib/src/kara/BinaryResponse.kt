@@ -26,7 +26,11 @@ public class BinaryResponse(val mime: String, val length: Int?, val modified : L
         }
 
         when {
-            ifNoneMatch == etag || ifModifiedSince >= 0 && (modified ?: 0) / 1000 <= ifModifiedSince / 1000 -> {
+            etag != null && ifNoneMatch == etag -> {
+                r.setStatus(304)
+            }
+
+            ifModifiedSince >= 0 && (modified ?: 0) / 1000 <= ifModifiedSince / 1000 -> {
                 r.setStatus(304)
             }
 
