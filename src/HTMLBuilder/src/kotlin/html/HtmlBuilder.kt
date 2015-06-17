@@ -40,6 +40,15 @@ private fun HtmlElement.computeContentStyle(): ContentStyle {
     }
 }
 
+fun html(content: HtmlBodyTag.() -> Unit): String {
+    val root = TransparentTag(null)
+    root.content()
+    return with(StringBuilder()) {
+        root.renderElement(this, "")
+        toString()
+    }
+}
+
 fun String.htmlEscapeTo(builder: StringBuilder) {
     val len = length()
 
