@@ -2,7 +2,28 @@ package kara.tests.views
 
 
 import kara.*
+import org.junit.Test
+import kotlin.html.a
+import kotlin.html.html
+import kotlin.html.p
+import kotlin.test.assertEquals
 
+class HtmlBuilderTest {
+    Test fun simplestBodyTest() {
+        val html = html {
+            p {
+                +"This is text"
+            }
+
+            a {
+                +"Name"
+                href="xxx".link()
+            }
+        }
+
+        assertEquals("<p>This is text</p><a href=\"xxx\">Name</a>", html)
+    }
+}
 //fun testHtml(args : Array<String>) =
 //    html {
 //        head {

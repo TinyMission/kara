@@ -6,7 +6,10 @@ import kara.link
 
 inline fun HtmlBodyTag.pills(body: UL.()->Unit): Unit = ul("nav nav-pills", contents = body)
 inline fun HtmlBodyTag.content(body: DIV.()->Unit): Unit = div("tab-content", contents = body)
-public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div("tab-pane" + if (active) "active" else "") {
+public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div {
+    addClass("tab-pane")
+    if (active)
+        addClass("active")
     this.id = name
     body()
 }
