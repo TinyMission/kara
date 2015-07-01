@@ -79,11 +79,13 @@ public class LinkAttribute(name: String) : Attribute<Link>(name) {
     }
 }
 
-public interface StringEnum<T : Enum<T>> : Enum<T> {
-    val value: String get() = name()
+public interface StringEnum<T : Enum<T>> {
+    val value: String
 }
 
-public class EnumAttribute<T : StringEnum<T>>(name: String, val klass: Class<T>) : Attribute<T>(name) {
+public class EnumAttribute<T : StringEnum<T>>(name: String, val klass: Class<T>) : Attribute<T>(name)
+    where T : Enum<T>
+{
     override fun encode(t: T): String? {
         return t.value
     }
