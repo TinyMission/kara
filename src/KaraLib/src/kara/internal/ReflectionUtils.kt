@@ -34,7 +34,7 @@ fun Class<out Resource>.route(): ResourceDescriptor {
     fun p(part: String) = (getEnclosingClass()?.routePrefix()?:"").appendPathElement(part.replace("#", getSimpleName().toLowerCase()))
     for (ann in getAnnotations()) {
         when (ann) {
-            is Get -> return ResourceDescriptor(HttpMethod.GET, p(ann.route), this, ann.allowCrossOrigin)
+            is Get -> return ResourceDescriptor(HttpMethod.GET, p(ann.route), this, null)
             is Post -> return ResourceDescriptor(HttpMethod.POST, p(ann.route), this, ann.allowCrossOrigin)
             is Put -> return ResourceDescriptor(HttpMethod.PUT, p(ann.route), this, ann.allowCrossOrigin)
             is Delete -> return ResourceDescriptor(HttpMethod.DELETE, p(ann.route), this, ann.allowCrossOrigin)

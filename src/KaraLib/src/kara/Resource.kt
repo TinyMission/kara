@@ -63,7 +63,7 @@ public abstract class Resource() : Link {
             queryArgs[prop] = propertyValue(prop)!!
         }
 
-        if (!descriptor.allowCrossOrigin) {
+        if (descriptor.allowCrossOrigin == "") {
             queryArgs[ActionContext.SESSION_TOKEN_PARAMETER] = ActionContext.current().sessionToken()
         }
 
@@ -84,7 +84,7 @@ public fun Class<out Resource>.baseLink(): Link {
         throw RuntimeException("You can't have base link for the route with URL parameters")
     }
 
-    return (if (!descriptor.allowCrossOrigin) {
+    return (if (descriptor.allowCrossOrigin == "") {
         "$route?_st=${ActionContext.current().sessionToken()}"
     }
     else route).link()
