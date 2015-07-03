@@ -77,17 +77,11 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         return params
     }
 
-    fun buildRouteInstance(params: RouteParameters): Resource {
-        return resourceClass.buildBeanInstance {
-            params[it]
-        }
-    }
-
     /** Execute the action based on the given request and populate the response. */
     public fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = try {
-            buildRouteInstance(params)
+            resourceClass.buildBeanInstance(params._map)
         }
         catch(e: RuntimeException) {
             throw e

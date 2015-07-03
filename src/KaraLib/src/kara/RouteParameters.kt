@@ -73,11 +73,11 @@ class RouteParameters() {
     }
 
     fun intParam(name: String): Int {
-        return optIntParam(name) ?: throw MissingArgumentException(name)
+        return optIntParam(name) ?: throw MissingArgumentException("Required int argument $name is missing")
     }
 
     fun stringParam(name: String): String {
-        return optStringParam(name) ?: throw MissingArgumentException(name)
+        return optStringParam(name) ?: throw MissingArgumentException("Required string argument $name is missing")
     }
 
     fun optStringParam(name: String): String? {

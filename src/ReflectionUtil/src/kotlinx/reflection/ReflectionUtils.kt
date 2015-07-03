@@ -85,10 +85,10 @@ private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, Lis
     }
 }
 
-public class MissingArgumentException(val name: String) : RuntimeException("Required argument $name is missing")
+public class MissingArgumentException(message: String) : RuntimeException(message)
 
 @suppress("UNCHECKED_CAST")
-fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
+fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
     objectInstance()?.let {
         return it as T
     }
@@ -96,12 +96,12 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     val (ktor, paramTypes, valueParams) = consMetaData()
 
     val args = valueParams.mapIndexed { i, param ->
-        params(param.getName().asString())?.let {
+        allParams[param.getName().asString()]?.let {
             Serialization.deserialize(it, paramTypes[i] as Class<Any>)
         } ?: if (param.getType().isMarkedNullable()) {
             null
         } else {
-            throw MissingArgumentException(param.getName().asString())
+            throw MissingArgumentException("Required argument '${param.getName().asString()}' is missing, available params: $allParams")
 
         }
     }.toTypedArray()

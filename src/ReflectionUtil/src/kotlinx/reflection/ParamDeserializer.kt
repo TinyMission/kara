@@ -171,9 +171,7 @@ fun <T> Class<T>.parse(params: String) : T {
             map[nvp[0]] = ""
     }
 
-    return buildBeanInstance {
-        map[it]?.let { urlDecode(it) }
-    }
+    return buildBeanInstance(map.mapValues { urlDecode(it.value) })
 }
 
 fun Any.serialize(): String {
