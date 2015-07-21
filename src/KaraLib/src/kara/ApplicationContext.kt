@@ -49,7 +49,7 @@ class ApplicationContext(public val config : ApplicationConfig,
 
     public fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
 
-        fun formatLogErrorMsg(error: String, req: HttpServletRequest) = "$error processing ${req.getMethod()} ${req.getRequestURI()}. User agent: ${req.getHeader("User-Agent")}, Referer: ${req.getHeader("Referer")}"
+        fun formatLogErrorMsg(error: String, req: HttpServletRequest) = "$error processing ${req.method} ${req.requestURI}. User agent: ${req.getHeader("User-Agent")}, Referer: ${req.getHeader("Referer")}"
 
         fun dispatch(index: Int, request: HttpServletRequest, response: HttpServletResponse): Boolean {
             return if (index in interceptors.indices) {
@@ -78,7 +78,7 @@ class ApplicationContext(public val config : ApplicationConfig,
         }
         catch(ex: Throwable) {
             when {
-                ex.javaClass.getName() == "org.apache.catalina.connector.ClientAbortException" -> {} // do nothing for tomcat specific exception
+                ex.javaClass.name == "org.apache.catalina.connector.ClientAbortException" -> {} // do nothing for tomcat specific exception
                 else -> {
                     Application.logger.error(formatLogErrorMsg("Error", request), ex)
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())

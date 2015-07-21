@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
     }
     else {
         BasicConfigurator.configure()
-        LogManager.getRootLogger()?.setLevel(Level.INFO)
+        LogManager.getRootLogger()?.level = Level.INFO
     }
 
     config(appConfig)

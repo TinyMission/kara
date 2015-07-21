@@ -16,7 +16,7 @@ public open class ApplicationConfig() : Config() {
     public companion object {
         public fun loadFrom(configPath: String): ApplicationConfig {
             val config = ApplicationConfig()
-            Config.readConfig(config, configPath, javaClass.getClassLoader()!!)
+            Config.readConfig(config, configPath, javaClass.classLoader!!)
             return config
         }
     }
@@ -33,15 +33,15 @@ public open class ApplicationConfig() : Config() {
     public val applicationPackageName: String
         get() = this["kara.appPackage"]
 
-    private val _publicDirectories by Delegates.blockingLazy {
+    private val _publicDirectories by lazy {
         readPublicDirProperty().map {
             val dirPath = it.trim()
             val dir = File(dirPath)
-            val context = ActionContext.current().request.getServletContext()
-            if ((dir.getParent() == null || !dir.isDirectory()) && context != null) {
+            val context = ActionContext.current().request.servletContext
+            if ((dir.getParent() == null || !dir.isDirectory) && context != null) {
                 logger.info("Can't find public dir $dirPath. Trying to resolve it via servlet context.")
                 return@map context.getRealPath(dirPath)?.let { path ->
-                    if (File(path).isDirectory()) {
+                    if (File(path).isDirectory) {
                         path
                     } else {
                         logger.warn("Resolved path is not directory $path")
@@ -76,12 +76,12 @@ public open class ApplicationConfig() : Config() {
                             when {
                                 it.endsWith("/**") -> {
                                     val answer = ArrayList<File>()
-                                    File(it.removeSuffix("/**")).recurse { file -> if (file.isFile() && file.getName().endsWith(".jar"))  answer.add(file) }
+                                    File(it.removeSuffix("/**")).walkTopDown().forEach { file -> if (file.isFile && file.getName().endsWith(".jar")) answer.add(file) }
                                     answer
                                 }
 
                                 it.endsWith("/*") -> {
-                                    File(it.removeSuffix("/*")).listFiles { it.isFile() && it.getName().endsWith(".jar") }?.toList() ?: listOf()
+                                    File(it.removeSuffix("/*")).listFiles { it.isFile && it.getName().endsWith(".jar") }?.toList() ?: listOf()
                                 }
 
                                 else -> {

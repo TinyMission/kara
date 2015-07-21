@@ -29,8 +29,8 @@ fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<C
     val answer = ArrayList<Class<out Resource>>()
 
     fun scan(routesObject : Any) {
-        val newClass = classloader?.loadClass(routesObject.javaClass.getName()) ?: routesObject.javaClass
-        for (innerClass in newClass.getDeclaredClasses()) {
+        val newClass = classloader?.loadClass(routesObject.javaClass.name) ?: routesObject.javaClass
+        for (innerClass in newClass.declaredClasses) {
             innerClass.objectInstance()?.let {
                 scan(it)
             } ?: run {

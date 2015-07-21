@@ -51,7 +51,7 @@ public abstract class Resource() : Link {
                     Serialization.serialize(propertyValue(it.name))
                 }
                 is WildcardRouteComponent -> throw RuntimeException("Routes with wildcards aren't supported")
-                else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.getName()}")
+                else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.name}")
             }
         })
 
@@ -98,7 +98,7 @@ public fun String.link(): Link {
 public fun contextPath(): String {
     val request = ActionContext.tryGet()?.request
     if (request == null) return ""
-    return request.getAttribute("CONTEXT_PATH") as? String ?: request.getContextPath() ?: ""
+    return request.getAttribute("CONTEXT_PATH") as? String ?: request.contextPath ?: ""
 }
 
 public fun HttpServletRequest.setContextPath(path: String) {

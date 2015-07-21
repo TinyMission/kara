@@ -7,7 +7,7 @@ class NotFoundException(message : String) : RuntimeException(message)
 /**
  * Thrown by the form builder if an invalid model property is specified.
  */
-class InvalidPropertyException(val modelClass : Class<Any>, val property : String) : RuntimeException("Invalid property ${property} on type ${modelClass.getName()}") {
+class InvalidPropertyException(val modelClass : Class<Any>, val property : String) : RuntimeException("Invalid property ${property} on type ${modelClass.name}") {
 
 }
 

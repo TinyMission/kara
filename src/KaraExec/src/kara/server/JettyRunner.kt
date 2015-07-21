@@ -26,34 +26,34 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         val CONFIG = MultipartConfigElement(System.getProperty("java.io.tmpdir"))
 
         public override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
-            if (baseRequest?.getContentType()?.let { it.contains("multipart/form-data", ignoreCase = true) } ?: false) {
+            if (baseRequest?.contentType?.let { it.contains("multipart/form-data", ignoreCase = true) } ?: false) {
                 baseRequest?.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, CONFIG)
             }
 
-            response!!.setCharacterEncoding("UTF-8")
-            val query = request!!.getQueryString()
-            val method = request.getMethod()
+            response!!.characterEncoding = "UTF-8"
+            val query = request!!.queryString
+            val method = request.method
             try {
                 if (application.context.dispatch(request, response)) {
-                    baseRequest!!.setHandled(true)
-                    logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- OK[${response.getStatus()}]")
+                    baseRequest!!.isHandled = true
+                    logger.info("$method -- ${request.requestURL}${if (query != null) "?" + query else ""} -- OK[${response.status}]")
                 }
                 else {
                     for (resourceHandler in resourceHandlers) {
                         resourceHandler.handle(target, baseRequest, request, response)
-                        if (baseRequest!!.isHandled()) {
-                            logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- OK @${resourceHandler.getResourceBase()}")
+                        if (baseRequest!!.isHandled) {
+                            logger.info("$method -- ${request.requestURL}${if (query != null) "?" + query else ""} -- OK @${resourceHandler.resourceBase}")
                             break;
                         }
                     }
                 }
-                if (!baseRequest!!.isHandled()) {
-                    logger.info("$method -- ${request.getRequestURL()}${if (query != null) "?" + query else ""} -- FAIL")
+                if (!baseRequest!!.isHandled) {
+                    logger.info("$method -- ${request.requestURL}${if (query != null) "?" + query else ""} -- FAIL")
                 }
             }
             catch(ex: Throwable) {
                 logger.error("dispatch error: ${ex.getMessage()}", ex);
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorDescr(ex, request, request.getSession()!!))
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorDescr(ex, request, request.session!!))
             }
         }
     }
@@ -73,18 +73,18 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         applicationConfig.publicDirectories.forEach {
             logger.info("Attaching resource handler: ${it}")
             val resourceHandler = ResourceHandler()
-            resourceHandler.setDirectoriesListed(false)
-            resourceHandler.setResourceBase("./${it}")
-            resourceHandler.setWelcomeFiles(arrayOf("index.html"))
+            resourceHandler.isDirectoriesListed = false
+            resourceHandler.resourceBase = "./${it}"
+            resourceHandler.welcomeFiles = arrayOf("index.html")
             resourceHandlers.add(resourceHandler)
         }
 
         val sessionHandler = SessionHandler()
         val sessionManager = HashSessionManager()
-        sessionManager.setStoreDirectory(java.io.File("tmp/sessions"))
-        sessionHandler.setSessionManager(sessionManager)
-        sessionHandler.setHandler(Handler())
-        server?.setHandler(sessionHandler)
+        sessionManager.storeDirectory = java.io.File("tmp/sessions")
+        sessionHandler.sessionManager = sessionManager
+        sessionHandler.handler = Handler()
+        server?.handler = sessionHandler
 
         server?.start()
         logger.info("Server running.")
@@ -117,7 +117,7 @@ fun Throwable.getStackTraceString(): String {
 
 fun errorDescr(ex: Throwable, request: HttpServletRequest, session: HttpSession): String {
     return with (StringBuilder()) {
-        append("\nRequest: ${request.getRequestURI()}")
+        append("\nRequest: ${request.requestURI}")
         append("\nSession: ${session.getDescription()}")
         append("\n\nStack Trace:\n")
         append(ex.getStackTraceString())

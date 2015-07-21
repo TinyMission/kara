@@ -10,8 +10,8 @@ public open class HtmlTemplateView<T : Template<HTML>>(val template: T, val buil
     }
 
     fun writeResponse(response: HttpServletResponse) {
-        response.setContentType("text/html")
-        val writer = response.getWriter()!!
+        response.contentType = "text/html"
+        val writer = response.writer!!
         val view = this@HtmlTemplateView
         val page = HTML()
         with(template) {

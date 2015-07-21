@@ -15,7 +15,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
             val css = compiler.compile(lessSource) ?: error("$name can't be compiled")
 
             val bytes = css.toByteArray("UTF-8")
-            return ResourceContent("text/css", combinedModification, bytes.size(), {bytes.inputStream})
+            return ResourceContent("text/css", combinedModification, bytes.size(), { bytes.inputStream() })
         }
     }
 
@@ -23,7 +23,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
         val (modification, root) = context.loadResource(name)
 
         val lessSource = LessSource(URLResource(root.toURI()))
-        val combinedModification = if (modification == null) null else lessSource.getLastModifiedIncludingImports()
+        val combinedModification = if (modification == null) null else lessSource.lastModifiedIncludingImports
         return Pair(lessSource, combinedModification)
     }
 

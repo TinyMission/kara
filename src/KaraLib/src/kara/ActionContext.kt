@@ -11,7 +11,7 @@ import java.security.SecureRandom
 
 
 fun HttpSession.getDescription() : String {
-    return this.getAttributeNames()!!.toList().map { "${it}: ${this.getAttribute(it)}" }.join()
+    return this.attributeNames!!.toList().map { "${it}: ${this.getAttribute(it)}" }.join()
 }
 
 /** This contains information about the current rendering action.
@@ -41,7 +41,7 @@ class ActionContext(val appContext: ApplicationContext,
     }
 
     private fun ByteArray.readObject(): Any? {
-        return CustomClassloaderObjectInputStream(inputStream, appContext.classLoader).readObject()
+        return CustomClassloaderObjectInputStream(inputStream(), appContext.classLoader).readObject()
     }
 
     fun toSession(key: String, value: Any?) {
@@ -60,12 +60,12 @@ class ActionContext(val appContext: ApplicationContext,
     fun sessionToken(): String {
         val attr = SESSION_TOKEN_PARAMETER
 
-        val cookie = request.getCookies()?.firstOrNull { it.getName() == attr }
+        val cookie = request.cookies?.firstOrNull { it.name == attr }
 
         fun HttpSession.getToken() = this.getAttribute(attr) ?. let { it as String }
 
-        return cookie?.getValue() ?: run {
-            val token = session.getToken() ?: synchronized(session.getId().intern()) {
+        return cookie?.value ?: run {
+            val token = session.getToken() ?: synchronized(session.id.intern()) {
                 session.getToken() ?: run {
                     val token = BigInteger(128, rnd).toString(36).take(10)
                     session.setAttribute(attr, token)
@@ -74,7 +74,7 @@ class ActionContext(val appContext: ApplicationContext,
             }
 
             val newCookie = Cookie(attr, token)
-            newCookie.setPath("/")
+            newCookie.path = "/"
 
             response.addCookie(newCookie)
 
@@ -102,6 +102,7 @@ class ActionContext(val appContext: ApplicationContext,
 }
 
 public class RequestScope<T>() {
+    @suppress("UNCHECKED_CAST")
     fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
         val data = ActionContext.current().data
         return data.get(desc) as T

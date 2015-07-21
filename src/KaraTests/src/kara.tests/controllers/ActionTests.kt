@@ -49,7 +49,7 @@ class ActionTests() {
 
     Test fun redirect() {
         val response = mockDispatch("GET", "/foo/redirect")
-        assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, response.getStatus())
+        assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, response.status)
         assertEquals("/foo/bar", response.stringOutput())
     }
 

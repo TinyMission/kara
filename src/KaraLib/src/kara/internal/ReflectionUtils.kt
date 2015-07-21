@@ -22,8 +22,8 @@ fun String.appendPathElement(part : String) : String {
 }
 
 fun Class<*>.routePrefix(): String {
-    val owner = getEnclosingClass()
-    val defaultPart = if (owner == null) "" else getSimpleName().toLowerCase()
+    val owner = enclosingClass
+    val defaultPart = if (owner == null) "" else simpleName.toLowerCase()
     val part = getAnnotation(javaClass<Location>())?.path.asNotEmpty() ?: defaultPart
 
     val base = if (owner == null) "" else owner.routePrefix()
@@ -31,8 +31,8 @@ fun Class<*>.routePrefix(): String {
 }
 
 fun Class<out Resource>.route(): ResourceDescriptor {
-    fun p(part: String) = (getEnclosingClass()?.routePrefix()?:"").appendPathElement(part.replace("#", getSimpleName().toLowerCase()))
-    for (ann in getAnnotations()) {
+    fun p(part: String) = (enclosingClass?.routePrefix()?:"").appendPathElement(part.replace("#", simpleName.toLowerCase()))
+    for (ann in annotations) {
         when (ann) {
             is Get -> return ResourceDescriptor(HttpMethod.GET, p(ann.route), this, null)
             is Post -> return ResourceDescriptor(HttpMethod.POST, p(ann.route), this, ann.allowCrossOrigin)
@@ -42,5 +42,5 @@ fun Class<out Resource>.route(): ResourceDescriptor {
         }
     }
 
-    throw RuntimeException("No HTTP method annotation found in ${getName()}")
+    throw RuntimeException("No HTTP method annotation found in ${name}")
 }

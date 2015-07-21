@@ -12,8 +12,8 @@ abstract class HtmlView(val layout: HtmlLayout? = null) : ActionResult {
     }
 
     fun writeResponse(response: HttpServletResponse) {
-        response.setContentType("text/html")
-        val writer = response.getWriter()!!
+        response.contentType = "text/html"
+        val writer = response.writer!!
         if (layout == null) {
             writer.write(renderWithoutLayout())
         }

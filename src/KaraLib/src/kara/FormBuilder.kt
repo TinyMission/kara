@@ -15,7 +15,7 @@ public interface FormModel<P> {
 }
 
 class BeanFormModel(val model: Any) : FormModel<String> {
-    val modelName = model.javaClass.getSimpleName().toLowerCase()
+    val modelName = model.javaClass.simpleName.toLowerCase()
 
     override fun modelName(): String {
         return modelName

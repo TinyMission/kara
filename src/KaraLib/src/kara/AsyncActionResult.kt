@@ -36,7 +36,7 @@ class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationCon
     }
 }
 
-private val asyncExecutors by Delegates.blockingLazy {
+private val asyncExecutors by lazy {
     Executors.newFixedThreadPool(ActionContext.tryGet()?.config?.tryGet("kara.asyncThreads")?.toInt() ?: 4)
 }
 
@@ -44,7 +44,7 @@ private fun AsyncResult.execute() {
     try {
         if (timed_out) return
 
-        val context = ActionContext(appContext, asyncContext.getRequest() as HttpServletRequest, asyncContext.getResponse() as HttpServletResponse, params)
+        val context = ActionContext(appContext, asyncContext.request as HttpServletRequest, asyncContext.response as HttpServletResponse, params)
         context.withContext {
             val result = context.body()
 

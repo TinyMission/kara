@@ -23,7 +23,7 @@ class IntSerializer() : TypeSerializer() {
     }
 
     override fun isThisType(testType : Class<*>) : Boolean {
-        return testType.toString() == "int" || testType.getName() == "java.lang.Integer"
+        return testType.toString() == "int" || testType.name == "java.lang.Integer"
     }
 }
 
@@ -36,7 +36,7 @@ class FloatSerializer() : TypeSerializer() {
     }
 
     override fun isThisType(testType : Class<*>) : Boolean {
-        return testType.toString() == "float" || testType.getName() == "java.lang.Float"
+        return testType.toString() == "float" || testType.name == "java.lang.Float"
     }
 }
 
@@ -46,7 +46,7 @@ class BooleanSerializer: TypeSerializer() {
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
-        return testType.getName() == "boolean" || testType.getName() == "java.lang.Boolean"
+        return testType.name == "boolean" || testType.name == "java.lang.Boolean"
     }
 
     override fun serialize(param: Any): String {
@@ -61,7 +61,7 @@ class LongSerializer: TypeSerializer() {
     }
 
     override fun isThisType(testType : Class<*>) : Boolean {
-        return testType.toString() == "long" || testType.getName() == "java.lang.Long"
+        return testType.toString() == "long" || testType.name == "java.lang.Long"
     }
 }
 
@@ -82,15 +82,15 @@ class EnumSerializer: TypeSerializer() {
     }
 
     override fun deserialize(param: String, paramType: Class<*>): Any? {
-        return if (paramType.isEnum()) {
+        return if (paramType.isEnum) {
             paramType.getEnumConstants()?.get(param.toInt())
         } else if (paramType.isEnumClass()) {
-            paramType.getEnclosingClass().getEnumConstants()?.get(param.toInt())
+            paramType.enclosingClass.getEnumConstants()?.get(param.toInt())
         }
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
-        return testType.isEnum() || testType.isEnumClass()
+        return testType.isEnum || testType.isEnumClass()
     }
 }
 
@@ -162,9 +162,9 @@ public object Serialization {
 fun <T> Class<T>.parse(params: String) : T {
     val map = HashMap<String, String>()
 
-    val queryComponents = params.splitBy("&")
+    val queryComponents = params.split("&")
     for (component in queryComponents) {
-        val nvp = component.splitBy("=")
+        val nvp = component.split("=")
         if (nvp.size() > 1)
             map[nvp[0]] = nvp[1]
         else

@@ -21,7 +21,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     private val routeComponents = route.toRouteComponents()
 
     // TODO: verify optional components are all last
-    private val optionalComponents by Delegates.lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
+    private val optionalComponents by lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
 
     public fun matches(url: String): Boolean {
         val path = url.substringBefore("?")
@@ -39,8 +39,8 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     }
 
     public fun buildParams(request: HttpServletRequest): RouteParameters {
-        val url = request.getRequestURI()?.removePrefix(request.getContextPath().orEmpty())!!
-        val query = request.getQueryString()
+        val url = request.requestURI?.removePrefix(request.contextPath.orEmpty())!!
+        val query = request.queryString
         val params = RouteParameters()
 
         // parse the route parameters
@@ -60,16 +60,16 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         }
 
         // parse the form parameters
-        for (formParameterName in request.getParameterNames()) {
+        for (formParameterName in request.parameterNames) {
             val value = request.getParameter(formParameterName)!!
             params[formParameterName] = value
         }
 
-        if (request.getContentType()?.startsWith("multipart/form-data")?:false) {
-            for (part in request.getParts()!!) {
-                if (part.getSize() < 4192) {
-                    val name = part.getName()!!
-                    params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
+        if (request.contentType?.startsWith("multipart/form-data")?:false) {
+            for (part in request.parts!!) {
+                if (part.size < 4192) {
+                    val name = part.name!!
+                    params[name] = part.inputStream?.buffered()?.reader()?.readText()?:""
                 }
             }
         }
@@ -87,7 +87,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
             throw e
         }
         catch (e: Exception) {
-            throw RuntimeException("Error processing ${request.getMethod()} ${request.getRequestURI()}, parameters={${params.toString()}}, User agent: ${request.getHeader("User-Agent")}", e)
+            throw RuntimeException("Error processing ${request.method} ${request.requestURI}, parameters={${params.toString()}}, User agent: ${request.getHeader("User-Agent")}", e)
         }
 
         val actionContext = ActionContext(context, request, response, params)

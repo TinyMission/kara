@@ -91,11 +91,11 @@ public class EnumAttribute<T : StringEnum<T>>(name: String, val klass: Class<T>)
     }
 
     override fun decode(s: String?): T {
-        for (c in klass.getEnumConstants()!!) {
+        for (c in klass.enumConstants!!) {
             if (encode(c) == s) return c
         }
 
-        throw RuntimeException("Can't decode '$s' as value of '${klass.getName()}'")
+        throw RuntimeException("Can't decode '$s' as value of '${klass.name}'")
     }
 }
 
