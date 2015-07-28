@@ -1,13 +1,16 @@
 package kara
 
-import javax.servlet.http.*
-import kotlin.html.Link
-import java.util.HashMap
-import java.io.Serializable
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.math.BigInteger
 import java.security.SecureRandom
+import java.util.HashMap
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpSession
+import kotlin.html.Link
 
 
 fun HttpSession.getDescription() : String {
@@ -73,11 +76,12 @@ class ActionContext(val appContext: ApplicationContext,
                 }
             }
 
-            val newCookie = Cookie(attr, token)
-            newCookie.path = "/"
+            if (response.getHeaders("Set-Cookie").none { it.startsWith(attr) }) {
+                val newCookie = Cookie(attr, token)
+                newCookie.path = "/"
 
-            response.addCookie(newCookie)
-
+                response.addCookie(newCookie)
+            }
             token
         }
     }
