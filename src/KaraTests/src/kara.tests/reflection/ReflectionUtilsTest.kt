@@ -3,12 +3,17 @@ package kara.tests.reflection
 import kara.Application
 import kara.ApplicationConfig
 import kara.internal.scanPackageForResources
-import kara.tests.mock.MockApplication
-import kotlinx.reflection.*
+import kotlinx.reflection.ReflectionCache
+import kotlinx.reflection.companionObjectInstance
+import kotlinx.reflection.objectInstance
+import kotlinx.reflection.objectInstance0
 import org.junit.Before
 import org.junit.Test
 import java.net.URLClassLoader
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 open class Foo {
     companion object Bar {}
@@ -19,7 +24,7 @@ object Foo2 {
     object Test {}
 }
 
-Test class ObjectInstances() {
+class ObjectInstances() {
 
     Before
     fun cleanUpReflectionCache() {
@@ -50,7 +55,7 @@ Test class ObjectInstances() {
     }
 }
 
-Test class ClassLoaderFunctionsTest() {
+class ClassLoaderFunctionsTest() {
 
     Test fun scanPackageForResourcesTest() {
         val app = Application.load(ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf"))
