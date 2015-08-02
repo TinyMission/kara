@@ -4,7 +4,6 @@ import java.io.File
 import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import java.net.URL
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.jar.JarFile
@@ -19,6 +18,7 @@ import kotlin.reflect.jvm.internal.impl.utils.UtilsPackage
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.kotlin
+import kotlin.reflect.memberProperties
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
@@ -68,7 +68,7 @@ fun Class<*>.companionObjectInstance(): Any? {
 @suppress("UNCHECKED_CAST")
 fun <T> KClass<out T>.propertyGetter(property: String): KProperty1<Any, *>? {
     return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property)) {
-        properties.singleOrNull {
+        memberProperties.singleOrNull {
             property == it.javaField?.name ?: it.javaGetter?.name?.removePrefix("get")?.decapitalize()
         } as KProperty1<Any, *>?
     }
