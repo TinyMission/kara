@@ -1,16 +1,15 @@
 package kara
 
-import java.net.URL
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletRequest
-import java.lang.reflect.Modifier
 import kara.internal.*
-import kotlinx.reflection.*
-import java.util.HashSet
-import java.util.LinkedHashSet
-import kotlin.html.*
+import kotlinx.reflection.Serialization
+import kotlinx.reflection.primaryProperties
+import kotlinx.reflection.propertyValue
+import kotlinx.reflection.urlEncode
 import java.util.LinkedHashMap
-import java.net.URLEncoder
+import java.util.LinkedHashSet
+import javax.servlet.http.HttpServletRequest
+import kotlin.html.DirectLink
+import kotlin.html.Link
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.java
 
@@ -38,6 +37,10 @@ public abstract class Resource() : Link {
 
         val path = StringBuilder(context)
 
+        if (!context.endsWith('/')) {
+            path.append('/')
+        }
+
         val properties = LinkedHashSet(primaryProperties())
         val components = route.toRouteComponents().map({
             when (it) {
@@ -56,7 +59,6 @@ public abstract class Resource() : Link {
         })
 
         path.append(components.filterNotNull().join("/"))
-        if (path.length() == 0) path.append("/")
 
         val queryArgs = LinkedHashMap<String, Any>()
         for (prop in properties filter { propertyValue(it) != null }) {
