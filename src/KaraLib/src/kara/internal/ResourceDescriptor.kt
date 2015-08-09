@@ -16,12 +16,12 @@ val logger = Logger.getLogger(javaClass<ResourceDescriptor>())!!
 
 /** Contains all the information necessary to match a route and execute an action.
  */
-class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val resourceClass: Class<out Resource>, val allowCrossOrigin: Boolean) {
+class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val resourceClass: Class<out Resource>, val allowCrossOrigin: String?) {
 
     private val routeComponents = route.toRouteComponents()
 
     // TODO: verify optional components are all last
-    private val optionalComponents by Delegates.lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
+    private val optionalComponents by lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
 
     public fun matches(url: String): Boolean {
         val path = url.substringBefore("?")
@@ -39,8 +39,8 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     }
 
     public fun buildParams(request: HttpServletRequest): RouteParameters {
-        val url = request.getRequestURI()?.removePrefix(request.getContextPath().orEmpty())!!
-        val query = request.getQueryString()
+        val url = request.requestURI?.removePrefix(request.contextPath.orEmpty())!!
+        val query = request.queryString
         val params = RouteParameters()
 
         // parse the route parameters
@@ -60,16 +60,16 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         }
 
         // parse the form parameters
-        for (formParameterName in request.getParameterNames()) {
+        for (formParameterName in request.parameterNames) {
             val value = request.getParameter(formParameterName)!!
             params[formParameterName] = value
         }
 
-        if (request.getContentType()?.startsWith("multipart/form-data")?:false) {
-            for (part in request.getParts()!!) {
-                if (part.getSize() < 4192) {
-                    val name = part.getName()!!
-                    params[name] = part.getInputStream()?.buffered()?.reader()?.readText()?:""
+        if (request.contentType?.startsWith("multipart/form-data")?:false) {
+            for (part in request.parts!!) {
+                if (part.size < 4192) {
+                    val name = part.name!!
+                    params[name] = part.inputStream?.buffered()?.reader()?.readText()?:""
                 }
             }
         }
@@ -77,33 +77,31 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         return params
     }
 
-    fun buildRouteInstance(params: RouteParameters): Resource {
-        return resourceClass.buildBeanInstance {
-            params[it]
-        }
-    }
-
     /** Execute the action based on the given request and populate the response. */
     public fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = try {
-            buildRouteInstance(params)
+            resourceClass.buildBeanInstance(params._map)
         }
         catch(e: RuntimeException) {
             throw e
         }
         catch (e: Exception) {
-            throw RuntimeException("Error processing ${request.getMethod()} ${request.getRequestURI()}, parameters={${params.toString()}}, User agent: ${request.getHeader("User-Agent")}", e)
+            throw RuntimeException("Error processing ${request.method} ${request.requestURI}, parameters={${params.toString()}}, User agent: ${request.getHeader("User-Agent")}", e)
         }
 
         val actionContext = ActionContext(context, request, response, params)
 
         actionContext.withContext {
             val actionResult = when {
-                !allowCrossOrigin && params[ActionContext.SESSION_TOKEN_PARAMETER] != actionContext.sessionToken() ->
+                allowCrossOrigin == "" && params[ActionContext.SESSION_TOKEN_PARAMETER] != actionContext.sessionToken() ->
                     ErrorResult(403, "This request is only valid within same origin")
-                else ->
+                else -> {
+                    if(!allowCrossOrigin.isNullOrEmpty()) {
+                        response.addHeader("Access-Control-Allow-Origin", allowCrossOrigin)
+                    }
                     routeInstance.handle(actionContext)
+                }
             }
 
             actionResult.writeResponse(actionContext)

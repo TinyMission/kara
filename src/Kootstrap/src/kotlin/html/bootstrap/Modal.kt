@@ -240,8 +240,8 @@ fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: 
 
 class ModalResult(val content: HtmlBodyTag.() -> Unit) : ActionResult {
     fun sendHtml(html: String, response: HttpServletResponse) {
-        response.setContentType("text/html")
-        val writer = response.getWriter()!!
+        response.contentType = "text/html"
+        val writer = response.writer!!
         writer.write(html)
         writer.flush()
     }

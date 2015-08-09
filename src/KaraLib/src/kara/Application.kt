@@ -86,19 +86,19 @@ open class Application(public val config: ApplicationConfig) {
                 return FileVisitResult.CONTINUE
             }
             override fun visitFile(file: Path?, attrs: BasicFileAttributes): FileVisitResult {
-                val dir = file?.getParent()
+                val dir = file?.parent
                 if (dir != null)
                     paths.add(dir)
                 return FileVisitResult.CONTINUE
             }
         }
-        val loaders = resourceTypes.map { it.getClassLoader() }.toSet()
+        val loaders = resourceTypes.map { it.classLoader }.toSet()
         for (loader in loaders) {
             if (loader is URLClassLoader) {
-                val loaderUrls = loader.getURLs()
+                val loaderUrls = loader.urLs
                 for (url in loaderUrls) {
                     logger.debug("Evaluating URL '${url}' to watch for changes.")
-                    url.getPath()?.let {
+                    url.path?.let {
                         val folder = File(urlDecode(it))
                         if (folder.exists()) {
                             Files.walkFileTree(folder.toPath(), visitor)
@@ -127,7 +127,7 @@ open class Application(public val config: ApplicationConfig) {
         val logger = Logger.getLogger(javaClass)!!
 
         fun classLoader(config: ApplicationConfig): ClassLoader {
-            val rootClassloader = javaClass.getClassLoader()!!
+            val rootClassloader = javaClass.classLoader!!
             val classPath = config.classPath
             return when {
                 classPath.isEmpty() -> rootClassloader

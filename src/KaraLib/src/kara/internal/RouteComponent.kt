@@ -2,7 +2,7 @@ package kara.internal
 
 import kara.*
 
-fun String.toPathComponents(): List<String> = (if (length() > 1) trimEnd('/') else this).splitBy("/")
+fun String.toPathComponents(): List<String> = (if (length() > 1) trimEnd('/') else this).split("/").filter { it.isNotEmpty() }
 fun String.toRouteComponents(): List<RouteComponent> = toPathComponents().map { RouteComponent.create(it) }
 
 /** Base class for objects that represent a single component of a route. */

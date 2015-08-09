@@ -40,6 +40,15 @@ class ActionTests() {
         assertResponse("compute: 42, 3.12", "/foo/compute?anInt=42&aFloat=3.12")
     }
 
+    Test fun doubleSlashesOK() {
+        assertResponse("blank", "/foo//blank")
+        assertResponse("bar", "/foo////bar")
+        assertResponse("list: bar", "/foo///bar//list")
+        assertResponse("complex: bar id = 42", "/foo/complex/bar//list//42")
+        assertResponse("complex: bar id = 42", "/foo//complex/bar/list/42?param")
+
+    }
+
     Test fun optionalTests() {
         assertResponse("optional/null", "/optional")
         assertResponse("optional/44", "/optional/44")
@@ -49,7 +58,7 @@ class ActionTests() {
 
     Test fun redirect() {
         val response = mockDispatch("GET", "/foo/redirect")
-        assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, response.getStatus())
+        assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, response.status)
         assertEquals("/foo/bar", response.stringOutput())
     }
 

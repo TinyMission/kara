@@ -1,7 +1,9 @@
 package kotlin.html
 
 public enum class ButtonType : StringEnum<ButtonType> {
-    button, reset, submit
+    button, reset, submit;
+
+    override val value: String get() = name()
 }
 
 public enum class InputType : StringEnum<InputType> {

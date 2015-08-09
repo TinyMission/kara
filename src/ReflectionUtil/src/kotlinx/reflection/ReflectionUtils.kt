@@ -5,9 +5,10 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import java.util.jar.JarFile
 import kotlin.reflect.KClass
-import kotlin.reflect.KMemberProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.jvm.internal.KClassImpl
 import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
 import kotlin.reflect.jvm.internal.impl.descriptors.ClassKind
@@ -17,25 +18,26 @@ import kotlin.reflect.jvm.internal.impl.utils.UtilsPackage
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.kotlin
+import kotlin.reflect.memberProperties
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
     val companionObjects = ConcurrentHashMap<Class<*>, Any>()
     val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>>>()
     val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
-    val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KMemberProperty<Any, Any?>?>()
+    val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KProperty1<Any, Any?>?>()
 }
 
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
 
 fun Class<*>.objectInstance0(): Any? {
-    return ReflectionCache.objects.getOrPut(this) {
+    return ReflectionCache.objects.concurrentGetOrPut(this) {
         try {
             val field = getDeclaredField("INSTANCE\$")
-            if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
-                if (!field.isAccessible()) {
-                    field.setAccessible(true)
+            if (Modifier.isStatic(field.modifiers) && Modifier.isPublic(field.modifiers)) {
+                if (!field.isAccessible) {
+                    field.isAccessible = true
                 }
                 field[null]!!
             }
@@ -48,47 +50,47 @@ fun Class<*>.objectInstance0(): Any? {
 }
 
 fun Class<*>.objectInstance(): Any? {
-    return ReflectionCache.objects.getOrPut(this) {
-        getFields().firstOrNull {
-            with(it.getType().kotlin as KClassImpl<*>) {
-                __descriptor.getKind() == ClassKind.OBJECT && !__descriptor.isCompanionObject()
+    return ReflectionCache.objects.concurrentGetOrPut(this) {
+        fields.firstOrNull {
+            with(it.type.kotlin as KClassImpl<*>) {
+                __descriptor.kind == ClassKind.OBJECT && !__descriptor.isCompanionObject
             }
         }?.get(null) ?: NullMask
     }.unmask()
 }
 
 fun Class<*>.companionObjectInstance(): Any? {
-    return ReflectionCache.companionObjects.getOrPut(this) {
-        getFields().firstOrNull { (it.getType().kotlin as KClassImpl<*>).__descriptor.isCompanionObject() }?.get(null) ?: NullMask
+    return ReflectionCache.companionObjects.concurrentGetOrPut(this) {
+        fields.firstOrNull { (it.type.kotlin as KClassImpl<*>).__descriptor.isCompanionObject }?.get(null) ?: NullMask
     }.unmask()
 }
 
 @suppress("UNCHECKED_CAST")
-fun <T> KClass<out T>.propertyGetter(property: String): KMemberProperty<Any, *>? {
-    return ReflectionCache.propertyGetters.getOrPut(Pair(this, property)) {
-        properties.singleOrNull {
-            property == it.javaField?.getName() ?: it.javaGetter?.getName()?.removePrefix("get")?.decapitalize()
-        } as KMemberProperty<Any, *>?
+fun <T> KClass<out T>.propertyGetter(property: String): KProperty1<Any, *>? {
+    return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property)) {
+        memberProperties.singleOrNull {
+            property == it.javaField?.name ?: it.javaGetter?.name?.removePrefix("get")?.decapitalize()
+        } as KProperty1<Any, *>?
     }
 }
 
 fun Any.propertyValue(property: String): Any? {
-    val getter = javaClass.kotlin.propertyGetter(property) ?: error("Invalid property ${property} on type ${javaClass.getName()}")
+    val getter = javaClass.kotlin.propertyGetter(property) ?: error("Invalid property $property on type ${javaClass.name}")
     return getter.get(this)
 }
 
 private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>> {
-    return ReflectionCache.consMetadata.getOrPut(this) {
+    return ReflectionCache.consMetadata.concurrentGetOrPut(this) {
         val cons = primaryConstructor() ?: error("Expecting single constructor for the bean")
-        val consDesc = (this.kotlin as KClassImpl<*>).__descriptor.getUnsubstitutedPrimaryConstructor()!!
-        return Triple(cons, cons.getParameterTypes(), consDesc.getValueParameters())
+        val consDesc = (this.kotlin as KClassImpl<*>).__descriptor.unsubstitutedPrimaryConstructor!!
+        Triple(cons, cons.parameterTypes, consDesc.valueParameters)
     }
 }
 
-public class MissingArgumentException(val name: String) : RuntimeException("Required argument $name is missing")
+public class MissingArgumentException(message: String) : RuntimeException(message)
 
 @suppress("UNCHECKED_CAST")
-fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
+fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
     objectInstance()?.let {
         return it as T
     }
@@ -96,12 +98,12 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
     val (ktor, paramTypes, valueParams) = consMetaData()
 
     val args = valueParams.mapIndexed { i, param ->
-        params(param.getName().asString())?.let {
+        allParams[param.name.asString()]?.let {
             Serialization.deserialize(it, paramTypes[i] as Class<Any>)
-        } ?: if (param.getType().isMarkedNullable()) {
+        } ?: if (param.type.isMarkedNullable) {
             null
         } else {
-            throw MissingArgumentException(param.getName().asString())
+            throw MissingArgumentException("Required argument '${param.name.asString()}' is missing, available params: $allParams")
 
         }
     }.toTypedArray()
@@ -110,14 +112,14 @@ fun <T> Class<out T>.buildBeanInstance(params: (String) -> String?): T {
 }
 
 fun Any.primaryProperties() : List<String> {
-    return ReflectionCache.primaryProperites.getOrPut(javaClass) {
-        (javaClass.kotlin as KClassImpl<*>).__descriptor.getUnsubstitutedPrimaryConstructor()?.getValueParameters()?.map { it.getName().asString() }
+    return ReflectionCache.primaryProperites.concurrentGetOrPut(javaClass) {
+        (javaClass.kotlin as KClassImpl<*>).__descriptor.unsubstitutedPrimaryConstructor?.valueParameters?.map { it.name.asString() }.orEmpty()
     }
 }
 
 @suppress("UNCHECKED_CAST")
 fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
-    return getConstructors().singleOrNull() as? Constructor<T>
+    return constructors.singleOrNull() as? Constructor<T>
 }
 
 public fun Class<*>.isEnumClass(): Boolean = javaClass<Enum<*>>().isAssignableFrom(this)
@@ -146,8 +148,8 @@ fun ClassLoader.scanForClasses(prefix: String) : List<Class<*>> {
 
 private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): List<Class<*>> {
     return when {
-        getProtocol() == "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("file:").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
-        else -> File(urlDecode(getPath())).scanForClasses(prefix, classLoader)
+        protocol == "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("file:").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
+        else -> File(urlDecode(path)).scanForClasses(prefix, classLoader)
     }
 }
 
@@ -156,12 +158,12 @@ private fun String.packageToPath() = replace(".", File.separator) + File.separat
 private fun File.scanForClasses(prefix: String, classLoader: ClassLoader): List<Class<*>> {
     val path = prefix.packageToPath()
     return FileTreeWalk(this, filter = {
-        it.isDirectory() || (it.isFile() && it.extension == "class")
+        it.isDirectory || (it.isFile && it.extension == "class")
     }).toList()
     .filter{
-        it.isFile() && it.getAbsolutePath().contains(path)
+        it.isFile && it.absolutePath.contains(path)
     }.map {
-        ReflectPackage.tryLoadClass(classLoader, prefix +"." + it.getAbsolutePath().substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
+        ReflectPackage.tryLoadClass(classLoader, prefix +"." + it.absolutePath.substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
     }.filterNotNull().toList()
 }
 
@@ -171,8 +173,8 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     val entries = this.entries()
     while(entries.hasMoreElements()) {
         entries.nextElement().let {
-            if (!it.isDirectory() && it.getName().endsWith(".class") && it.getName().contains(path)) {
-                UtilsPackage.addIfNotNull(classes, ReflectPackage.tryLoadClass(classLoader, prefix + "." + it.getName().substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
+            if (!it.isDirectory && it.name.endsWith(".class") && it.name.contains(path)) {
+                UtilsPackage.addIfNotNull(classes, ReflectPackage.tryLoadClass(classLoader, prefix + "." + it.name.substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
             }
         }
     }
@@ -186,3 +188,12 @@ fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> =
 inline fun <reified T> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(javaClass<T>())
 
 val KClassImpl<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
+
+public fun <K, V> ConcurrentMap<K, V>.concurrentGetOrPut(key: K, defaultValue: () -> V): V {
+    var localValue:V = null
+    fun invokeAndStore () : V  {
+        localValue = defaultValue()
+        return localValue
+    }
+    return putIfAbsent(key, invokeAndStore()) ?: localValue
+}

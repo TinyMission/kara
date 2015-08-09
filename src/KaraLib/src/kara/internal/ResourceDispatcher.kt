@@ -43,9 +43,9 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
     }
 
     fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
-        val url = request.getRequestURI()
-        val method = request.getMethod()
-        val resourceDescriptor = findDescriptor(method!!, url.removePrefix(request.getContextPath().orEmpty()))
+        val url = request.requestURI
+        val method = request.method
+        val resourceDescriptor = findDescriptor(method!!, url.removePrefix(request.contextPath.orEmpty()))
         if (resourceDescriptor != null) {
             resourceDescriptor.exec(context, request, response)
             return true

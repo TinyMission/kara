@@ -9,7 +9,7 @@ object MockApplication : Application(ApplicationConfig()) {
     override val context: ApplicationContext
 
     init {
-        val classLoader = javaClass.getClassLoader()!!
+        val classLoader = javaClass.classLoader!!
         context = ApplicationContext(config, listOf<String>(), classLoader, hashMapOf(), scanObjects(arrayOf(Routes), classLoader))
     }
 }

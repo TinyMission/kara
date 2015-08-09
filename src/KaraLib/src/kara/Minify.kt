@@ -24,7 +24,7 @@ fun ByteArray.minifyResource(context: ActionContext, mime: String): ByteArray {
 }
 
 private fun ByteArray.compressJavascript(): ByteArray {
-    val compressor = JavaScriptCompressor(this.inputStream.reader(), MinifierReporter)
+    val compressor = JavaScriptCompressor(this.inputStream().reader(), MinifierReporter)
     val answer = StringWriter()
 
     compressor.compress(answer, 160, true, false, true, false)
@@ -33,7 +33,7 @@ private fun ByteArray.compressJavascript(): ByteArray {
 }
 
 private fun ByteArray.compressCss(): ByteArray {
-    val compressor = CssCompressor(this.inputStream.reader())
+    val compressor = CssCompressor(this.inputStream().reader())
     val answer = StringWriter()
     compressor.compress(answer, 160)
     return answer.toString().toByteArray()

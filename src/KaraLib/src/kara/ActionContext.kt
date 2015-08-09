@@ -1,17 +1,20 @@
 package kara
 
-import javax.servlet.http.*
-import kotlin.html.Link
-import java.util.HashMap
-import java.io.Serializable
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.math.BigInteger
 import java.security.SecureRandom
+import java.util.HashMap
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpSession
+import kotlin.html.Link
 
 
 fun HttpSession.getDescription() : String {
-    return this.getAttributeNames()!!.toList().map { "${it}: ${this.getAttribute(it)}" }.join()
+    return this.attributeNames!!.toList().map { "${it}: ${this.getAttribute(it)}" }.join()
 }
 
 /** This contains information about the current rendering action.
@@ -41,7 +44,7 @@ class ActionContext(val appContext: ApplicationContext,
     }
 
     private fun ByteArray.readObject(): Any? {
-        return CustomClassloaderObjectInputStream(inputStream, appContext.classLoader).readObject()
+        return CustomClassloaderObjectInputStream(inputStream(), appContext.classLoader).readObject()
     }
 
     fun toSession(key: String, value: Any?) {
@@ -60,12 +63,12 @@ class ActionContext(val appContext: ApplicationContext,
     fun sessionToken(): String {
         val attr = SESSION_TOKEN_PARAMETER
 
-        val cookie = request.getCookies()?.firstOrNull { it.getName() == attr }
+        val cookie = request.cookies?.firstOrNull { it.name == attr }
 
         fun HttpSession.getToken() = this.getAttribute(attr) ?. let { it as String }
 
-        return cookie?.getValue() ?: run {
-            val token = session.getToken() ?: synchronized(session.getId().intern()) {
+        return cookie?.value ?: run {
+            val token = session.getToken() ?: synchronized(session.id.intern()) {
                 session.getToken() ?: run {
                     val token = BigInteger(128, rnd).toString(36).take(10)
                     session.setAttribute(attr, token)
@@ -73,11 +76,12 @@ class ActionContext(val appContext: ApplicationContext,
                 }
             }
 
-            val newCookie = Cookie(attr, token)
-            newCookie.setPath("/")
+            if (response.getHeaders("Set-Cookie").none { it.startsWith(attr) }) {
+                val newCookie = Cookie(attr, token)
+                newCookie.path = "/"
 
-            response.addCookie(newCookie)
-
+                response.addCookie(newCookie)
+            }
             token
         }
     }
@@ -102,6 +106,7 @@ class ActionContext(val appContext: ApplicationContext,
 }
 
 public class RequestScope<T>() {
+    @suppress("UNCHECKED_CAST")
     fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
         val data = ActionContext.current().data
         return data.get(desc) as T

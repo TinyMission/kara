@@ -8,7 +8,7 @@ import java.net.URL
 import java.util.*
 
 public data class ResourceContent(val mime: String, val lastModified: Long?, val length: Int?, val data: ActionContext.() -> InputStream) {
-    public constructor(mime: String, bytes: ByteArray) : this(mime, null, bytes.size(), {bytes.inputStream})
+    public constructor(mime: String, bytes: ByteArray) : this(mime, null, bytes.size(), { bytes.inputStream() })
 }
 
 public abstract class DynamicResource() : Resource() {
@@ -35,7 +35,7 @@ public abstract class CachedResource() : DynamicResource() {
     override fun handle(context: ActionContext): ActionResult {
         val result = ensureCachedResource(context)
 
-        return BinaryResponse(result.mime, result.bytes.size(), result.lastModified, result.contentHash, { result.bytes.inputStream })
+        return BinaryResponse(result.mime, result.bytes.size(), result.lastModified, result.contentHash, { result.bytes.inputStream() })
     }
 
     public fun versionHash() : String = ensureCachedResource(ActionContext.current()).contentHash
@@ -68,7 +68,7 @@ public open class EmbeddedResource(val mime : String, val name: String) : Cached
 }
 
 public fun ActionContext.resourceURL(name: String): URL? {
-    return appContext.classLoader.getResource(name) ?: request.getServletContext()?.getResource(name)
+    return appContext.classLoader.getResource(name) ?: request.servletContext?.getResource(name)
 }
 
 public fun ActionContext.publicDirectoryResource(name: String): Pair<Long?, URL>? {

@@ -1,16 +1,15 @@
 package kara
 
-import java.net.URL
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletRequest
-import java.lang.reflect.Modifier
 import kara.internal.*
-import kotlinx.reflection.*
-import java.util.HashSet
-import java.util.LinkedHashSet
-import kotlin.html.*
+import kotlinx.reflection.Serialization
+import kotlinx.reflection.primaryProperties
+import kotlinx.reflection.propertyValue
+import kotlinx.reflection.urlEncode
 import java.util.LinkedHashMap
-import java.net.URLEncoder
+import java.util.LinkedHashSet
+import javax.servlet.http.HttpServletRequest
+import kotlin.html.DirectLink
+import kotlin.html.Link
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.java
 
@@ -38,6 +37,10 @@ public abstract class Resource() : Link {
 
         val path = StringBuilder(context)
 
+        if (!context.endsWith('/')) {
+            path.append('/')
+        }
+
         val properties = LinkedHashSet(primaryProperties())
         val components = route.toRouteComponents().map({
             when (it) {
@@ -51,19 +54,18 @@ public abstract class Resource() : Link {
                     Serialization.serialize(propertyValue(it.name))
                 }
                 is WildcardRouteComponent -> throw RuntimeException("Routes with wildcards aren't supported")
-                else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.getName()}")
+                else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.name}")
             }
         })
 
         path.append(components.filterNotNull().join("/"))
-        if (path.length() == 0) path.append("/")
 
         val queryArgs = LinkedHashMap<String, Any>()
         for (prop in properties filter { propertyValue(it) != null }) {
             queryArgs[prop] = propertyValue(prop)!!
         }
 
-        if (!descriptor.allowCrossOrigin) {
+        if (descriptor.allowCrossOrigin == "") {
             queryArgs[ActionContext.SESSION_TOKEN_PARAMETER] = ActionContext.current().sessionToken()
         }
 
@@ -84,7 +86,7 @@ public fun Class<out Resource>.baseLink(): Link {
         throw RuntimeException("You can't have base link for the route with URL parameters")
     }
 
-    return (if (!descriptor.allowCrossOrigin) {
+    return (if (descriptor.allowCrossOrigin == "") {
         "$route?_st=${ActionContext.current().sessionToken()}"
     }
     else route).link()
@@ -98,7 +100,7 @@ public fun String.link(): Link {
 public fun contextPath(): String {
     val request = ActionContext.tryGet()?.request
     if (request == null) return ""
-    return request.getAttribute("CONTEXT_PATH") as? String ?: request.getContextPath() ?: ""
+    return request.getAttribute("CONTEXT_PATH") as? String ?: request.contextPath ?: ""
 }
 
 public fun HttpServletRequest.setContextPath(path: String) {

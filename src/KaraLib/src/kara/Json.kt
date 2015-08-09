@@ -14,7 +14,7 @@ class JsonResult(val json: JsonElement) : ActionResult {
         json.build(result)
         if (jsonpCallback != null) result.append(")")
 
-        val out = context.response.getWriter()
+        val out = context.response.writer
         out.print(result.toString())
         out.flush()
     }

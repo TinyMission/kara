@@ -15,13 +15,13 @@ class MockHttpSession : HttpSession {
     val attributes = Hashtable<String,Any>()
 
     public override fun getCreationTime(): Long {
-        return java.util.Date().getTime()
+        return java.util.Date().time
     }
     public override fun getId(): String? {
         return "mock"
     }
     public override fun getLastAccessedTime(): Long {
-        return java.util.Date().getTime()
+        return java.util.Date().time
     }
     public override fun getServletContext(): ServletContext? {
         throw UnsupportedOperationException()

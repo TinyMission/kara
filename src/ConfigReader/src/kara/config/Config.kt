@@ -82,9 +82,9 @@ public open class Config() {
             var text: String? = null
             var base: File? = null
             if (file.exists()) {
-                base = file.getParentFile()
+                base = file.parentFile
                 text = file.readText("UTF-8")
-                Config.logger.info("Reading ${file.getAbsolutePath()}")
+                Config.logger.info("Reading ${file.absolutePath}")
             } else {
                 val resource = classloader.getResourceAsStream(path)
                 if (resource != null) {
@@ -116,7 +116,7 @@ public open class Config() {
 
                     else -> {
                         val eq = line.indexOf('=')
-                        if (eq <= 0) error("Cannot parse line '$line' in file '${file.getAbsolutePath()}'")
+                        if (eq <= 0) error("Cannot parse line '$line' in file '${file.absolutePath}'")
                         config.set(line.substring(0, eq).trim(), evalVars(line.substring(eq + 1).trim(), ::eval))
                     }
                 }

@@ -34,12 +34,12 @@ class DispatchTests() {
         dispatcher.findDescriptor("GET", "/foo/foobar") // default action name
 
         var request = mockRequest("GET", "/foo/bar/list")
-        actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // unnamed param
+        actionInfo = dispatcher.findDescriptor("GET", request.requestURI!!)!! // unnamed param
         var params = actionInfo.buildParams(request)
         assertEquals("bar", params[0])
 
         request = mockRequest("GET", "/foo/complex/bar/list/42")
-        actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // named and unnamed params
+        actionInfo = dispatcher.findDescriptor("GET", request.requestURI!!)!! // named and unnamed params
         params = actionInfo.buildParams(request)
         assertEquals("bar", params[0])
         assertEquals("42", params["id"])
@@ -47,25 +47,25 @@ class DispatchTests() {
 
         // crud controller
         request = mockRequest("GET", "/crud?name=value")
-        actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // empty route with parameters
+        actionInfo = dispatcher.findDescriptor("GET", request.requestURI!!)!! // empty route with parameters
         assertEquals(Routes.Crud.Index().javaClass, actionInfo.resourceClass)
         params = actionInfo.buildParams(request)
         assertEquals("value", params["name"])
 
         request = mockRequest("GET", "/crud/42")
-        actionInfo = dispatcher.findDescriptor("GET", request.getRequestURI()!!)!! // named parameter
+        actionInfo = dispatcher.findDescriptor("GET", request.requestURI!!)!! // named parameter
         params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
 
         dispatcher.findDescriptor("POST", "/crud") // models
 
         request = mockRequest("PUT", "/crud/42")
-        actionInfo = dispatcher.findDescriptor("PUT", request.getRequestURI()!!)!! // put
+        actionInfo = dispatcher.findDescriptor("PUT", request.requestURI!!)!! // put
         params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
 
         request = mockRequest("DELETE", "/crud/42")
-        actionInfo = dispatcher.findDescriptor("DELETE", request.getRequestURI()!!)!! // delete
+        actionInfo = dispatcher.findDescriptor("DELETE", request.requestURI!!)!! // delete
         params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
     }

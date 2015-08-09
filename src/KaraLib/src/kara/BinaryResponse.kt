@@ -27,17 +27,17 @@ public class BinaryResponse(val mime: String, val length: Int?, val modified : L
 
         when {
             etag != null && ifNoneMatch == etag -> {
-                r.setStatus(304)
+                r.status = 304
             }
 
             ifModifiedSince >= 0 && (modified ?: 0) / 1000 <= ifModifiedSince / 1000 -> {
-                r.setStatus(304)
+                r.status = 304
             }
 
             else -> {
                 val stream = context.streamData()
                 try {
-                    stream.copyTo(r.getOutputStream()!!)
+                    stream.copyTo(r.outputStream!!)
                 } finally {
                     stream.close()
                 }
