@@ -190,10 +190,10 @@ inline fun <reified T> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> =
 val KClassImpl<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
 
 public fun <K, V> ConcurrentMap<K, V>.concurrentGetOrPut(key: K, defaultValue: () -> V): V {
-    var localValue:V = null
-    fun invokeAndStore () : V  {
+    var localValue:V? = get(key)
+    fun invokeAndStore() : V  {
         localValue = defaultValue()
-        return localValue
+        return localValue as V
     }
-    return putIfAbsent(key, invokeAndStore()) ?: localValue
+    return localValue ?: putIfAbsent(key, invokeAndStore()) ?: localValue!!
 }
