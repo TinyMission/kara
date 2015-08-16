@@ -67,32 +67,32 @@ public open class ApplicationConfig() : Config() {
     public val port: String
         get() = tryGet("kara.port") ?: "8080"
 
-    public open val classPath: Array<URL>
-        get() {
-            val urls = ArrayList<URL>()
-            tryGet("kara.classpath")?.let {
-                urls.addAll(it.split(':')
-                        .flatMap {
-                            when {
-                                it.endsWith("/**") -> {
-                                    val answer = ArrayList<File>()
-                                    File(it.removeSuffix("/**")).walkTopDown().forEach { file -> if (file.isFile && file.getName().endsWith(".jar")) answer.add(file) }
-                                    answer
-                                }
+    public fun classPath(ctx: String): Array<URL> {
+        val urls = ArrayList<URL>()
+        val key = if (ctx.isBlank()) "kara.classpath" else "kara.classpath.${ctx}"
+        tryGet(key)?.let {
+            urls.addAll(it.split(':')
+                    .flatMap {
+                        when {
+                            it.endsWith("/**") -> {
+                                val answer = ArrayList<File>()
+                                File(it.removeSuffix("/**")).walkTopDown().forEach { file -> if (file.isFile && file.getName().endsWith(".jar")) answer.add(file) }
+                                answer
+                            }
 
-                                it.endsWith("/*") -> {
-                                    File(it.removeSuffix("/*")).listFiles { it.isFile && it.getName().endsWith(".jar") }?.toList() ?: listOf()
-                                }
+                            it.endsWith("/*") -> {
+                                File(it.removeSuffix("/*")).listFiles { it.isFile && it.getName().endsWith(".jar") }?.toList() ?: listOf()
+                            }
 
-                                else -> {
-                                    listOf(File(it))
-                                }
+                            else -> {
+                                listOf(File(it))
                             }
                         }
-                        .map { it.toURI().toURL() })
-            }
-            return urls.toTypedArray()
+                    }
+                    .map { it.toURI().toURL() })
         }
+        return urls.toTypedArray()
+    }
 
     fun minifyResrouces(): Boolean {
         val explicit = tryGet("kara.minifyResources")
