@@ -29,7 +29,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
     val apps = HashMap<String, Application>()
 
     init {
-        val appContexts = applicationConfig.tryGet("kara.apps")?.split(',')?.filterNot {it.startsWith('-')} ?: listOf("")
+        val appContexts = applicationConfig.tryGet("kara.apps")?.split(',')?.map{it.trim()}?.filterNot {it.startsWith('-')} ?: listOf("")
 
         for (ctx in appContexts) {
             apps[ctx] = Application.load(applicationConfig, ctx)
