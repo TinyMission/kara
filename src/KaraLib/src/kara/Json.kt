@@ -1,7 +1,7 @@
 package kara
 
-import javax.servlet.http.HttpServletResponse
-import java.util.*
+import java.util.ArrayList
+import java.util.LinkedHashMap
 
 /** JSON Action Result.
  */
@@ -40,7 +40,9 @@ class JsonValue(val value: Any) : JsonElement {
 class JsonRoot : JsonElement {
     private var _element : JsonElement? = null
     fun set(element : JsonElement) { _element = element }
-    override fun build(builder: StringBuilder) = _element?.build(builder)
+    override fun build(builder: StringBuilder) {
+        _element?.build(builder)
+    }
 }
 
 class JsonArray : JsonElement {
