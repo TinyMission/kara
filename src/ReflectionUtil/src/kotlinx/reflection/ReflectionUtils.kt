@@ -155,10 +155,21 @@ private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): L
 
 private fun String.packageToPath() = replace(".", File.separator) + File.separator
 
+private fun isAnonClass(name: String): Boolean {
+    var idx = name.indexOf('$')
+
+    while (idx >= 0) {
+        if (idx + 1 < name.length() && name[idx + 1] in '0'..'9') return true
+        idx = name.indexOf('$', idx + 1)
+    }
+
+    return false
+}
+
 private fun File.scanForClasses(prefix: String, classLoader: ClassLoader): List<Class<*>> {
     val path = prefix.packageToPath()
     return FileTreeWalk(this, filter = {
-        it.isDirectory || (it.isFile && it.extension == "class")
+        it.isDirectory || (it.isFile && it.extension == "class" && !isAnonClass(it.name))
     }).toList()
     .filter{
         it.isFile && it.absolutePath.contains(path)
@@ -173,7 +184,7 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     val entries = this.entries()
     while(entries.hasMoreElements()) {
         entries.nextElement().let {
-            if (!it.isDirectory && it.name.endsWith(".class") && it.name.contains(path)) {
+            if (!it.isDirectory && it.name.endsWith(".class") && it.name.contains(path) && !isAnonClass(it.name)) {
                 UtilsPackage.addIfNotNull(classes, ReflectPackage.tryLoadClass(classLoader, prefix + "." + it.name.substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
             }
         }
