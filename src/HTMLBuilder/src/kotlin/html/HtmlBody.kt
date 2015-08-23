@@ -317,3 +317,16 @@ open class CANVAS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "canv
     public var width: Int by Attributes.width
     public var height: Int by Attributes.height
 }
+
+open class CODE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "code")
+inline fun HtmlBodyTag.code(contents: CODE.() -> Unit) = contentTag(CODE(this), contents)
+
+open class IFRAME(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "iframe") {
+    public var src: Link by Attributes.src
+}
+
+inline fun HtmlBodyTag.iframe(contents: IFRAME.() -> Unit) = contentTag(IFRAME(this), contents)
+
+open class GENERIC_TAG(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name)
+inline fun HtmlBodyTag.tag(c: String, name: String, contents: HtmlBodyTag.() -> Unit) = contentTag(GENERIC_TAG(this, name), c, contents)
+inline fun HtmlBodyTag.tag(name: String, contents: HtmlBodyTag.() -> Unit) = contentTag(GENERIC_TAG(this, name), contents)
