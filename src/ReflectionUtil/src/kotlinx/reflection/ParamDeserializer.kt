@@ -72,7 +72,7 @@ class BigDecimalSerializer: TypeSerializer() {
     }
 
     override fun isThisType(testType : Class<*>) : Boolean {
-        return javaClass<BigDecimal>().isAssignableFrom(testType)
+        return BigDecimal::class.java.isAssignableFrom(testType)
     }
 }
 
@@ -106,7 +106,7 @@ class DataClassSerializer: TypeSerializer() {
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
-        return javaClass<DataClass>().isAssignableFrom(testType)
+        return DataClass::class.java.isAssignableFrom(testType)
     }
 }
 
@@ -132,7 +132,7 @@ public object Serialization {
     }
 
     public fun deserialize(param : String, paramType : Class<Any>) : Any? {
-        if (paramType == javaClass<String>()) {
+        if (paramType == String::class.java) {
             return param
         }
         for (deserializer in serializer) {

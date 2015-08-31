@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 import org.apache.log4j.Logger
 
 public open class Servlet() : HttpServlet() {
-    val logger = Logger.getLogger(javaClass<Servlet>())!!
+    val logger = Logger.getLogger(Servlet::class.java)!!
 
     val application: Application by lazy {
         val servletContext = servletContext!!

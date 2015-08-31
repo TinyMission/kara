@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest
 import kotlin.html.DirectLink
 import kotlin.html.Link
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.java
 
 public abstract class Resource() : Link {
     abstract  fun handle(context: ActionContext): ActionResult

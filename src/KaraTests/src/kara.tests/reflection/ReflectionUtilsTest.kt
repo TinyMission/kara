@@ -33,23 +33,23 @@ class ObjectInstances() {
     }
 
     Test fun testDeprecatedObjectInstanceViaReflection() {
-        assertNotNull(javaClass<Foo2>().objectInstance0())
-        assertNotNull(javaClass<Foo2.Test>().objectInstance0())
+        assertNotNull(Foo2::class.java.objectInstance0())
+        assertNotNull(Foo2.Test::class.java.objectInstance0())
     }
 
     Test fun testObjectInstance() {
-        assertNotNull(javaClass<Foo2>().objectInstance())
-        assertNotNull(javaClass<Foo2.Test>().objectInstance())
-        assertEquals(javaClass<Foo2.Test>().objectInstance(), javaClass<Foo2.Test>().objectInstance0())
+        assertNotNull(Foo2::class.java.objectInstance())
+        assertNotNull(Foo2.Test::class.java.objectInstance())
+        assertEquals(Foo2.Test::class.java.objectInstance(), Foo2.Test::class.java.objectInstance0())
     }
 
     Test fun testObjectInstanceIsNotCompanion() {
-        assertNull(javaClass<Foo>().objectInstance())
+        assertNull(Foo::class.java.objectInstance())
     }
 
 
     Test fun testCompanionObjectViaReflection() {
-        val companion = javaClass<Foo>().companionObjectInstance()
+        val companion = Foo::class.java.companionObjectInstance()
         assertNotNull(companion)
         assert(companion is Foo.Bar)
     }

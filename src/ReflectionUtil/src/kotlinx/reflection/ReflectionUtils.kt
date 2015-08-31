@@ -5,7 +5,6 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 import java.util.jar.JarFile
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -17,7 +16,6 @@ import kotlin.reflect.jvm.internal.impl.load.java.reflect.ReflectPackage
 import kotlin.reflect.jvm.internal.impl.utils.UtilsPackage
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
-import kotlin.reflect.jvm.kotlin
 import kotlin.reflect.memberProperties
 
 object ReflectionCache {
@@ -25,7 +23,7 @@ object ReflectionCache {
     val companionObjects = ConcurrentHashMap<Class<*>, Any>()
     val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>>>()
     val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
-    val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KProperty1<Any, Any?>?>()
+    val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KProperty1<Any, Any?>>()
 }
 
 private object NullMask
@@ -66,11 +64,11 @@ fun Class<*>.companionObjectInstance(): Any? {
 }
 
 @suppress("UNCHECKED_CAST")
-fun <T> KClass<out T>.propertyGetter(property: String): KProperty1<Any, *>? {
+fun <T: Any> KClass<out T>.propertyGetter(property: String): KProperty1<Any, *>? {
     return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property)) {
         memberProperties.singleOrNull {
             property == it.javaField?.name ?: it.javaGetter?.name?.removePrefix("get")?.decapitalize()
-        } as KProperty1<Any, *>?
+        } as KProperty1<Any, *>
     }
 }
 
@@ -122,7 +120,7 @@ fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
     return constructors.singleOrNull() as? Constructor<T>
 }
 
-public fun Class<*>.isEnumClass(): Boolean = javaClass<Enum<*>>().isAssignableFrom(this)
+public fun Class<*>.isEnumClass(): Boolean = Enum::class.java.isAssignableFrom(this)
 
 fun ClassLoader.findClasses(prefix: String, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<*>> {
     synchronized(cache) {
@@ -196,15 +194,6 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
 fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> = filter { clazz.isAssignableFrom(it) } as List<Class<T>>
 
 @suppress("UNCHECKED_CAST")
-inline fun <reified T> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(javaClass<T>())
+inline fun <reified T: Any> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(T::class.java)
 
 val KClassImpl<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
-
-public fun <K, V> ConcurrentMap<K, V>.concurrentGetOrPut(key: K, defaultValue: () -> V): V {
-    var localValue:V? = get(key)
-    fun invokeAndStore() : V  {
-        localValue = defaultValue()
-        return localValue as V
-    }
-    return localValue ?: putIfAbsent(key, invokeAndStore()) ?: localValue!!
-}

@@ -36,7 +36,7 @@ class ApplicationContext(public val config : ApplicationConfig,
             }
         }
 
-        for (monitor in monitors.sortBy { it.priority }) {
+        for (monitor in monitors.sortedBy { it.priority }) {
             logger.info("Executing startup sequence on ${monitor.javaClass}")
             monitor.created(this)
             monitorInstances.add(monitor)
