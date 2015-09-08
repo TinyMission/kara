@@ -1,8 +1,9 @@
 package kotlinx.reflection
 
 import java.math.BigDecimal
+import java.net.URLDecoder
+import java.net.URLEncoder
 import java.util.*
-import java.net.*
 
 
 /** Base class for object that deserialize parameters to a certain type.

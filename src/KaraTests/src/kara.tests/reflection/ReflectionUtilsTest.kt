@@ -26,29 +26,29 @@ object Foo2 {
 
 class ObjectInstances() {
 
-    Before
+    @Before
     fun cleanUpReflectionCache() {
         ReflectionCache.companionObjects.clear()
         ReflectionCache.objects.clear()
     }
 
-    Test fun testDeprecatedObjectInstanceViaReflection() {
+    @Test fun testDeprecatedObjectInstanceViaReflection() {
         assertNotNull(Foo2::class.java.objectInstance0())
         assertNotNull(Foo2.Test::class.java.objectInstance0())
     }
 
-    Test fun testObjectInstance() {
+    @Test fun testObjectInstance() {
         assertNotNull(Foo2::class.java.objectInstance())
         assertNotNull(Foo2.Test::class.java.objectInstance())
         assertEquals(Foo2.Test::class.java.objectInstance(), Foo2.Test::class.java.objectInstance0())
     }
 
-    Test fun testObjectInstanceIsNotCompanion() {
+    @Test fun testObjectInstanceIsNotCompanion() {
         assertNull(Foo::class.java.objectInstance())
     }
 
 
-    Test fun testCompanionObjectViaReflection() {
+    @Test fun testCompanionObjectViaReflection() {
         val companion = Foo::class.java.companionObjectInstance()
         assertNotNull(companion)
         assert(companion is Foo.Bar)
@@ -57,7 +57,7 @@ class ObjectInstances() {
 
 class ClassLoaderFunctionsTest() {
 
-    Test fun scanPackageForResourcesTest() {
+    @Test fun scanPackageForResourcesTest() {
         val app = Application.load(ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf"),"")
         val classLoader = app.requestClassloader()
         assertTrue((classLoader as URLClassLoader).urLs.any{ it.file.endsWith("kootstrap.jar")}, "Can't find test jar file in classpath")

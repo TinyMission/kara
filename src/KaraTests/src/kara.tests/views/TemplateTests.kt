@@ -1,24 +1,25 @@
 package kara.tests.views
 
-import kotlin.test.*
-import kotlin.html.*
 import kara.*
-import kara.internal.*
-import org.junit.*
+import kara.tests.mock.mockDispatch
 import org.apache.log4j.BasicConfigurator
-import kara.tests.mock.*
+import org.junit.Before
+import org.junit.Test
+import kotlin.html.*
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class TemplateTests() {
-    Before fun setUp() {
+    @Before fun setUp() {
         BasicConfigurator.configure()
     }
 
-    Test fun inlineTemplate() {
+    @Test fun inlineTemplate() {
         val response = mockDispatch("GET", "/template/1")
         assertEquals("text/html", response._contentType, "Content type should be html")
     }
 
-    Test fun funTemplate() {
+    @Test fun funTemplate() {
         val response = mockDispatch("GET", "/template/2")
         val output = response.stringOutput()
         assertEquals("text/html", response._contentType, "Content type should be html")

@@ -1,7 +1,7 @@
 package kara.tests.views
 
 
-import kara.*
+import kara.link
 import org.junit.Test
 import kotlin.html.a
 import kotlin.html.html
@@ -9,7 +9,7 @@ import kotlin.html.p
 import kotlin.test.assertEquals
 
 class HtmlBuilderTest {
-    Test fun simplestBodyTest() {
+    @Test fun simplestBodyTest() {
         val html = html {
             p {
                 +"This is text"

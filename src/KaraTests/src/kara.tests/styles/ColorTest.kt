@@ -1,11 +1,11 @@
 package kara.tests.styles
 
 import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.html.color
+import kotlin.test.assertEquals
 
 class ColorTest {
-    Test fun colors() {
+    @Test fun colors() {
         assertEquals("#888888", color("#888").toString())
         assertEquals("rgba(170, 187, 204, 0.867)", color("#abcd").toString())
         assertEquals("#101010", color("#101010").toString())
