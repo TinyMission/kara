@@ -284,7 +284,7 @@ fun makeDirection(s: String): Direction {
 enum class Display(val value: String) {
     none("none"),
     block("block"),
-    inline("inline"),
+    `inline`("inline"),
     inlineBlock("inline-block"),
     inlineTable("inline-table"),
     listItem("list-item"),
