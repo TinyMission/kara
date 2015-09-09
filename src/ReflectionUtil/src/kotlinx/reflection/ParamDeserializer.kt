@@ -95,6 +95,7 @@ class EnumSerializer: TypeSerializer() {
     }
 }
 
+/** Don't use multiply constructors or constructors with default values if you wish to implement this interface. **/
 interface DataClass
 
 class DataClassSerializer: TypeSerializer() {
@@ -132,12 +133,12 @@ public object Serialization {
         register(EnumSerializer())
     }
 
-    public fun deserialize(param : String, paramType : Class<Any>) : Any? {
+    public fun deserialize(param : String, paramType : Class<Any>, classLoader: ClassLoader? = null) : Any? {
         if (paramType == String::class.java) {
             return param
         }
         for (deserializer in serializer) {
-            if (deserializer.isThisType(paramType)) {
+            if (deserializer.isThisType(paramType) && deserializer.javaClass.classLoader in setOf(classLoader, ClassLoader.getSystemClassLoader())) {
                 return deserializer.deserialize(param, paramType)
             }
         }

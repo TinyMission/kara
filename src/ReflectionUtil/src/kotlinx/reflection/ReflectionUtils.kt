@@ -97,7 +97,7 @@ fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
 
     val args = valueParams.mapIndexed { i, param ->
         allParams[param.name.asString()]?.let {
-            Serialization.deserialize(it, paramTypes[i] as Class<Any>)
+            Serialization.deserialize(it, paramTypes[i] as Class<Any>, classLoader)
         } ?: if (param.type.isMarkedNullable) {
             null
         } else {
