@@ -138,7 +138,7 @@ public object Serialization {
             return param
         }
         for (deserializer in serializer) {
-            if (deserializer.isThisType(paramType) && deserializer.javaClass.classLoader in setOf(classLoader, ClassLoader.getSystemClassLoader())) {
+            if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {
                 return deserializer.deserialize(param, paramType)
             }
         }
