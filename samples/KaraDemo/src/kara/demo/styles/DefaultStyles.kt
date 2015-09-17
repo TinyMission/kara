@@ -1,12 +1,15 @@
 package kara.demo.styles
 
+import kara.Get
+import kara.Stylesheet
+import kara.demo.styles.StyleClasses.cLabel
+import kara.demo.styles.StyleClasses.fields
+import kara.demo.styles.StyleClasses.top
 import kotlin.html.*
-import kara.demo.styles.StyleClasses.*
-import kara.*
 
 /** The default stylesheet for the demo application.
  */
-Get("/dynamic/default.css")
+@Get("/dynamic/default.css")
 object DefaultStyles : Stylesheet() {
 
     override fun CssElement.render() {

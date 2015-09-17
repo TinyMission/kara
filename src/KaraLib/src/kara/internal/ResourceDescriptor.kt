@@ -12,7 +12,7 @@ import org.apache.log4j.Logger
 import java.io.IOException
 import kotlin.properties.*
 
-val logger = Logger.getLogger(javaClass<ResourceDescriptor>())!!
+val logger = Logger.getLogger(ResourceDescriptor::class.java)!!
 
 /** Contains all the information necessary to match a route and execute an action.
  */

@@ -1,8 +1,9 @@
 package kotlinx.reflection
 
 import java.math.BigDecimal
+import java.net.URLDecoder
+import java.net.URLEncoder
 import java.util.*
-import java.net.*
 
 
 /** Base class for object that deserialize parameters to a certain type.
@@ -72,7 +73,7 @@ class BigDecimalSerializer: TypeSerializer() {
     }
 
     override fun isThisType(testType : Class<*>) : Boolean {
-        return javaClass<BigDecimal>().isAssignableFrom(testType)
+        return BigDecimal::class.java.isAssignableFrom(testType)
     }
 }
 
@@ -83,9 +84,9 @@ class EnumSerializer: TypeSerializer() {
 
     override fun deserialize(param: String, paramType: Class<*>): Any? {
         return if (paramType.isEnum) {
-            paramType.getEnumConstants()?.get(param.toInt())
+            paramType.getEnumConstants()?.safeGet(param.toInt())
         } else if (paramType.isEnumClass()) {
-            paramType.enclosingClass.getEnumConstants()?.get(param.toInt())
+            paramType.enclosingClass.getEnumConstants()?.safeGet(param.toInt())
         }
     }
 
@@ -94,6 +95,7 @@ class EnumSerializer: TypeSerializer() {
     }
 }
 
+/** Don't use multiply constructors or constructors with default values if you wish to implement this interface. **/
 interface DataClass
 
 class DataClassSerializer: TypeSerializer() {
@@ -106,7 +108,7 @@ class DataClassSerializer: TypeSerializer() {
     }
 
     override fun isThisType(testType: Class<out Any?>): Boolean {
-        return javaClass<DataClass>().isAssignableFrom(testType)
+        return DataClass::class.java.isAssignableFrom(testType)
     }
 }
 
@@ -131,12 +133,12 @@ public object Serialization {
         register(EnumSerializer())
     }
 
-    public fun deserialize(param : String, paramType : Class<Any>) : Any? {
-        if (paramType == javaClass<String>()) {
+    public fun deserialize(param : String, paramType : Class<Any>, classLoader: ClassLoader? = null) : Any? {
+        if (paramType == String::class.java) {
             return param
         }
         for (deserializer in serializer) {
-            if (deserializer.isThisType(paramType)) {
+            if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {
                 return deserializer.deserialize(param, paramType)
             }
         }

@@ -1,19 +1,24 @@
 package kara.tests.controllers
 
-import kotlin.test.*
-import kara.*
-import kara.internal.*
-import kara.tests.mock.*
-import org.apache.log4j.*
-import org.junit.*
+import kara.Application
+import kara.ApplicationConfig
+import kara.internal.ResourceDispatcher
+import kara.internal.scanObjects
+import kara.tests.mock.mockRequest
+import org.apache.log4j.BasicConfigurator
+import org.junit.Before
+import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 /** Tests for dispatching routes to get action info. */
 class DispatchTests() {
-    Before fun setUp() {
+    @Before fun setUp() {
         BasicConfigurator.configure()
     }
 
-    Test fun runDispatchTests() {
+    @Test fun runDispatchTests() {
         val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")
 
         val app = object : Application(appConfig) {}

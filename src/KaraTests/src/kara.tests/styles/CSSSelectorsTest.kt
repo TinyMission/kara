@@ -1,9 +1,12 @@
 package kara.tests.styles
 
+import kara.tests.styles.SampleClasses.c1
+import kara.tests.styles.SampleClasses.c2
 import org.junit.Test
+import kotlin.html.CssElement
+import kotlin.html.Selector
+import kotlin.html.StyleClass
 import kotlin.test.assertEquals
-import kara.tests.styles.SampleClasses.*
-import kotlin.html.*
 
 enum class SampleClasses : StyleClass {
     c1, c2, c3
@@ -21,39 +24,39 @@ class SelectorsTest {
         result = toExternalForm()
     }
 
-    Test fun simpleTags() {
+    @Test fun simpleTags() {
         test("td",  { td })
         test("div", { div })
         test("*",   { any })
     }
 
 
-    Test fun simpleClasses() {
+    @Test fun simpleClasses() {
         test(".c1", { c1 })
         test(".c2", { c2 })
     }
 
 /* Uncomment when id(String) returns IdSelector, rather than SelectorTrait
-    Test fun simpleIds() {
+    @Test fun simpleIds() {
         test("#id", { id("id") })
     }
 */
 
-    Test fun tagWithIds() {
+    @Test fun tagWithIds() {
         test("div#id", { div.id("id") })
     }
 
-    Test fun tagWithClasses() {
+    @Test fun tagWithClasses() {
         test("div.c1", {div.c(c1) })
         test("div.c1.c2", {div(c1, c2) })
     }
 
-    Test fun idWithClasses() {
+    @Test fun idWithClasses() {
         test("#id.c1", {any (id("id"), c1)})
         test("#id.c1.c2", {any(id("id"), c1, c2)})
     }
 
-    Test fun attributeFilters() {
+    @Test fun attributeFilters() {
         test("div[important]", {div(att("important"))})
         test("div[class*=\"head\"]", {div(att("class") contains "head") })
         test("div[class~=\"header\"]", {div(att("class") containsInSpaces "header") })
@@ -63,7 +66,7 @@ class SelectorsTest {
         test("input[type$=\"set\"]", {input(att("type") endsWith "set") })
     }
 
-    Test fun compositeSelector() {
+    @Test fun compositeSelector() {
         test("(div#id,.c1)", { forAny(div.id("id"), c1) })
     }
 }

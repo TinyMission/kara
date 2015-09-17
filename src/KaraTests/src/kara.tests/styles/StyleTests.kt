@@ -1,11 +1,11 @@
 package kara.tests.styles
 
-import kotlin.test.*
 import org.junit.Test
+import kotlin.test.assertTrue
 
 
 class StyleTests() {
-    Test fun styles() {
+    @Test fun styles() {
         val styleString = TestStylesheet.toString()
 
         println(styleString)
