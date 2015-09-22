@@ -1,14 +1,14 @@
 package kara.internal
 
-import kotlinx.reflection.*
-import java.util.ArrayList
 import kara.*
-import java.lang.instrument.Instrumentation
-import kotlin.reflect.jvm.kotlin
+import kotlinx.reflection.filterIsAssignable
+import kotlinx.reflection.findClasses
+import kotlinx.reflection.objectInstance
+import java.util.*
 
 val karaAnnotations = listOf(Put::class.java, Get::class.java, Post::class.java, Delete::class.java, Route::class.java, Location::class.java)
 
-@suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun scanPackageForResources(prefix: String, classloader: ClassLoader, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<out Resource>> {
     try {
         return classloader.findClasses(prefix, cache)

@@ -5,7 +5,7 @@ import java.io.ObjectOutputStream
 import java.io.Serializable
 import java.math.BigInteger
 import java.security.SecureRandom
-import java.util.HashMap
+import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -106,7 +106,7 @@ class ActionContext(val appContext: ApplicationContext,
 }
 
 public class RequestScope<T>() {
-    @suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST")
     fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
         val data = ActionContext.current().data
         return data.get(desc) as T

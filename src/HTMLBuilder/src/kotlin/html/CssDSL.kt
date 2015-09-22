@@ -1,7 +1,6 @@
 package kotlin.html
 
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 interface Selector {
     fun toExternalForm(): String
@@ -250,7 +249,7 @@ class StyledElement(val selector: String) : CssElement() {
     }
 
     /** Strongly-typed method for pulling attributes out of the hash. */
-    @suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST")
     fun getAttribute<T>(name: String): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
@@ -259,7 +258,7 @@ class StyledElement(val selector: String) : CssElement() {
     }
 
     /** Strongly-typed method for pulling attributes out of the hash, with a default return value. */
-    @suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST")
     fun getAttribute<T>(name: String, default: T): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
