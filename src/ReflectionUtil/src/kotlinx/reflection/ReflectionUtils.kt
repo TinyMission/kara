@@ -63,7 +63,7 @@ fun Class<*>.companionObjectInstance(): Any? {
     }.unmask()
 }
 
-@suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun <T: Any> KClass<out T>.propertyGetter(property: String): KProperty1<Any, *>? {
     return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property)) {
         memberProperties.singleOrNull {
@@ -87,7 +87,7 @@ private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, Lis
 
 public class MissingArgumentException(message: String) : RuntimeException(message)
 
-@suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
     objectInstance()?.let {
         return it as T
@@ -115,7 +115,7 @@ fun Any.primaryProperties() : List<String> {
     }
 }
 
-@suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
     return constructors.singleOrNull() as? Constructor<T>
 }
@@ -190,10 +190,10 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     return classes
 }
 
-@suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> = filter { clazz.isAssignableFrom(it) } as List<Class<T>>
 
-@suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST")
 inline fun <reified T: Any> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(T::class.java)
 
 val KClassImpl<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
