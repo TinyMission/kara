@@ -1,6 +1,5 @@
 package kara
 
-import kara.ActionContext
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 import javax.servlet.http.HttpServletRequest
@@ -9,13 +8,13 @@ class FlashScopeStorage : Serializable {
     private var current = ConcurrentHashMap<String, Any?>()
     private var next = ConcurrentHashMap<String, Any?>()
 
-    private fun next() {
+    operator private fun next() {
         current.clear()
         current = ConcurrentHashMap(next)
         next.clear()
     }
 
-    fun get(key: String): Any? {
+    operator fun get(key: String): Any? {
         if (next.containsKey(key)) {
             return next[key]
         }
@@ -32,7 +31,7 @@ class FlashScopeStorage : Serializable {
     }
 
 
-    fun set(key: String, value: Any?) {
+    operator fun set(key: String, value: Any?) {
         put(key, value)
     }
 
@@ -74,17 +73,9 @@ class FlashScopeStorage : Serializable {
         public fun current() : FlashScopeStorage {
             val ctx = ActionContext.current()
 
-            var res = ctx.request.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
-            if (res == null) {
-                res = ctx.session.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
-            }
-
-            if (res == null) {
-                res = FlashScopeStorage()
-                ctx.request.setAttribute(flashScopeAttributeName, res)
-            }
-
-            return res;
+            return ctx.request.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
+                    ?: ctx.session.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
+                    ?: FlashScopeStorage().apply {  ctx.request.setAttribute(flashScopeAttributeName, this) }
         }
     }
 }

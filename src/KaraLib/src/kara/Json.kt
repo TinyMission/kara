@@ -1,7 +1,6 @@
 package kara
 
-import java.util.ArrayList
-import java.util.LinkedHashMap
+import java.util.*
 
 /** JSON Action Result.
  */
@@ -32,7 +31,7 @@ class JsonValue(val value: Any) : JsonElement {
             is Int -> builder.append(value)
             is Long -> builder.append(value)
             is Boolean -> builder.append(value)
-            else -> builder.append("\"${value}\"")
+            else -> builder.append("\"$value\"")
         }
     }
 }
@@ -73,7 +72,7 @@ class JsonObject : JsonElement {
         for((key, value) in properties) {
             if (!first)
                 builder.append(",")
-            builder.append("\"${key}\"")
+            builder.append("\"$key\"")
             builder.append(":")
             value.build(builder)
             first = false

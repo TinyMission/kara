@@ -1,11 +1,10 @@
 package kara
 
-import java.lang.reflect.Method
+import kara.internal.decamel
+import kotlinx.reflection.propertyValue
 import org.apache.log4j.Logger
-import kara.internal.*
 import kotlin.html.*
 import kotlin.html.InputType.*
-import kotlinx.reflection.*
 
 
 public interface FormModel<P> {
@@ -14,7 +13,7 @@ public interface FormModel<P> {
     fun propertyName(property: P): String
 }
 
-class BeanFormModel(val model: Any) : FormModel<String> {
+class BeanFormModel<T:Any>(val model: T) : FormModel<String> {
     val modelName = model.javaClass.simpleName.toLowerCase()
 
     override fun modelName(): String {
@@ -22,7 +21,7 @@ class BeanFormModel(val model: Any) : FormModel<String> {
     }
 
     override fun propertyValue(property: String): String {
-        return model.propertyValue(property).toString() // TODO: Use provided parameter serialization instead of toString
+        return model.propertyValue<T, Any>(property).toString() // TODO: Use provided parameter serialization instead of toString
     }
 
     override fun propertyName(property: String): String {
@@ -41,7 +40,7 @@ fun <P,M:FormModel<P>> HtmlBodyTag.formForModel(model: M, action : Link, formMet
     }
 }
 
-fun HtmlBodyTag.formForBean(bean: Any, action : Link, formMethod : FormMethod = FormMethod.post, contents : FormBuilder<String, FormModel<String>>.() -> Unit) {
+fun <T:Any>HtmlBodyTag.formForBean(bean: T, action : Link, formMethod : FormMethod = FormMethod.post, contents : FormBuilder<String, FormModel<String>>.() -> Unit) {
     formForModel(BeanFormModel(bean), action, formMethod, contents)
 }
 

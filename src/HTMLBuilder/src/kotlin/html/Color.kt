@@ -1,6 +1,6 @@
 package kotlin.html
 
-import java.util.Locale
+import java.util.*
 
 
 /** Container class for HSL values */
@@ -58,7 +58,7 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
                 val a = Integer.parseInt(s.substring(7, 9), 16)
                 return Color.fromRgb(r, g, b, a)
             }
-            throw Exception("Invalid color hex string: ${s}");
+            throw Exception("Invalid color hex string: $s");
         }
 
         /** Creates a color from a set of HSL values. */
@@ -217,7 +217,7 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
 inline fun color(s: String): Color {
     if (s.startsWith("#"))
         return Color.fromHex(s)
-    throw Exception("Invalid color string: ${s}");
+    throw Exception("Invalid color string: $s");
 }
 
 /** Returns true if the string is a valid color literal. */

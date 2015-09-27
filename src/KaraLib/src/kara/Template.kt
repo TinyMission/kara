@@ -8,7 +8,7 @@ public abstract class Template<TOuter>() {
 
 open public class TemplatePlaceholder<TOuter, TTemplate>() {
     private var content: (TTemplate.() -> Unit)? = null
-    fun invoke(content: TTemplate.() -> Unit) {
+    operator fun invoke(content: TTemplate.() -> Unit) {
         this.content = content
     }
     fun TTemplate.render() {
@@ -23,7 +23,7 @@ open public class Placeholder<TOuter>() {
     private var content: (TOuter.(Placeholder<TOuter>) -> Unit)? = null
     var meta : String = ""
 
-    fun invoke(meta : String = "", content: TOuter.(Placeholder<TOuter>) -> Unit) {
+    operator fun invoke(meta : String = "", content: TOuter.(Placeholder<TOuter>) -> Unit) {
         this.content = content
         this.meta = meta
     }
@@ -42,7 +42,7 @@ public class PlaceholderItem<TOuter>(val index: Int, val collection: List<Placeh
 
 open public class Placeholders<TOuter, TInner>() {
     private var items = ArrayList<PlaceholderItem<TInner>>()
-    fun invoke(meta : String = "", content: TInner.(Placeholder<TInner>) -> Unit = {}) {
+    operator fun invoke(meta : String = "", content: TInner.(Placeholder<TInner>) -> Unit = {}) {
         val placeholder = PlaceholderItem<TInner>(items.size(), items)
         placeholder(meta, content)
         items.add(placeholder)

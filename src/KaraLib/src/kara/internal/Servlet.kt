@@ -1,11 +1,11 @@
 package kara.internal
 
-import javax.servlet.http.*
-import java.io.IOException
-import kara.*
-import javax.servlet.ServletConfig
-import kotlin.properties.Delegates
+import kara.Application
+import kara.ApplicationConfig
 import org.apache.log4j.Logger
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 public open class Servlet() : HttpServlet() {
     val logger = Logger.getLogger(Servlet::class.java)!!

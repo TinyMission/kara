@@ -14,7 +14,7 @@ import kotlin.html.Link
 
 
 fun HttpSession.getDescription() : String {
-    return this.attributeNames!!.toList().map { "${it}: ${this.getAttribute(it)}" }.join()
+    return this.attributeNames!!.toList().map { "$it: ${this.getAttribute(it)}" }.join()
 }
 
 /** This contains information about the current rendering action.
@@ -92,41 +92,28 @@ class ActionContext(val appContext: ApplicationContext,
 
         val contexts = ThreadLocal<ActionContext?>()
 
-        public fun current(): ActionContext {
-            val context = tryGet()
-            if (context == null)
-                throw ContextException("Operation is not in context of an action, ActionContext not set.")
-            return context
-        }
+        public fun current(): ActionContext = tryGet() ?: throw ContextException("Operation is not in context of an action, ActionContext not set.")
 
-        fun tryGet(): ActionContext? {
-            return contexts.get()
-        }
+        fun tryGet(): ActionContext? = contexts.get()
     }
 }
 
 public class RequestScope<T>() {
-    @Suppress("UNCHECKED_CAST")
+    operator @Suppress("UNCHECKED_CAST")
     fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
         val data = ActionContext.current().data
         return data.get(desc) as T
     }
 
-    private fun set(o : Any?, desc: kotlin.PropertyMetadata, value: T) {
+    operator private fun set(o : Any?, desc: kotlin.PropertyMetadata, value: T) {
         ActionContext.current().data.put(desc, value)
     }
 }
 
 
 public class LazyRequestScope<T:Any>(val initial: () -> T) {
-    fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
-        val data = ActionContext.current().data
-        if (!data.containsKey(desc)) {
-            val eval = initial()
-            data.put(desc, eval)
-        }
-        return data.get(desc) as T
-    }
+    @Suppress("UNCHECKED_CAST")
+    operator fun get(o: Any?, desc: kotlin.PropertyMetadata): T = ActionContext.current().data.getOrPut(desc, { initial() }) as T
 }
 
 public class ContextException(msg : String) : Exception(msg) {}

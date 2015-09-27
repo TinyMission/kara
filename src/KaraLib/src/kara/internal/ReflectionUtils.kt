@@ -42,5 +42,5 @@ fun Class<out Resource>.route(): ResourceDescriptor {
         }
     }
 
-    throw RuntimeException("No HTTP method annotation found in ${name}")
+    throw RuntimeException("No HTTP method annotation found in $name")
 }

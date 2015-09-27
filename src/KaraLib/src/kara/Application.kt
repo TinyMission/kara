@@ -1,17 +1,16 @@
 package kara
 
-import java.util.ArrayList
-import java.net.URLClassLoader
-import kara.internal.*
+import kara.internal.scanPackageForResources
 import kotlinx.reflection.urlDecode
-
-import java.io.File
 import org.apache.log4j.Logger
-import java.util.HashSet
+import java.io.File
+import java.net.URLClassLoader
 import java.nio.file.*
-import java.nio.file.StandardWatchEventKinds.*
-import java.net.URLDecoder
+import java.nio.file.StandardWatchEventKinds.ENTRY_CREATE
+import java.nio.file.StandardWatchEventKinds.ENTRY_DELETE
+import java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
 import java.nio.file.attribute.BasicFileAttributes
+import java.util.*
 
 /** The base Kara application class.
  */
@@ -36,7 +35,7 @@ open class Application(public val config: ApplicationConfig, public val appConte
                         count += moreChanges.size()
                     }
 
-                    logger.info("Changes to ${count} files caused ApplicationContext restart.")
+                    logger.info("Changes to $count files caused ApplicationContext restart.")
                     changes.take(5).forEach { logger.info("...  ${it.context()}") }
                     destroyContext()
                     _context = null
@@ -97,7 +96,7 @@ open class Application(public val config: ApplicationConfig, public val appConte
             if (loader is URLClassLoader) {
                 val loaderUrls = loader.urLs
                 for (url in loaderUrls) {
-                    logger.debug("Evaluating URL '${url}' to watch for changes.")
+                    logger.debug("Evaluating URL '$url' to watch for changes.")
                     url.path?.let {
                         val folder = File(urlDecode(it))
                         if (folder.exists()) {
@@ -110,7 +109,7 @@ open class Application(public val config: ApplicationConfig, public val appConte
 
         val watcher = FileSystems.getDefault()!!.newWatchService();
         paths.forEach {
-            logger.debug("Watching ${it} for changes.")
+            logger.debug("Watching $it for changes.")
         }
         watchKeys.addAll(paths.map { it.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)!! })
     }
@@ -124,10 +123,10 @@ open class Application(public val config: ApplicationConfig, public val appConte
     }
 
     companion object {
-        val logger = Logger.getLogger(javaClass)!!
+        val logger = Logger.getLogger(Application::class.java)
 
         fun classLoader(config: ApplicationConfig, appContext: String): ClassLoader {
-            val rootClassloader = javaClass.classLoader!!
+            val rootClassloader = Application::class.java.classLoader!!
             val classPath = config.classPath(appContext)
             return when {
                 classPath.isEmpty() -> rootClassloader

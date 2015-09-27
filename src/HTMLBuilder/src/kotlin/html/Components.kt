@@ -1,7 +1,7 @@
 package kotlin.html
 
 fun StyledElement.roundBorder(width: LinearDimension, color: Color, radius : LinearDimension): Unit {
-    attributes["border"] = "${width} solid ${color}"
+    attributes["border"] = "$width solid $color"
     attributes["-webkit-border-radius"] = radius
     attributes["-moz-border-radius"] = radius
     attributes["border-radius"] = radius
@@ -23,7 +23,7 @@ fun StyledElement.shadow(color : String, shift : Int = 1, strength : Int = 3): U
     attributes["-webkit-box-shadow"] = "0px ${shift}px ${strength}px $color"
     attributes["box-shadow"] = "0px ${shift}px ${strength}px $color"
     /* For IE 8 */
-    attributes["-ms-filter"] = " \"progid:DXImageTransform.Microsoft.Shadow(Strength=${strength}, Direction=180, Color='$color')\";"
+    attributes["-ms-filter"] = " \"progid:DXImageTransform.Microsoft.Shadow(Strength=$strength, Direction=180, Color='$color')\";"
     /* For IE 5.5 - 7 */
-    attributes["filter"] = "progid:DXImageTransform.Microsoft.Shadow(Strength=${strength}, Direction=180, Color='$color');"
+    attributes["filter"] = "progid:DXImageTransform.Microsoft.Shadow(Strength=$strength, Direction=180, Color='$color');"
 }

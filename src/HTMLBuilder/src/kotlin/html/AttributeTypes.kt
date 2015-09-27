@@ -1,10 +1,10 @@
 package kotlin.html
 
 public abstract class Attribute<T>(val name: String) {
-    fun get(tag: HtmlTag, property: PropertyMetadata): T {
+    operator fun get(tag: HtmlTag, property: PropertyMetadata): T {
         return decode(tag[name]);
     }
-    open fun set(tag: HtmlTag, property: PropertyMetadata, value: T) {
+    operator open fun set(tag: HtmlTag, property: PropertyMetadata, value: T) {
         tag[name] = encode(value);
     }
 
@@ -60,7 +60,7 @@ public class TickerAttribute(name: String) : Attribute<Boolean>(name) {
         return if (s == null) false else true
     }
 
-    override fun set(tag: HtmlTag, property: PropertyMetadata, value: Boolean) {
+    operator override fun set(tag: HtmlTag, property: PropertyMetadata, value: Boolean) {
         if (value == true) {
             super.set(tag, property, value)
         } else {

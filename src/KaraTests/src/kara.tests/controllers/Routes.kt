@@ -20,7 +20,12 @@ object Routes {
 
     @Get("/optional/?p")
     class Optional(val p: String?) : Request({
-        TextResult("optional/${p}")
+        TextResult("optional/$p")
+    })
+
+    @Get("/default/?p")
+    class Default(val p: String? = "test") : Request({
+        TextResult("default/$p")
     })
 
     @Get("/error/:brokenPipe")
@@ -92,12 +97,12 @@ object Routes {
 
         @Get("compute/:anInt/:aFloat")
         class Compute(val anInt: Int, val aFloat: Float) : Request({
-            TextResult("compute: ${anInt}, ${aFloat}")
+            TextResult("compute: $anInt, $aFloat")
         })
 
         @Get("compute")
         class ComputeQuery(val anInt: Int, val aFloat: Float) : Request({
-            TextResult("compute: ${anInt}, ${aFloat}")
+            TextResult("compute: $anInt, $aFloat")
         })
     }
 
@@ -119,7 +124,7 @@ object Routes {
 
         @Put(":id")
         class Update(id: Int) : Request({
-            TextResult("update ${id}")
+            TextResult("update $id")
         })
 
         @Delete(":id")

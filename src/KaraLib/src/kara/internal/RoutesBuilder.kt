@@ -3,7 +3,6 @@ package kara.internal
 import kara.*
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
-import kotlinx.reflection.objectInstance
 import java.util.*
 
 val karaAnnotations = listOf(Put::class.java, Get::class.java, Post::class.java, Delete::class.java, Route::class.java, Location::class.java)
@@ -28,14 +27,15 @@ fun scanPackageForResources(prefix: String, classloader: ClassLoader, cache: Mut
 fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<Class<out Resource>> {
     val answer = ArrayList<Class<out Resource>>()
 
+    @Suppress("UNCHECKED_CAST")
     fun scan(routesObject : Any) {
         val newClass = classloader?.loadClass(routesObject.javaClass.name) ?: routesObject.javaClass
-        for (innerClass in newClass.declaredClasses) {
-            innerClass.objectInstance()?.let {
+        for (innerClass  in newClass.declaredClasses) {
+            (innerClass as Class<Any>).kotlin.objectInstance?.let {
                 scan(it)
             } ?: run {
                 if (Resource::class.java.isAssignableFrom(innerClass)) {
-                    answer.add(innerClass as Class<Resource>)
+                    answer.add(innerClass as Class<out Resource>)
                 }
             }
         }

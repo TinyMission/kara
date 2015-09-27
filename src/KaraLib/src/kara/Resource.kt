@@ -2,11 +2,10 @@ package kara
 
 import kara.internal.*
 import kotlinx.reflection.Serialization
-import kotlinx.reflection.primaryProperties
+import kotlinx.reflection.primaryParametersNames
 import kotlinx.reflection.propertyValue
 import kotlinx.reflection.urlEncode
-import java.util.LinkedHashMap
-import java.util.LinkedHashSet
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import kotlin.html.DirectLink
 import kotlin.html.Link
@@ -40,7 +39,7 @@ public abstract class Resource() : Link {
             path.append('/')
         }
 
-        val properties = LinkedHashSet(primaryProperties())
+        val properties = primaryParametersNames().toMutableSet()
         val components = route.toRouteComponents().map({
             when (it) {
                 is StringRouteComponent -> it.componentText
@@ -60,7 +59,7 @@ public abstract class Resource() : Link {
         path.append(components.filterNotNull().join("/"))
 
         val queryArgs = LinkedHashMap<String, Any>()
-        for (prop in properties filter { propertyValue(it) != null }) {
+        for (prop in properties filter { propertyValue<Resource,Any>(it) != null }) {
             queryArgs[prop] = propertyValue(prop)!!
         }
 
@@ -97,8 +96,7 @@ public fun String.link(): Link {
 }
 
 public fun contextPath(): String {
-    val request = ActionContext.tryGet()?.request
-    if (request == null) return ""
+    val request = ActionContext.tryGet()?.request ?: return ""
     return request.getAttribute("CONTEXT_PATH") as? String ?: request.contextPath ?: ""
 }
 

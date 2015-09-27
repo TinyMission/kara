@@ -1,12 +1,10 @@
 package kara
 
 import kara.config.Config
-import kara.internal.Servlet
 import kara.internal.logger
 import java.io.File
 import java.net.URL
-import java.util.ArrayList
-import kotlin.properties.Delegates
+import java.util.*
 
 /**
  * Store application configuration.
@@ -16,7 +14,7 @@ public open class ApplicationConfig() : Config() {
     public companion object {
         public fun loadFrom(configPath: String): ApplicationConfig {
             val config = ApplicationConfig()
-            Config.readConfig(config, configPath, javaClass.classLoader!!)
+            Config.readConfig(config, configPath, ApplicationConfig::class.java.classLoader!!)
             return config
         }
     }
@@ -60,7 +58,7 @@ public open class ApplicationConfig() : Config() {
 
     public val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
-                ?: listOf("${applicationPackageName}.routes", "${applicationPackageName}.styles")
+                ?: listOf("$applicationPackageName.routes", "$applicationPackageName.styles")
 
 
     /** The port to run the server on. */
@@ -69,7 +67,7 @@ public open class ApplicationConfig() : Config() {
 
     public fun classPath(ctx: String): Array<URL> {
         val urls = ArrayList<URL>()
-        val key = if (ctx.isBlank()) "kara.classpath" else "kara.classpath.${ctx}"
+        val key = if (ctx.isBlank()) "kara.classpath" else "kara.classpath.$ctx"
         tryGet(key)?.let {
             urls.addAll(it.split(':')
                     .flatMap {
@@ -94,12 +92,9 @@ public open class ApplicationConfig() : Config() {
         return urls.toTypedArray()
     }
 
-    fun minifyResrouces(): Boolean {
-        val explicit = tryGet("kara.minifyResources")
-        return when {
-            explicit == "true", explicit == "yes" -> true
-            explicit == "false", explicit == "no" -> false
-            else -> isProduction()
-        }
+    fun minifyResrouces(): Boolean = when (tryGet("kara.minifyResources")) {
+        "true", "yes" -> true
+        "false", "no" -> false
+        else -> isProduction()
     }
 }

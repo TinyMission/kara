@@ -60,11 +60,11 @@ public enum class PseudoClass : StyleClass {
  * Represents a single stylesheet element.
  */
 open class CssElement() {
-    val children: MutableList<StyledElement> = ArrayList<StyledElement>()
+    val children = arrayListOf<StyledElement>()
     val attributes = HashMap<String, Any>()
 
     public inner class IdSelector(val name: String) : SelectorTrait, Selector {
-        fun invoke(body: StyledElement.() -> Unit) {
+        operator fun invoke(body: StyledElement.() -> Unit) {
             any.invoke(this, body = body)
         }
 
@@ -85,7 +85,7 @@ open class CssElement() {
             s(SimpleSelector(this, traits).toExternalForm(), body)
         }
 
-        fun invoke(classes: String, body: StyledElement.() -> Unit) {
+        operator fun invoke(classes: String, body: StyledElement.() -> Unit) {
             s(SimpleSelector(this, arrayOf(SimpleClassStyle(classes))).toExternalForm(), body)
         }
 
@@ -250,7 +250,7 @@ class StyledElement(val selector: String) : CssElement() {
 
     /** Strongly-typed method for pulling attributes out of the hash. */
     @Suppress("UNCHECKED_CAST")
-    fun getAttribute<T>(name: String): T {
+    fun getAttribute<T:Any?>(name: String): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
         else
@@ -267,36 +267,34 @@ class StyledElement(val selector: String) : CssElement() {
     }
 
     /** Shorthand for making a color inside a stylesheet. */
-    fun c(colorString: String): Color {
-        return color(colorString)
-    }
+    fun c(colorString: String): Color = color(colorString)
 
     var backgroundAttachment: BackgroundAttachment?
-        get() = getAttribute<BackgroundAttachment>("background-attachment")
+        get() = getAttribute("background-attachment")
         set(value) {
             attributes["background-attachment"] = value.toString()
         }
 
     var backgroundColor: Color?
-        get() = getAttribute<Color>("background-color")
+        get() = getAttribute("background-color")
         set(value) {
             attributes["background-color"] = value.toString()
         }
 
     var backgroundImage: String?
-        get() = getAttribute<String>("background-image")
+        get() = getAttribute("background-image")
         set(value) {
             attributes["background-image"] = value.toString()
         }
 
     var backgroundPosition: String?
-        get() = getAttribute<String>("background-position")
+        get() = getAttribute("background-position")
         set(value) {
             attributes["background-position"] = value.toString()
         }
 
     var backgroundRepeat: BackgroundRepeat?
-        get() = getAttribute<BackgroundRepeat>("background-repeat")
+        get() = getAttribute("background-repeat")
         set(value) {
             attributes["background-repeat"] = value.toString()
         }
@@ -312,216 +310,216 @@ class StyledElement(val selector: String) : CssElement() {
                 else if (isBorderStyle(token))
                     borderStyle = makeBorderStyle(token)
                 else
-                    throw Exception("Invalid border property: ${token}")
+                    throw Exception("Invalid border property: $token")
             }
         }
 
     var borderColor: Color?
-        get() = getAttribute<Color>("border-color")
+        get() = getAttribute("border-color")
         set(value) {
             attributes["border-color"] = value.toString()
         }
 
     var borderRadius: LinearDimension
-        get() = getAttribute<LinearDimension>("border-radius", 0.px)
+        get() = getAttribute("border-radius", 0.px)
         set(value) {
             attributes["border-radius"] = value.toString()
         }
 
     var borderBottomLeftRadius: LinearDimension
-        get() = getAttribute<LinearDimension>("border-bottom-left-radius", 0.px)
+        get() = getAttribute("border-bottom-left-radius", 0.px)
         set(value) {
             attributes["border-bottom-left-radius"] = value.toString()
         }
 
     var borderBottomRightRadius: LinearDimension
-        get() = getAttribute<LinearDimension>("border-bottom-right-radius", 0.px)
+        get() = getAttribute("border-bottom-right-radius", 0.px)
         set(value) {
             attributes["border-bottom-right-radius"] = value.toString()
         }
 
     var borderTopLeftRadius: LinearDimension
-        get() = getAttribute<LinearDimension>("border-top-left-radius", 0.px)
+        get() = getAttribute("border-top-left-radius", 0.px)
         set(value) {
             attributes["border-top-left-radius"] = value.toString()
         }
 
     var borderTopRightRadius: LinearDimension
-        get() = getAttribute<LinearDimension>("border-top-right-radius", 0.px)
+        get() = getAttribute("border-top-right-radius", 0.px)
         set(value) {
             attributes["border-top-right-radius"] = value.toString()
         }
 
     var borderStyle: BorderStyle?
-        get() = getAttribute<BorderStyle>("border-style")
+        get() = getAttribute("border-style")
         set(value) {
             attributes["border-style"] = value.toString()
         }
 
     var borderWidth: LinearDimension
-        get() = getAttribute<LinearDimension>("border-width", 0.px)
+        get() = getAttribute("border-width", 0.px)
         set(value) {
             attributes["border-width"] = value.toString()
         }
 
     var clear: Clear?
-        get() = getAttribute<Clear>("clear")
+        get() = getAttribute("clear")
         set(value) {
             attributes["clear"] = value.toString()
         }
 
     var color: Color?
-        get() = getAttribute<Color>("color")
+        get() = getAttribute("color")
         set(value) {
             attributes["color"] = value.toString()
         }
 
     var display: Display?
-        get() = getAttribute<Display>("display")
+        get() = getAttribute("display")
         set(value) {
             attributes["display"] = value.toString()
         }
 
     var float: FloatType?
-        get() = getAttribute<FloatType>("float")
+        get() = getAttribute("float")
         set(value) {
             attributes["float"] = value.toString()
         }
 
     var fontFamily: String?
-        get() = getAttribute<String>("font-family")
+        get() = getAttribute("font-family")
         set(value) {
             attributes["font-family"] = value.toString()
         }
 
     var fontSize: LinearDimension?
-        get() = getAttribute<LinearDimension>("font-size")
+        get() = getAttribute("font-size")
         set(value) {
             attributes["font-size"] = value.toString()
         }
 
     var fontWeight: FontWeight
-        get() = getAttribute<FontWeight>("font-weight")
+        get() = getAttribute("font-weight")
         set(value) {
             attributes["font-weight"] = value.toString()
         }
 
     var height: LinearDimension?
-        get() = getAttribute<LinearDimension>("height")
+        get() = getAttribute("height")
         set(value) {
             attributes["height"] = value.toString()
         }
 
     var lineHeight: LinearDimension?
-        get() = getAttribute<LinearDimension>("line-height")
+        get() = getAttribute("line-height")
         set(value) {
             attributes["line-height"] = value.toString()
         }
 
     var margin: BoxDimensions?
-        get() = getAttribute<BoxDimensions>("margin")
+        get() = getAttribute("margin")
         set(value) {
             attributes["margin"] = value.toString()
         }
 
     var marginTop: LinearDimension?
-        get() = getAttribute<LinearDimension>("margin-top")
+        get() = getAttribute("margin-top")
         set(value) {
             attributes["margin-top"] = value.toString()
         }
 
     var marginBottom: LinearDimension?
-        get() = getAttribute<LinearDimension>("margin-bottom")
+        get() = getAttribute("margin-bottom")
         set(value) {
             attributes["margin-bottom"] = value.toString()
         }
 
     var marginLeft: LinearDimension?
-        get() = getAttribute<LinearDimension>("margin-left")
+        get() = getAttribute("margin-left")
         set(value) {
             attributes["margin-left"] = value.toString()
         }
 
     var marginRight: LinearDimension?
-        get() = getAttribute<LinearDimension>("margin-right")
+        get() = getAttribute("margin-right")
         set(value) {
             attributes["margin-right"] = value.toString()
         }
 
     var maxHeight: LinearDimension?
-        get() = getAttribute<LinearDimension>("max-height")
+        get() = getAttribute("max-height")
         set(value) {
             attributes["max-height"] = value.toString()
         }
 
     var maxWidth: LinearDimension?
-        get() = getAttribute<LinearDimension>("max-width")
+        get() = getAttribute("max-width")
         set(value) {
             attributes["max-width"] = value.toString()
         }
 
     var minHeight: LinearDimension?
-        get() = getAttribute<LinearDimension>("min-height")
+        get() = getAttribute("min-height")
         set(value) {
             attributes["min-height"] = value.toString()
         }
 
     var minWidth: LinearDimension?
-        get() = getAttribute<LinearDimension>("min-width")
+        get() = getAttribute("min-width")
         set(value) {
             attributes["min-width"] = value.toString()
         }
 
     var overflow: Overflow
-        get() = getAttribute<Overflow>("overflow", Overflow.inherit)
+        get() = getAttribute("overflow", Overflow.inherit)
         set(value) {
             attributes["overflow"] = value.toString()
         }
 
     var padding: BoxDimensions?
-        get() = getAttribute<BoxDimensions>("padding")
+        get() = getAttribute("padding")
         set(value) {
             attributes["padding"] = value.toString()
         }
 
     var paddingTop: LinearDimension?
-        get() = getAttribute<LinearDimension>("padding-top")
+        get() = getAttribute("padding-top")
         set(value) {
             attributes["padding-top"] = value.toString()
         }
 
     var paddingBottom: LinearDimension?
-        get() = getAttribute<LinearDimension>("padding-bottom")
+        get() = getAttribute("padding-bottom")
         set(value) {
             attributes["padding-bottom"] = value.toString()
         }
 
     var paddingLeft: LinearDimension?
-        get() = getAttribute<LinearDimension>("padding-left")
+        get() = getAttribute("padding-left")
         set(value) {
             attributes["padding-left"] = value.toString()
         }
 
     var paddingRight: LinearDimension?
-        get() = getAttribute<LinearDimension>("padding-right")
+        get() = getAttribute("padding-right")
         set(value) {
             attributes["padding-right"] = value.toString()
         }
 
     var textAlign: TextAlign
-        get() = getAttribute<TextAlign>("text-align", TextAlign.inherit)
+        get() = getAttribute("text-align", TextAlign.inherit)
         set(value) {
             attributes["text-align"] = value.toString()
         }
 
     var verticalAlign: VerticalAlign
-        get() = getAttribute<VerticalAlign>("vertical-align", VerticalAlign.inherit)
+        get() = getAttribute("vertical-align", VerticalAlign.inherit)
         set(value) {
             attributes["vertical-align"] = value.toString()
         }
 
     var width: LinearDimension?
-        get() = getAttribute<LinearDimension>("width")
+        get() = getAttribute("width")
         set(value) {
             attributes["width"] = value.toString()
         }

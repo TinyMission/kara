@@ -1,8 +1,6 @@
 package kara
 
 import kotlin.html.*
-import java.io.OutputStreamWriter
-import java.io.FileOutputStream
 
 /** A class for programmatically generating CSS stylesheets.
  */

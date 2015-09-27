@@ -1,12 +1,12 @@
 package kotlin.html.bootstrap
 
+import java.util.*
 import kotlin.html.*
-import java.util.HashMap
 
 fun HtmlTag.applyAttributes(apply: HtmlTag.() -> Unit): Boolean {
     for (child in children) {
         if (child is HtmlTag) {
-            if (!(child is TransparentTag)) {
+            if (child !is TransparentTag) {
                 child.apply()
                 return true
             }
@@ -45,9 +45,9 @@ fun <T : HtmlTag> T.fetch(dataUrl: Link, interval: Int = 0, content: T.() -> Uni
 
 fun HtmlTag.bindIf(attribute: String, condition: String, trueValue: String, falseValue: String? = null) {
     if (falseValue != null)
-        attribute("bind-$attribute", "if:${condition}:${trueValue}:${falseValue}")
+        attribute("bind-$attribute", "if:$condition:$trueValue:$falseValue")
     else
-        attribute("bind-$attribute", "if:${condition}:${trueValue}")
+        attribute("bind-$attribute", "if:$condition:$trueValue")
 }
 
 fun HtmlTag.bind(attribute: String, property: String) {

@@ -68,7 +68,7 @@ object Home {
 
     object Posts {
         @Get("get/:id") class GetPost(id: Int) : Request({
-            val post = kara.demo.models.Post(Date(), "Post ${id}")
+            val post = kara.demo.models.Post(Date(), "Post $id")
             post.body = "This is the <em>post</em> body"
             kara.demo.views.Show(post)
         })

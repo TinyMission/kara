@@ -1,13 +1,9 @@
 package kara.internal
 
-import java.util.ArrayList
-import kotlin.MutableList
 import kara.*
-import javax.servlet.http.*
-import java.lang.reflect.Method
-import org.apache.log4j.Logger
-import java.lang.reflect.Modifier
-import java.util.HashMap
+import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
@@ -38,7 +34,7 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
         return when (matches.size()) {
             1 -> matches[0]
             0 -> null
-            else -> throw InvalidRouteException("URL '${url}' matches more than single route: ${matches.map { it.route }.join(", ")}")
+            else -> throw InvalidRouteException("URL '$url' matches more than single route: ${matches.map { it.route }.join(", ")}")
         }
     }
 

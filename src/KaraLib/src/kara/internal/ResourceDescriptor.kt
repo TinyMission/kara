@@ -1,16 +1,11 @@
 package kara.internal
 
-import java.lang.reflect.Method
-import javax.servlet.http.*
-import java.util.ArrayList
-import java.lang.reflect.Type
-import java.lang.reflect.Constructor
-import java.net.URLDecoder
 import kara.*
-import kotlinx.reflection.*
+import kotlinx.reflection.buildBeanInstance
+import kotlinx.reflection.urlDecode
 import org.apache.log4j.Logger
-import java.io.IOException
-import kotlin.properties.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 val logger = Logger.getLogger(ResourceDescriptor::class.java)!!
 
@@ -109,7 +104,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     }
 
     public override fun toString(): String {
-        return "Resource<${resourceClass}> at $route"
+        return "Resource<$resourceClass> at $route"
     }
 
 }

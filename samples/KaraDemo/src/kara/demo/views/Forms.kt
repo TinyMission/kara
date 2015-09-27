@@ -1,12 +1,15 @@
 package kara.demo.views
 
-import kara.*
+import kara.HtmlTemplateView
 import kara.demo.models.Book
-import kara.demo.styles.StyleClasses.*
 import kara.demo.routes.Home
+import kara.demo.styles.StyleClasses.cLabel
+import kara.demo.styles.StyleClasses.fields
+import kara.demo.styles.StyleClasses.top
+import kara.formForBean
 import kotlin.html.*
 
-fun Forms(book: Book) = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
+fun Forms(book: Book) = HtmlTemplateView(DefaultTemplate()) {
     content {
         h2 { +"Forms" }
         formForBean(book, Home.Update(), FormMethod.post) {

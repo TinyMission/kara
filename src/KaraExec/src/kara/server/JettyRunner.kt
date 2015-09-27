@@ -12,8 +12,7 @@ import org.eclipse.jetty.server.session.HashSessionManager
 import org.eclipse.jetty.server.session.SessionHandler
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 import javax.servlet.MultipartConfigElement
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -95,10 +94,10 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         server = Server(port)
 
         applicationConfig.publicDirectories.forEach {
-            logger.info("Attaching resource handler: ${it}")
+            logger.info("Attaching resource handler: $it")
             val resourceHandler = ResourceHandler()
             resourceHandler.isDirectoriesListed = false
-            resourceHandler.resourceBase = "./${it}"
+            resourceHandler.resourceBase = "./$it"
             resourceHandler.welcomeFiles = arrayOf("index.html")
             resourceHandlers.add(resourceHandler)
         }
@@ -161,13 +160,9 @@ private fun HttpServletRequest.removeContext(ctx: String) = when {
 }
 
 private class ContextReqest(val w: HttpServletRequest, val context: String) : HttpServletRequest by w {
-    override fun getContextPath(): String? {
-        return w.contextPath.orEmpty() + "/" + context
-    }
+    override fun getContextPath(): String? = w.contextPath.orEmpty() + "/" + context
 }
 
 private class ContextRemovedReqest(val w: HttpServletRequest, val context: String) : HttpServletRequest by w {
-    override fun getPathInfo(): String? {
-        return w.pathInfo?.removePrefix("/${context}")
-    }
+    override fun getPathInfo(): String? = w.pathInfo?.removePrefix("/$context")
 }
