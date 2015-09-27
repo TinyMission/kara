@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
-import kotlin.reflect.jvm.internal.KClassImpl
 import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
 import kotlin.reflect.jvm.internal.impl.descriptors.ClassKind
 import kotlin.reflect.jvm.internal.impl.descriptors.ValueParameterDescriptor
@@ -50,7 +49,7 @@ fun Class<*>.objectInstance0(): Any? {
 fun Class<*>.objectInstance(): Any? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
         fields.firstOrNull {
-            with(it.type.kotlin as KClassImpl<*>) {
+            with(it.type.kotlin as KClass<*>) {
                 __descriptor.kind == ClassKind.OBJECT && !__descriptor.isCompanionObject
             }
         }?.get(null) ?: NullMask
@@ -59,7 +58,7 @@ fun Class<*>.objectInstance(): Any? {
 
 fun Class<*>.companionObjectInstance(): Any? {
     return ReflectionCache.companionObjects.concurrentGetOrPut(this) {
-        fields.firstOrNull { (it.type.kotlin as KClassImpl<*>).__descriptor.isCompanionObject }?.get(null) ?: NullMask
+        fields.firstOrNull { (it.type.kotlin as KClass<*>).__descriptor.isCompanionObject }?.get(null) ?: NullMask
     }.unmask()
 }
 
@@ -80,7 +79,7 @@ fun Any.propertyValue(property: String): Any? {
 private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>> {
     return ReflectionCache.consMetadata.concurrentGetOrPut(this) {
         val cons = primaryConstructor() ?: error("Expecting single constructor for the bean")
-        val consDesc = (this.kotlin as KClassImpl<*>).__descriptor.unsubstitutedPrimaryConstructor!!
+        val consDesc = (this.kotlin as KClass<*>).__descriptor.unsubstitutedPrimaryConstructor!!
         Triple(cons, cons.parameterTypes, consDesc.valueParameters)
     }
 }
@@ -111,7 +110,7 @@ fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
 
 fun Any.primaryProperties() : List<String> {
     return ReflectionCache.primaryProperites.concurrentGetOrPut(javaClass) {
-        (javaClass.kotlin as KClassImpl<*>).__descriptor.unsubstitutedPrimaryConstructor?.valueParameters?.map { it.name.asString() }.orEmpty()
+        (javaClass.kotlin as KClass<*>).__descriptor.unsubstitutedPrimaryConstructor?.valueParameters?.map { it.name.asString() }.orEmpty()
     }
 }
 
@@ -196,7 +195,7 @@ fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> =
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T: Any> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(T::class.java)
 
-val KClassImpl<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
+val KClass<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
 
 fun <T:Any?> Array<T>.safeGet(index: Int): T? {
     return if (index in this.indices) this[index] else null
