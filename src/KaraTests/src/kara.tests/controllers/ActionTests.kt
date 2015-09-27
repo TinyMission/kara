@@ -65,6 +65,12 @@ class ActionTests() {
         assertEquals("/default/smth", Routes.Default("smth").href())
     }*/
 
+    @Test fun hrefWithContext() {
+        assertEquals("/somepath/test/test.css", TestStyles.href("/somepath"))
+        assertEquals("/somepath/foo/bar", Routes.Foo.Bar().href("/somepath"))
+        assertEquals("/somepath/foo/compute/42/3.1415", Routes.Foo.Compute(42, 3.1415.toFloat()).href("/somepath"))
+    }
+
     @Test fun redirect() {
         val response = mockDispatch("GET", "/foo/redirect")
         assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, response.status)

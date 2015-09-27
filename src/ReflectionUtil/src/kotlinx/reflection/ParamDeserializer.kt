@@ -8,8 +8,8 @@ import java.util.*
 
 /** Base class for object that deserialize parameters to a certain type.
 */
-abstract class TypeSerializer() {
-    abstract fun deserialize(param : String, paramType: Class<*>) : Any?
+abstract class TypeSerializer<T:Any?>() {
+    abstract fun deserialize(param : String, paramType: Class<out T>) : T?
     open fun serialize(param: Any): String = param.toString()
 
     abstract fun isThisType(testType : Class<*>) : Boolean
@@ -17,8 +17,8 @@ abstract class TypeSerializer() {
 
 /** Deserializer for integers.
 */
-class IntSerializer() : TypeSerializer() {
-    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+class IntSerializer() : TypeSerializer<Int>() {
+    override fun deserialize(param : String, paramType: Class<out Int>) : Int? {
         if (param.isEmpty()) return null
         return param.toInt()
     }
@@ -30,8 +30,8 @@ class IntSerializer() : TypeSerializer() {
 
 /** Deserializer for floats.
 */
-class FloatSerializer() : TypeSerializer() {
-    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+class FloatSerializer() : TypeSerializer<Float>() {
+    override fun deserialize(param : String, paramType: Class<out Float>) : Float? {
         if (param.isEmpty()) return null
         return param.toFloat()
     }
@@ -41,12 +41,12 @@ class FloatSerializer() : TypeSerializer() {
     }
 }
 
-class BooleanSerializer: TypeSerializer() {
-    override fun deserialize(param: String, paramType: Class<out Any?>): Any? {
+class BooleanSerializer: TypeSerializer<Boolean>() {
+    override fun deserialize(param: String, paramType: Class<out Boolean>): Boolean? {
         return !(param.equals("false", true))
     }
 
-    override fun isThisType(testType: Class<out Any?>): Boolean {
+    override fun isThisType(testType: Class<*>): Boolean {
         return testType.name == "boolean" || testType.name == "java.lang.Boolean"
     }
 
@@ -55,8 +55,8 @@ class BooleanSerializer: TypeSerializer() {
     }
 }
 
-class LongSerializer: TypeSerializer() {
-    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+class LongSerializer: TypeSerializer<Long>() {
+    override fun deserialize(param : String, paramType: Class<out Long>) : Long? {
         if (param.isEmpty()) return null
         return param.toLong()
     }
@@ -66,8 +66,8 @@ class LongSerializer: TypeSerializer() {
     }
 }
 
-class BigDecimalSerializer: TypeSerializer() {
-    override fun deserialize(param : String, paramType: Class<*>) : Any? {
+class BigDecimalSerializer: TypeSerializer<BigDecimal>() {
+    override fun deserialize(param : String, paramType: Class<out BigDecimal>) : BigDecimal? {
         if (param.isEmpty()) return null
         return BigDecimal(param)
     }
@@ -77,20 +77,21 @@ class BigDecimalSerializer: TypeSerializer() {
     }
 }
 
-class EnumSerializer: TypeSerializer() {
+class EnumSerializer: TypeSerializer<Enum<*>>() {
     override fun serialize(param: Any): String {
         return (param as Enum<*>).ordinal().toString()
     }
 
-    override fun deserialize(param: String, paramType: Class<*>): Any? {
+    @Suppress("IMPLICIT_CAST_TO_UNIT_OR_ANY")
+    override fun deserialize(param: String, paramType: Class<out Enum<*>>): Enum<*>? {
         return if (paramType.isEnum) {
             paramType.enumConstants?.safeGet(param.toInt())
         } else if (paramType.isEnumClass()) {
             paramType.enclosingClass.enumConstants?.safeGet(param.toInt())
-        }
+        } as Enum<*>
     }
 
-    override fun isThisType(testType: Class<out Any?>): Boolean {
+    override fun isThisType(testType: Class<*>): Boolean {
         return testType.isEnum || testType.isEnumClass()
     }
 }
@@ -98,28 +99,28 @@ class EnumSerializer: TypeSerializer() {
 /** Don't use multiply constructors or constructors with default values if you wish to implement this interface. **/
 interface DataClass
 
-class DataClassSerializer: TypeSerializer() {
+class DataClassSerializer: TypeSerializer<DataClass>() {
     override fun serialize(param: Any): String {
         return param.serialize()
     }
 
-    override fun deserialize(param: String, paramType: Class<*>): Any? {
+    override fun deserialize(param: String, paramType: Class<out DataClass>): DataClass? {
         return paramType.parse(param)
     }
 
-    override fun isThisType(testType: Class<out Any?>): Boolean {
+    override fun isThisType(testType: Class<*>): Boolean {
         return DataClass::class.java.isAssignableFrom(testType)
     }
 }
 
 public object Serialization {
-    val serializer = ArrayList<TypeSerializer>()
+    val serializer = ArrayList<TypeSerializer<out Any>>()
 
     init {
         this.loadDefaults()
     }
 
-    public fun register(ptd : TypeSerializer) {
+    public fun register(ptd : TypeSerializer<out Any>) {
         serializer.add(ptd)
     }
 
@@ -161,7 +162,7 @@ public object Serialization {
     }
 }
 
-fun <T> Class<T>.parse(params: String) : T {
+fun <T:Any> Class<T>.parse(params: String) : T {
     val map = HashMap<String, String>()
 
     val queryComponents = params.split("&")
@@ -176,9 +177,8 @@ fun <T> Class<T>.parse(params: String) : T {
     return buildBeanInstance(map.mapValues { urlDecode(it.value) })
 }
 
-fun Any.serialize(): String {
-    val names = LinkedHashSet(primaryProperties())
-    return names.map { it to propertyValue(it) }.
+fun <T:Any> T.serialize(): String {
+    return primaryParametersNames().map { it to propertyValue<T,Any>(it) }.
     filter {it.second != null}.
     map { "${it.first}=${urlEncode(Serialization.serialize(it.second)!!)}"}.
     join("&")

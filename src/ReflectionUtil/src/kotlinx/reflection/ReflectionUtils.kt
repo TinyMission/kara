@@ -1,27 +1,26 @@
 package kotlinx.reflection
 
 import java.io.File
-import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
 import kotlin.reflect.*
-import kotlin.reflect.jvm.javaField
-import kotlin.reflect.jvm.javaGetter
+import kotlin.reflect.jvm.internal.impl.load.java.reflect.ReflectJavaClassFinderKt.tryLoadClass
+import kotlin.reflect.jvm.javaType
 
-object ReflectionCache {
+private object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
     val companionObjects = ConcurrentHashMap<Class<*>, Any>()
-    val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>, Array<Class<*>>, List<KParameter>>>()
-    val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
-    val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KProperty1<Any, Any?>>()
+    val primaryParameters = ConcurrentHashMap<Class<out Any>, List<KParameter>>()
+    val propertyGetters = ConcurrentHashMap<Pair<KClass<out Any>, String>, Any>()
 }
 
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
 
-fun Class<*>.objectInstance0(): Any? {
+@Deprecated("use KClass<T>.objectInstance. Fpr backword compatibilibty test only.")
+fun <T:Any> Class<T>.objectInstance0(): T? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
         try {
             val field = getDeclaredField("INSTANCE\$")
@@ -36,8 +35,16 @@ fun Class<*>.objectInstance0(): Any? {
         catch (e: NoSuchFieldException) {
             NullMask
         }
+    }.unmask() as T
+}
+
+fun Class<*>.objectInstance(): Any? {
+    return ReflectionCache.objects.concurrentGetOrPut(this) {
+        val k: KClass<out Any> = kotlin
+        k.objectInstance ?: NullMask
     }.unmask()
 }
+
 
 fun Class<*>.objectInstance(): Any? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
@@ -52,62 +59,46 @@ fun Class<*>.companionObjectInstance(): Any? {
     }.unmask()
 }
 
-@Suppress("UNCHECKED_CAST")
-fun <T: Any> KClass<out T>.propertyGetter(property: String): KProperty1<Any, *>? {
-    return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property)) {
-        memberProperties.singleOrNull {
-            property == it.javaField?.name ?: it.javaGetter?.name?.removePrefix("get")?.decapitalize()
-        } as KProperty1<Any, *>
-    }
+fun <T: Any, R:Any?> KClass<out T>.propertyGetter(property: String): KProperty1<T, R>? {
+    return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property),  {
+        memberProperties.firstOrNull { it.name == property } ?: NullMask
+    }).unmask() as KProperty1<T, R>?
 }
 
-fun Any.propertyValue(property: String): Any? {
-    val getter = javaClass.kotlin.propertyGetter(property) ?: error("Invalid property $property on type ${javaClass.name}")
+
+fun <T:Any, R:Any?> T.propertyValue(property: String): R? {
+    val getter = javaClass.kotlin.propertyGetter<T,R>(property) ?: error("Invalid property $property on type ${javaClass.name}")
     return getter.get(this)
-}
-
-private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<KParameter>> {
-    return ReflectionCache.consMetadata.concurrentGetOrPut(this) {
-        val cons = primaryConstructor() ?: error("Expecting single constructor for the bean")
-        val consDesc: KFunction<Any> = (this.kotlin as KClass<*>).primaryConstructor!!
-        Triple(cons, cons.parameterTypes, consDesc.parameters)
-    }
 }
 
 public class MissingArgumentException(message: String) : RuntimeException(message)
 
 @Suppress("UNCHECKED_CAST")
-fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
-    objectInstance()?.let {
-        return it as T
+fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
+    kotlin.objectInstance?.let {
+        return it
     }
 
-    val (ktor, paramTypes, valueParams) = consMetaData()
+    val args = primaryParameters.map { param ->
+        param to (allParams[param.name]?.let {
+            Serialization.deserialize(it, param.type.javaType as Class<Any>, classLoader)
+        } ?: when {
+            param.type.isMarkedNullable -> null
+        //            param.isOptional && !allParams.containsKey(param.name)-> NullMask
+            else -> throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
+        })
+    }/*.filter { it.second == NullMask }*/.toMap()
 
-    val args = valueParams.mapIndexed { i, param ->
-        allParams[param.name]?.let {
-            Serialization.deserialize(it, paramTypes[i] as Class<Any>, classLoader)
-        } ?: if (param.type.isMarkedNullable) {
-            null
-        } else {
-            throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
-
-        }
-    }.toTypedArray()
-
-    return ktor.newInstance(*args) as T
+    return kotlin.primaryConstructor!!.callBy(args)
 }
 
-fun Any.primaryProperties() : List<String> {
-    return ReflectionCache.primaryProperites.concurrentGetOrPut(javaClass) {
-        javaClass.kotlin.primaryConstructor?.parameters?.map { it.name ?: "" }.orEmpty()
+val <T:Any> Class<T>.primaryParameters : List<KParameter> get() {
+    return ReflectionCache.primaryParameters.concurrentGetOrPut(this) {
+        kotlin.primaryConstructor?.parameters.orEmpty()
     }
 }
 
-@Suppress("UNCHECKED_CAST")
-fun <T> Class<out T>.primaryConstructor() : Constructor<T>? {
-    return constructors.singleOrNull() as? Constructor<T>
-}
+fun Any.primaryParametersNames() = javaClass.primaryParameters.map { it.name!! }
 
 public fun Class<*>.isEnumClass(): Boolean = Enum::class.java.isAssignableFrom(this)
 
@@ -134,8 +125,8 @@ fun ClassLoader.scanForClasses(prefix: String) : List<Class<*>> {
 }
 
 private fun URL.scanForClasses(prefix: String = "", classLoader: ClassLoader): List<Class<*>> {
-    return when {
-        protocol == "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("file:").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
+    return when (protocol) {
+        "jar" -> JarFile(urlDecode(toExternalForm().substringAfter("file:").substringBeforeLast("!"))).scanForClasses(prefix, classLoader)
         else -> File(urlDecode(path)).scanForClasses(prefix, classLoader)
     }
 }
