@@ -76,12 +76,12 @@ public open class ApplicationConfig() : Config() {
                         when {
                             it.endsWith("/**") -> {
                                 val answer = ArrayList<File>()
-                                File(it.removeSuffix("/**")).walkTopDown().forEach { file -> if (file.isFile && file.getName().endsWith(".jar")) answer.add(file) }
+                                File(it.removeSuffix("/**")).walkTopDown().forEach { file -> if (file.isFile && file.name.endsWith(".jar")) answer.add(file) }
                                 answer
                             }
 
                             it.endsWith("/*") -> {
-                                File(it.removeSuffix("/*")).listFiles { it.isFile && it.getName().endsWith(".jar") }?.toList() ?: listOf()
+                                File(it.removeSuffix("/*")).listFiles { it.isFile && it.name.endsWith(".jar") }?.toList() ?: listOf()
                             }
 
                             else -> {

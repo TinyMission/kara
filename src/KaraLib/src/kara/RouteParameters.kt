@@ -10,19 +10,19 @@ class RouteParameters() {
     val _list = ArrayList<String>()
 
     /** Gets a named parameter by name */
-    fun get(name : String) : String? {
+    operator fun get(name : String) : String? {
         return _map[name]
     }
 
     /** Sets a named parameter */
-    fun set(name : String, value : String) {
+    operator fun set(name : String, value : String) {
         if (!_map.containsKey(name)) // add it to the unnamed list as well, if it's not already there
             append(value)
         _map[name] = value
     }
 
     /** Gets an unnamed parameter by index */
-    fun get(i : Int) : String? {
+    operator fun get(i : Int) : String? {
         return _list.get(i)
     }
 

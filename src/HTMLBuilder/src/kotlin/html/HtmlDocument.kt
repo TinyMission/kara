@@ -6,7 +6,7 @@ open class HTML() : HtmlTag(null, "html") {
 
     override fun renderElement(builder: StringBuilder, indent: String) {
         builder.append("$doctype\n")
-        super<HtmlTag>.renderElement(builder, indent)
+        super.renderElement(builder, indent)
     }
 }
 

@@ -17,7 +17,7 @@ public open class Config() {
      * Gets the value for the given key.
      * Will raise an exception if the value isn't present. Try calling contains(key) first if you're unsure.
      */
-    public fun get(name: String): String {
+    operator public fun get(name: String): String {
         return tryGet(name) ?: throw MissingException("Could not find config value for key $name")
     }
 
@@ -38,7 +38,7 @@ public open class Config() {
     }
 
     /** Sets a value for the given key. */
-    public fun set(name: String, value: String) {
+    operator public fun set(name: String, value: String) {
         data[name] = value
     }
 
@@ -98,7 +98,7 @@ public open class Config() {
                 error("$path cannot be found")
             }
 
-            text.reader.forEachLine {
+            text.reader().forEachLine {
                 val line = it.trim()
 
                 when {

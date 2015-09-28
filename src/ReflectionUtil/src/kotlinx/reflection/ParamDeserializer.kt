@@ -84,9 +84,9 @@ class EnumSerializer: TypeSerializer() {
 
     override fun deserialize(param: String, paramType: Class<*>): Any? {
         return if (paramType.isEnum) {
-            paramType.getEnumConstants()?.safeGet(param.toInt())
+            paramType.enumConstants?.safeGet(param.toInt())
         } else if (paramType.isEnumClass()) {
-            paramType.enclosingClass.getEnumConstants()?.safeGet(param.toInt())
+            paramType.enclosingClass.enumConstants?.safeGet(param.toInt())
         }
     }
 

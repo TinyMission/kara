@@ -40,7 +40,7 @@ class CompositeStyleClass(val a: StyleClass, val b: StyleClass) : StyleClass {
     }
 }
 
-public fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
+operator public fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
     this == null && another == null -> null
     this == null -> another
     another == null -> this
@@ -81,7 +81,7 @@ open class CssElement() {
         fun c(vararg klass: StyleClass, body: StyledElement.() -> Unit) = invoke(*klass, body = body)
         fun c(vararg klass: StyleClass): Selector = invoke(*klass)
 
-        fun invoke(vararg traits: SelectorTrait, body: StyledElement.() -> Unit) {
+        operator fun invoke(vararg traits: SelectorTrait, body: StyledElement.() -> Unit) {
             s(SimpleSelector(this, traits).toExternalForm(), body)
         }
 
@@ -89,7 +89,7 @@ open class CssElement() {
             s(SimpleSelector(this, arrayOf(SimpleClassStyle(classes))).toExternalForm(), body)
         }
 
-        fun invoke(vararg t: SelectorTrait): Selector {
+        operator fun invoke(vararg t: SelectorTrait): Selector {
             return SimpleSelector(this, t)
         }
 

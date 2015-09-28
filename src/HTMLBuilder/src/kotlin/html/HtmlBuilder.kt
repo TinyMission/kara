@@ -1,7 +1,6 @@
 package kotlin.html
 
 import java.util.*
-import java.text.StringCharacterIterator
 
 abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle: ContentStyle = ContentStyle.block) {
     init {
@@ -133,11 +132,11 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         return attributes.containsKey(attributeName)
     }
 
-    public fun get(attributeName: String): String? {
+    operator public fun get(attributeName: String): String? {
         return attributes[attributeName]
     }
 
-    public fun set(attName: String, attValue: String?) {
+    operator public fun set(attName: String, attValue: String?) {
         attributes[attName] = attValue
     }
 
@@ -148,17 +147,17 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     /**
      * Override the not operator to add raw html
      */
-    fun String.not() = RawHtml(this@HtmlTag, this)
+    operator fun String.not() = RawHtml(this@HtmlTag, this)
 
     /**
      * Override the plus operator to add a text element.
      */
-    fun String.plus() = HtmlText(this@HtmlTag, this)
+    operator fun String.plus() = HtmlText(this@HtmlTag, this)
 
     /**
      * Override the plus operator to add a text element.
      */
-    fun Char.plus() = HtmlText(this@HtmlTag, this.toString())
+    operator fun Char.plus() = HtmlText(this@HtmlTag, this.toString())
 
     /**
      * Yet another way to set the text content of the node.

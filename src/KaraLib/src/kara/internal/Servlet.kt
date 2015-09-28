@@ -23,7 +23,7 @@ public open class Servlet() : HttpServlet() {
 
 
     override fun init() {
-        super<HttpServlet>.init()
+        super.init()
         application.config // Just to make sure application is eagerly loaded when servlet is initialized.
     }
 

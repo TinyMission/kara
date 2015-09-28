@@ -6,21 +6,14 @@ import java.lang.reflect.Modifier
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
-import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
-import kotlin.reflect.jvm.internal.impl.descriptors.ClassKind
-import kotlin.reflect.jvm.internal.impl.descriptors.ValueParameterDescriptor
-import kotlin.reflect.jvm.internal.impl.load.java.reflect.ReflectPackage
-import kotlin.reflect.jvm.internal.impl.utils.UtilsPackage
+import kotlin.reflect.*
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
-import kotlin.reflect.memberProperties
 
 object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
     val companionObjects = ConcurrentHashMap<Class<*>, Any>()
-    val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>>>()
+    val consMetadata = ConcurrentHashMap<Class<*>, Triple<Constructor<*>, Array<Class<*>>, List<KParameter>>>()
     val primaryProperites = ConcurrentHashMap<Class<*>, List<String>>()
     val propertyGetters = ConcurrentHashMap<Pair<KClass<*>, String>, KProperty1<Any, Any?>>()
 }
@@ -48,17 +41,14 @@ fun Class<*>.objectInstance0(): Any? {
 
 fun Class<*>.objectInstance(): Any? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
-        fields.firstOrNull {
-            with(it.type.kotlin as KClass<*>) {
-                __descriptor.kind == ClassKind.OBJECT && !__descriptor.isCompanionObject
-            }
-        }?.get(null) ?: NullMask
+        val k: KClass<out Any> = kotlin
+        k.objectInstance ?: NullMask
     }.unmask()
 }
 
 fun Class<*>.companionObjectInstance(): Any? {
     return ReflectionCache.companionObjects.concurrentGetOrPut(this) {
-        fields.firstOrNull { (it.type.kotlin as KClass<*>).__descriptor.isCompanionObject }?.get(null) ?: NullMask
+        kotlin.companionObjectInstance ?: NullMask
     }.unmask()
 }
 
@@ -76,11 +66,11 @@ fun Any.propertyValue(property: String): Any? {
     return getter.get(this)
 }
 
-private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<ValueParameterDescriptor>> {
+private fun Class<*>.consMetaData(): Triple<Constructor<*>, Array<Class<*>>, List<KParameter>> {
     return ReflectionCache.consMetadata.concurrentGetOrPut(this) {
         val cons = primaryConstructor() ?: error("Expecting single constructor for the bean")
-        val consDesc = (this.kotlin as KClass<*>).__descriptor.unsubstitutedPrimaryConstructor!!
-        Triple(cons, cons.parameterTypes, consDesc.valueParameters)
+        val consDesc: KFunction<Any> = (this.kotlin as KClass<*>).primaryConstructor!!
+        Triple(cons, cons.parameterTypes, consDesc.parameters)
     }
 }
 
@@ -95,12 +85,12 @@ fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
     val (ktor, paramTypes, valueParams) = consMetaData()
 
     val args = valueParams.mapIndexed { i, param ->
-        allParams[param.name.asString()]?.let {
+        allParams[param.name]?.let {
             Serialization.deserialize(it, paramTypes[i] as Class<Any>, classLoader)
         } ?: if (param.type.isMarkedNullable) {
             null
         } else {
-            throw MissingArgumentException("Required argument '${param.name.asString()}' is missing, available params: $allParams")
+            throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
 
         }
     }.toTypedArray()
@@ -110,7 +100,7 @@ fun <T> Class<out T>.buildBeanInstance(allParams: Map<String,String>): T {
 
 fun Any.primaryProperties() : List<String> {
     return ReflectionCache.primaryProperites.concurrentGetOrPut(javaClass) {
-        (javaClass.kotlin as KClass<*>).__descriptor.unsubstitutedPrimaryConstructor?.valueParameters?.map { it.name.asString() }.orEmpty()
+        javaClass.kotlin.primaryConstructor?.parameters?.map { it.name ?: "" }.orEmpty()
     }
 }
 
@@ -171,7 +161,7 @@ private fun File.scanForClasses(prefix: String, classLoader: ClassLoader): List<
     .filter{
         it.isFile && it.absolutePath.contains(path)
     }.map {
-        ReflectPackage.tryLoadClass(classLoader, prefix +"." + it.absolutePath.substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
+        classLoader.loadClass(prefix +"." + it.absolutePath.substringAfterLast(path).removeSuffix(".class").replace(File.separator, "."))
     }.filterNotNull().toList()
 }
 
@@ -182,7 +172,9 @@ private fun JarFile.scanForClasses(prefix: String, classLoader: ClassLoader): Li
     while(entries.hasMoreElements()) {
         entries.nextElement().let {
             if (!it.isDirectory && it.name.endsWith(".class") && it.name.contains(path) && !isAnonClass(it.name)) {
-                UtilsPackage.addIfNotNull(classes, ReflectPackage.tryLoadClass(classLoader, prefix + "." + it.name.substringAfterLast(path).removeSuffix(".class").replace("/", ".")))
+                classLoader.loadClass(prefix + "." + it.name.substringAfterLast(path).removeSuffix(".class").replace("/", "."))?.let{
+                    classes.add(it)
+                }
             }
         }
     }
@@ -194,8 +186,6 @@ fun <T> Iterable<Class<*>>.filterIsAssignable(clazz: Class<T>): List<Class<T>> =
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T: Any> Iterable<Class<*>>.filterIsAssignable(): List<Class<T>> = filterIsAssignable(T::class.java)
-
-val KClass<*>.__descriptor: ClassDescriptor get() = ReflectionUtil.getClassDescriptor(this)
 
 fun <T:Any?> Array<T>.safeGet(index: Int): T? {
     return if (index in this.indices) this[index] else null
