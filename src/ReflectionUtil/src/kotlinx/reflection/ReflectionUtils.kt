@@ -6,7 +6,6 @@ import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
 import kotlin.reflect.*
-import kotlin.reflect.jvm.internal.impl.load.java.reflect.ReflectJavaClassFinderKt.tryLoadClass
 import kotlin.reflect.jvm.javaType
 
 private object ReflectionCache {
@@ -19,7 +18,7 @@ private object ReflectionCache {
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
 
-@Deprecated("use KClass<T>.objectInstance. Fpr backword compatibilibty test only.")
+@Deprecated("use KClass<T>.objectInstance. For backword compatibilibty test only.")
 fun <T:Any> Class<T>.objectInstance0(): T? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
         try {
@@ -38,27 +37,13 @@ fun <T:Any> Class<T>.objectInstance0(): T? {
     }.unmask() as T
 }
 
-fun Class<*>.objectInstance(): Any? {
-    return ReflectionCache.objects.concurrentGetOrPut(this) {
-        val k: KClass<out Any> = kotlin
-        k.objectInstance ?: NullMask
-    }.unmask()
-}
-
-
-fun Class<*>.objectInstance(): Any? {
-    return ReflectionCache.objects.concurrentGetOrPut(this) {
-        val k: KClass<out Any> = kotlin
-        k.objectInstance ?: NullMask
-    }.unmask()
-}
-
 fun Class<*>.companionObjectInstance(): Any? {
     return ReflectionCache.companionObjects.concurrentGetOrPut(this) {
         kotlin.companionObjectInstance ?: NullMask
     }.unmask()
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T: Any, R:Any?> KClass<out T>.propertyGetter(property: String): KProperty1<T, R>? {
     return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property),  {
         memberProperties.firstOrNull { it.name == property } ?: NullMask

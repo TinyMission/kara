@@ -3,10 +3,10 @@ package kara.tests.reflection
 import kara.Application
 import kara.ApplicationConfig
 import kara.internal.scanPackageForResources
+import kotlinx.reflection.companionObjectInstance
 import kotlinx.reflection.objectInstance0
 import org.junit.Test
 import java.net.URLClassLoader
-import kotlin.reflect.companionObjectInstance
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -40,7 +40,7 @@ class ObjectInstances() {
 
 
     @Test fun testCompanionObjectViaReflection() {
-        val companion = Foo::class.companionObjectInstance
+        val companion = Foo::class.java.companionObjectInstance()
         assertNotNull(companion)
         assert(companion is Foo.Bar)
     }
