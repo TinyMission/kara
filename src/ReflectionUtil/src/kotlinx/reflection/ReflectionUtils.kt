@@ -18,6 +18,7 @@ private object ReflectionCache {
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
 
+@Suppress("UNCHECKED_CAST")
 @Deprecated("use KClass<T>.objectInstance. For backword compatibilibty test only.")
 fun <T:Any> Class<T>.objectInstance0(): T? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
@@ -27,7 +28,7 @@ fun <T:Any> Class<T>.objectInstance0(): T? {
                 if (!field.isAccessible) {
                     field.isAccessible = true
                 }
-                field[null]!!
+                field.get(null)!!
             }
             else NullMask
         }
@@ -65,14 +66,17 @@ fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
     }
 
     val args = primaryParameters.map { param ->
-        param to (allParams[param.name]?.let {
-            Serialization.deserialize(it, param.type.javaType as Class<Any>, classLoader)
-        } ?: when {
-            param.type.isMarkedNullable -> null
-        //            param.isOptional && !allParams.containsKey(param.name)-> NullMask
-            else -> throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
+        param to (run {
+            val stringValue = allParams[param.name]
+            when {
+                stringValue == "null" && param.type.isMarkedNullable -> null
+                stringValue != null -> Serialization.deserialize(stringValue, param.type.javaType as Class<Any>, classLoader)
+                param.isOptional -> NullMask
+                param.type.isMarkedNullable -> null
+                else -> throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
+            }
         })
-    }/*.filter { it.second == NullMask }*/.toMap()
+    }.filter { it.second != NullMask }.toMap()
 
     return kotlin.primaryConstructor!!.callBy(args)
 }

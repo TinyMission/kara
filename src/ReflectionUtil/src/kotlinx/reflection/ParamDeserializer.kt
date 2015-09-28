@@ -85,9 +85,9 @@ class EnumSerializer: TypeSerializer<Enum<*>>() {
     @Suppress("IMPLICIT_CAST_TO_UNIT_OR_ANY")
     override fun deserialize(param: String, paramType: Class<out Enum<*>>): Enum<*>? {
         return if (paramType.isEnum) {
-            paramType.enumConstants?.safeGet(param.toInt())
+            paramType.enumConstants.safeGet(param.toInt())
         } else if (paramType.isEnumClass()) {
-            paramType.enclosingClass.enumConstants?.safeGet(param.toInt())
+            paramType.enclosingClass.enumConstants.safeGet(param.toInt())
         } as Enum<*>
     }
 

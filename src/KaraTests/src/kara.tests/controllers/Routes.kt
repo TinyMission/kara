@@ -36,6 +36,11 @@ object Routes {
         TextResult("default/$p")
     })
 
+    @Get("/ndefault/?p")
+    class NDefault(val p: Int? = 42) : Request({
+        TextResult("ndefault/$p")
+    })
+
     @Get("/error/:brokenPipe")
     class Error(val brokenPipe: Boolean) : Request({
         if (brokenPipe) {
@@ -94,7 +99,7 @@ object Routes {
         })
 
         @Get("complex/*/list/:id")
-        class Complex(id: String) : Request({
+        class Complex(val id: String) : Request({
             TextResult("complex: ${params[0]} id = $id")
         })
 
@@ -121,7 +126,7 @@ object Routes {
         })
 
         @Get(":id")
-        class Show(id: Int) : Request({
+        class Show(val id: Int) : Request({
             TextResult("show $id")
         })
 
@@ -131,12 +136,12 @@ object Routes {
         })
 
         @Put(":id")
-        class Update(id: Int) : Request({
+        class Update(val id: Int) : Request({
             TextResult("update $id")
         })
 
         @Delete(":id")
-        class _Delete(id: String) : Request({
+        class _Delete(val id: String) : Request({
             TextResult("delete $id")
         })
     }

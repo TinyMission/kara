@@ -58,12 +58,22 @@ class ActionTests() {
         assertEquals("/optional/44", Routes.Optional("44").href())
     }
 
-/*    @Test fun defaultTests() {
+    @Test fun defaultTests() {
         assertResponse("default/test", "/default")
         assertResponse("default/smth", "/default/smth")
         assertEquals("/default/test", Routes.Default().href())
         assertEquals("/default/smth", Routes.Default("smth").href())
-    }*/
+        assertEquals("/default", Routes.Default(null).href())
+    }
+
+    @Test fun defaultNumericTests() {
+        assertResponse("ndefault/42", "/ndefault")
+        assertResponse("ndefault/null", "/ndefault/null")
+        assertResponse("ndefault/5", "/ndefault/5")
+        assertEquals("/ndefault/42", Routes.NDefault().href())
+        assertEquals("/ndefault/5", Routes.NDefault(5).href())
+        assertEquals("/ndefault", Routes.NDefault(null).href())
+    }
 
     @Test fun hrefWithContext() {
         assertEquals("/somepath/test/test.css", TestStyles.href("/somepath"))
