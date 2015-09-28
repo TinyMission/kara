@@ -2,6 +2,8 @@ package kotlinx.reflection
 
 import java.io.File
 import java.lang.reflect.Modifier
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
@@ -59,7 +61,6 @@ fun <T:Any, R:Any?> T.propertyValue(property: String): R? {
 
 public class MissingArgumentException(message: String) : RuntimeException(message)
 
-@Suppress("UNCHECKED_CAST")
 fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
     kotlin.objectInstance?.let {
         return it
@@ -70,7 +71,7 @@ fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
             val stringValue = allParams[param.name]
             when {
                 stringValue == "null" && param.type.isMarkedNullable -> null
-                stringValue != null -> Serialization.deserialize(stringValue, param.type.javaType as Class<Any>, classLoader)
+                stringValue != null -> Serialization.deserialize(stringValue, paramJavaType(param.type.javaType), classLoader)
                 param.isOptional -> NullMask
                 param.type.isMarkedNullable -> null
                 else -> throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
@@ -79,6 +80,15 @@ fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
     }.filter { it.second != NullMask }.toMap()
 
     return kotlin.primaryConstructor!!.callBy(args)
+}
+
+@Suppress("UNCHECKED_CAST")
+private fun paramJavaType(javaType: Type): Class<Any> {
+    return when (javaType) {
+        is ParameterizedType -> paramJavaType(javaType.rawType)
+        is Class<*> -> javaType as Class<Any>
+        else -> error("Unsupported type")
+    }
 }
 
 val <T:Any> Class<T>.primaryParameters : List<KParameter> get() {
