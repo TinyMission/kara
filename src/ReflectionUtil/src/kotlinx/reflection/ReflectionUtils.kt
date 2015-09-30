@@ -13,7 +13,7 @@ import kotlin.reflect.jvm.javaType
 private object ReflectionCache {
     val objects = ConcurrentHashMap<Class<*>, Any>()
     val companionObjects = ConcurrentHashMap<Class<*>, Any>()
-    val primaryParameters = ConcurrentHashMap<Class<out Any>, List<KParameter>>()
+    val primaryParameterNames = ConcurrentHashMap<Class<out Any>, List<String>>()
     val propertyGetters = ConcurrentHashMap<Pair<KClass<out Any>, String>, Any>()
 }
 
@@ -66,7 +66,8 @@ fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
         return it
     }
 
-    val args = primaryParameters.map { param ->
+    val cons = kotlin.primaryConstructor!!
+    val args = cons.parameters.map { param ->
         param to (run {
             val stringValue = allParams[param.name]
             when {
@@ -79,7 +80,7 @@ fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
         })
     }.filter { it.second != NullMask }.toMap()
 
-    return kotlin.primaryConstructor!!.callBy(args)
+    return cons.callBy(args)
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -91,13 +92,9 @@ private fun paramJavaType(javaType: Type): Class<Any> {
     }
 }
 
-val <T:Any> Class<T>.primaryParameters : List<KParameter> get() {
-    return ReflectionCache.primaryParameters.concurrentGetOrPut(this) {
-        kotlin.primaryConstructor?.parameters.orEmpty()
-    }
+fun Any.primaryParametersNames() = ReflectionCache.primaryParameterNames.concurrentGetOrPut(javaClass) {
+    javaClass.kotlin.primaryConstructor?.parameters.orEmpty().map {it.name!!}
 }
-
-fun Any.primaryParametersNames() = javaClass.primaryParameters.map { it.name!! }
 
 public fun Class<*>.isEnumClass(): Boolean = Enum::class.java.isAssignableFrom(this)
 
