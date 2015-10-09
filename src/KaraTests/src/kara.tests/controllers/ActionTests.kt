@@ -66,6 +66,10 @@ class ActionTests() {
         assertEquals("/default", Routes.Default(null).href())
     }
 
+    @Test fun emptyStrings() {
+        assertResponse("es:,esn:,int:null", "/emptyStrings?es=&esn=&int=")
+    }
+
     @Test fun defaultNumericTests() {
         assertResponse("ndefault/42", "/ndefault")
         assertResponse("ndefault/null", "/ndefault/null")

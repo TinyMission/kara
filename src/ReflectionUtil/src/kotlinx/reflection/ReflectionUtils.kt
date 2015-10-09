@@ -72,6 +72,7 @@ fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
             val stringValue = allParams[param.name]
             when {
                 stringValue == "null" && param.type.isMarkedNullable -> null
+                stringValue == "" && param.type.javaType != String::class.java && param.type.isMarkedNullable -> null
                 stringValue != null -> Serialization.deserialize(stringValue, paramJavaType(param.type.javaType), classLoader)  ?: throw MissingArgumentException("Bad argument ${param.name}='$stringValue'")
                 param.isOptional -> NullMask
                 param.type.isMarkedNullable -> null

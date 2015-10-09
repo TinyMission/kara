@@ -41,6 +41,11 @@ object Routes {
         TextResult("ndefault/$p")
     })
 
+    @Get("/emptyStrings")
+    class EmptyStrings(val es: String, val esn: String?, val int: Int?) : Request({
+        TextResult("es:$es,esn:$esn,int:$int")
+    })
+
     @Get("/error/:brokenPipe")
     class Error(val brokenPipe: Boolean) : Request({
         if (brokenPipe) {
