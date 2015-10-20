@@ -15,7 +15,7 @@ fun String.partition(char: Char) : Pair<String, String> {
     val idx = indexOf(char)
 
     return when {
-        idx in 0 .. length() - 1 -> substring(0, idx) to substring(idx + 1)
+        idx in 0 .. length - 1 -> substring(0, idx) to substring(idx + 1)
         else -> this to ""
     }
 }

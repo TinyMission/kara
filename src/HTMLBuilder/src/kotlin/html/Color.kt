@@ -32,26 +32,26 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
         public fun fromHex(s : String) : Color {
             // TODO 4/8-digit are actually not supported by CSS spec, make framework parse rgb/rgba() format instead
 
-            if (s.length() == 4 && s.charAt(0) == '#') {
+            if (s.length == 4 && s[0] == '#') {
                 val r = Integer.parseInt(s.substring(1, 2), 16)
                 val g = Integer.parseInt(s.substring(2, 3), 16)
                 val b = Integer.parseInt(s.substring(3, 4), 16)
                 return Color.fromRgb(r * 16 + r, g * 16 + g, b * 16 + b)
             }
-            if (s.length() == 5 && s.charAt(0) == '#') {
+            if (s.length == 5 && s[0] == '#') {
                 val r = Integer.parseInt(s.substring(1, 2), 16)
                 val g = Integer.parseInt(s.substring(2, 3), 16)
                 val b = Integer.parseInt(s.substring(3, 4), 16)
                 val a = Integer.parseInt(s.substring(4, 5), 16)
                 return Color.fromRgb(r * 16 + r, g * 16 + g, b * 16 + b, a * 16 + a)
             }
-            if (s.length() == 7 && s.charAt(0) == '#') {
+            if (s.length == 7 && s[0] == '#') {
                 val r = Integer.parseInt(s.substring(1, 3), 16)
                 val g = Integer.parseInt(s.substring(3, 5), 16)
                 val b = Integer.parseInt(s.substring(5, 7), 16)
                 return Color.fromRgb(r, g, b)
             }
-            if (s.length() == 9 && s.charAt(0) == '#') {
+            if (s.length == 9 && s[0] == '#') {
                 val r = Integer.parseInt(s.substring(1, 3), 16)
                 val g = Integer.parseInt(s.substring(3, 5), 16)
                 val b = Integer.parseInt(s.substring(5, 7), 16)

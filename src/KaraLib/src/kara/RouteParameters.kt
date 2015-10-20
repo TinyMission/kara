@@ -37,17 +37,17 @@ class RouteParameters() {
 
     /** Returns the total number of parameters */
     fun size() : Int {
-        return _list.size()
+        return _list.size
     }
 
     /** Gets a hash with the nested values of the given name. */
     fun getHash(name : String) : HashMap<String,String> {
         val map = HashMap<String,String>()
         val prefix = name + "["
-        for (key in _map.keySet()) {
+        for (key in _map.keys) {
             if (key.startsWith(prefix)) {
                 var subkey = key.replace(prefix, "")
-                subkey = subkey.substring(0, subkey.length()-1)
+                subkey = subkey.substring(0, subkey.length -1)
                 val value = _map[key]!!
                 map[subkey] = value
             }
@@ -57,9 +57,9 @@ class RouteParameters() {
 
     public override fun toString() : String {
         val pairs = _map.map { it ->
-            "${it.getKey()}: ${it.getValue()}"
+            "${it.key}: ${it.value}"
         }
-        return pairs.join(", ")
+        return pairs.joinToString(", ")
     }
 
     fun optIntParam(name: String): Int? {

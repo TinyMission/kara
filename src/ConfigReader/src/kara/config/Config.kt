@@ -52,7 +52,7 @@ public open class Config() {
     /** Prints the entire config to a nicely formatted string. */
     public override fun toString(): String {
         val builder = StringBuilder()
-        for (name in data.keySet()) {
+        for (name in data.keys) {
             builder.append("$name: ${data[name]}\n")
         }
         return builder.toString()
@@ -139,7 +139,7 @@ public open class Config() {
                 lastAppend = matcher.end()
             }
 
-            answer.append(line, lastAppend, line.length())
+            answer.append(line, lastAppend, line.length)
 
             return answer.toString()
         }

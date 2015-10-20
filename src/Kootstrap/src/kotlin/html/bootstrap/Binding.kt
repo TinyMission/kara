@@ -18,9 +18,9 @@ fun HtmlTag.applyAttributes(apply: HtmlTag.() -> Unit): Boolean {
 }
 
 fun <T : HtmlTag> T.withAttributes(content: T.() -> Unit, apply: HtmlTag.() -> Unit) {
-    val curChildren = children.size()
+    val curChildren = children.size
     content()
-    if (curChildren + 1 != children.size()) {
+    if (curChildren + 1 != children.size) {
         throw Exception("Template tag must have single child tag")
     }
 

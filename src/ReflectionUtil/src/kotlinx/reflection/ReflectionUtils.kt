@@ -134,7 +134,7 @@ private fun isAnonClass(name: String): Boolean {
     var idx = name.indexOf('$')
 
     while (idx >= 0) {
-        if (idx + 1 < name.length() && name[idx + 1] in '0'..'9') return true
+        if (idx + 1 < name.length && name[idx + 1] in '0'..'9') return true
         idx = name.indexOf('$', idx + 1)
     }
 

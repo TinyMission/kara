@@ -51,7 +51,7 @@ public open class Servlet() : HttpServlet() {
         catch (ex: Throwable) {
             logger.error("Error processing request: ${req.requestURI}, User agent: ${req.getHeader("User-Agent")}", ex)
             if (!resp.isCommitted) {
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.message)
             }
         }
     }

@@ -3,7 +3,7 @@ package kotlin.html
 public enum class ButtonType : StringEnum<ButtonType> {
     button, reset, submit;
 
-    override val value: String get() = name()
+    override val value: String get() = name
 }
 
 public enum class InputType : StringEnum<InputType> {
@@ -12,5 +12,5 @@ public enum class InputType : StringEnum<InputType> {
     // HTML5:
     color, date, datetime, datetime_local, email, number, range, search, tel, time, url, month, week;
 
-    override val value: String = name().replace('_', '-')
+    override val value: String = name.replace('_', '-')
 }

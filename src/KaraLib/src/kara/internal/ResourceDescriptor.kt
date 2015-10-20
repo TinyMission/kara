@@ -21,7 +21,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     public fun matches(url: String): Boolean {
         val path = url.substringBefore("?")
         val components = path.toPathComponents()
-        if (components.size() > routeComponents.size() || components.size() < routeComponents.size() - optionalComponents.size())
+        if (components.size > routeComponents.size || components.size < routeComponents.size - optionalComponents.size)
             return false
 
         for (i in components.indices) {
@@ -40,7 +40,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
 
         // parse the route parameters
         val pathComponents = url.substringBefore('?').toPathComponents().map { urlDecode(it) }
-        if (pathComponents.size() < routeComponents.size() - optionalComponents.size())
+        if (pathComponents.size < routeComponents.size - optionalComponents.size)
             throw InvalidRouteException("URL has less components than mandatory parameters of the route")
         for (i in pathComponents.indices) {
             val component = pathComponents[i]

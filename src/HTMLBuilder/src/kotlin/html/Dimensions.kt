@@ -20,11 +20,11 @@ class LinearDimension(var value: Double, var units: LinearUnits) {
         /** Creates a linear dimension froma string literal */
         fun fromString(s: String): LinearDimension {
             if (s.endsWith("em"))
-                return LinearDimension(s.substring(0, s.length() - 2).toDouble(), LinearUnits._em)
+                return LinearDimension(s.substring(0, s.length - 2).toDouble(), LinearUnits._em)
             if (s.endsWith("px"))
-                return LinearDimension(s.substring(0, s.length() - 2).toDouble(), LinearUnits._px)
+                return LinearDimension(s.substring(0, s.length - 2).toDouble(), LinearUnits._px)
             if (s.endsWith("%"))
-                return LinearDimension(s.substring(0, s.length() - 1).toDouble(), LinearUnits._percent)
+                return LinearDimension(s.substring(0, s.length - 1).toDouble(), LinearUnits._percent)
             throw Exception("Invalid linear dimension: $s")
         }
 

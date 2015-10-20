@@ -15,7 +15,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
             val css = compiler.compile(lessSource) ?: error("$name can't be compiled")
 
             val bytes = css.toByteArray("UTF-8")
-            return ResourceContent("text/css", combinedModification, bytes.size(), { bytes.inputStream() })
+            return ResourceContent("text/css", combinedModification, bytes.size, { bytes.inputStream() })
         }
     }
 
@@ -37,7 +37,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
 public class URLResource(val uri: URI): org.lesscss.HttpResource(uri) {
     override fun createRelative(name: String?): org.lesscss.Resource? {
         val components = uri.toString().split('/')
-        val newPath = "${components.take(components.size() - 1).join("/")}/$name"
+        val newPath = "${components.take(components.size() - 1).joinToString("/")}/$name"
         return URLResource(URI(newPath))
     }
 }

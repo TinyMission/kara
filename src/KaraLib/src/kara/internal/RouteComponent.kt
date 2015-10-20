@@ -2,16 +2,16 @@ package kara.internal
 
 import kara.*
 
-fun String.toPathComponents(): List<String> = (if (length() > 1) trimEnd('/') else this).split("/").filter { it.isNotEmpty() }
+fun String.toPathComponents(): List<String> = (if (length > 1) trimEnd('/') else this).split("/").filter { it.isNotEmpty() }
 fun String.toRouteComponents(): List<RouteComponent> = toPathComponents().map { RouteComponent.create(it) }
 
 /** Base class for objects that represent a single component of a route. */
 abstract class RouteComponent(val componentText: String) {
     companion object {
         fun create(component: String): RouteComponent {
-            if (component.length() > 1 && component.charAt(0) == ':' && component.lastIndexOf(':') == 0)
+            if (component.length > 1 && component[0] == ':' && component.lastIndexOf(':') == 0)
                 return ParamRouteComponent(component)
-            else if (component.length() > 1 && component.charAt(0) == '?' && component.lastIndexOf('?') == 0)
+            else if (component.length > 1 && component[0] == '?' && component.lastIndexOf('?') == 0)
                 return OptionalParamRouteComponent(component)
             else if (component == "*")
                 return WildcardRouteComponent(component)

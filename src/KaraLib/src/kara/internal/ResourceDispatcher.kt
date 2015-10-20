@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse
 /** Used by the server to dispatch requests to their appropriate actions.
  */
 class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Class<out Resource>>) {
-    private val httpMethods = Array(HttpMethod.values().size()) {
+    private val httpMethods = Array(HttpMethod.values().size) {
         ArrayList<ResourceDescriptor>()
     };
     private val resources = HashMap<Class<out Resource>, ResourceDescriptor>()
@@ -17,7 +17,7 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
         for (routeType in resourceTypes) {
             val descriptor = routeType.route()
             resources[routeType] = descriptor
-            httpMethods[descriptor.httpMethod.ordinal()].add(descriptor)
+            httpMethods[descriptor.httpMethod.ordinal].add(descriptor)
         }
     }
 
@@ -28,13 +28,13 @@ class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Cl
     /** Matches an http method and url to an ActionInfo object. Returns null if no match is found.
      */
     fun findDescriptor(httpMethod: String, url: String): ResourceDescriptor? {
-        val httpMethodIndex = httpMethod.asHttpMethod().ordinal()
+        val httpMethodIndex = httpMethod.asHttpMethod().ordinal
         val matches = ArrayList(httpMethods[httpMethodIndex].filter { it.matches(url) })
 
-        return when (matches.size()) {
+        return when (matches.size) {
             1 -> matches[0]
             0 -> null
-            else -> throw InvalidRouteException("URL '$url' matches more than single route: ${matches.map { it.route }.join(", ")}")
+            else -> throw InvalidRouteException("URL '$url' matches more than single route: ${matches.map { it.route }.joinToString(", ")}")
         }
     }
 

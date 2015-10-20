@@ -69,7 +69,7 @@ open class XmlResult(val xml: String) : ActionResult {
     fun respondWithXml(context: ActionContext) {
         val text = prettyFormat(xml, 2)
         val content = text.toByteArray();
-        context.response.setContentLength(content.size())
+        context.response.setContentLength(content.size)
         context.response.contentType = "text/xml"
         context.response.characterEncoding = "UTF-8"
         val out = context.response.outputStream

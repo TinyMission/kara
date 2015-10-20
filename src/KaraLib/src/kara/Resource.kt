@@ -18,13 +18,13 @@ public abstract class Resource() : Link {
 
     fun href(context: String): String {
         val url = requestParts(context)
-        if (url.second.size() == 0) return url.first
+        if (url.second.size == 0) return url.first
 
         val answer = StringBuilder()
 
         answer.append(url.first)
         answer.append("?")
-        answer.append(url.second map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" } join("&"))
+        answer.append((url.second map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" }).joinToString(("&")))
 
         return answer.toString()
     }
@@ -56,7 +56,7 @@ public abstract class Resource() : Link {
             }
         })
 
-        path.append(components.filterNotNull().join("/"))
+        path.append(components.filterNotNull().joinToString("/"))
 
         val queryArgs = LinkedHashMap<String, Any>()
         for (prop in properties filter { propertyValue<Resource,Any>(it) != null }) {

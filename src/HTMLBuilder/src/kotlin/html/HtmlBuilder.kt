@@ -49,10 +49,10 @@ fun html(content: HtmlBodyTag.() -> Unit): String {
 }
 
 fun String.htmlEscapeTo(builder: StringBuilder) {
-    val len = length()
+    val len = length
 
     for (i in 0..len - 1) {
-        val c = charAt(i)
+        val c = this[i]
         when (c) {
             '<' -> builder.append("&lt;")
             '>' -> builder.append("&gt;")
@@ -66,13 +66,13 @@ fun String.htmlEscapeTo(builder: StringBuilder) {
 abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
     private val attributes = HashMap<String, String?>()
 
-    public inline fun build<T : HtmlTag>(tag: T, contents: T.() -> Unit): T {
+    public inline fun <T : HtmlTag> build(tag: T, contents: T.() -> Unit): T {
         tag.contents()
         return tag
     }
 
     override fun renderElement(builder: StringBuilder, indent: String) {
-        val count = children.size()
+        val count = children.size
         builder.append(indent).append('<').append(tagName)
         renderAttributes(builder)
 
@@ -114,7 +114,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     }
 
     protected fun renderAttributes(builder: StringBuilder) {
-        for ((name, value) in attributes.entrySet()) {
+        for ((name, value) in attributes.entries) {
             builder.append(' ').append(name)
             value?.let {
                 builder.append("=\"")
@@ -152,7 +152,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     /**
      * Override the plus operator to add a text element.
      */
-    operator fun String.plus() = HtmlText(this@HtmlTag, this)
+    operator fun String.unaryPlus() = HtmlText(this@HtmlTag, this)
 
     /**
      * Override the plus operator to add a text element.
@@ -164,7 +164,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
      */
     var text: String?
         get() {
-            if (children.size() > 0)
+            if (children.size > 0)
                 return children[0].toString()
             return ""
         }

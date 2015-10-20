@@ -79,16 +79,20 @@ class BigDecimalSerializer: TypeSerializer<BigDecimal>() {
 
 class EnumSerializer: TypeSerializer<Enum<*>>() {
     override fun serialize(param: Any): String {
-        return (param as Enum<*>).ordinal().toString()
+        return (param as Enum<*>).ordinal.toString()
     }
 
     @Suppress("IMPLICIT_CAST_TO_UNIT_OR_ANY")
     override fun deserialize(param: String, paramType: Class<out Enum<*>>): Enum<*>? {
-        return if (paramType.isEnum) {
-            paramType.enumConstants.safeGet(param.toInt())
-        } else if (paramType.isEnumClass()) {
-            paramType.enclosingClass.enumConstants.safeGet(param.toInt())
-        } as Enum<*>
+        return when {
+            paramType.isEnum -> {
+                paramType.enumConstants.safeGet(param.toInt())
+            }
+            paramType.isEnumClass() -> {
+                paramType.enclosingClass.enumConstants.safeGet(param.toInt()) as Enum<*>
+            }
+            else -> null
+        }
     }
 
     override fun isThisType(testType: Class<*>): Boolean {
@@ -168,7 +172,7 @@ fun <T:Any> Class<T>.parse(params: String) : T {
     val queryComponents = params.split("&")
     for (component in queryComponents) {
         val nvp = component.split("=")
-        if (nvp.size() > 1)
+        if (nvp.size > 1)
             map[nvp[0]] = nvp[1]
         else
             map[nvp[0]] = ""
@@ -179,9 +183,9 @@ fun <T:Any> Class<T>.parse(params: String) : T {
 
 fun <T:Any> T.serialize(): String {
     return primaryParametersNames().map { it to propertyValue<T,Any>(it) }.
-    filter {it.second != null}.
-    map { "${it.first}=${urlEncode(Serialization.serialize(it.second)!!)}"}.
-    join("&")
+            filter {it.second != null}.
+            map { "${it.first}=${urlEncode(Serialization.serialize(it.second)!!)}"}.
+            joinToString("&")
 
 }
 

@@ -69,7 +69,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
                 }
             }
             catch(ex: Throwable) {
-                logger.error("dispatch error: ${ex.getMessage()}", ex);
+                logger.error("dispatch error: ${ex.message}", ex);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorDescr(ex, request, request.session!!))
             }
         }
@@ -78,7 +78,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
     private fun findApp(request: HttpServletRequest): Application {
         val path = request.requestURI.removePrefix("/").substringBefore("/")
 
-        return apps[path] ?: apps[""] ?: apps[apps.keySet().first()]!!
+        return apps[path] ?: apps[""] ?: apps[apps.keys.first()]!!
     }
 
     public fun start() {

@@ -11,10 +11,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
 import kotlin.html.Link
+import kotlin.reflect.KProperty
 
 
 fun HttpSession.getDescription() : String {
-    return this.attributeNames!!.toList().map { "$it: ${this.getAttribute(it)}" }.join()
+    return this.attributeNames!!.toList().map { "$it: ${this.getAttribute(it)}" }.joinToString()
 }
 
 /** This contains information about the current rendering action.
@@ -100,12 +101,12 @@ class ActionContext(val appContext: ApplicationContext,
 
 public class RequestScope<T>() {
     operator @Suppress("UNCHECKED_CAST")
-    fun get(o : Any?, desc: kotlin.PropertyMetadata): T {
+    fun get(o : Any?, desc: KProperty<*>): T {
         val data = ActionContext.current().data
         return data.get(desc) as T
     }
 
-    operator private fun set(o : Any?, desc: kotlin.PropertyMetadata, value: T) {
+    operator private fun set(o : Any?, desc: KProperty<*>, value: T) {
         ActionContext.current().data.put(desc, value)
     }
 }
@@ -113,7 +114,7 @@ public class RequestScope<T>() {
 
 public class LazyRequestScope<T:Any>(val initial: () -> T) {
     @Suppress("UNCHECKED_CAST")
-    operator fun get(o: Any?, desc: kotlin.PropertyMetadata): T = ActionContext.current().data.getOrPut(desc, { initial() }) as T
+    operator fun get(o: Any?, desc: KProperty<*>): T = ActionContext.current().data.getOrPut(desc, { initial() }) as T
 }
 
 public class ContextException(msg : String) : Exception(msg) {}

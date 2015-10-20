@@ -17,23 +17,18 @@ object EmptyTrait : SelectorTrait {
 }
 
 public interface StyleClass : SelectorTrait, Selector {
-    fun name(): String
+    val name: String
 
     override fun toExternalForm(): String {
-        return ".${name()}"
+        return ".${name}"
     }
 }
 
-public class SimpleClassStyle(val name : String) : StyleClass {
-    override fun name(): String {
-        return name
-    }
+public class SimpleClassStyle(override val name : String) : StyleClass {
 }
 
 class CompositeStyleClass(val a: StyleClass, val b: StyleClass) : StyleClass {
-    override fun name(): String {
-        return "${a.name()} ${b.name()}"
-    }
+    override val name: String get() = "${a.name} ${b.name}"
 
     override fun toExternalForm(): String {
         return "${a.toExternalForm()} ${b.toExternalForm()}"
@@ -52,7 +47,7 @@ public enum class PseudoClass : StyleClass {
     empty, link, visited, active, focus, hover, target, enabled, disabled, checked;
 
     override fun toExternalForm(): String {
-        return ":${name()}"
+        return ":${name}"
     }
 }
 
@@ -156,27 +151,27 @@ open class CssElement() {
     public fun att(name: String): Attribute = Attribute(name, HasAttribute(name))
 
     public class Attribute internal constructor(val name: String, val filter: AttFilter) : SelectorTrait {
-        public fun startsWith(value: String): Attribute {
+        public infix fun startsWith(value: String): Attribute {
             return Attribute(name, StartsWith(value))
         }
 
-        public fun equalTo(value: String): Attribute {
+        public infix fun equalTo(value: String): Attribute {
             return Attribute(name, Equals(value))
         }
 
-        public fun endsWith(value: String): Attribute {
+        public infix fun endsWith(value: String): Attribute {
             return Attribute(name, EndsWith(value))
         }
 
-        public fun contains(value: String): Attribute {
+        public infix fun contains(value: String): Attribute {
             return Attribute(name, Contains(value, AttributeValueTokenizer.Substring))
         }
 
-        public fun containsInHypen(value: String): Attribute {
+        public infix fun containsInHypen(value: String): Attribute {
             return Attribute(name, Contains(value, AttributeValueTokenizer.Hypen))
         }
 
-        public fun containsInSpaces(value: String): Attribute {
+        public infix fun containsInSpaces(value: String): Attribute {
             return Attribute(name, Contains(value, AttributeValueTokenizer.Spaces))
         }
 
@@ -198,7 +193,7 @@ open class CssElement() {
                 answer.append(t.toExternalForm())
             }
 
-            if (answer.length() == 0 && isAny) {
+            if (answer.length == 0 && isAny) {
                 return "*"
             }
 
@@ -216,7 +211,7 @@ open class CssElement() {
 
     class UnionSelector(val selectors: Array<out Selector>) : Selector {
         override fun toExternalForm(): String {
-            return "(${selectors.map ({ it.toExternalForm() }).join(",")})"
+            return "(${selectors.map ({ it.toExternalForm() }).joinToString(",")})"
         }
     }
 
@@ -236,9 +231,9 @@ class StyledElement(val selector: String) : CssElement() {
      * Writes the element to the builder with the given indenation.
      */
     fun build(builder: StringBuilder, baseSelector: String) {
-        val thisSelector = if (baseSelector.length() > 0) if (selector.startsWith(':')) "$baseSelector$selector" else "$baseSelector $selector" else selector
+        val thisSelector = if (baseSelector.length > 0) if (selector.startsWith(':')) "$baseSelector$selector" else "$baseSelector $selector" else selector
         builder.append("$thisSelector {\n")
-        for (a in attributes.keySet()) {
+        for (a in attributes.keys) {
             val attr = attributes[a]!!
             builder.append("    $a: ${attr.toString()};\n")
         }
@@ -250,7 +245,7 @@ class StyledElement(val selector: String) : CssElement() {
 
     /** Strongly-typed method for pulling attributes out of the hash. */
     @Suppress("UNCHECKED_CAST")
-    fun getAttribute<T:Any?>(name: String): T {
+    fun <T:Any?> getAttribute(name: String): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
         else
@@ -259,7 +254,7 @@ class StyledElement(val selector: String) : CssElement() {
 
     /** Strongly-typed method for pulling attributes out of the hash, with a default return value. */
     @Suppress("UNCHECKED_CAST")
-    fun getAttribute<T>(name: String, default: T): T {
+    fun <T> getAttribute(name: String, default: T): T {
         if (attributes.containsKey(name))
             return attributes[name] as T
         else

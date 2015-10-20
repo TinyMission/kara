@@ -1,6 +1,6 @@
 package kotlin.html
 
-val <T> empty_contents: T.() -> Unit = { }
+val empty_contents: Any.() -> Unit = { }
 
 fun HTML.body(init: BODY.() -> Unit) = build(BODY(this), init)
 class BODY(containingTag: HTML) : HtmlBodyTag(containingTag, "body")
@@ -22,7 +22,7 @@ public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderS
 
     fun addClass(c: StyleClass?) {
         if (c != null) {
-            addClass(c.name())
+            addClass(c.name)
         }
     }
 
@@ -34,7 +34,7 @@ public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderS
     }
 
     fun setClass(c: StyleClass?) {
-        setClass(c?.name() ?: "")
+        setClass(c?.name ?: "")
     }
 
     fun setClass(c: String) {

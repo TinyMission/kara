@@ -1,7 +1,5 @@
 package kotlin.html
 
-import kotlin.html.*
-
 object Attributes {
     val id = IdAttribute("id")
     val style = StringAttribute("style")

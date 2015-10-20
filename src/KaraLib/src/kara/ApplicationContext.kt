@@ -57,21 +57,21 @@ class ApplicationContext(public val config : ApplicationConfig,
             // All kinds of EOFs and Broken Pipes can be safely ignored
         }
         catch(e400: MissingArgumentException) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.getMessage())
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.message)
             Application.logger.warn(formatLogErrorMsg("400", request), e400)
         } catch(e400: InvalidRequestException) {
             Application.logger.warn(formatLogErrorMsg("400", request), e400)
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.getMessage())
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e400.message)
         } catch(e404: NotFoundException) {
             Application.logger.warn(formatLogErrorMsg("404", request), e404)
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, e404.getMessage())
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, e404.message)
         }
         catch(ex: Throwable) {
             when {
                 ex.javaClass.name == "org.apache.catalina.connector.ClientAbortException" -> {} // do nothing for tomcat specific exception
                 else -> {
                     Application.logger.error(formatLogErrorMsg("Error", request), ex)
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage())
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.message)
                 }
             }
         }

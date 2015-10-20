@@ -37,18 +37,18 @@ open public class Placeholder<TOuter>() {
 
 public class PlaceholderItem<TOuter>(val index: Int, val collection: List<PlaceholderItem<TOuter>>) : Placeholder<TOuter>() {
     val first: Boolean get() = index == 0
-    val last: Boolean get() = index == collection.size()
+    val last: Boolean get() = index == collection.size
 }
 
 open public class Placeholders<TOuter, TInner>() {
     private var items = ArrayList<PlaceholderItem<TInner>>()
     operator fun invoke(meta : String = "", content: TInner.(Placeholder<TInner>) -> Unit = {}) {
-        val placeholder = PlaceholderItem<TInner>(items.size(), items)
+        val placeholder = PlaceholderItem<TInner>(items.size, items)
         placeholder(meta, content)
         items.add(placeholder)
     }
 
-    fun isEmpty() : Boolean = items.size() == 0
+    fun isEmpty() : Boolean = items.size == 0
     fun TOuter.render(render: TOuter.(PlaceholderItem<TInner>) -> Unit) {
         for (item in items) {
             render(item)

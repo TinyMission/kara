@@ -6,5 +6,5 @@ public enum class FormMethod() : StringEnum<FormMethod> {
     put,
     delete;
 
-    override val value: String get() = name()
+    override val value: String get() = name
 }
