@@ -157,7 +157,7 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
     /**
      * Override the plus operator to add a text element.
      */
-    operator fun Char.plus() = HtmlText(this@HtmlTag, this.toString())
+    operator fun Char.unaryPlus() = HtmlText(this@HtmlTag, this.toString())
 
     /**
      * Yet another way to set the text content of the node.

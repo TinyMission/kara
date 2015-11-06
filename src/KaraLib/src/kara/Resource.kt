@@ -24,7 +24,7 @@ public abstract class Resource() : Link {
 
         answer.append(url.first)
         answer.append("?")
-        answer.append((url.second map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" }).joinToString(("&")))
+        answer.append((url.second.map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" }).joinToString(("&")))
 
         return answer.toString()
     }
@@ -59,7 +59,7 @@ public abstract class Resource() : Link {
         path.append(components.filterNotNull().joinToString("/"))
 
         val queryArgs = LinkedHashMap<String, Any>()
-        for (prop in properties filter { propertyValue<Resource,Any>(it) != null }) {
+        for (prop in properties.filter { propertyValue<Resource,Any>(it) != null }) {
             queryArgs[prop] = propertyValue(prop)!!
         }
 

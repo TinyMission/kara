@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse
 /** Used by the server to dispatch requests to their appropriate actions.
  */
 class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Class<out Resource>>) {
-    private val httpMethods = Array(HttpMethod.values().size) {
+    private val httpMethods = Array(HttpMethod.values.size) {
         ArrayList<ResourceDescriptor>()
     };
     private val resources = HashMap<Class<out Resource>, ResourceDescriptor>()
