@@ -66,6 +66,11 @@ class ActionTests() {
         assertEquals("/default", Routes.Default(null).href())
     }
 
+    @Test fun paramEscaping() {
+        assertResponse("1", Routes.RouteParams("1").href())
+        assertResponse("abc/def", Routes.RouteParams("abc/def").href())
+    }
+
     @Test fun emptyStrings() {
         assertResponse("es:,esn:,int:null", "/emptyStrings?es=&esn=&int=")
     }

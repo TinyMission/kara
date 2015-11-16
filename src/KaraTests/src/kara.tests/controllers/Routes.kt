@@ -77,6 +77,10 @@ object Routes {
         }
     })
 
+    @Get("/route-params/:param") class RouteParams(val param: String) : Request({
+        TextResult(param)
+    })
+
     object Foo {
         @Get("#")
         class Blank() : Request({

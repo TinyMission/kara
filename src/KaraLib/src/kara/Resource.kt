@@ -45,11 +45,11 @@ public abstract class Resource() : Link {
                 is StringRouteComponent -> it.componentText
                 is OptionalParamRouteComponent -> {
                     properties.remove(it.name)
-                    Serialization.serialize(propertyValue(it.name))
+                    Serialization.serialize(propertyValue(it.name))?.let {urlEncode(it)}
                 }
                 is ParamRouteComponent -> {
                     properties.remove(it.name)
-                    Serialization.serialize(propertyValue(it.name))
+                    Serialization.serialize(propertyValue(it.name))?.let {urlEncode(it)}
                 }
                 is WildcardRouteComponent -> throw RuntimeException("Routes with wildcards aren't supported")
                 else -> throw RuntimeException("Unknown route component $it of class ${it.javaClass.name}")
