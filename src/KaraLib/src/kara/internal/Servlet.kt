@@ -12,7 +12,9 @@ public open class Servlet() : HttpServlet() {
 
     val application: Application by lazy {
         val servletContext = servletContext!!
-        val config: ApplicationConfig = ApplicationConfig.loadFrom(servletContext.getInitParameter("kara.config") ?: error("kara.config context parameter is required."))
+        val config: ApplicationConfig = ApplicationConfig.loadFrom(
+                servletContext.getInitParameter("kara.config") ?: error("kara.config context parameter is required."),
+                servletContext.classLoader)
 
         for (name in servletContext.initParameterNames) {
             config[name] = servletContext.getInitParameter(name)!!
