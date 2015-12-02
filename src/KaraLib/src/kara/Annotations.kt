@@ -25,3 +25,6 @@ package kara
 Default is / for top level root object or lowercased object name for inner objects
 */
 @Retention(AnnotationRetention.RUNTIME) annotation class Location(val path: String = "")
+
+/** Used to annotate route objects, for which HttpSession should not be used (service calls, non-browser user agents) */
+@Retention(AnnotationRetention.RUNTIME) annotation class NoSession()

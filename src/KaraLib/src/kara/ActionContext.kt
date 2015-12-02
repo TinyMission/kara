@@ -24,9 +24,11 @@ fun HttpSession.getDescription() : String {
 class ActionContext(val appContext: ApplicationContext,
                     val request : HttpServletRequest,
                     val response : HttpServletResponse,
-                    val params : RouteParameters) {
+                    val params : RouteParameters,
+                    val allowHttpSession: Boolean) {
     public val config: ApplicationConfig = appContext.config
-    public val session : HttpSession = request.getSession(true)!!
+    public val session = if (allowHttpSession) HttpActionSession({request.getSession(true)!!}) else NullSession
+
     public val data: HashMap<Any, Any?> = HashMap()
     public val startedAt : Long = System.currentTimeMillis()
 
@@ -66,7 +68,7 @@ class ActionContext(val appContext: ApplicationContext,
 
         val cookie = request.cookies?.firstOrNull { it.name == attr }
 
-        fun HttpSession.getToken() = this.getAttribute(attr) ?. let { it as String }
+        fun ActionSession.getToken() = this.getAttribute(attr) ?. let { it as String }
 
         return cookie?.value ?: run {
             val token = session.getToken() ?: synchronized(session.id.intern()) {
