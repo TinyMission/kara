@@ -102,13 +102,13 @@ class ActionContext(val appContext: ApplicationContext,
 }
 
 public class RequestScope<T>() {
-    operator @Suppress("UNCHECKED_CAST")
-    fun getValue(o : Any?, desc: KProperty<*>): T {
+    @Suppress("UNCHECKED_CAST")
+    operator fun getValue(o : Any?, desc: KProperty<*>): T {
         val data = ActionContext.current().data
         return data.get(desc) as T
     }
 
-    operator private fun setValue(o : Any?, desc: KProperty<*>, value: T) {
+    operator fun setValue(o : Any?, desc: KProperty<*>, value: T) {
         ActionContext.current().data.put(desc, value)
     }
 }
