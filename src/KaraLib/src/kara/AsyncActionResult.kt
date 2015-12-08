@@ -12,7 +12,7 @@ import kotlin.properties.Delegates
 /**
  * @author max
  */
-class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationContext, val params: RouteParameters, val body : ActionContext.() -> ActionResult) : ActionResult {
+class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationContext, val params: RouteParameters, val allowHttpSession: Boolean, val body : ActionContext.() -> ActionResult) : ActionResult {
     var timed_out = false
 
     init {
@@ -44,7 +44,7 @@ private fun AsyncResult.execute() {
     try {
         if (timed_out) return
 
-        val context = ActionContext(appContext, asyncContext.request as HttpServletRequest, asyncContext.response as HttpServletResponse, params)
+        val context = ActionContext(appContext, asyncContext.request as HttpServletRequest, asyncContext.response as HttpServletResponse, params, allowHttpSession)
         context.withContext {
             val result = context.body()
 
@@ -65,7 +65,7 @@ private fun AsyncResult.execute() {
 
 fun ActionContext.async(body: ActionContext.() -> ActionResult): ActionResult {
     val asyncContext = request.startAsync(request, response)
-    val asyncResult = AsyncResult(asyncContext, appContext, params, body)
+    val asyncResult = AsyncResult(asyncContext, appContext, params, allowHttpSession, body)
 
     asyncExecutors.submit {
         asyncResult.execute()

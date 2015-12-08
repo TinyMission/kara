@@ -9,12 +9,12 @@ import java.util.*
 /**
  * Store application configuration.
  */
-public open class ApplicationConfig() : Config() {
+public open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
 
     public companion object {
-        public fun loadFrom(configPath: String): ApplicationConfig {
-            val config = ApplicationConfig()
-            Config.readConfig(config, configPath, ApplicationConfig::class.java.classLoader!!)
+        public fun loadFrom(configPath: String, classLoader: ClassLoader? = null): ApplicationConfig {
+            val config = ApplicationConfig(classLoader ?: ApplicationConfig::class.java.classLoader!!)
+            Config.readConfig(config, configPath, config.appClassloader)
             return config
         }
     }

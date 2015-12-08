@@ -126,11 +126,10 @@ open class Application(public val config: ApplicationConfig, public val appConte
         val logger = Logger.getLogger(Application::class.java)
 
         fun classLoader(config: ApplicationConfig, appContext: String): ClassLoader {
-            val rootClassloader = Application::class.java.classLoader!!
             val classPath = config.classPath(appContext)
             return when {
-                classPath.isEmpty() -> rootClassloader
-                else -> URLClassLoader(classPath, rootClassloader)
+                classPath.isEmpty() -> config.appClassloader
+                else -> URLClassLoader(classPath, config.appClassloader)
             }
         }
 

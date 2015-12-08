@@ -4,12 +4,12 @@ import kara.tests.controllers.Routes
 import kara.*
 import kara.internal.*
 
-object MockApplication : Application(ApplicationConfig()) {
+object MockApplication : Application(ApplicationConfig(ApplicationConfig::class.java.classLoader)) {
 
     override val context: ApplicationContext
 
     init {
-        val classLoader = javaClass.classLoader!!
+        val classLoader = config.appClassloader
         context = ApplicationContext(config, listOf<String>(), classLoader, hashMapOf(), scanObjects(arrayOf(Routes), classLoader))
     }
 }
