@@ -45,7 +45,7 @@ public fun HtmlBodyTag.tabs(activeName: String, body: PagesBuilder.() -> Unit) {
     content {
         for (item in builder.items) {
             pane(item.id, activeName == item.id) {
-                item.content()
+                item.content(this)
             }
         }
     }

@@ -43,7 +43,7 @@ object Home {
 
     @Get("/json")
     class JsonPage : Request({
-        json {
+        jsonResult {
             jsonObject {
                 jsonValue("version", 5)
                 jsonObject("people")

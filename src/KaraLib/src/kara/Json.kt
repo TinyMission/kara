@@ -166,20 +166,18 @@ inline fun JsonRoot.jsonObject(body: JsonObject.() -> Unit){
     set(obj)
 }
 
-inline fun jsonArray(body: JsonArray.() -> Unit) : JsonElement {
-    val array = JsonArray()
-    array.body()
-    return array
-}
-
-inline fun jsonObject(body: JsonObject.() -> Unit) : JsonElement {
-    val obj = JsonObject()
-    obj.body()
-    return obj
-}
-
-inline fun json(body: JsonRoot.() -> Unit) : JsonResult {
+inline fun jsonResult(body: JsonRoot.() -> Unit): JsonResult {
     val json = JsonRoot()
     json.body()
     return JsonResult(json)
+}
+
+@Deprecated(replaceWith = ReplaceWith("jsonResult(body)"), message = "use jsonResult instead", level = DeprecationLevel.WARNING)
+inline fun json(body: JsonRoot.() -> Unit) = jsonResult(body)
+
+inline fun jsonString(body: JsonRoot.() -> Unit): String {
+    val json = JsonRoot()
+    json.body()
+
+    return StringBuilder().apply { json.build(this) }.toString()
 }
