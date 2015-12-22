@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
 import kotlin.html.Link
+import kotlin.properties.ReadOnlyProperty
+import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 
@@ -30,6 +32,8 @@ class ActionContext(val appContext: ApplicationContext,
     public val session = if (allowHttpSession) HttpActionSession({request.getSession(true)!!}) else NullSession
 
     public val data: HashMap<Any, Any?> = HashMap()
+    private val sessionCache = HashMap<String, Any?>()
+
     public val startedAt : Long = System.currentTimeMillis()
 
     fun redirect(link: Link): ActionResult {
@@ -52,15 +56,24 @@ class ActionContext(val appContext: ApplicationContext,
 
     fun toSession(key: String, value: Any?) {
         if (value !is Serializable?) error("Non serializable value to session: key=$key, value=$value")
-        session.setAttribute(key, (value as? Serializable)?.toBytes())
+        sessionCache[key] = value
     }
 
     fun fromSession(key: String): Any? {
-        val raw = session.getAttribute(key)
-        return when (raw) {
-            is ByteArray -> raw.readObject()
-            else -> raw
+        return sessionCache.getOrPut(key) {
+            val raw = session.getAttribute(key)
+            when (raw) {
+                is ByteArray -> raw.readObject()
+                else -> raw
+            }
         }
+    }
+
+    fun flushSessionCache() {
+        sessionCache.forEach { key, value ->
+            session.setAttribute(key, (value as? Serializable)?.toBytes())
+        }
+        sessionCache.clear()
     }
 
     fun sessionToken(): String {
@@ -101,22 +114,44 @@ class ActionContext(val appContext: ApplicationContext,
     }
 }
 
-public class RequestScope<T>() {
+public class RequestScope<T:Any>(): ReadWriteProperty<Nothing?, T?> {
     @Suppress("UNCHECKED_CAST")
-    operator fun getValue(o : Any?, desc: KProperty<*>): T {
+    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T? {
         val data = ActionContext.current().data
-        return data.get(desc) as T
+        return data.get(property) as T?
     }
 
-    operator fun setValue(o : Any?, desc: KProperty<*>, value: T) {
-        ActionContext.current().data.put(desc, value)
+    override fun setValue(thisRef: Nothing?, property: KProperty<*>, value: T?) {
+        ActionContext.current().data.put(property, value)
     }
 }
 
-
-public class LazyRequestScope<T:Any>(val initial: () -> T) {
+public class LazyRequestScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Nothing?, T> {
     @Suppress("UNCHECKED_CAST")
-    operator fun getValue(o: Any?, desc: KProperty<*>): T = ActionContext.current().data.getOrPut(desc, { initial() }) as T
+    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T = ActionContext.current().data.getOrPut(property, { initial() }) as T
+}
+
+public class SessionScope<T:Any>(): ReadWriteProperty<Nothing?, T?> {
+    @Suppress("UNCHECKED_CAST")
+    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T? {
+        return ActionContext.current().fromSession(property.name) as T?
+    }
+
+    override fun setValue(thisRef: Nothing?, property: KProperty<*>, value: T?) {
+        ActionContext.current().toSession(property.name, value)
+    }
+}
+
+public class LazySessionScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Nothing?, T> {
+    private val store = SessionScope<T>()
+
+    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T {
+        return store.getValue(thisRef, property) ?: run {
+            val i = initial()
+            store.setValue(thisRef, property, i)
+            i
+        }
+    }
 }
 
 public class ContextException(msg : String) : Exception(msg) {}
@@ -128,6 +163,7 @@ public fun <T> ActionContext.withContext(body: () -> T): T {
     }
     finally {
         ActionContext.contexts.set(null)
+        flushSessionCache()
     }
 }
 

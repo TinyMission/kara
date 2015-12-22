@@ -1,7 +1,9 @@
 package kotlin.html.bootstrap
 
-import kara.*
-import javax.servlet.http.*
+import kara.ActionContext
+import kara.ActionResult
+import kara.link
+import javax.servlet.http.HttpServletResponse
 import kotlin.html.*
 
 class ModalBuilder() {
@@ -9,9 +11,9 @@ class ModalBuilder() {
     var h: highlight = highlight.default
     var c: caliber = caliber.default
 
-    var form : (FORM.() -> Unit)? = null
-    fun form(content: FORM.() -> Unit) {
-        form = content
+    var formContent: (FORM.() -> Unit)? = null
+    fun formContent(content: FORM.() -> Unit) {
+        formContent = content
     }
 
     fun button(h: highlight = highlight.default, size: caliber = caliber.default, b: A.() -> Unit) {
@@ -90,7 +92,7 @@ fun HtmlBodyTag.modalDialogForm(id: String, action: Link, formMethod: FormMethod
     modalDialog(id, content) {
         form{
             addClass(form_horizontal)
-            it.form ?. let {it()}
+            it.formContent?.let {it()}
             this.action = action
             this.method = formMethod
             modalBody(it)
@@ -129,7 +131,7 @@ fun HtmlBodyTag.modalForm(action: Link, formMethod: FormMethod = FormMethod.post
     modalFrame(content) {
         form {
             addClass(form_horizontal)
-            it.form ?. let {it()}
+            it.formContent?. let {it()}
             this.action = action
             this.method = formMethod
             modalBody(it)
@@ -225,7 +227,7 @@ fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: 
                 addClass("modal-content")
                 form {
                     addClass(form_horizontal)
-                    builder.form ?. let {it()}
+                    builder.formContent?. let {it()}
 
                     this.action = action
                     this.method = formMethod

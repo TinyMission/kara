@@ -1,7 +1,6 @@
 package kara
 
 import kara.config.Config
-import kara.internal.logger
 import java.io.File
 import java.net.URL
 import java.util.*
@@ -79,7 +78,7 @@ public open class ApplicationConfig(val appClassloader: ClassLoader) : Config() 
                             }
 
                             it.endsWith("/*") -> {
-                                File(it.removeSuffix("/*")).listFiles { it.isFile && it.name.endsWith(".jar") }?.toList() ?: listOf()
+                                File(it.removeSuffix("/*")).listFiles{ file -> file.isFile && file.name.endsWith(".jar") }?.toList() ?: listOf()
                             }
 
                             else -> {

@@ -15,7 +15,7 @@ object Home {
 
     @Get("/async")
     class Async() : Request({
-        async {
+        async() {
             TextResult("This've been rendered async.")
         }
     })
@@ -43,7 +43,7 @@ object Home {
 
     @Get("/json")
     class JsonPage : Request({
-        json {
+        jsonResult {
             jsonObject {
                 jsonValue("version", 5)
                 jsonObject("people")
