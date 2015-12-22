@@ -70,8 +70,8 @@ class ActionContext(val appContext: ApplicationContext,
     }
 
     fun flushSessionCache() {
-        sessionCache.forEach {
-            session.setAttribute(it.key, (it.value as? Serializable)?.toBytes())
+        sessionCache.forEach { key, value ->
+            session.setAttribute(key, (value as? Serializable)?.toBytes())
         }
         sessionCache.clear()
     }

@@ -23,11 +23,13 @@ object Foo2 {
 
 class ObjectInstances() {
 
+    @Suppress("DEPRECATION")
     @Test fun testDeprecatedObjectInstanceViaReflection() {
         assertNotNull(Foo2::class.java.objectInstance0())
         assertNotNull(Foo2.Test::class.java.objectInstance0())
     }
 
+    @Suppress("DEPRECATION")
     @Test fun testObjectInstance() {
         assertNotNull(Foo2::class.objectInstance)
         assertNotNull(Foo2.Test::class.objectInstance)

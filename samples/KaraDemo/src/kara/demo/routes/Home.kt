@@ -15,7 +15,7 @@ object Home {
 
     @Get("/async")
     class Async() : Request({
-        async {
+        async() {
             TextResult("This've been rendered async.")
         }
     })
