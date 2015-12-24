@@ -21,14 +21,23 @@ public object NullSession : ActionSession {
 }
 
 public class HttpActionSession(val s: () -> HttpSession): ActionSession {
-    val session by lazy { s() }
-    override val id: String get() = session.id
-    override fun getAttribute(key: String): Any? = session.getAttribute(key)
+    private var _session: HttpSession? = null
+
+    private fun getSession(): HttpSession {
+        if(_session == null) {
+            _session = s()
+        }
+        return _session!!
+    }
+
+    override val id: String get() = getSession().id
+    override fun getAttribute(key: String): Any? = getSession().getAttribute(key)
     override fun setAttribute(key: String, value: Any?) {
-        session.setAttribute(key, value)
+        getSession().setAttribute(key, value)
     }
 
     override fun invalidate() {
-        session.invalidate()
+        getSession().invalidate()
+        _session = null
     }
 }
