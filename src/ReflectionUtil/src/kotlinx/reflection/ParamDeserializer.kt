@@ -144,7 +144,8 @@ public object Serialization {
         }
         for (deserializer in serializer) {
             if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {
-                return deserializer.deserialize(param, paramType)
+                @Suppress("UNCHECKED_CAST")
+                return (deserializer as TypeSerializer<Any>).deserialize(param, paramType)
             }
         }
 
