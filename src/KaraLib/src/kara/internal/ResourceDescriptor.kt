@@ -98,7 +98,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
                     routeInstance.handle(actionContext)
                 }
             }
-
+            actionContext.flushSessionCache()
             actionResult.writeResponse(actionContext)
         }
     }

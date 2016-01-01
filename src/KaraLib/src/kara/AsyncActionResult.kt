@@ -48,6 +48,7 @@ private fun AsyncResult.execute() {
         context.withContext {
             val result = context.body()
 
+            context.flushSessionCache()
             if (!timed_out) {
                 result.writeResponse(context)
             }
