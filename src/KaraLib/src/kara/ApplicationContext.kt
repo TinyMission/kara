@@ -65,6 +65,9 @@ class ApplicationContext(public val config : ApplicationConfig,
         } catch(e404: NotFoundException) {
             Application.logger.warn(formatLogErrorMsg("404", request), e404)
             response.sendError(HttpServletResponse.SC_NOT_FOUND, e404.message)
+        } catch(e405: UnknownHttpMethodException) {
+            Application.logger.warn(formatLogErrorMsg("405", request), e405)
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, e405.message)
         }
         catch(ex: Throwable) {
             when {

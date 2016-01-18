@@ -22,5 +22,7 @@ fun String.asHttpMethod(): HttpMethod = when (this) {
     "PROPFIND" -> HttpMethod.PROPFIND
     "PROPPATCH" -> HttpMethod.PROPPATCH
     "REPORT" -> HttpMethod.REPORT
-    else -> throw RuntimeException("Unknown $this as HTTP method")
+    else -> throw UnknownHttpMethodException(this)
 }
+
+class UnknownHttpMethodException(method: String) : RuntimeException("Unknown $method as HTTP method")
