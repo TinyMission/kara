@@ -1,7 +1,7 @@
 package kara.tests.styles
 
 import org.junit.Test
-import kotlin.html.color
+import kotlinx.html.color
 import kotlin.test.assertEquals
 
 class ColorTest {

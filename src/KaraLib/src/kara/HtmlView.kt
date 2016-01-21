@@ -1,6 +1,6 @@
 package kara
 
-import kotlin.html.*
+import kotlinx.html.*
 import kara.internal.*
 import javax.servlet.http.HttpServletResponse
 

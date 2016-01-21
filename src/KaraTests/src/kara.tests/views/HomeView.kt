@@ -1,7 +1,7 @@
 package kara.tests.views
 
 import kara.*
-import kotlin.html.*
+import kotlinx.html.*
 
 /** Home html view.
  */

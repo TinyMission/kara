@@ -3,9 +3,9 @@ package kara.tests.views
 
 import kara.link
 import org.junit.Test
-import kotlin.html.a
-import kotlin.html.html
-import kotlin.html.p
+import kotlinx.html.a
+import kotlinx.html.html
+import kotlinx.html.p
 import kotlin.test.assertEquals
 
 class HtmlBuilderTest {

@@ -1,6 +1,6 @@
 package kara
 
-import kotlin.html.*
+import kotlinx.html.*
 
 /** A class for programmatically generating CSS stylesheets.
  */

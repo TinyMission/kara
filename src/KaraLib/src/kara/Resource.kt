@@ -7,8 +7,8 @@ import kotlinx.reflection.propertyValue
 import kotlinx.reflection.urlEncode
 import java.util.*
 import javax.servlet.http.HttpServletRequest
-import kotlin.html.DirectLink
-import kotlin.html.Link
+import kotlinx.html.DirectLink
+import kotlinx.html.Link
 import kotlin.reflect.KClass
 
 public abstract class Resource() : Link {

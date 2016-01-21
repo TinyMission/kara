@@ -2,7 +2,7 @@ package kara.demo.views
 
 import kara.*
 import kara.demo.styles.DefaultStyles
-import kotlin.html.*
+import kotlinx.html.*
 import kara.demo.routes.*
 
 class DefaultTemplate : Template<HTML>() {

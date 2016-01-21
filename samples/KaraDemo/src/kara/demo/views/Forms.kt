@@ -7,7 +7,7 @@ import kara.demo.styles.StyleClasses.cLabel
 import kara.demo.styles.StyleClasses.fields
 import kara.demo.styles.StyleClasses.top
 import kara.formForBean
-import kotlin.html.*
+import kotlinx.html.*
 
 fun Forms(book: Book) = HtmlTemplateView(DefaultTemplate()) {
     content {

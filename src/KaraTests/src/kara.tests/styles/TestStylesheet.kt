@@ -1,7 +1,7 @@
 package kara.tests.styles
 
 import kara.*
-import kotlin.html.*
+import kotlinx.html.*
 
 /** A test stylesheet builder.
  */

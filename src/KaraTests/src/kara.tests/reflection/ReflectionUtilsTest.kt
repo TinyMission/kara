@@ -54,6 +54,6 @@ class ClassLoaderFunctionsTest() {
         val app = Application.load(ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf"),"")
         val classLoader = app.requestClassloader()
         assertTrue((classLoader as URLClassLoader).urLs.any{ it.file.endsWith("kootstrap.jar")}, "Can't find test jar file in classpath")
-        assertTrue(scanPackageForResources("kotlin.html.bootstrap", classLoader, hashMapOf()).isNotEmpty())
+        assertTrue(scanPackageForResources("kotlinx.html.bootstrap", classLoader, hashMapOf()).isNotEmpty())
     }
 }

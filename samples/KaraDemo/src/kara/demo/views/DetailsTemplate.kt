@@ -3,7 +3,7 @@ package kara.demo.views
 import kara.*
 import kara.demo.styles.DefaultStyles
 import kara.demo.styles.StyleClasses.*
-import kotlin.html.*
+import kotlinx.html.*
 import javax.swing.text.DefaultEditorKit.InsertBreakAction
 
 class DetailsTemplate : Template<HTML>() {
