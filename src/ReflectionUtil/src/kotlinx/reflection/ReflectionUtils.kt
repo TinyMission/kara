@@ -25,7 +25,7 @@ private fun Any.unmask():Any? = if (this == NullMask) null else this
 fun <T:Any> Class<T>.objectInstance0(): T? {
     return ReflectionCache.objects.concurrentGetOrPut(this) {
         try {
-            val field = getDeclaredField("INSTANCE\$")
+            val field = getDeclaredField("INSTANCE")
             if (Modifier.isStatic(field.modifiers) && Modifier.isPublic(field.modifiers)) {
                 if (!field.isAccessible) {
                     field.isAccessible = true
