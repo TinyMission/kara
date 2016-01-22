@@ -20,7 +20,7 @@ abstract class Stylesheet(var namespace : String = "") : CachedResource() {
     }
 
     override fun content(context: ActionContext): ResourceContent {
-        return ResourceContent("text/css", toString().toByteArray("UTF-8"))
+        return ResourceContent("text/css", toString().toByteArray(Charsets.UTF_8))
     }
 }
 

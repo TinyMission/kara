@@ -143,9 +143,9 @@ private fun isAnonClass(name: String): Boolean {
 
 private fun File.scanForClasses(prefix: String, classLoader: ClassLoader): List<Class<*>> {
     val path = prefix.packageToPath()
-    return FileTreeWalk(this, filter = {
+    return walk().filter {
         it.isDirectory || (it.isFile && it.extension == "class" && !isAnonClass(it.name))
-    }).toList()
+    }.toList()
     .filter{
         it.isFile && it.absolutePath.contains(path)
     }.map {
