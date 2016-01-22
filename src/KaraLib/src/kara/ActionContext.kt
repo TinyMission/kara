@@ -114,38 +114,38 @@ class ActionContext(val appContext: ApplicationContext,
     }
 }
 
-public class RequestScope<T:Any>(): ReadWriteProperty<Nothing?, T?> {
+public class RequestScope<T:Any>(): ReadWriteProperty<Any?, T?> {
     @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T? {
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         val data = ActionContext.current().data
         return data.get(property) as T?
     }
 
-    override fun setValue(thisRef: Nothing?, property: KProperty<*>, value: T?) {
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
         ActionContext.current().data.put(property, value)
     }
 }
 
-public class LazyRequestScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Nothing?, T> {
+public class LazyRequestScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, T> {
     @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T = ActionContext.current().data.getOrPut(property, { initial() }) as T
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T = ActionContext.current().data.getOrPut(property, { initial() }) as T
 }
 
-public class SessionScope<T:Any>(): ReadWriteProperty<Nothing?, T?> {
+public class SessionScope<T:Any>(): ReadWriteProperty<Any?, T?> {
     @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T? {
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         return ActionContext.current().fromSession(property.name) as T?
     }
 
-    override fun setValue(thisRef: Nothing?, property: KProperty<*>, value: T?) {
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
         ActionContext.current().toSession(property.name, value)
     }
 }
 
-public class LazySessionScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Nothing?, T> {
+public class LazySessionScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, T> {
     private val store = SessionScope<T>()
 
-    override fun getValue(thisRef: Nothing?, property: KProperty<*>): T {
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return store.getValue(thisRef, property) ?: run {
             val i = initial()
             store.setValue(thisRef, property, i)
