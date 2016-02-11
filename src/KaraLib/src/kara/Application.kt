@@ -47,7 +47,7 @@ open class Application(public val config: ApplicationConfig, public val appConte
                 context = createContext()
                 _context = context
             }
-            context!!
+            context
         }
 
     public fun requestClassloader(): ClassLoader = classLoader(config, appContext)

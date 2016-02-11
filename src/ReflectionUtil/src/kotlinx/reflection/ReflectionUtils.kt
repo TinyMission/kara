@@ -23,7 +23,7 @@ private fun Any.unmask():Any? = if (this == NullMask) null else this
 @Suppress("UNCHECKED_CAST")
 @Deprecated("use KClass<T>.objectInstance. For backword compatibilibty test only.")
 fun <T:Any> Class<T>.objectInstance0(): T? {
-    return ReflectionCache.objects.concurrentGetOrPut(this) {
+    return ReflectionCache.objects.getOrPut(this) {
         try {
             val field = getDeclaredField("INSTANCE")
             if (Modifier.isStatic(field.modifiers) && Modifier.isPublic(field.modifiers)) {
@@ -41,14 +41,14 @@ fun <T:Any> Class<T>.objectInstance0(): T? {
 }
 
 fun Class<*>.companionObjectInstance(): Any? {
-    return ReflectionCache.companionObjects.concurrentGetOrPut(this) {
+    return ReflectionCache.companionObjects.getOrPut(this) {
         kotlin.companionObjectInstance ?: NullMask
     }.unmask()
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Any, R:Any?> KClass<out T>.propertyGetter(property: String): KProperty1<T, R>? {
-    return ReflectionCache.propertyGetters.concurrentGetOrPut(Pair(this, property),  {
+    return ReflectionCache.propertyGetters.getOrPut(Pair(this, property),  {
         memberProperties.firstOrNull { it.name == property } ?: NullMask
     }).unmask() as KProperty1<T, R>?
 }
@@ -93,7 +93,7 @@ private fun paramJavaType(javaType: Type): Class<Any> {
     }
 }
 
-fun Any.primaryParametersNames() = ReflectionCache.primaryParameterNames.concurrentGetOrPut(javaClass) {
+fun Any.primaryParametersNames() = ReflectionCache.primaryParameterNames.getOrPut(javaClass) {
     javaClass.kotlin.primaryConstructor?.parameters.orEmpty().map {it.name!!}
 }
 
