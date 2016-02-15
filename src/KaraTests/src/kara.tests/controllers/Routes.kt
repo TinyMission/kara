@@ -5,9 +5,9 @@ import kara.tests.views.HomeView
 import kara.tests.views.SomeFunView
 import kara.tests.views.view
 import java.net.SocketException
-import kotlin.html.CssElement
-import kotlin.html.div
-import kotlin.html.span
+import kotlinx.html.CssElement
+import kotlinx.html.div
+import kotlinx.html.span
 
 @Get("/test/test.css")
 object TestStyles : Stylesheet() {

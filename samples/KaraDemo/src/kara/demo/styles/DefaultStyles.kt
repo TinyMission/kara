@@ -5,7 +5,7 @@ import kara.Stylesheet
 import kara.demo.styles.StyleClasses.cLabel
 import kara.demo.styles.StyleClasses.fields
 import kara.demo.styles.StyleClasses.top
-import kotlin.html.*
+import kotlinx.html.*
 
 /** The default stylesheet for the demo application.
  */

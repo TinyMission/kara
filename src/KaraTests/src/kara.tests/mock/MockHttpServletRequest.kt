@@ -3,15 +3,11 @@ package kara.tests.mock
 import javax.servlet.http.HttpServletRequest
 import java.security.Principal
 import javax.servlet.http.HttpSession
-import java.util.Enumeration
 import javax.servlet.RequestDispatcher
 import javax.servlet.ServletInputStream
-import java.util.Locale
 import java.io.BufferedReader
+import java.util.*
 import javax.servlet.http.Cookie
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.Hashtable
 import javax.servlet.http.HttpUpgradeHandler
 
 
@@ -192,7 +188,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     public override fun getParameterMap() : MutableMap<String, Array<String>?>? {
-        return params.map { it.key to arrayOf(it.value) }.toMap().toLinkedMap()
+        return params.map { it.key to arrayOf(it.value) }.toMap(LinkedHashMap())
     }
     public override fun getInputStream() : ServletInputStream? {
         throw UnsupportedOperationException()

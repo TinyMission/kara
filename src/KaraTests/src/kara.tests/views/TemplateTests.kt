@@ -5,7 +5,7 @@ import kara.tests.mock.mockDispatch
 import org.apache.log4j.BasicConfigurator
 import org.junit.Before
 import org.junit.Test
-import kotlin.html.*
+import kotlinx.html.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

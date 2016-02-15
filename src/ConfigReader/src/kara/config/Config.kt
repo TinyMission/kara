@@ -85,14 +85,14 @@ public open class Config() {
             var base: File? = null
             if (file.exists()) {
                 base = file.parentFile
-                text = file.readText("UTF-8")
+                text = file.readText(Charsets.UTF_8)
                 Config.logger.info("Reading ${file.absolutePath}")
             } else {
                 val resource = classloader.getResourceAsStream(path)
                 if (resource != null) {
                     Config.logger.info("Reading classpath resource $path")
                     base = null
-                    text = resource.reader("UTF-8").readText()
+                    text = resource.reader(Charsets.UTF_8).readText()
                 }
             }
 

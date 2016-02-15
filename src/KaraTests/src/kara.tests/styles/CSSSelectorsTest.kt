@@ -3,9 +3,9 @@ package kara.tests.styles
 import kara.tests.styles.SampleClasses.c1
 import kara.tests.styles.SampleClasses.c2
 import org.junit.Test
-import kotlin.html.CssElement
-import kotlin.html.Selector
-import kotlin.html.StyleClass
+import kotlinx.html.CssElement
+import kotlinx.html.Selector
+import kotlinx.html.StyleClass
 import kotlin.test.assertEquals
 
 enum class SampleClasses : StyleClass {

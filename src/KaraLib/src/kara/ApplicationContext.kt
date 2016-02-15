@@ -1,6 +1,6 @@
 package kara
 
-import kara.internal.ResourceDispatcher
+import kara.internal.*
 import kotlinx.reflection.MissingArgumentException
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
@@ -18,7 +18,7 @@ class ApplicationContext(public val config : ApplicationConfig,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
                          val resourceTypes: List<Class<out Resource>>) {
     val logger = Logger.getLogger(this.javaClass)!!
-    private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, (HttpServletRequest, HttpServletResponse) -> Boolean) -> Boolean>()
+    private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>();
 
     public val version: Int = ++versionCounter
@@ -33,7 +33,7 @@ class ApplicationContext(public val config : ApplicationConfig,
         }
     }
 
-    public fun intercept(interceptor: (request: HttpServletRequest, response: HttpServletResponse, proceed: (HttpServletRequest, HttpServletResponse) -> Boolean) -> Boolean) {
+    public fun intercept(interceptor: (request: HttpServletRequest, response: HttpServletResponse, descriptor: ResourceDescriptor?, proceed: (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean) {
         interceptors.add(interceptor)
     }
 
@@ -41,17 +41,21 @@ class ApplicationContext(public val config : ApplicationConfig,
 
         fun formatLogErrorMsg(error: String, req: HttpServletRequest) = "$error processing ${req.method} ${req.requestURI}. User agent: ${req.getHeader("User-Agent")}, Referer: ${req.getHeader("Referer")}"
 
-        fun dispatch(index: Int, request: HttpServletRequest, response: HttpServletResponse): Boolean {
+        fun dispatch(index: Int, request: HttpServletRequest, response: HttpServletResponse, resourceDescriptor: ResourceDescriptor?): Boolean {
             return if (index in interceptors.indices) {
-                interceptors[index](request, response) { req, resp -> dispatch(index + 1, req, resp) }
+                interceptors[index](request, response, resourceDescriptor) { req, resp, desc -> dispatch(index + 1, req, resp, desc) }
             }
             else {
-                dispatcher.dispatch(request, response)
+                dispatcher.dispatch(request, response, resourceDescriptor)
             }
         }
 
+        val url = request.requestURI
+        val method = request.method
+        val resourceDescriptor = dispatcher.findDescriptor(method, url.removePrefix(request.contextPath.orEmpty()))
+
         try {
-            return dispatch(0, request, response)
+            return dispatch(0, request, response, resourceDescriptor)
         }
         catch(ex: SocketException) {
             // All kinds of EOFs and Broken Pipes can be safely ignored
@@ -65,6 +69,9 @@ class ApplicationContext(public val config : ApplicationConfig,
         } catch(e404: NotFoundException) {
             Application.logger.warn(formatLogErrorMsg("404", request), e404)
             response.sendError(HttpServletResponse.SC_NOT_FOUND, e404.message)
+        } catch(e405: UnknownHttpMethodException) {
+            Application.logger.warn(formatLogErrorMsg("405", request), e405)
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, e405.message)
         }
         catch(ex: Throwable) {
             when {

@@ -3,8 +3,8 @@ package kara
 import kara.internal.decamel
 import kotlinx.reflection.propertyValue
 import org.apache.log4j.Logger
-import kotlin.html.*
-import kotlin.html.InputType.*
+import kotlinx.html.*
+import kotlinx.html.InputType.*
 
 
 public interface FormModel<P> {

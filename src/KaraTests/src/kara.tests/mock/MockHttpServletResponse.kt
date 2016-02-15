@@ -15,7 +15,7 @@ class MockHttpServletResponse() : HttpServletResponse {
 
     public fun stringOutput() : String? {
         _outSteam.flush()
-        return String(_outSteam.toByteArray()!!, "UTF-8")
+        return String(_outSteam.toByteArray()!!, Charsets.UTF_8)
     }
 
     public override fun sendError(p0 : Int) {

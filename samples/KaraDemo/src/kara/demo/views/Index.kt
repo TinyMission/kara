@@ -1,7 +1,7 @@
 package kara.demo.views
 
 import kara.*
-import kotlin.html.*
+import kotlinx.html.*
 
 fun Index() = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
     content {

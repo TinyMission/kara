@@ -14,7 +14,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
             val (lessSource, combinedModification) = resourceAndModification(context)
             val css = compiler.compile(lessSource) ?: error("$name can't be compiled")
 
-            val bytes = css.toByteArray("UTF-8")
+            val bytes = css.toByteArray(Charsets.UTF_8)
             return ResourceContent("text/css", combinedModification, bytes.size, { bytes.inputStream() })
         }
     }

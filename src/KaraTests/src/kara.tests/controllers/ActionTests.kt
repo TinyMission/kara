@@ -9,7 +9,7 @@ import org.apache.log4j.spi.LoggingEvent
 import org.junit.Before
 import org.junit.Test
 import javax.servlet.http.HttpServletResponse
-import kotlin.html.htmlEscapeTo
+import kotlinx.html.htmlEscapeTo
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
