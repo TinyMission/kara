@@ -1,11 +1,8 @@
 package kara.cli
 
-import java.util.HashMap
 import kara.*
-import kara.internal.*
 import kara.server.JettyRunner
 import org.apache.log4j.*
-import java.util.ArrayList
 
 fun server(appConfig : ApplicationConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -23,8 +20,7 @@ fun main(args: Array<String>) {
 
     if (logPath != null) {
         PropertyConfigurator.configureAndWatch(logPath, 5000)
-    }
-    else {
+    } else if (LogManager.getRootLogger()?.allAppenders?.hasMoreElements()?.not()?:true) {
         BasicConfigurator.configure()
         LogManager.getRootLogger()?.level = Level.INFO
     }
