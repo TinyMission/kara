@@ -1,5 +1,6 @@
 package kara
 
+import kotlinx.html.Link
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
@@ -10,7 +11,6 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
-import kotlinx.html.Link
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -60,7 +60,7 @@ class ActionContext(val appContext: ApplicationContext,
     }
 
     fun fromSession(key: String): Any? {
-        return sessionCache.getOrPut(key) {
+        return if (sessionCache.keys.contains(key)) sessionCache[key] else sessionCache.getOrPut(key) {
             val raw = session.getAttribute(key)
             when (raw) {
                 is ByteArray -> raw.readObject()
