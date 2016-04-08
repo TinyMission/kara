@@ -5,7 +5,7 @@ import javax.servlet.http.HttpSession
 /**
  * @author max
  */
-public interface ActionSession {
+interface ActionSession {
     val id: String
 
     fun getAttribute(key: String): Any?
@@ -13,14 +13,14 @@ public interface ActionSession {
     fun invalidate()
 }
 
-public object NullSession : ActionSession {
+object NullSession : ActionSession {
     override val id = "none"
     override fun getAttribute(key: String): Any? = null
     override fun setAttribute(key: String, value: Any?) {}
     override fun invalidate() {}
 }
 
-public class HttpActionSession(val s: () -> HttpSession): ActionSession {
+class HttpActionSession(val s: () -> HttpSession): ActionSession {
     private var _session: HttpSession? = null
 
     private fun getSession(): HttpSession {

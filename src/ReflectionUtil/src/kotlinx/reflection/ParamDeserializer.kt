@@ -117,18 +117,18 @@ class DataClassSerializer: TypeSerializer<DataClass>() {
     }
 }
 
-public object Serialization {
+object Serialization {
     val serializer = ArrayList<TypeSerializer<out Any>>()
 
     init {
         this.loadDefaults()
     }
 
-    public fun register(ptd : TypeSerializer<out Any>) {
+    fun register(ptd : TypeSerializer<out Any>) {
         serializer.add(ptd)
     }
 
-    public fun loadDefaults() {
+    fun loadDefaults() {
         register(IntSerializer())
         register(FloatSerializer())
         register(BooleanSerializer())
@@ -138,7 +138,7 @@ public object Serialization {
         register(EnumSerializer())
     }
 
-    public fun deserialize(param : String, paramType : Class<Any>, classLoader: ClassLoader? = null) : Any? {
+    fun deserialize(param : String, paramType : Class<Any>, classLoader: ClassLoader? = null) : Any? {
         if (paramType == String::class.java) {
             return param
         }
@@ -152,7 +152,7 @@ public object Serialization {
         error("Can't deserialize parameter of class $paramType")
     }
 
-    public fun serialize(param: Any?): String? {
+    fun serialize(param: Any?): String? {
         if (param == null) return null
         if (param is String) return param
 
@@ -190,7 +190,7 @@ fun <T:Any> T.serialize(): String {
 
 }
 
-public fun urlEncode(value: String): String {
+fun urlEncode(value: String): String {
     try {
         return URLEncoder.encode(value, "UTF-8")
     }
@@ -199,7 +199,7 @@ public fun urlEncode(value: String): String {
     }
 }
 
-public fun urlDecode(encoded: String): String {
+fun urlDecode(encoded: String): String {
     try {
         return URLDecoder.decode(encoded, "UTF-8")
     }

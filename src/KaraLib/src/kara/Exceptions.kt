@@ -17,4 +17,4 @@ class InvalidRouteException(message : String) : RuntimeException(message)
 /**
  * Thrown by route handlers, that discover incorrect parameters passed
  */
-public class InvalidRequestException(message: String) : RuntimeException(message)
+class InvalidRequestException(message: String) : RuntimeException(message)

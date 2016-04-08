@@ -1,11 +1,17 @@
 package kotlinx.html.bootstrap
 
-import kotlinx.html.*
-import kara.*
-import kotlinx.reflection.*
+import kara.JsonObject
+import kara.Request
+import kara.jsonValue
+import kara.link
+import kotlinx.html.A
+import kotlinx.html.HtmlBodyTag
+import kotlinx.html.a
+import kotlinx.html.onClick
+import kotlinx.reflection.Serialization
 
 private val empty: JsonObject.()->Unit = {}
-public fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String {
+fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String {
     val parts = requestParts()
 
     val answer = StringBuilder()
@@ -42,7 +48,7 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
     return answer.toString()
 }
 
-public fun HtmlBodyTag.post(link: Request, done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty, content: A.()->Unit) {
+fun HtmlBodyTag.post(link: Request, done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty, content: A.()->Unit) {
     a {
         href="javascript:void(0);".link()
 

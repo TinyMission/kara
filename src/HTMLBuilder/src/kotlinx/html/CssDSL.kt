@@ -16,7 +16,7 @@ object EmptyTrait : SelectorTrait {
     }
 }
 
-public interface StyleClass : SelectorTrait, Selector {
+interface StyleClass : SelectorTrait, Selector {
     val name: String
 
     override fun toExternalForm(): String {
@@ -24,7 +24,7 @@ public interface StyleClass : SelectorTrait, Selector {
     }
 }
 
-public class SimpleClassStyle(override val name : String) : StyleClass {
+class SimpleClassStyle(override val name : String) : StyleClass {
 }
 
 class CompositeStyleClass(val a: StyleClass, val b: StyleClass) : StyleClass {
@@ -35,14 +35,14 @@ class CompositeStyleClass(val a: StyleClass, val b: StyleClass) : StyleClass {
     }
 }
 
-operator public fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
+operator fun StyleClass?.plus(another: StyleClass?): StyleClass? = when {
     this == null && another == null -> null
     this == null -> another
     another == null -> this
     else -> CompositeStyleClass(this, another)
 }
 
-public enum class PseudoClass : StyleClass {
+enum class PseudoClass : StyleClass {
     root, firstChild, lastChild, firstOfType, lastOfType, onlyChild, onlyOfType,
     empty, link, visited, active, focus, hover, target, enabled, disabled, checked;
 
@@ -58,7 +58,7 @@ open class CssElement() {
     val children = arrayListOf<StyledElement>()
     val attributes = HashMap<String, Any>()
 
-    public inner class IdSelector(val name: String) : SelectorTrait, Selector {
+    inner class IdSelector(val name: String) : SelectorTrait, Selector {
         operator fun invoke(body: StyledElement.() -> Unit) {
             any.invoke(this, body = body)
         }
@@ -68,7 +68,7 @@ open class CssElement() {
         }
     }
 
-    public inner open class TagSelector(val name: String) : Selector {
+    inner open class TagSelector(val name: String) : Selector {
         fun id(name: String): Selector = invoke(IdSelector(name))
         fun id(name: String, body: StyledElement.() -> Unit) = id(IdSelector(name), body)
         fun id(id: IdSelector, body: StyledElement.() -> Unit) = invoke(id, body = body)
@@ -138,40 +138,40 @@ open class CssElement() {
     val dd: TagSelector get() = TagSelector("dd")
 
 
-    public fun id(name: String, body: StyledElement.() -> Unit) {
+    fun id(name: String, body: StyledElement.() -> Unit) {
         any.id(name, body)
     }
 
-    public fun id(name: String): IdSelector = IdSelector(name)
+    fun id(name: String): IdSelector = IdSelector(name)
 
     fun c(klass: StyleClass, body: StyledElement.() -> Unit) {
         any.invoke(klass, body = body)
     }
 
-    public fun att(name: String): Attribute = Attribute(name, kotlinx.html.HasAttribute(name))
+    fun att(name: String): Attribute = Attribute(name, kotlinx.html.HasAttribute(name))
 
-    public class Attribute internal constructor(val name: String, val filter: kotlinx.html.AttFilter) : SelectorTrait {
-        public infix fun startsWith(value: String): Attribute {
+    class Attribute internal constructor(val name: String, val filter: kotlinx.html.AttFilter) : SelectorTrait {
+        infix fun startsWith(value: String): Attribute {
             return Attribute(name, kotlinx.html.StartsWith(value))
         }
 
-        public infix fun equalTo(value: String): Attribute {
+        infix fun equalTo(value: String): Attribute {
             return Attribute(name, kotlinx.html.Equals(value))
         }
 
-        public infix fun endsWith(value: String): Attribute {
+        infix fun endsWith(value: String): Attribute {
             return Attribute(name, kotlinx.html.EndsWith(value))
         }
 
-        public infix fun contains(value: String): Attribute {
+        infix fun contains(value: String): Attribute {
             return Attribute(name, kotlinx.html.Contains(value, kotlinx.html.AttributeValueTokenizer.Substring))
         }
 
-        public infix fun containsInHypen(value: String): Attribute {
+        infix fun containsInHypen(value: String): Attribute {
             return Attribute(name, kotlinx.html.Contains(value, kotlinx.html.AttributeValueTokenizer.Hypen))
         }
 
-        public infix fun containsInSpaces(value: String): Attribute {
+        infix fun containsInSpaces(value: String): Attribute {
             return Attribute(name, kotlinx.html.Contains(value, kotlinx.html.AttributeValueTokenizer.Spaces))
         }
 
@@ -201,11 +201,11 @@ open class CssElement() {
         }
     }
 
-    public fun forAny(vararg selectors: Selector, body: StyledElement.() -> Unit) {
+    fun forAny(vararg selectors: Selector, body: StyledElement.() -> Unit) {
         s(UnionSelector(selectors).toExternalForm(), body)
     }
 
-    public fun forAny(vararg selectors: Selector): UnionSelector {
+    fun forAny(vararg selectors: Selector): UnionSelector {
         return UnionSelector(selectors)
     }
 

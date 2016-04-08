@@ -1,6 +1,7 @@
 package kara
 
-import kara.internal.*
+import kara.internal.ResourceDescriptor
+import kara.internal.ResourceDispatcher
 import kotlinx.reflection.MissingArgumentException
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
 
 /** Current application execution context
  */
-class ApplicationContext(public val config : ApplicationConfig,
+class ApplicationContext(val config : ApplicationConfig,
                          packages: List<String>,
                          val classLoader: ClassLoader,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
@@ -21,7 +22,7 @@ class ApplicationContext(public val config : ApplicationConfig,
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>();
 
-    public val version: Int = ++versionCounter
+    val version: Int = ++versionCounter
 
     init {
         packages.flatMap { scanPackageForMonitors(it) }.map {
@@ -33,11 +34,11 @@ class ApplicationContext(public val config : ApplicationConfig,
         }
     }
 
-    public fun intercept(interceptor: (request: HttpServletRequest, response: HttpServletResponse, descriptor: ResourceDescriptor?, proceed: (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean) {
+    fun intercept(interceptor: (request: HttpServletRequest, response: HttpServletResponse, descriptor: ResourceDescriptor?, proceed: (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean) {
         interceptors.add(interceptor)
     }
 
-    public fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
+    fun dispatch(request: HttpServletRequest, response: HttpServletResponse): Boolean {
 
         fun formatLogErrorMsg(error: String, req: HttpServletRequest) = "$error processing ${req.method} ${req.requestURI}. User agent: ${req.getHeader("User-Agent")}, Referer: ${req.getHeader("Referer")}"
 
@@ -90,7 +91,7 @@ class ApplicationContext(public val config : ApplicationConfig,
 
     private var _dispatcher: ResourceDispatcher? = null
 
-    public val dispatcher: ResourceDispatcher
+    val dispatcher: ResourceDispatcher
         get() {
             var d = _dispatcher
             if (d == null) {

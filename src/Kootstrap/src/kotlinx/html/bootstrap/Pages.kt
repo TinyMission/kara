@@ -1,12 +1,12 @@
 package kotlinx.html.bootstrap
 
-import kotlinx.html.*
-import java.util.ArrayList
 import kara.link
+import kotlinx.html.*
+import java.util.*
 
 inline fun HtmlBodyTag.pills(body: UL.()->Unit): Unit = ul("nav nav-pills", contents = body)
 inline fun HtmlBodyTag.content(body: DIV.()->Unit): Unit = div("tab-content", contents = body)
-public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div {
+fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()->Unit): Unit = div {
     addClass("tab-pane")
     if (active)
         addClass("active")
@@ -14,19 +14,19 @@ public fun HtmlBodyTag.pane(name: String, active: Boolean = false, body: DIV.()-
     body()
 }
 
-public fun HtmlBodyTag.tabs(body: UL.()->Unit): Unit = ul("nav nav-tabs", contents = body)
+fun HtmlBodyTag.tabs(body: UL.()->Unit): Unit = ul("nav nav-tabs", contents = body)
 
-public class PagesBuilder() {
+class PagesBuilder() {
     class Item(val id: String, val title: String, val content: HtmlBodyTag.() -> Unit)
 
     val items = ArrayList<Item>()
 
-    public fun item(name: String, title: String, content : HtmlBodyTag.() -> Unit) {
+    fun item(name: String, title: String, content : HtmlBodyTag.() -> Unit) {
         items.add(Item(name, title, content))
     }
 }
 
-public fun HtmlBodyTag.tabs(activeName: String, body: PagesBuilder.() -> Unit) {
+fun HtmlBodyTag.tabs(activeName: String, body: PagesBuilder.() -> Unit) {
     val builder = PagesBuilder()
     builder.body()
 

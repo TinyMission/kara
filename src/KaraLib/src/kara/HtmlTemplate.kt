@@ -1,10 +1,9 @@
 package kara
 
-import kotlinx.html.*
-import java.util.ArrayList
+import kotlinx.html.HTML
 import javax.servlet.http.HttpServletResponse
 
-public open class HtmlTemplateView<T : Template<HTML>>(val template: T, val build: T.() -> Unit) : ActionResult {
+open class HtmlTemplateView<T : Template<HTML>>(val template: T, val build: T.() -> Unit) : ActionResult {
     override fun writeResponse(context: ActionContext) {
         writeResponse(context.response)
     }

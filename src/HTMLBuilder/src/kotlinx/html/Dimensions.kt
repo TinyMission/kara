@@ -39,7 +39,7 @@ class LinearDimension(var value: Double, var units: LinearUnits) {
 }
 
 /** Use this instance to specify the auto keyword for linear dimensions. */
-public val auto: LinearDimension = LinearDimension(0.0, LinearUnits.auto)
+val auto: LinearDimension = LinearDimension(0.0, LinearUnits.auto)
 
 /** Returns true if the given string represents a valid linear dimension */
 fun isLinearDimension(s: String): Boolean {
@@ -56,7 +56,7 @@ val Int.em: LinearDimension get() = LinearDimension(this.toDouble(), LinearUnits
 val Double.px: LinearDimension get() = LinearDimension(this, LinearUnits._px)
 
 /** Extenion property to convert an int to a LinearDimension with units px. */
-public val Int.px: LinearDimension get() = LinearDimension(this.toDouble(), LinearUnits._px)
+val Int.px: LinearDimension get() = LinearDimension(this.toDouble(), LinearUnits._px)
 
 /** Extenion property to convert a double to a LinearDimension with units percent. */
 val Double.percent: LinearDimension get() = LinearDimension(this, LinearUnits._percent)

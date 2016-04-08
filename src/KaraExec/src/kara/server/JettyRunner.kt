@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
-public class JettyRunner(val applicationConfig: ApplicationConfig) {
+class JettyRunner(val applicationConfig: ApplicationConfig) {
     val logger = Logger.getLogger(this.javaClass)!!
     var server: Server? = null
     val resourceHandlers = ArrayList<ResourceHandler>()
@@ -38,7 +38,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
     inner class Handler() : AbstractHandler() {
         val CONFIG = MultipartConfigElement(System.getProperty("java.io.tmpdir"))
 
-        public override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
+        override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
             if (baseRequest?.contentType?.let { it.contains("multipart/form-data", ignoreCase = true) } ?: false) {
                 baseRequest?.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, CONFIG)
             }
@@ -81,7 +81,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         return apps[path] ?: apps[""] ?: apps[apps.keys.first()]!!
     }
 
-    public fun start() {
+    fun start() {
         logger.info("Starting server...")
 
         var port: Int
@@ -117,14 +117,14 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         }
     }
 
-    public fun stop() {
+    fun stop() {
         if (server != null) {
             server?.stop()
             server = null
         }
     }
 
-    public fun restart() {
+    fun restart() {
         this.stop()
         this.start()
     }

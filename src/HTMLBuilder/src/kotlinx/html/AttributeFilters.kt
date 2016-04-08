@@ -1,6 +1,6 @@
 package kotlinx.html
 
-public interface AttFilter {
+interface AttFilter {
     fun toExternalForm(): String
 }
 

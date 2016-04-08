@@ -5,9 +5,9 @@ val empty_contents: Any.() -> Unit = { }
 fun HTML.body(init: BODY.() -> Unit) = build(BODY(this), init)
 class BODY(containingTag: HTML) : HtmlBodyTag(containingTag, "body")
 
-public abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlTag(containingTag, name, renderStyle, contentStyle) {
-    public var id: String by Attributes.id
-    public var style: String by Attributes.style
+abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlTag(containingTag, name, renderStyle, contentStyle) {
+    var id: String by Attributes.id
+    var style: String by Attributes.style
 
     fun style(init: StyledElement.() -> Unit) {
         val element = StyledElement("inline")
@@ -97,16 +97,16 @@ inline fun HtmlBodyTag.a(c: String, contents: A.() -> Unit) = contentTag(A(this)
 inline fun HtmlBodyTag.a(contents: A.() -> Unit) = contentTag(A(this), contents)
 
 open class A(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "a", contentStyle = ContentStyle.propagate) {
-    public var href: Link by Attributes.href
-    public var rel: String by Attributes.rel
-    public var target: String by Attributes.target
+    var href: Link by Attributes.href
+    var rel: String by Attributes.rel
+    var target: String by Attributes.target
 }
 
 open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "button", RenderStyle.adaptive, ContentStyle.propagate) {
-    public var name: String by Attributes.name
-    public var value: String by Attributes.value
-    public var buttonType: ButtonType by Attributes.buttonType
-    public var href: Link by Attributes.href
+    var name: String by Attributes.name
+    var value: String by Attributes.value
+    var buttonType: ButtonType by Attributes.buttonType
+    var href: Link by Attributes.href
 }
 
 fun HtmlBodyTag.hr() = contentTag(HR(this), empty_contents)
@@ -161,7 +161,7 @@ open class SMALL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "small
 open class EM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "em", contentStyle = ContentStyle.propagate)
 open class ADDRESS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "address")
 open class BLOCKQUOTE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "blockquote") {
-    public var cite: Link by Attributes.cite
+    var cite: Link by Attributes.cite
 }
 
 
@@ -190,32 +190,32 @@ open class H4(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h4")
 open class H5(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "h5")
 
 open class IMG(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "img", RenderStyle._empty, ContentStyle.text) {
-    public var width: Int by Attributes.width
-    public var height: Int by Attributes.height
-    public var src: Link by Attributes.src
-    public var alt: String by Attributes.alt
+    var width: Int by Attributes.width
+    var height: Int by Attributes.height
+    var src: Link by Attributes.src
+    var alt: String by Attributes.alt
 }
 
 open class INPUT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "input", RenderStyle.adaptive, ContentStyle.propagate) {
-    public var alt: String by Attributes.alt
-    public var autocomplete: Boolean by Attributes.autocomplete
-    public var autofocus: Boolean by Attributes.autofocus
-    public var checked: Boolean by Attributes.checked
-    public var disabled: Boolean by Attributes.disabled
-    public var height: Int by Attributes.height
-    public var maxlength: Int by Attributes.maxlength
-    public var multiple: Boolean by Attributes.multiple
-    public var inputType: InputType by Attributes.inputType
-    public var name: String by Attributes.name
-    public var pattern: String by Attributes.pattern
-    public var placeholder: String by Attributes.placeholder
-    public var readonly: Boolean by Attributes.readonly
-    public var required: Boolean by Attributes.required
-    public var size: Int by Attributes.size
-    public var src: Link by Attributes.src
-    public var step: Int by Attributes.step
-    public var value: String by Attributes.value
-    public var width: Int by Attributes.width
+    var alt: String by Attributes.alt
+    var autocomplete: Boolean by Attributes.autocomplete
+    var autofocus: Boolean by Attributes.autofocus
+    var checked: Boolean by Attributes.checked
+    var disabled: Boolean by Attributes.disabled
+    var height: Int by Attributes.height
+    var maxlength: Int by Attributes.maxlength
+    var multiple: Boolean by Attributes.multiple
+    var inputType: InputType by Attributes.inputType
+    var name: String by Attributes.name
+    var pattern: String by Attributes.pattern
+    var placeholder: String by Attributes.placeholder
+    var readonly: Boolean by Attributes.readonly
+    var required: Boolean by Attributes.required
+    var size: Int by Attributes.size
+    var src: Link by Attributes.src
+    var step: Int by Attributes.step
+    var value: String by Attributes.value
+    var width: Int by Attributes.width
 }
 
 abstract class TableTag(containingTag: HtmlBodyTag, name: String) : HtmlBodyTag(containingTag, name)
@@ -260,42 +260,42 @@ inline fun SELECT.optiongroup(contents: OPTGROUP.() -> Unit) = contentTag(OPTGRO
 
 open class FIELDSET(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "fieldset")
 
-public open class FORM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "form") {
-    public var action: Link by Attributes.action
-    public var enctype: EncodingType by Attributes.enctype
-    public var method: FormMethod by Attributes.method
-    public var novalidate: Boolean by Attributes.novalidate
+open class FORM(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "form") {
+    var action: Link by Attributes.action
+    var enctype: EncodingType by Attributes.enctype
+    var method: FormMethod by Attributes.method
+    var novalidate: Boolean by Attributes.novalidate
 }
 
 open class SELECT(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "select") {
-    public var name: String by Attributes.name
-    public var size: Int by Attributes.size
-    public var multiple: Boolean by Attributes.multiple
-    public var disabled: Boolean by Attributes.disabled
-    public var required: Boolean by Attributes.required
+    var name: String by Attributes.name
+    var size: Int by Attributes.size
+    var multiple: Boolean by Attributes.multiple
+    var disabled: Boolean by Attributes.disabled
+    var required: Boolean by Attributes.required
 }
 
 open class OPTION(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "option") {
-    public var value: String by Attributes.value
-    public var label: String by Attributes.label
-    public var disabled: Boolean by Attributes.disabled
-    public var selected: Boolean by Attributes.selected
+    var value: String by Attributes.value
+    var label: String by Attributes.label
+    var disabled: Boolean by Attributes.disabled
+    var selected: Boolean by Attributes.selected
 }
 
 open class OPTGROUP(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "optgroup") {
 }
 
 open class TEXTAREA(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "textarea") {
-    public var autofocus: Boolean by Attributes.autofocus
-    public var cols: Int by Attributes.cols
-    public var disabled: Boolean by Attributes.disabled
-    public var maxlength: Int by Attributes.maxlength
-    public var name: String by Attributes.name
-    public var placeholder: String by Attributes.placeholder
-    public var readonly: Boolean by Attributes.readonly
-    public var required: Boolean by Attributes.required
-    public var rows: Int by Attributes.rows
-    public var wrap: Wrap by Attributes.wrap
+    var autofocus: Boolean by Attributes.autofocus
+    var cols: Int by Attributes.cols
+    var disabled: Boolean by Attributes.disabled
+    var maxlength: Int by Attributes.maxlength
+    var name: String by Attributes.name
+    var placeholder: String by Attributes.placeholder
+    var readonly: Boolean by Attributes.readonly
+    var required: Boolean by Attributes.required
+    var rows: Int by Attributes.rows
+    var wrap: Wrap by Attributes.wrap
 }
 
 inline fun HtmlBodyTag.fieldset(c: String, contents: FIELDSET.() -> Unit) = contentTag(FIELDSET(this), c, contents)
@@ -305,7 +305,7 @@ inline fun FIELDSET.legend(c: String, contents: LEGEND.() -> Unit) = contentTag(
 inline fun FIELDSET.legend(contents: LEGEND.() -> Unit) = contentTag(LEGEND(this), contents)
 
 open class LABEL(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "label") {
-    public var forId: String by Attributes.forId
+    var forId: String by Attributes.forId
 }
 
 open class LEGEND(containingTag: FIELDSET) : HtmlBodyTag(containingTag, "legend")
@@ -314,15 +314,15 @@ inline fun HtmlBodyTag.canvas(c: String, contents: CANVAS.() -> Unit) = contentT
 inline fun HtmlBodyTag.canvas(contents: CANVAS.() -> Unit) = contentTag(CANVAS(this), contents)
 
 open class CANVAS(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "canvas") {
-    public var width: Int by Attributes.width
-    public var height: Int by Attributes.height
+    var width: Int by Attributes.width
+    var height: Int by Attributes.height
 }
 
 open class CODE(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "code")
 inline fun HtmlBodyTag.code(contents: CODE.() -> Unit) = contentTag(CODE(this), contents)
 
 open class IFRAME(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "iframe") {
-    public var src: Link by Attributes.src
+    var src: Link by Attributes.src
 }
 
 inline fun HtmlBodyTag.iframe(contents: IFRAME.() -> Unit) = contentTag(IFRAME(this), contents)

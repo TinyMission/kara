@@ -1,7 +1,7 @@
 package kara
 
-import kotlinx.html.*
-import kara.internal.*
+import kotlinx.html.HTML
+import kotlinx.html.HtmlBodyTag
 import javax.servlet.http.HttpServletResponse
 
 /** Base class for html views.
@@ -45,5 +45,5 @@ abstract class HtmlView(val layout: HtmlLayout? = null) : ActionResult {
     abstract fun HtmlBodyTag.render()
 }
 
-public fun HtmlBodyTag.renderView(view: HtmlView) : Unit = with(view) { render() }
+fun HtmlBodyTag.renderView(view: HtmlView) : Unit = with(view) { render() }
 

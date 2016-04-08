@@ -58,8 +58,8 @@ fun HtmlBodyTag.pullRight() {
     addClass(pull_right)
 }
 
-public class devices(val phone: Int, val tablet: Int = phone, val medium: Int = tablet, val large: Int = medium) {
-    public fun styles(name: String = ""): StyleClass {
+class devices(val phone: Int, val tablet: Int = phone, val medium: Int = tablet, val large: Int = medium) {
+    fun styles(name: String = ""): StyleClass {
         val suffix = if (name.length > 0) "-$name" else ""
         return (s("col-xs$suffix-$phone") + s("col-sm$suffix-$tablet") + s("col-md$suffix-$medium") + s("col-lg$suffix-$large"))!!
     }

@@ -1,8 +1,10 @@
 package kara.tests.mock
 
+import kara.Application
+import kara.ApplicationConfig
+import kara.ApplicationContext
+import kara.internal.scanObjects
 import kara.tests.controllers.Routes
-import kara.*
-import kara.internal.*
 
 object MockApplication : Application(ApplicationConfig(ApplicationConfig::class.java.classLoader)) {
 
@@ -16,7 +18,7 @@ object MockApplication : Application(ApplicationConfig(ApplicationConfig::class.
 
 /** Provides a mock dispatch of the given method and url.
  */
-public fun mockDispatch(httpMethod : String, url : String) : MockHttpServletResponse {
+fun mockDispatch(httpMethod : String, url : String) : MockHttpServletResponse {
     val request = MockHttpServletRequest(httpMethod, url)
     val response = MockHttpServletResponse()
     MockApplication.context.dispatch(request, response)
@@ -25,7 +27,7 @@ public fun mockDispatch(httpMethod : String, url : String) : MockHttpServletResp
 
 
 /** Creates a HttpServletRequest with the given method and url*/
-public fun mockRequest(httpMethod : String, url : String) : MockHttpServletRequest {
+fun mockRequest(httpMethod : String, url : String) : MockHttpServletRequest {
     val request = MockHttpServletRequest(httpMethod, url)
     return request
 }

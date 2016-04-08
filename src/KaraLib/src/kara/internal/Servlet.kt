@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-public open class Servlet() : HttpServlet() {
+open class Servlet() : HttpServlet() {
     val logger = Logger.getLogger(Servlet::class.java)!!
 
     val application: Application by lazy {
@@ -29,11 +29,11 @@ public open class Servlet() : HttpServlet() {
         application.config // Just to make sure application is eagerly loaded when servlet is initialized.
     }
 
-    public override fun destroy() {
+    override fun destroy() {
         application.shutDown()
     }
 
-    protected override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
+    override fun service(req: HttpServletRequest?, resp: HttpServletResponse?) {
         dispatch(req!!, resp!!)
     }
 

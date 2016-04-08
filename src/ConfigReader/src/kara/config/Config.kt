@@ -9,21 +9,21 @@ import javax.naming.Context
 import javax.naming.InitialContext
 import javax.naming.NamingException
 
-public open class Config() {
-    public class MissingException(desc: String) : RuntimeException(desc)
+open class Config() {
+    class MissingException(desc: String) : RuntimeException(desc)
 
-    val data = LinkedHashMap<String, String>()
-    val cache = ConcurrentHashMap<String, String?>()
+    protected val data = LinkedHashMap<String, String>()
+    protected val cache = ConcurrentHashMap<String, String?>()
 
     /**
      * Gets the value for the given key.
      * Will raise an exception if the value isn't present. Try calling contains(key) first if you're unsure.
      */
-    operator public fun get(name: String): String {
+    operator fun get(name: String): String {
         return tryGet(name) ?: throw MissingException("Could not find config value for key $name")
     }
 
-    public fun tryGet(name: String): String? {
+    fun tryGet(name: String): String? {
         return lookupCache(name) {
             lookupJNDI(name) ?: data[name]
         }
@@ -40,17 +40,17 @@ public open class Config() {
     }
 
     /** Sets a value for the given key. */
-    operator public fun set(name: String, value: String) {
+    operator fun set(name: String, value: String) {
         data[name] = value
     }
 
     /** Returns true if the config contains a value for the given key. */
-    public fun contains(name: String): Boolean {
+    fun contains(name: String): Boolean {
         return data.containsKey(name) || lookupJNDI(name) != null
     }
 
     /** Prints the entire config to a nicely formatted string. */
-    public override fun toString(): String {
+    override fun toString(): String {
         val builder = StringBuilder()
         for (name in data.keys) {
             builder.append("$name: ${data[name]}\n")
@@ -70,10 +70,10 @@ public open class Config() {
         }
     }
 
-    public companion object {
+    companion object {
         val logger = Logger.getLogger(Config::class.java)!!
 
-        public fun readConfig(config: Config, path: String, classloader: ClassLoader, baseFile: File? = null) {
+        fun readConfig(config: Config, path: String, classloader: ClassLoader, baseFile: File? = null) {
             fun eval(name: String): String {
                 return config.tryGet(name) ?: System.getProperty(name) ?: System.getenv(name) ?: error("$name is not defined")
             }

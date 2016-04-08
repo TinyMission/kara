@@ -2,7 +2,7 @@ package kotlinx.html.bootstrap
 
 import kotlinx.html.*
 
-public fun s(name : String) : StyleClass = SimpleClassStyle(name)
+fun s(name : String) : StyleClass = SimpleClassStyle(name)
 
 val muted = "text-muted"
 val img_thumbnail = "img-thumbnail"

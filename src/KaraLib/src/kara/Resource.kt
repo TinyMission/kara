@@ -11,7 +11,7 @@ import kotlinx.html.DirectLink
 import kotlinx.html.Link
 import kotlin.reflect.KClass
 
-public abstract class Resource() : Link {
+abstract class Resource() : Link {
     abstract  fun handle(context: ActionContext): ActionResult
 
     override fun href(): String = href(contextPath())
@@ -75,9 +75,9 @@ private fun Class<out Resource>.fastRoute(): ResourceDescriptor {
     return ActionContext.tryGet()?.appContext?.dispatcher?.route(this) ?: route()
 }
 
-public fun KClass<out Resource>.baseLink(): Link = java.baseLink()
+fun KClass<out Resource>.baseLink(): Link = java.baseLink()
 
-public fun Class<out Resource>.baseLink(): Link {
+fun Class<out Resource>.baseLink(): Link {
     val descriptor = fastRoute()
     val route = descriptor.route
     if (route.contains(":")) {
@@ -91,20 +91,20 @@ public fun Class<out Resource>.baseLink(): Link {
 
 }
 
-public fun String.link(): Link {
+fun String.link(): Link {
     return DirectLink(appendContext())
 }
 
-public fun contextPath(): String {
+fun contextPath(): String {
     val request = ActionContext.tryGet()?.request ?: return ""
     return request.getAttribute("CONTEXT_PATH") as? String ?: request.contextPath ?: ""
 }
 
-public fun HttpServletRequest.setContextPath(path: String) {
+fun HttpServletRequest.setContextPath(path: String) {
     setAttribute("CONTEXT_PATH", path)
 }
 
-public fun String.appendContext(): String {
+fun String.appendContext(): String {
     if (startsWith("/") && !startsWith("//")) {
         return contextPath() + this
     }
