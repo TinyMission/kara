@@ -12,12 +12,12 @@ abstract class HtmlBodyTag(containingTag: HtmlTag?, name: String, renderStyle: R
     fun style(init: StyledElement.() -> Unit) {
         val element = StyledElement("inline")
         element.init()
-        val builder = StringBuilder()
-        for ((k, v) in element.attributes) {
-            builder.append("$k:$v;")
-        }
 
-        this["style"] = builder.toString()
+        this["style"] = buildString {
+            for ((k, v) in element.attributes) {
+                append("$k:$v;")
+            }
+        }
     }
 
     fun addClass(c: StyleClass?) {

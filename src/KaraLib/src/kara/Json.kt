@@ -9,14 +9,14 @@ import java.util.*
 class JsonResult(val json: JsonElement) : ActionResult {
     override fun writeResponse(context: ActionContext) {
         val jsonpCallback = context.params.optStringParam("callback")
-        val result = StringBuilder()
-
-        if (jsonpCallback != null) result.append(jsonpCallback).append("(")
-        json.build(result)
-        if (jsonpCallback != null) result.append(")")
+        val result = buildString {
+            if (jsonpCallback != null) append(jsonpCallback).append("(")
+            json.build(this)
+            if (jsonpCallback != null) append(")")
+        }
 
         val out = context.response.writer
-        out.print(result.toString())
+        out.print(result)
         out.flush()
     }
 }
@@ -170,8 +170,8 @@ inline fun jsonResult(body: JsonRoot.() -> Unit): JsonResult {
     return JsonResult(jsonNode(body))
 }
 
-inline fun jsonString(body: JsonRoot.() -> Unit): String {
-    return StringBuilder().apply { jsonNode(body).build(this) }.toString()
+inline fun jsonString(body: JsonRoot.() -> Unit) = buildString {
+    jsonNode(body).build(this)
 }
 
 inline fun jsonNode(body: JsonRoot.() -> Unit): JsonElement {

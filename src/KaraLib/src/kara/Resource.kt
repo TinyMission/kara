@@ -1,14 +1,14 @@
 package kara
 
 import kara.internal.*
+import kotlinx.html.DirectLink
+import kotlinx.html.Link
 import kotlinx.reflection.Serialization
 import kotlinx.reflection.primaryParametersNames
 import kotlinx.reflection.propertyValue
 import kotlinx.reflection.urlEncode
 import java.util.*
 import javax.servlet.http.HttpServletRequest
-import kotlinx.html.DirectLink
-import kotlinx.html.Link
 import kotlin.reflect.KClass
 
 abstract class Resource() : Link {
@@ -16,17 +16,12 @@ abstract class Resource() : Link {
 
     override fun href(): String = href(contextPath())
 
-    fun href(context: String): String {
+    fun href(context: String) = buildString {
         val url = requestParts(context)
         if (url.second.size == 0) return url.first
-
-        val answer = StringBuilder()
-
-        answer.append(url.first)
-        answer.append("?")
-        answer.append((url.second.map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" }).joinToString(("&")))
-
-        return answer.toString()
+        append(url.first)
+        append("?")
+        append((url.second.map { "${it.key}=${Serialization.serialize(it.value)?.let{urlEncode(it)}}" }).joinToString(("&")))
     }
 
     fun requestParts(context: String = contextPath()): Pair<String, Map<String, Any>> {

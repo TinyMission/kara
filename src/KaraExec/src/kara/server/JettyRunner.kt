@@ -95,19 +95,20 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
 
         applicationConfig.publicDirectories.forEach {
             logger.info("Attaching resource handler: $it")
-            val resourceHandler = ResourceHandler()
-            resourceHandler.isDirectoriesListed = false
-            resourceHandler.resourceBase = "./$it"
-            resourceHandler.welcomeFiles = arrayOf("index.html")
-            resourceHandlers.add(resourceHandler)
+            resourceHandlers.add(ResourceHandler().apply {
+                isDirectoriesListed = false
+                resourceBase = "./$it"
+                welcomeFiles = arrayOf("index.html")
+            })
         }
 
-        val sessionHandler = SessionHandler()
-        val sessionManager = HashSessionManager()
-        sessionManager.storeDirectory = java.io.File("tmp/sessions")
-        sessionHandler.sessionManager = sessionManager
-        sessionHandler.handler = Handler()
-        server?.handler = sessionHandler
+        server?.handler = SessionHandler().apply {
+            sessionManager = HashSessionManager().apply {
+                storeDirectory = java.io.File("tmp/sessions")
+                httpOnly = true
+            }
+            handler = Handler()
+        }
 
         server?.start()
         logger.info("Server running.")
@@ -138,15 +139,11 @@ fun Throwable.getStackTraceString(): String {
     return os.toString()
 }
 
-fun errorDescr(ex: Throwable, request: HttpServletRequest, session: HttpSession): String {
-    return with (StringBuilder()) {
-        append("\nRequest: ${request.requestURI}")
-        append("\nSession: ${session.getDescription()}")
-        append("\n\nStack Trace:\n")
-        append(ex.getStackTraceString())
-
-        toString()
-    }
+fun errorDescr(ex: Throwable, request: HttpServletRequest, session: HttpSession): String = buildString {
+    append("\nRequest: ${request.requestURI}")
+    append("\nSession: ${session.getDescription()}")
+    append("\n\nStack Trace:\n")
+    append(ex.getStackTraceString())
 }
 
 private fun HttpServletRequest.appendContext(ctx: String) = when {

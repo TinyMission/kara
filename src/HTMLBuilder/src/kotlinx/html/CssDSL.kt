@@ -181,23 +181,19 @@ open class CssElement() {
     }
 
     class SimpleSelector(val tag: TagSelector, val traits: Array<out SelectorTrait>) : Selector {
-        override fun toExternalForm(): String {
-            val answer = StringBuilder()
-
+        override fun toExternalForm(): String = buildString {
             val isAny = tag.isAny()
             if (!isAny) {
-                answer.append(tag.name)
+                append(tag.name)
             }
 
             for (t in traits) {
-                answer.append(t.toExternalForm())
+                append(t.toExternalForm())
             }
 
-            if (answer.length == 0 && isAny) {
+            if (length == 0 && isAny) {
                 return "*"
             }
-
-            return answer.toString()
         }
     }
 

@@ -50,12 +50,10 @@ open class Config() {
     }
 
     /** Prints the entire config to a nicely formatted string. */
-    override fun toString(): String {
-        val builder = StringBuilder()
+    override fun toString(): String = buildString {
         for (name in data.keys) {
-            builder.append("$name: ${data[name]}\n")
+            appendln("$name: ${data[name]}")
         }
-        return builder.toString()
     }
 
     private fun lookupJNDI(name: String): String? {
@@ -126,22 +124,18 @@ open class Config() {
         }
 
         val varPattern = Pattern.compile("\\$\\{([^\\}]*)\\}")
-        fun evalVars(line: String, eval: (String) -> String): String {
+        fun evalVars(line: String, eval: (String) -> String) = buildString {
             val matcher = varPattern.matcher(line)
-            val answer = StringBuilder()
-
             var lastAppend = 0
 
             while (matcher.find()) {
                 val varName = matcher.group(1)!!
-                answer.append(line, lastAppend, matcher.start())
-                answer.append(eval(varName))
+                append(line, lastAppend, matcher.start())
+                append(eval(varName))
                 lastAppend = matcher.end()
             }
 
-            answer.append(line, lastAppend, line.length)
-
-            return answer.toString()
+            append(line, lastAppend, line.length)
         }
     }
 }

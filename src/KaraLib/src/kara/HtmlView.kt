@@ -27,18 +27,13 @@ abstract class HtmlView(val layout: HtmlLayout? = null) : ActionResult {
         writer.flush()
     }
 
-    fun renderWithoutLayout(): String {
-        val root = object: HtmlBodyTag(null, "view") {
-        }
+    fun renderWithoutLayout() = buildString {
+        val root = object: HtmlBodyTag(null, "view") {}
         root.render()
-
-        val builder = StringBuilder()
         for (child in root.children) {
-            child.renderElement(builder, "")
+            child.renderElement(this, "")
         }
-        return builder.toString()
     }
-
 
     /** Subclasses must implement this to provide the primary html to dispay.
      */

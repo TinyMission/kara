@@ -9,14 +9,12 @@ abstract class Stylesheet(var namespace : String = "") : CachedResource() {
     */
     abstract fun CssElement.render()
 
-    override fun toString() : String {
+    override fun toString() : String = buildString {
         val element = CssElement()
         element.render()
-        val builder = StringBuilder()
         for (child in element.children) {
-            child.build(builder, "")
+            child.build(this, "")
         }
-        return builder.toString()
     }
 
     override fun content(context: ActionContext): ResourceContent {

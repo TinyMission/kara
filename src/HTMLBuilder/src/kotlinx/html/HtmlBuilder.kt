@@ -13,10 +13,8 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 
     abstract fun renderElement(builder: StringBuilder, indent: String)
 
-    override fun toString(): String {
-        val builder = StringBuilder()
-        renderElement(builder, "")
-        return builder.toString()
+    override fun toString() = buildString {
+        renderElement(this, "")
     }
 }
 
@@ -39,13 +37,10 @@ private fun HtmlElement.computeContentStyle(): ContentStyle {
     }
 }
 
-fun html(content: HtmlBodyTag.() -> Unit): String {
+fun html(content: HtmlBodyTag.() -> Unit) = buildString {
     val root = TransparentTag(null)
     root.content()
-    return with(StringBuilder()) {
-        root.renderElement(this, "")
-        toString()
-    }
+    root.renderElement(this, "")
 }
 
 fun String.htmlEscapeTo(builder: StringBuilder) {
