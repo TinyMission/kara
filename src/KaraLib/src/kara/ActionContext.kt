@@ -95,7 +95,7 @@ class ActionContext(val appContext: ApplicationContext,
             if (response.getHeaders("Set-Cookie").none { it.startsWith(attr) }) {
                 val newCookie = Cookie(attr, token)
                 newCookie.path = "/"
-
+                newCookie.isHttpOnly = true
                 response.addCookie(newCookie)
             }
             token
