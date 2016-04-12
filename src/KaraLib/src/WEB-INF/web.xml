@@ -11,6 +11,12 @@
         <async-supported>true</async-supported>
     </servlet>
 
+    <session-config>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
+
     <servlet-mapping>
         <servlet-name>KaraServlet</servlet-name>
         <url-pattern>/</url-pattern>
