@@ -8,6 +8,7 @@ import java.util.*
  */
 class JsonResult(val json: JsonElement) : ActionResult {
     override fun writeResponse(context: ActionContext) {
+        context.response.contentType = "application/json"
         val jsonpCallback = context.params.optStringParam("callback")
         val result = buildString {
             if (jsonpCallback != null) append(jsonpCallback).append("(")
