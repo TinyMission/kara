@@ -60,7 +60,7 @@ class FlashScopeStorage : Serializable {
     companion object {
         private val flashScopeAttributeName = "jetprofile.FlashScope"
 
-        public fun init(request: HttpServletRequest) {
+        fun init(request: HttpServletRequest) {
             var res = request.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
 
             if (res == null) {
@@ -70,7 +70,7 @@ class FlashScopeStorage : Serializable {
             res?.next();
         }
 
-        public fun current() : FlashScopeStorage {
+        fun current() : FlashScopeStorage {
             val ctx = ActionContext.current()
 
             return ctx.request.getAttribute(flashScopeAttributeName) as FlashScopeStorage?

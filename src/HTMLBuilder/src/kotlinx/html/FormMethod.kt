@@ -1,6 +1,6 @@
 package kotlinx.html
 
-public enum class FormMethod() : StringEnum<FormMethod> {
+enum class FormMethod() : StringEnum<FormMethod> {
     get,
     post,
     put,

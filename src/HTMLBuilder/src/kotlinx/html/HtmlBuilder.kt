@@ -13,10 +13,8 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 
     abstract fun renderElement(builder: StringBuilder, indent: String)
 
-    override fun toString(): String {
-        val builder = StringBuilder()
-        renderElement(builder, "")
-        return builder.toString()
+    override fun toString() = buildString {
+        renderElement(this, "")
     }
 }
 
@@ -39,13 +37,10 @@ private fun HtmlElement.computeContentStyle(): ContentStyle {
     }
 }
 
-fun html(content: HtmlBodyTag.() -> Unit): String {
+fun html(content: HtmlBodyTag.() -> Unit) = buildString {
     val root = TransparentTag(null)
     root.content()
-    return with(StringBuilder()) {
-        root.renderElement(this, "")
-        toString()
-    }
+    root.renderElement(this, "")
 }
 
 fun String.htmlEscapeTo(builder: StringBuilder) {
@@ -66,7 +61,7 @@ fun String.htmlEscapeTo(builder: StringBuilder) {
 abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderStyle: RenderStyle = RenderStyle.expanded, contentStyle: ContentStyle = ContentStyle.block) : HtmlElement(containingTag, contentStyle) {
     private val attributes = HashMap<String, String?>()
 
-    public inline fun <T : HtmlTag> build(tag: T, contents: T.() -> Unit): T {
+    inline fun <T : HtmlTag> build(tag: T, contents: T.() -> Unit): T {
         tag.contents()
         return tag
     }
@@ -124,23 +119,23 @@ abstract class HtmlTag(containingTag: HtmlTag?, val tagName: String, val renderS
         }
     }
 
-    public fun attribute(name: String, value: String) {
+    fun attribute(name: String, value: String) {
         attributes[name] = value
     }
 
-    public fun hasAttribute(attributeName: String): Boolean {
+    fun hasAttribute(attributeName: String): Boolean {
         return attributes.containsKey(attributeName)
     }
 
-    operator public fun get(attributeName: String): String? {
+    operator fun get(attributeName: String): String? {
         return attributes[attributeName]
     }
 
-    operator public fun set(attName: String, attValue: String?) {
+    operator fun set(attName: String, attValue: String?) {
         attributes[attName] = attValue
     }
 
-    public fun removeAttribute(attributeName: String) {
+    fun removeAttribute(attributeName: String) {
         attributes.remove(attributeName)
     }
 

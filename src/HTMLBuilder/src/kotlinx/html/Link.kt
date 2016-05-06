@@ -1,6 +1,6 @@
 package kotlinx.html
 
-public interface Link {
+interface Link {
     fun href(): String
 }
 

@@ -2,7 +2,7 @@ package kara
 
 import java.io.InputStream
 
-public class BinaryResponse(val mime: String, val length: Int?, val modified : Long?, val etag: String?, val streamData: ActionContext.() -> InputStream) : ActionResult {
+class BinaryResponse(val mime: String, val length: Int?, val modified : Long?, val etag: String?, val streamData: ActionContext.() -> InputStream) : ActionResult {
 
     override fun writeResponse(context: ActionContext) {
         val r = context.response

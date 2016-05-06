@@ -2,12 +2,12 @@ package kotlinx.html.bootstrap
 
 import kotlinx.html.*
 
-public fun ListTag.item(active: Boolean = false, body: LI.()->Unit): Unit = li(if (active) "active" else "", contents = body)
-public fun ListTag.item(url: Link, active: Boolean = false, body: A.()->Unit): Unit = item(active) { a { href = url; body() } }
-public fun ListTag.item(name: String, active: Boolean = false, body: A.()->Unit): Unit = item(active) { a { href = DirectLink("#$name"); body() } }
-public fun ListTag.itemDivider(): Unit = li("divider") {}
+fun ListTag.item(active: Boolean = false, body: LI.()->Unit): Unit = li(if (active) "active" else "", contents = body)
+fun ListTag.item(url: Link, active: Boolean = false, body: A.()->Unit): Unit = item(active) { a { href = url; body() } }
+fun ListTag.item(name: String, active: Boolean = false, body: A.()->Unit): Unit = item(active) { a { href = DirectLink("#$name"); body() } }
+fun ListTag.itemDivider(): Unit = li("divider") {}
 
-public fun ListTag.dropdownItem(c:StyleClass? = null, caption: A.()->Unit, items: UL.()->Unit): Unit = li {
+fun ListTag.dropdownItem(c:StyleClass? = null, caption: A.()->Unit, items: UL.()->Unit): Unit = li {
     addClass("dropdown")
     addClass(c)
     a {
@@ -22,29 +22,29 @@ public fun ListTag.dropdownItem(c:StyleClass? = null, caption: A.()->Unit, items
 
 
 inline fun HtmlBodyTag.listGroup(body: UL.()->Unit): Unit = ul("list-group", contents = body)
-public fun ListTag.listItem(active: Boolean = false, body: LI.()->Unit): Unit = item(active) {
+fun ListTag.listItem(active: Boolean = false, body: LI.()->Unit): Unit = item(active) {
     addClass("list-group-item")
     body()
 }
 
-public fun ListTag.listItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = item(url, active) {
+fun ListTag.listItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = item(url, active) {
     addClass("list-group-item")
     body()
 }
 fun ListTag.listDivider(): Unit = span("list-group-divider") {}
 
 inline fun HtmlBodyTag.linkGroup(body: DIV.()->Unit): Unit = div("list-group", contents = body)
-public fun DIV.linkItem(active: Boolean = false, body: A.()->Unit): Unit = a(if (active) "list-group-item active" else "list-group-item", contents = body)
-public fun DIV.linkItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = linkItem(active) { href = url; body() }
-public fun DIV.linkDivider(): Unit = span("list-group-divider") {}
+fun DIV.linkItem(active: Boolean = false, body: A.()->Unit): Unit = a(if (active) "list-group-item active" else "list-group-item", contents = body)
+fun DIV.linkItem(url: Link, active: Boolean = false, body: A.()->Unit): Unit = linkItem(active) { href = url; body() }
+fun DIV.linkDivider(): Unit = span("list-group-divider") {}
 
 inline  fun HtmlBodyTag.menu(body: UL.()->Unit): Unit = ul("dropdown-menu", contents = body)
 
-public enum class navbarPosition {
+enum class navbarPosition {
     `default`, top, bottom, static
 }
 
-public fun HtmlBodyTag.navbar(position: navbarPosition, body: DIV.()->Unit): Unit = div("navbar navbar-default" + when(position) {
+fun HtmlBodyTag.navbar(position: navbarPosition, body: DIV.()->Unit): Unit = div("navbar navbar-default" + when(position) {
     navbarPosition.top -> " navbar-fixed-top"
     navbarPosition.bottom -> " navbar-fixed-bottom"
     navbarPosition.static -> " navbar-static-top"

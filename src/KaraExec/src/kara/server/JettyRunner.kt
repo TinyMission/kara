@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession
 
 /** A Runnable responsible for managing a Jetty server instance.
  */
-public class JettyRunner(val applicationConfig: ApplicationConfig) {
+class JettyRunner(val applicationConfig: ApplicationConfig) {
     val logger = Logger.getLogger(this.javaClass)!!
     var server: Server? = null
     val resourceHandlers = ArrayList<ResourceHandler>()
@@ -38,7 +38,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
     inner class Handler() : AbstractHandler() {
         val CONFIG = MultipartConfigElement(System.getProperty("java.io.tmpdir"))
 
-        public override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
+        override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
             if (baseRequest?.contentType?.let { it.contains("multipart/form-data", ignoreCase = true) } ?: false) {
                 baseRequest?.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, CONFIG)
             }
@@ -81,7 +81,7 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         return apps[path] ?: apps[""] ?: apps[apps.keys.first()]!!
     }
 
-    public fun start() {
+    fun start() {
         logger.info("Starting server...")
 
         var port: Int
@@ -95,19 +95,20 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
 
         applicationConfig.publicDirectories.forEach {
             logger.info("Attaching resource handler: $it")
-            val resourceHandler = ResourceHandler()
-            resourceHandler.isDirectoriesListed = false
-            resourceHandler.resourceBase = "./$it"
-            resourceHandler.welcomeFiles = arrayOf("index.html")
-            resourceHandlers.add(resourceHandler)
+            resourceHandlers.add(ResourceHandler().apply {
+                isDirectoriesListed = false
+                resourceBase = "./$it"
+                welcomeFiles = arrayOf("index.html")
+            })
         }
 
-        val sessionHandler = SessionHandler()
-        val sessionManager = HashSessionManager()
-        sessionManager.storeDirectory = java.io.File("tmp/sessions")
-        sessionHandler.sessionManager = sessionManager
-        sessionHandler.handler = Handler()
-        server?.handler = sessionHandler
+        server?.handler = SessionHandler().apply {
+            sessionManager = HashSessionManager().apply {
+                storeDirectory = java.io.File("tmp/sessions")
+                httpOnly = true
+            }
+            handler = Handler()
+        }
 
         server?.start()
         logger.info("Server running.")
@@ -117,14 +118,14 @@ public class JettyRunner(val applicationConfig: ApplicationConfig) {
         }
     }
 
-    public fun stop() {
+    fun stop() {
         if (server != null) {
             server?.stop()
             server = null
         }
     }
 
-    public fun restart() {
+    fun restart() {
         this.stop()
         this.start()
     }
@@ -138,15 +139,11 @@ fun Throwable.getStackTraceString(): String {
     return os.toString()
 }
 
-fun errorDescr(ex: Throwable, request: HttpServletRequest, session: HttpSession): String {
-    return with (StringBuilder()) {
-        append("\nRequest: ${request.requestURI}")
-        append("\nSession: ${session.getDescription()}")
-        append("\n\nStack Trace:\n")
-        append(ex.getStackTraceString())
-
-        toString()
-    }
+fun errorDescr(ex: Throwable, request: HttpServletRequest, session: HttpSession): String = buildString {
+    append("\nRequest: ${request.requestURI}")
+    append("\nSession: ${session.getDescription()}")
+    append("\n\nStack Trace:\n")
+    append(ex.getStackTraceString())
 }
 
 private fun HttpServletRequest.appendContext(ctx: String) = when {

@@ -1,5 +1,5 @@
 package kara.demo
 
-import kara.*
+import kara.ApplicationConfig
 
 class Application(config: ApplicationConfig) : kara.Application(config)

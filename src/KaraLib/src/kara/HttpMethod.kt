@@ -1,6 +1,6 @@
 package kara
 
-public enum class HttpMethod {
+enum class HttpMethod {
     GET,
     POST,
     PUT,

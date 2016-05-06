@@ -4,21 +4,18 @@ import kara.*
 
 fun String?.asNotEmpty(): String? = if (this == null) null else if (!isEmpty()) this else null
 
-fun String.appendPathElement(part : String) : String {
-    val b = StringBuilder()
-    b.append(this)
+fun String.appendPathElement(part : String) = buildString {
+    append(this@appendPathElement)
     if (!this.endsWith("/")) {
-        b.append("/")
+        append("/")
     }
 
     if (part.startsWith('/')) {
-        b.append(part.substring(1))
+        append(part.substring(1))
     }
     else {
-        b.append(part)
+        append(part)
     }
-
-    return b.toString()
 }
 
 fun Class<*>.routePrefix(): String {

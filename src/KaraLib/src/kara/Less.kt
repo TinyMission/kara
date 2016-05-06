@@ -1,14 +1,12 @@
 package kara;
 
 import org.lesscss.LessCompiler
-import java.io.InputStream
-import org.lesscss.*
+import org.lesscss.LessSource
 import java.net.URI
-import java.net.URL
 
 private val compiler = LessCompiler()
 
-public open class EmbeddedLessResource(val name: String) : CachedResource() {
+open class EmbeddedLessResource(val name: String) : CachedResource() {
     override fun content(context: ActionContext): ResourceContent {
         synchronized(this) {
             val (lessSource, combinedModification) = resourceAndModification(context)
@@ -34,7 +32,7 @@ public open class EmbeddedLessResource(val name: String) : CachedResource() {
     }
 }
 
-public class URLResource(val uri: URI): org.lesscss.HttpResource(uri) {
+class URLResource(val uri: URI): org.lesscss.HttpResource(uri) {
     override fun createRelative(name: String?): org.lesscss.Resource? {
         val components = uri.toString().split('/')
         val newPath = "${components.take(components.size - 1).joinToString("/")}/$name"

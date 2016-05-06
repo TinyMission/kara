@@ -59,7 +59,7 @@ fun <T:Any, R:Any?> T.propertyValue(property: String): R? {
     return getter.get(this)
 }
 
-public class MissingArgumentException(message: String) : RuntimeException(message)
+class MissingArgumentException(message: String) : RuntimeException(message)
 
 fun <T:Any> Class<T>.buildBeanInstance(allParams: Map<String, String>): T {
     kotlin.objectInstance?.let {
@@ -97,7 +97,7 @@ fun Any.primaryParametersNames() = ReflectionCache.primaryParameterNames.getOrPu
     javaClass.kotlin.primaryConstructor?.parameters.orEmpty().map {it.name!!}
 }
 
-public fun Class<*>.isEnumClass(): Boolean = Enum::class.java.isAssignableFrom(this)
+fun Class<*>.isEnumClass(): Boolean = Enum::class.java.isAssignableFrom(this)
 
 fun ClassLoader.findClasses(prefix: String, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<Class<*>> {
     synchronized(cache) {

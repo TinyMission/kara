@@ -8,10 +8,10 @@ import java.util.*
 /**
  * Store application configuration.
  */
-public open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
+open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
 
-    public companion object {
-        public fun loadFrom(configPath: String, classLoader: ClassLoader? = null): ApplicationConfig {
+    companion object {
+        fun loadFrom(configPath: String, classLoader: ClassLoader? = null): ApplicationConfig {
             val config = ApplicationConfig(classLoader ?: ApplicationConfig::class.java.classLoader!!)
             Config.readConfig(config, configPath, config.appClassloader)
             return config
@@ -19,15 +19,15 @@ public open class ApplicationConfig(val appClassloader: ClassLoader) : Config() 
     }
 
     /** Returns true if the application is running in the development environment. */
-    public fun isDevelopment(): Boolean = get("kara.environment") == "development"
+    fun isDevelopment(): Boolean = get("kara.environment") == "development"
 
     /** Returns true if the application is running in the test environment. */
-    public fun isTest(): Boolean = get("kara.environment") == "test"
+    fun isTest(): Boolean = get("kara.environment") == "test"
 
     /** Returns true if the application is running in the production environment. */
-    public fun isProduction(): Boolean = get("kara.environment") == "production"
+    fun isProduction(): Boolean = get("kara.environment") == "production"
 
-    public val applicationPackageName: String
+    val applicationPackageName: String
         get() = this["kara.appPackage"]
 
     private val _publicDirectories by lazy {
@@ -50,21 +50,21 @@ public open class ApplicationConfig(val appClassloader: ClassLoader) : Config() 
         }.filterNotNull().orEmpty()
     }
     /** Directories where publicly available files (like stylesheets, scripts, and images) will go. */
-    public val publicDirectories: List<String>
+    val publicDirectories: List<String>
         get() = ActionContext.tryGet()?.let { _publicDirectories } ?: readPublicDirProperty()
 
     private fun readPublicDirProperty() = tryGet("kara.publicDir")?.split(';')?.filter { it.isNotBlank() }.orEmpty()
 
-    public val routePackages: List<String>
+    internal val routePackages: List<String>
         get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
                 ?: listOf("$applicationPackageName.routes", "$applicationPackageName.styles")
 
 
     /** The port to run the server on. */
-    public val port: String
+    val port: String
         get() = tryGet("kara.port") ?: "8080"
 
-    public fun classPath(ctx: String): Array<URL> {
+    fun classPath(ctx: String): Array<URL> {
         val urls = ArrayList<URL>()
         val key = if (ctx.isBlank()) "kara.classpath" else "kara.classpath.$ctx"
         tryGet(key)?.let {

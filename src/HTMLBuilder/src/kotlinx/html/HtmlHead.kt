@@ -41,19 +41,19 @@ class HEAD(containingTag: HTML) : HtmlTag(containingTag, "head") {
 }
 
 class META(containingTag: HEAD) : HtmlTag(containingTag, "meta") {
-    public var name: String by Attributes.name
-    public var content: String by StringAttribute("content")
+    var name: String by Attributes.name
+    var content: String by StringAttribute("content")
 }
 
 class BASE(containingTag: HEAD) : HtmlTag(containingTag, "base") {
-    public var href: String by StringAttribute("href")
-    public var target: String by StringAttribute("target")
+    var href: String by StringAttribute("href")
+    var target: String by StringAttribute("target")
 }
 
 class _LINK(containingTag: HEAD) : HtmlTag(containingTag, "link", RenderStyle._empty) {
-    public var href: Link by Attributes.href
-    public var rel: String by Attributes.rel
-    public var mimeType: String by Attributes.mimeType
+    var href: Link by Attributes.href
+    var rel: String by Attributes.rel
+    var mimeType: String by Attributes.mimeType
     init {
         rel = "stylesheet"
         mimeType = "text/css"
@@ -61,15 +61,15 @@ class _LINK(containingTag: HEAD) : HtmlTag(containingTag, "link", RenderStyle._e
 }
 
 class SCRIPTSRC(containingTag: HtmlTag) : HtmlTag(containingTag, "script") {
-    public var src: Link by Attributes.src
-    public var mimeType: String by Attributes.mimeType
+    var src: Link by Attributes.src
+    var mimeType: String by Attributes.mimeType
     init {
         mimeType = "text/javascript"
     }
 }
 
 class SCRIPTBLOCK(containingTag: HtmlTag) : HtmlTag(containingTag, "script") {
-    public var mimeType: String by Attributes.mimeType
+    var mimeType: String by Attributes.mimeType
     init {
         mimeType = "text/javascript"
     }

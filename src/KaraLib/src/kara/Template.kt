@@ -2,11 +2,11 @@ package kara
 
 import java.util.*
 
-public abstract class Template<TOuter>() {
+abstract class Template<TOuter>() {
     abstract fun TOuter.render()
 }
 
-open public class TemplatePlaceholder<TOuter, TTemplate>() {
+open class TemplatePlaceholder<TOuter, TTemplate>() {
     private var content: (TTemplate.() -> Unit)? = null
     operator fun invoke(content: TTemplate.() -> Unit) {
         this.content = content
@@ -19,7 +19,7 @@ open public class TemplatePlaceholder<TOuter, TTemplate>() {
     fun isEmpty(): Boolean = content == null
 }
 
-open public class Placeholder<TOuter>() {
+open class Placeholder<TOuter>() {
     private var content: (TOuter.(Placeholder<TOuter>) -> Unit)? = null
     var meta : String = ""
 
@@ -35,12 +35,12 @@ open public class Placeholder<TOuter>() {
     fun isEmpty(): Boolean = content == null
 }
 
-public class PlaceholderItem<TOuter>(val index: Int, val collection: List<PlaceholderItem<TOuter>>) : Placeholder<TOuter>() {
+class PlaceholderItem<TOuter>(val index: Int, val collection: List<PlaceholderItem<TOuter>>) : Placeholder<TOuter>() {
     val first: Boolean get() = index == 0
     val last: Boolean get() = index == collection.size
 }
 
-open public class Placeholders<TOuter, TInner>() {
+open class Placeholders<TOuter, TInner>() {
     private var items = ArrayList<PlaceholderItem<TInner>>()
     operator fun invoke(meta : String = "", content: TInner.(Placeholder<TInner>) -> Unit = {}) {
         val placeholder = PlaceholderItem<TInner>(items.size, items)
@@ -56,13 +56,13 @@ open public class Placeholders<TOuter, TInner>() {
     }
 }
 
-public fun <TOuter, TInner> TOuter.each(items: Placeholders<TOuter, TInner>, itemTemplate: TOuter.(PlaceholderItem<TInner>) -> Unit): Unit {
+fun <TOuter, TInner> TOuter.each(items: Placeholders<TOuter, TInner>, itemTemplate: TOuter.(PlaceholderItem<TInner>) -> Unit): Unit {
     with(items) { render(itemTemplate) }
 }
 
-public fun <TOuter> TOuter.insert(placeholder: Placeholder<TOuter>): Unit = with(placeholder) { render() }
+fun <TOuter> TOuter.insert(placeholder: Placeholder<TOuter>): Unit = with(placeholder) { render() }
 
-public fun <TTemplate : Template<TOuter>, TOuter> TOuter.insert(template: TTemplate, placeholder: TemplatePlaceholder<TOuter, TTemplate>) {
+fun <TTemplate : Template<TOuter>, TOuter> TOuter.insert(template: TTemplate, placeholder: TemplatePlaceholder<TOuter, TTemplate>) {
     with(placeholder) { template.render() }
     with(template) { render() }
 

@@ -9,14 +9,12 @@ abstract class Stylesheet(var namespace : String = "") : CachedResource() {
     */
     abstract fun CssElement.render()
 
-    override fun toString() : String {
+    override fun toString() : String = buildString {
         val element = CssElement()
         element.render()
-        val builder = StringBuilder()
         for (child in element.children) {
-            child.build(builder, "")
+            child.build(this, "")
         }
-        return builder.toString()
     }
 
     override fun content(context: ActionContext): ResourceContent {
@@ -38,8 +36,8 @@ fun HEAD.style(media: String = "all", mimeType: String = "text/css", buildSheet:
 fun HEAD.stylesheet(stylesheet: Stylesheet)  = build(STYLESHEETLINK(this, stylesheet), { })
 
 class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTag(containingTag, "style") {
-    public var media : String by StringAttribute("media")
-    public var mimeType : String by Attributes.mimeType
+    var media : String by StringAttribute("media")
+    var mimeType : String by Attributes.mimeType
 
     init {
         media = "all"
@@ -56,9 +54,9 @@ class STYLE(containingTag : HEAD, val stylesheet : Stylesheet) : HtmlTag(contain
 }
 
 class STYLESHEETLINK(containingTag : HEAD, var stylesheet : Stylesheet) : HtmlTag(containingTag, "link", RenderStyle._empty) {
-    public var href : Link by Attributes.href
-    public var rel : String by Attributes.rel
-    public var mimeType : String by Attributes.mimeType
+    var href : Link by Attributes.href
+    var rel : String by Attributes.rel
+    var mimeType : String by Attributes.mimeType
     init {
         rel = "stylesheet"
         mimeType = "text/css"

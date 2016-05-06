@@ -1,17 +1,21 @@
 package kotlinx.html.bootstrap
 
-import kotlinx.html.*
-import kara.*
-import kotlinx.reflection.*
+import kara.JsonObject
+import kara.Request
+import kara.jsonValue
+import kara.link
+import kotlinx.html.A
+import kotlinx.html.HtmlBodyTag
+import kotlinx.html.a
+import kotlinx.html.onClick
+import kotlinx.reflection.Serialization
 
 private val empty: JsonObject.()->Unit = {}
-public fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String {
+fun Request.jQueryPost(done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty): String = buildString {
     val parts = requestParts()
-
-    val answer = StringBuilder()
-    answer.append("jQuery.post('")
-    answer.append(parts.first)
-    answer.append("'")
+    append("jQuery.post('")
+    append(parts.first)
+    append("'")
 
     val params = JsonObject()
     for ((key, value) in parts.second) {
@@ -20,29 +24,27 @@ public fun Request.jQueryPost(done: String? = null, fail: String? = null, always
     params.paramsBuilder()
 
     if (!params.isEmpty()) {
-        answer.append(",")
-        params.build(answer)
+        append(",")
+        params.build(this)
     }
-    answer.append(")")
+    append(")")
 
     if (done != null) {
-        answer.append(".done(function(data) { $done })")
+        append(".done(function(data) { $done })")
     }
 
     if (fail != null) {
-        answer.append(".fail(function(data) { $fail })")
+        append(".fail(function(data) { $fail })")
     }
 
     if (always != null) {
-        answer.append(".always(function(data) { $always })")
+        append(".always(function(data) { $always })")
     }
 
-    answer.append(';')
-
-    return answer.toString()
+    append(';')
 }
 
-public fun HtmlBodyTag.post(link: Request, done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty, content: A.()->Unit) {
+fun HtmlBodyTag.post(link: Request, done: String? = null, fail: String? = null, always: String? = null, paramsBuilder:JsonObject.()->Unit = empty, content: A.()->Unit) {
     a {
         href="javascript:void(0);".link()
 

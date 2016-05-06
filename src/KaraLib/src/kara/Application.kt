@@ -6,15 +6,13 @@ import org.apache.log4j.Logger
 import java.io.File
 import java.net.URLClassLoader
 import java.nio.file.*
-import java.nio.file.StandardWatchEventKinds.ENTRY_CREATE
-import java.nio.file.StandardWatchEventKinds.ENTRY_DELETE
-import java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
+import java.nio.file.StandardWatchEventKinds.*
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.*
 
 /** The base Kara application class.
  */
-open class Application(public val config: ApplicationConfig, public val appContext: String = "") {
+open class Application(val config: ApplicationConfig, val appContext: String = "") {
     private var _context: ApplicationContext? = null
     private val watchKeys = ArrayList<WatchKey>()
     private val contextLock = Object()
@@ -50,7 +48,7 @@ open class Application(public val config: ApplicationConfig, public val appConte
             context
         }
 
-    public fun requestClassloader(): ClassLoader = classLoader(config, appContext)
+    fun requestClassloader(): ClassLoader = classLoader(config, appContext)
 
     open fun createContext(): ApplicationContext {
         val classLoader = requestClassloader()
@@ -133,7 +131,7 @@ open class Application(public val config: ApplicationConfig, public val appConte
             }
         }
 
-        public fun load(config: ApplicationConfig, appContext: String): Application {
+        fun load(config: ApplicationConfig, appContext: String): Application {
             val application = Application(config, appContext)
             application.start()
             return application

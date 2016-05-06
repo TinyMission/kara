@@ -18,7 +18,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     // TODO: verify optional components are all last
     private val optionalComponents by lazy { routeComponents.filter { it is OptionalParamRouteComponent }.toList() }
 
-    public fun matches(url: String): Boolean {
+    fun matches(url: String): Boolean {
         val path = url.substringBefore("?")
         val components = path.toPathComponents()
         if (components.size > routeComponents.size || components.size < routeComponents.size - optionalComponents.size)
@@ -33,7 +33,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         return true
     }
 
-    public fun buildParams(request: HttpServletRequest): RouteParameters {
+    fun buildParams(request: HttpServletRequest): RouteParameters {
         val url = request.requestURI?.removePrefix(request.contextPath.orEmpty())!!
         val query = request.queryString
         val params = RouteParameters()
@@ -73,7 +73,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     }
 
     /** Execute the action based on the given request and populate the response. */
-    public fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
+    fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = try {
             resourceClass.buildBeanInstance(params._map)
@@ -103,7 +103,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         }
     }
 
-    public override fun toString(): String {
+    override fun toString(): String {
         return "Resource<$resourceClass> at $route"
     }
 

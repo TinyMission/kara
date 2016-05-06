@@ -2,7 +2,7 @@ package kotlinx.html
 
 import kotlin.reflect.KProperty
 
-public abstract class Attribute<T>(val name: String) {
+abstract class Attribute<T>(val name: String) {
     operator fun getValue(tag: HtmlTag, property: KProperty<*>): T {
         return decode(tag[name]);
     }
@@ -14,7 +14,7 @@ public abstract class Attribute<T>(val name: String) {
     abstract fun decode(s: String?): T
 }
 
-public open class StringAttribute(name: String) : Attribute<String>(name) {
+open class StringAttribute(name: String) : Attribute<String>(name) {
     override fun encode(t: String): String? {
         return t // TODO: it actually might need HTML esaping
     }
@@ -24,12 +24,12 @@ public open class StringAttribute(name: String) : Attribute<String>(name) {
     }
 }
 
-public class TextAttribute(name: String) : StringAttribute(name)
-public class RegexpAttribute(name: String) : StringAttribute(name)
-public class IdAttribute(name: String) : StringAttribute(name)
-public class MimeAttribute(name: String) : StringAttribute(name)
+class TextAttribute(name: String) : StringAttribute(name)
+class RegexpAttribute(name: String) : StringAttribute(name)
+class IdAttribute(name: String) : StringAttribute(name)
+class MimeAttribute(name: String) : StringAttribute(name)
 
-public class IntAttribute(name: String) : Attribute<Int>(name) {
+class IntAttribute(name: String) : Attribute<Int>(name) {
     override fun encode(t: Int): String? {
         return t.toString()
     }
@@ -39,7 +39,7 @@ public class IntAttribute(name: String) : Attribute<Int>(name) {
     }
 }
 
-public class BooleanAttribute(name: String, val trueValue: String = "true", val falseValue: String = "false") : Attribute<Boolean>(name) {
+class BooleanAttribute(name: String, val trueValue: String = "true", val falseValue: String = "false") : Attribute<Boolean>(name) {
     override fun encode(t: Boolean): String? {
         return if (t) trueValue else falseValue
     }
@@ -53,7 +53,7 @@ public class BooleanAttribute(name: String, val trueValue: String = "true", val 
     }
 }
 
-public class TickerAttribute(name: String) : Attribute<Boolean>(name) {
+class TickerAttribute(name: String) : Attribute<Boolean>(name) {
     override fun encode(t: Boolean): String? {
         return null
     }
@@ -71,7 +71,7 @@ public class TickerAttribute(name: String) : Attribute<Boolean>(name) {
     }
 }
 
-public class LinkAttribute(name: String) : Attribute<Link>(name) {
+class LinkAttribute(name: String) : Attribute<Link>(name) {
     override fun encode(t: Link): String? {
         return t.href()
     }
@@ -81,11 +81,11 @@ public class LinkAttribute(name: String) : Attribute<Link>(name) {
     }
 }
 
-public interface StringEnum<T : Enum<T>> {
+interface StringEnum<T : Enum<T>> {
     val value: String
 }
 
-public class EnumAttribute<T>(name: String, val klass: Class<T>) : Attribute<T>(name)
+class EnumAttribute<T>(name: String, val klass: Class<T>) : Attribute<T>(name)
     where T : StringEnum<T>, T : Enum<T>
 {
     override fun encode(t: T): String? {
@@ -101,7 +101,7 @@ public class EnumAttribute<T>(name: String, val klass: Class<T>) : Attribute<T>(
     }
 }
 
-public class MimeTypesAttribute(name: String) : Attribute<List<String>>(name) {
+class MimeTypesAttribute(name: String) : Attribute<List<String>>(name) {
 
     override fun encode(t: List<String>): String? {
         return t.joinToString(",")

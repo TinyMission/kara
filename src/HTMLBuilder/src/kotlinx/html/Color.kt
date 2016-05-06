@@ -24,12 +24,12 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
     companion object {
 
         /** Creates a color from integer RGBA values between 0 and 255. */
-        public fun fromRgb(red: Int, green: Int, blue: Int, alpha: Int = 255): Color {
+        fun fromRgb(red: Int, green: Int, blue: Int, alpha: Int = 255): Color {
             return Color(red.toDouble() / 255, green.toDouble() / 255.0, blue.toDouble() / 255.0, alpha.toDouble() / 255.0)
         }
 
         /** Makes a color from a hex string (hash included). */
-        public fun fromHex(s : String) : Color {
+        fun fromHex(s : String) : Color {
             // TODO 4/8-digit are actually not supported by CSS spec, make framework parse rgb/rgba() format instead
 
             if (s.length == 4 && s[0] == '#') {
