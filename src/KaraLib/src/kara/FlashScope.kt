@@ -8,7 +8,7 @@ class FlashScopeStorage : Serializable {
     private var current = ConcurrentHashMap<String, Any?>()
     private var next = ConcurrentHashMap<String, Any?>()
 
-    operator private fun next() {
+    private fun next() {
         current.clear()
         current = ConcurrentHashMap(next)
         next.clear()
@@ -72,6 +72,7 @@ class FlashScopeStorage : Serializable {
 
         fun current() : FlashScopeStorage {
             val ctx = ActionContext.current()
+
 
             return ctx.request.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
                     ?: ctx.session.getAttribute(flashScopeAttributeName) as FlashScopeStorage?

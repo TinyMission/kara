@@ -51,11 +51,9 @@ class ApplicationContext(val config : ApplicationConfig,
             }
         }
 
-        val url = request.requestURI
-        val method = request.method
-        val resourceDescriptor = dispatcher.findDescriptor(method, url.removePrefix(request.contextPath.orEmpty()))
-
         try {
+            val url = request.requestURI
+            val resourceDescriptor = dispatcher.findDescriptor(request.method, url.removePrefix(request.contextPath.orEmpty()))
             return dispatch(0, request, response, resourceDescriptor)
         }
         catch(ex: SocketException) {
