@@ -106,7 +106,6 @@ open class BUTTON(containingTag: HtmlBodyTag) : HtmlBodyTag(containingTag, "butt
     var name: String by Attributes.name
     var value: String by Attributes.value
     var buttonType: ButtonType by Attributes.buttonType
-    var href: Link by Attributes.href
 }
 
 fun HtmlBodyTag.hr() = contentTag(HR(this), empty_contents)
