@@ -34,11 +34,6 @@ fun HtmlBodyTag.bt_button(h: highlight = highlight.default, size: caliber = cali
     body()
 }
 
-fun HtmlBodyTag.bt_button(url: Link, h: highlight = highlight.default, size: caliber = caliber.default, body: BUTTON.()->Unit): Unit = bt_button(h, size) {
-    href = url;
-    body()
-}
-
 inline fun HtmlBodyTag.actionGroup(body: HtmlBodyTag.()->Unit): Unit = p {
     body()
 }
