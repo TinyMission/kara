@@ -10,7 +10,7 @@ import java.util.*
 */
 abstract class TypeSerializer<T:Any?>() {
     abstract fun deserialize(param : String, paramType: Class<out T>) : T?
-    open fun serialize(param: Any): String = param.toString()
+    open fun serialize(param: T): String = param.toString()
 
     abstract fun isThisType(testType : Class<*>) : Boolean
 }
@@ -50,8 +50,8 @@ class BooleanSerializer: TypeSerializer<Boolean>() {
         return testType.name == "boolean" || testType.name == "java.lang.Boolean"
     }
 
-    override fun serialize(param: Any): String {
-        return if (param as Boolean) "true" else "false"
+    override fun serialize(param: Boolean): String {
+        return if (param) "true" else "false"
     }
 }
 
@@ -78,8 +78,8 @@ class BigDecimalSerializer: TypeSerializer<BigDecimal>() {
 }
 
 class EnumSerializer: TypeSerializer<Enum<*>>() {
-    override fun serialize(param: Any): String {
-        return (param as Enum<*>).ordinal.toString()
+    override fun serialize(param: Enum<*>): String {
+        return param.ordinal.toString()
     }
 
     @Suppress("IMPLICIT_CAST_TO_UNIT_OR_ANY")
@@ -104,7 +104,7 @@ class EnumSerializer: TypeSerializer<Enum<*>>() {
 interface DataClass
 
 class DataClassSerializer: TypeSerializer<DataClass>() {
-    override fun serialize(param: Any): String {
+    override fun serialize(param: DataClass): String {
         return param.serialize()
     }
 
@@ -115,6 +115,37 @@ class DataClassSerializer: TypeSerializer<DataClass>() {
     override fun isThisType(testType: Class<*>): Boolean {
         return DataClass::class.java.isAssignableFrom(testType)
     }
+}
+
+private const val NULL_CHAR = "\u2400"
+const val RECORD_SEPARATOR_CHAR = "\u001e"
+@Suppress("UNCHECKED_CAST")
+class ArraySerializer : TypeSerializer<Array<*>>() {
+    override fun deserialize(param: String, paramType: Class<out Array<*>>): Array<*>? {
+        val values = param.split(RECORD_SEPARATOR_CHAR)
+        val result = java.lang.reflect.Array.newInstance(paramType.componentType, values.size) as Array<Any?>
+        return result.apply {
+            values.forEachIndexed { indx, e ->
+                this[indx] = if (e != NULL_CHAR) {
+                    Serialization.deserialize(e, paramType.componentType as Class<Any>, paramType.classLoader)
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
+    override fun serialize(param: Array<*>): String {
+        return param.map {
+            if (it == null)
+                NULL_CHAR
+            else {
+                Serialization.serialize(it)
+            }
+        }.joinToString(separator = RECORD_SEPARATOR_CHAR)
+    }
+
+    override fun isThisType(testType: Class<*>): Boolean = testType.isArray
 }
 
 object Serialization {
@@ -136,30 +167,33 @@ object Serialization {
         register(BigDecimalSerializer())
         register(DataClassSerializer())
         register(EnumSerializer())
+        register(ArraySerializer())
     }
 
-    fun deserialize(param : String, paramType : Class<Any>, classLoader: ClassLoader? = null) : Any? {
+    fun <T:Any> deserialize(param : String, paramType : Class<T>, classLoader: ClassLoader? = null) : T? {
         if (paramType == String::class.java) {
-            return param
+            @Suppress("UNCHECKED_CAST")
+            return param as T
         }
         for (deserializer in serializer) {
             if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {
                 @Suppress("UNCHECKED_CAST")
-                return (deserializer as TypeSerializer<Any>).deserialize(param, paramType)
+                return (deserializer as TypeSerializer<T>).deserialize(param, paramType)
             }
         }
 
         error("Can't deserialize parameter of class $paramType")
     }
 
-    fun serialize(param: Any?): String? {
+    fun <T:Any> serialize(param: T?): String? {
         if (param == null) return null
         if (param is String) return param
 
         val paramType = param.javaClass
         for (serializer in serializer) {
             if (serializer.isThisType(paramType)) {
-                return serializer.serialize(param)
+                @Suppress("UNCHECKED_CAST")
+                return (serializer as TypeSerializer<T>).serialize(param)
             }
         }
 

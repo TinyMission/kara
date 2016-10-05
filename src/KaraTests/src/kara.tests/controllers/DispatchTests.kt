@@ -2,8 +2,10 @@ package kara.tests.controllers
 
 import kara.Application
 import kara.ApplicationConfig
+import kara.baseLink
 import kara.internal.ResourceDispatcher
 import kara.internal.scanObjects
+import kara.tests.mock.mockDispatch
 import kara.tests.mock.mockRequest
 import org.apache.log4j.BasicConfigurator
 import org.junit.Before
@@ -73,5 +75,13 @@ class DispatchTests() {
         actionInfo = dispatcher.findDescriptor("DELETE", request.requestURI!!)!! // delete
         params = actionInfo.buildParams(request)
         assertEquals("42", params["id"])
+
+        val arrayBaseUrl = Routes.ArrayParam::class.baseLink().href()
+        val paramPart = Routes.ArrayParam::arr.name
+        assertEquals("foo", mockDispatch("GET", "$arrayBaseUrl?$paramPart=foo").stringOutput())
+        assertEquals("foo, bar", mockDispatch("GET", "$arrayBaseUrl?$paramPart=foo&$paramPart=bar").stringOutput())
+
+        val arrayWithNullsURL = Routes.ArrayParam(arrayOf("foo", null, "bar")).href()
+        assertEquals("foo, null, bar", mockDispatch("GET", arrayWithNullsURL).stringOutput())
     }
 }
