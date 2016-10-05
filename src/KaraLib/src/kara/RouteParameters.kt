@@ -9,6 +9,7 @@ class RouteParameters() {
     internal val _map = HashMap<String, String>()
     internal val _list = ArrayList<String>()
 
+    fun parameterNames() = _map.keys.toList()
     /** Gets a named parameter by name */
     operator fun get(name : String) : String? {
         return _map[name]
