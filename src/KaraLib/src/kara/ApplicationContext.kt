@@ -20,7 +20,7 @@ class ApplicationContext(val config : ApplicationConfig,
                          val resourceTypes: List<Class<out Resource>>) {
     val logger = Logger.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
-    private val monitorInstances = ArrayList<ApplicationContextMonitor>();
+    private val monitorInstances = ArrayList<ApplicationContextMonitor>()
 
     val version: Int = ++versionCounter
 

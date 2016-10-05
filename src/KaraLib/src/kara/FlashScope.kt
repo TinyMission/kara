@@ -67,7 +67,7 @@ class FlashScopeStorage : Serializable {
                 res = request.getSession(false)?.getAttribute(flashScopeAttributeName) as FlashScopeStorage?
             }
 
-            res?.next();
+            res?.next()
         }
 
         fun current() : FlashScopeStorage {

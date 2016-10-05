@@ -1,10 +1,11 @@
 package kara.demo.views
 
-import kara.*
-import kara.demo.styles.DefaultStyles
-import kara.demo.styles.StyleClasses.*
+import kara.Placeholder
+import kara.Template
+import kara.demo.styles.StyleClasses.body
+import kara.demo.styles.StyleClasses.title
+import kara.insert
 import kotlinx.html.*
-import javax.swing.text.DefaultEditorKit.InsertBreakAction
 
 class DetailsTemplate : Template<HTML>() {
     val caption = Placeholder<HtmlBodyTag>()

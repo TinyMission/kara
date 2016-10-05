@@ -1,11 +1,10 @@
-package kara;
+package kara
 
-import com.yahoo.platform.yui.compressor.JavaScriptCompressor
-import java.io.ByteArrayOutputStream
-import jj.org.mozilla.javascript.*
-import org.apache.log4j.Logger
-import kara.config.Config
 import com.yahoo.platform.yui.compressor.CssCompressor
+import com.yahoo.platform.yui.compressor.JavaScriptCompressor
+import jj.org.mozilla.javascript.ErrorReporter
+import jj.org.mozilla.javascript.EvaluatorException
+import org.apache.log4j.Logger
 import java.io.StringWriter
 
 fun ByteArray.minifyResource(context: ActionContext, mime: String): ByteArray {

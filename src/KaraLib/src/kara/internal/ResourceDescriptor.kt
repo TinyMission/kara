@@ -82,7 +82,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
             throw e
         }
         catch (e: Exception) {
-            throw RuntimeException("Error processing ${request.method} ${request.requestURI}, parameters={${params.toString()}}, User agent: ${request.getHeader("User-Agent")}", e)
+            throw RuntimeException("Error processing ${request.method} ${request.requestURI}, parameters={$params}, User agent: ${request.getHeader("User-Agent")}", e)
         }
 
         val actionContext = ActionContext(context, request, response, params, resourceClass.isAnnotationPresent(NoSession::class.java).not())

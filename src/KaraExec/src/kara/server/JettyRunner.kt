@@ -39,7 +39,7 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
         val CONFIG = MultipartConfigElement(System.getProperty("java.io.tmpdir"))
 
         override fun handle(target: String?, baseRequest: Request?, request: HttpServletRequest?, response: HttpServletResponse?) {
-            if (baseRequest?.contentType?.let { it.contains("multipart/form-data", ignoreCase = true) } ?: false) {
+            if (baseRequest?.contentType?.contains("multipart/form-data", ignoreCase = true) ?: false) {
                 baseRequest?.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, CONFIG)
             }
 
@@ -60,7 +60,7 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
                         resourceHandler.handle(targ, baseRequest, request.removeContext(appContext), response)
                         if (baseRequest!!.isHandled) {
                             logger.info("$method -- ${request.requestURL}${if (query != null) "?" + query else ""} -- OK @${resourceHandler.resourceBase}")
-                            break;
+                            break
                         }
                     }
                 }
@@ -69,7 +69,7 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
                 }
             }
             catch(ex: Throwable) {
-                logger.error("dispatch error: ${ex.message}", ex);
+                logger.error("dispatch error: ${ex.message}", ex)
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorDescr(ex, request, request.session!!))
             }
         }
@@ -84,9 +84,8 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
     fun start() {
         logger.info("Starting server...")
 
-        var port: Int
-        try {
-            port = applicationConfig.port.toInt()
+        val port = try {
+            applicationConfig.port.toInt()
         }
         catch (ex: Exception) {
             throw RuntimeException("${applicationConfig.port} is not a valid port number")

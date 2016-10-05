@@ -206,7 +206,7 @@ fun <T : HtmlBodyTag> T.modal(dataUrl: Link, effect: String = "fade", content: T
 fun dialog(content: ModalBuilder.() -> Unit): ActionResult {
     val builder = ModalBuilder()
     builder.content()
-    return ModalResult() {
+    return ModalResult {
         div {
             addClass("modal-dialog")
             div {
@@ -220,7 +220,7 @@ fun dialog(content: ModalBuilder.() -> Unit): ActionResult {
 fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: EncodingType = EncodingType.urlencoded, content: ModalBuilder.() -> Unit): ActionResult {
     val builder = ModalBuilder()
     builder.content()
-    return ModalResult() {
+    return ModalResult {
         div {
             addClass("modal-dialog")
             div {
@@ -262,7 +262,7 @@ class ModalResult(val content: HtmlBodyTag.() -> Unit) : ActionResult {
 }
 
 fun HtmlBodyTag.sampleModalDialog() {
-    modal() {
+    modal {
         button {
             +"Show Modal"
         }

@@ -4,6 +4,7 @@ import kara.*
 import kara.demo.models.Book
 import java.util.*
 
+@Suppress("unused")
 object Home {
     @Get("/")
     class Index() : Request({ kara.demo.views.Index() })
@@ -15,7 +16,7 @@ object Home {
 
     @Get("/async")
     class Async() : Request({
-        async() {
+        async {
             TextResult("This've been rendered async.")
         }
     })

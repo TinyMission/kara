@@ -1,7 +1,6 @@
 package kara.demo.styles
 
-import kara.*
-import kotlinx.html.*
+import kotlinx.html.StyleClass
 
 enum class StyleClasses : StyleClass {
     fields, cLabel, top,

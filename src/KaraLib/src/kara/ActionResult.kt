@@ -1,9 +1,11 @@
 package kara
 
-import javax.servlet.http.HttpServletResponse
-import javax.xml.transform.*
-import javax.xml.transform.stream.*
-import java.io.*
+import java.io.StringReader
+import java.io.StringWriter
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.stream.StreamResult
+import javax.xml.transform.stream.StreamSource
 
 /** Base class for objects that are returned from actions.
  */
@@ -50,15 +52,15 @@ open class RequestAuthentication(val realm: String) : ErrorResult(401, "Not auth
 
 open class XmlResult(val xml: String) : ActionResult {
     fun prettyFormat(input: String, indent: Int): String {
-        val xmlInput = StreamSource(StringReader(input));
-        val stringWriter = StringWriter();
-        val xmlOutput = StreamResult(stringWriter);
-        val transformerFactory = TransformerFactory.newInstance()!!;
-        transformerFactory.setAttribute("indent-number", indent);
-        val transformer = transformerFactory.newTransformer()!!;
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.transform(xmlInput, xmlOutput);
-        return xmlOutput.writer.toString();
+        val xmlInput = StreamSource(StringReader(input))
+        val stringWriter = StringWriter()
+        val xmlOutput = StreamResult(stringWriter)
+        val transformerFactory = TransformerFactory.newInstance()!!
+        transformerFactory.setAttribute("indent-number", indent)
+        val transformer = transformerFactory.newTransformer()!!
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes")
+        transformer.transform(xmlInput, xmlOutput)
+        return xmlOutput.writer.toString()
     }
 
     override fun writeResponse(context: ActionContext) {
@@ -68,7 +70,7 @@ open class XmlResult(val xml: String) : ActionResult {
 
     fun respondWithXml(context: ActionContext) {
         val text = prettyFormat(xml, 2)
-        val content = text.toByteArray();
+        val content = text.toByteArray()
         context.response.setContentLength(content.size)
         context.response.contentType = "text/xml"
         context.response.characterEncoding = "UTF-8"

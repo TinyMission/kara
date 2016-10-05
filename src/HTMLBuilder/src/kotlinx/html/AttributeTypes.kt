@@ -4,10 +4,10 @@ import kotlin.reflect.KProperty
 
 abstract class Attribute<T>(val name: String) {
     operator fun getValue(tag: HtmlTag, property: KProperty<*>): T {
-        return decode(tag[name]);
+        return decode(tag[name])
     }
     operator open fun setValue(tag: HtmlTag, property: KProperty<*>, value: T) {
-        tag[name] = encode(value);
+        tag[name] = encode(value)
     }
 
     abstract fun encode(t: T): String?
@@ -93,11 +93,7 @@ class EnumAttribute<T>(name: String, val klass: Class<T>) : Attribute<T>(name)
     }
 
     override fun decode(s: String?): T {
-        for (c in klass.enumConstants!!) {
-            if (encode(c) == s) return c
-        }
-
-        throw RuntimeException("Can't decode '$s' as value of '${klass.name}'")
+        return klass.enumConstants!!.firstOrNull { encode(it) == s } ?: throw RuntimeException("Can't decode '$s' as value of '${klass.name}'")
     }
 }
 

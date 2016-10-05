@@ -24,8 +24,8 @@ class TemplateTests() {
         val output = response.stringOutput()
         assertEquals("text/html", response._contentType, "Content type should be html")
         assertTrue(output?.contains("header/div") as Boolean, "View contains header placeholder")
-        assertTrue(output?.contains("content/left/span") as Boolean, "View contains content/left placeholder")
-        assertTrue(output?.contains("content/right/span") as Boolean, "View contains content/right placeholder")
+        assertTrue(output.contains("content/left/span"), "View contains content/left placeholder")
+        assertTrue(output.contains("content/right/span"), "View contains content/right placeholder")
     }
 }
 
@@ -39,7 +39,7 @@ class MenuTemplate : Template<HtmlBodyTag>() {
         }
         ul {
             each(item) {
-                li() {
+                li {
                     insert(it)
                 }
             }
@@ -75,7 +75,7 @@ class PageTemplate : Template<HTML>() {
         }
     }
 }
-fun view(view: PageTemplate.() -> Unit) = HtmlTemplateView<PageTemplate>(PageTemplate(), view)
+fun view(view: PageTemplate.() -> Unit) = HtmlTemplateView(PageTemplate(), view)
 
 fun SomeFunView() = view {
     menu {

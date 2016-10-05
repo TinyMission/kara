@@ -3,13 +3,13 @@ package kara.tests.controllers
 
 import kara.Application
 import kara.tests.mock.mockDispatch
+import kotlinx.html.htmlEscapeTo
 import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.spi.LoggingEvent
 import org.junit.Before
 import org.junit.Test
 import javax.servlet.http.HttpServletResponse
-import kotlinx.html.htmlEscapeTo
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -27,8 +27,8 @@ class ActionTests() {
         assertEquals("text/html", response._contentType, "Content type should be html")
 
         assertTrue(output?.contains("Default Layout") as Boolean, "Home view contains layout")
-        assertTrue(output?.contains("Welcome Home") as Boolean, "Home view contains view")
-        assertTrue(output?.contains("&lt;h2&gt;MakeSureThisIsEscaped&lt;/h2&gt;") as Boolean, "Proper escaping not applied : $output")
+        assertTrue(output.contains("Welcome Home"), "Home view contains view")
+        assertTrue(output.contains("&lt;h2&gt;MakeSureThisIsEscaped&lt;/h2&gt;"), "Proper escaping not applied : $output")
     }
 
     @Test fun runActionTests() {

@@ -2,7 +2,7 @@ package kara
 
 import java.util.*
 
-abstract class Template<TOuter>() {
+abstract class Template<in TOuter>() {
     abstract fun TOuter.render()
 }
 
@@ -43,7 +43,7 @@ class PlaceholderItem<TOuter>(val index: Int, val collection: List<PlaceholderIt
 open class Placeholders<TOuter, TInner>() {
     private var items = ArrayList<PlaceholderItem<TInner>>()
     operator fun invoke(meta : String = "", content: TInner.(Placeholder<TInner>) -> Unit = {}) {
-        val placeholder = PlaceholderItem<TInner>(items.size, items)
+        val placeholder = PlaceholderItem(items.size, items)
         placeholder(meta, content)
         items.add(placeholder)
     }

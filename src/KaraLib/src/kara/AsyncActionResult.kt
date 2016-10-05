@@ -7,7 +7,6 @@ import javax.servlet.AsyncEvent
 import javax.servlet.AsyncListener
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.properties.Delegates
 
 /**
  * @author max

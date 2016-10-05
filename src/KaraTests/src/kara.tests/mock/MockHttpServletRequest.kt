@@ -140,7 +140,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     override fun getAttribute(p0 : String?) : Any? {
-        return null;
+        return null
     }
     override fun getParameter(p0 : String?) : String? {
         return params[p0]

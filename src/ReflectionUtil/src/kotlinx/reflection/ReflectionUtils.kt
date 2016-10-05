@@ -1,6 +1,7 @@
 package kotlinx.reflection
 
 import java.io.File
+import java.lang.RuntimeException
 import java.lang.reflect.Modifier
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -93,7 +94,7 @@ private fun paramJavaType(javaType: Type): Class<Any> {
     }
 }
 
-fun Any.primaryParametersNames() = ReflectionCache.primaryParameterNames.getOrPut(javaClass) {
+fun Any.primaryParametersNames(): List<String> = ReflectionCache.primaryParameterNames.getOrPut(javaClass) {
     javaClass.kotlin.primaryConstructor?.parameters.orEmpty().map {it.name!!}
 }
 

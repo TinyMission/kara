@@ -20,7 +20,7 @@ interface StyleClass : SelectorTrait, Selector {
     val name: String
 
     override fun toExternalForm(): String {
-        return ".${name}"
+        return ".$name"
     }
 }
 
@@ -47,7 +47,7 @@ enum class PseudoClass : StyleClass {
     empty, link, visited, active, focus, hover, target, enabled, disabled, checked;
 
     override fun toExternalForm(): String {
-        return ":${name}"
+        return ":$name"
     }
 }
 
@@ -231,7 +231,7 @@ class StyledElement(val selector: String) : CssElement() {
         builder.append("$thisSelector {\n")
         for (a in attributes.keys) {
             val attr = attributes[a]!!
-            builder.append("    $a: ${attr.toString()};\n")
+            builder.append("    $a: $attr;\n")
         }
         builder.append("}\n")
         for (child in children) {

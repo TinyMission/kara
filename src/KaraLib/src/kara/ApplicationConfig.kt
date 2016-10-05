@@ -35,7 +35,7 @@ open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
             val dirPath = it.trim()
             val dir = File(dirPath)
             val context = ActionContext.current().request.servletContext
-            if ((dir.getParent() == null || !dir.isDirectory) && context != null) {
+            if ((dir.parent == null || !dir.isDirectory) && context != null) {
                 logger.info("Can't find public dir $dirPath. Trying to resolve it via servlet context.")
                 return@map context.getRealPath(dirPath)?.let { path ->
                     if (File(path).isDirectory) {
@@ -56,7 +56,7 @@ open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
     private fun readPublicDirProperty() = tryGet("kara.publicDir")?.split(';')?.filter { it.isNotBlank() }.orEmpty()
 
     internal val routePackages: List<String>
-        get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { "${it.trim()}" }
+        get() = tryGet("kara.routePackages")?.split(',')?.toList()?.map { it.trim() }
                 ?: listOf("$applicationPackageName.routes", "$applicationPackageName.styles")
 
 

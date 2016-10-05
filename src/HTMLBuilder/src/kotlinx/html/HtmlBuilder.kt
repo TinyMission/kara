@@ -1,5 +1,6 @@
 package kotlinx.html
 
+import java.lang.RuntimeException
 import java.util.*
 
 abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle: ContentStyle = ContentStyle.block) {
@@ -9,7 +10,7 @@ abstract class HtmlElement(val containingElement: HtmlElement?, val contentStyle
 
     private fun appendTo(element: HtmlElement?) = element?.children?.add(this)
 
-    val children: MutableList<HtmlElement> = ArrayList<HtmlElement>()
+    val children: MutableList<HtmlElement> = ArrayList()
 
     abstract fun renderElement(builder: StringBuilder, indent: String)
 
@@ -44,16 +45,13 @@ fun html(content: HtmlBodyTag.() -> Unit) = buildString {
 }
 
 fun String.htmlEscapeTo(builder: StringBuilder) {
-    val len = length
-
-    for (i in 0..len - 1) {
-        val c = this[i]
-        when (c) {
+    this.forEach {
+        when(it) {
             '<' -> builder.append("&lt;")
             '>' -> builder.append("&gt;")
             '\"' -> builder.append("&quot;")
             '&' -> builder.append("&amp;")
-            else -> builder.append(c)
+            else -> builder.append(it)
         }
     }
 }
