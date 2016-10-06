@@ -1,5 +1,8 @@
 package kara.tests.mock
 
+import kara.internal.partition
+import kotlinx.reflection.RECORD_SEPARATOR_CHAR
+import kotlinx.reflection.urlDecode
 import java.io.BufferedReader
 import java.security.Principal
 import java.util.*
@@ -15,6 +18,13 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
 
     var _method : String = method
     var _url : String = url
+    private val params = Hashtable<String,String>()
+
+    init {
+        url.split('?').getOrNull(1)?.split('&')?.map{ urlDecode(it).partition('=') }?.groupBy { it.first }?.forEach {
+            params[it.key] = it.value.joinToString(separator = RECORD_SEPARATOR_CHAR) { it.second }
+        }
+    }
 
     override fun startAsync(p0 : javax.servlet.ServletRequest?, p1 : javax.servlet.ServletResponse?) : javax.servlet.AsyncContext? {
         throw UnsupportedOperationException()
@@ -151,8 +161,6 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
     override fun getAttributeNames() : Enumeration<String>? {
         throw UnsupportedOperationException()
     }
-
-    val params = Hashtable<String,String>()
 
     override fun getParameterNames() : Enumeration<String>? {
         return params.keys()

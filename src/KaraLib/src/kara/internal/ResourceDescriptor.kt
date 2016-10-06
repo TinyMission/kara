@@ -35,7 +35,6 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
 
     fun buildParams(request: HttpServletRequest): RouteParameters {
         val url = request.requestURI?.removePrefix(request.contextPath.orEmpty())!!
-        val query = request.queryString
         val params = RouteParameters()
 
         // parse the route parameters
@@ -48,25 +47,24 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
             routeComponent.setParameter(params, component)
         }
 
-        // parse query parameters
-        query?.split('&')?.map {urlDecode(it)}?.forEach {
-            val (name, value) = it.partition('=')
-            params[name] = value.orEmpty()
-        }
-
-        // parse the form parameters
-        for (formParameterName in request.parameterNames) {
-            val value = request.getParameter(formParameterName)!!
-            params[formParameterName] = value
-        }
-
-        if (request.contentType?.startsWith("multipart/form-data")?:false) {
+        val isMultiPart = request.contentType?.startsWith("multipart/form-data") ?: false
+        if (isMultiPart) {
             for (part in request.parts!!) {
                 if (part.size < 4192) {
                     val name = part.name!!
-                    params[name] = part.inputStream?.buffered()?.reader()?.readText()?:""
+                    params[name] = part.inputStream?.use { it.bufferedReader().readText() } ?: ""
                 }
             }
+        }
+
+        // parse the request parameters
+        val parameterNames = request.parameterNames.toList().filter {
+            !isMultiPart || it !in params.parameterNames() // Skip parameters already loaded above on multi part initialization
+        }
+
+        for (formParameterName in parameterNames) {
+            val value = request.getParameter(formParameterName)!!
+            params[formParameterName] = value
         }
 
         return params
@@ -89,7 +87,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
 
         actionContext.withContext {
             val actionResult = when {
-                allowCrossOrigin == "" && params[ActionContext.SESSION_TOKEN_PARAMETER] != actionContext.sessionToken() ->
+                allowCrossOrigin == "" && params.optListParam(ActionContext.SESSION_TOKEN_PARAMETER)?.distinct()?.singleOrNull() != actionContext.sessionToken() ->
                     ErrorResult(403, "This request is only valid within same origin")
                 else -> {
                     if(!allowCrossOrigin.isNullOrEmpty()) {

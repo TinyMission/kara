@@ -1,5 +1,6 @@
 package kotlinx.reflection
 
+import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -150,7 +151,7 @@ class ArraySerializer : TypeSerializer<Array<*>>() {
 
 object Serialization {
     val serializer = ArrayList<TypeSerializer<out Any>>()
-
+    private val logger = LoggerFactory.getLogger(this::class.java.simpleName)
     init {
         this.loadDefaults()
     }
@@ -174,6 +175,9 @@ object Serialization {
         if (paramType == String::class.java) {
             @Suppress("UNCHECKED_CAST")
             return param as T
+        }
+        if (param.contains(RECORD_SEPARATOR_CHAR) && !paramType.isArray) {
+            logger.warn("Multiple parameter values: $param for non array paramType: ${paramType.canonicalName}", RuntimeException())
         }
         for (deserializer in serializer) {
             if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {

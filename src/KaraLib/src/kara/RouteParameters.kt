@@ -17,11 +17,11 @@ class RouteParameters() {
 
     /** Sets a named parameter */
     operator fun set(name : String, value : String) {
-        if (!_map.containsKey(name)) // add it to the unnamed list as well, if it's not already there
+        if (!_map.containsKey(name)) { // add it to the unnamed list as well, if it's not already there
             append(value)
-
-        _map.putIfAbsent(name, value)?.let {
-            _map[name] = "$it$RECORD_SEPARATOR_CHAR$value"
+            _map[name] = value
+        } else {
+            _map[name] += "$RECORD_SEPARATOR_CHAR$value"
         }
     }
 
@@ -86,5 +86,9 @@ class RouteParameters() {
 
     fun optStringParam(name: String): String? {
         return this[name]
+    }
+
+    fun optListParam(name: String): List<String>? {
+        return this[name]?.split(RECORD_SEPARATOR_CHAR)
     }
 }
