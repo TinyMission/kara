@@ -1,6 +1,7 @@
 package kotlinx.reflection
 
 import org.slf4j.LoggerFactory
+import java.lang.RuntimeException
 import java.math.BigDecimal
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -121,7 +122,7 @@ class DataClassSerializer: TypeSerializer<DataClass>() {
 private const val NULL_CHAR = "\u2400"
 const val RECORD_SEPARATOR_CHAR = "\u001e"
 @Suppress("UNCHECKED_CAST")
-class ArraySerializer : TypeSerializer<Array<*>>() {
+object ArraySerializer : TypeSerializer<Array<*>>() {
     override fun deserialize(param: String, paramType: Class<out Array<*>>): Array<*>? {
         val values = param.split(RECORD_SEPARATOR_CHAR)
         val result = java.lang.reflect.Array.newInstance(paramType.componentType, values.size) as Array<Any?>
@@ -151,7 +152,7 @@ class ArraySerializer : TypeSerializer<Array<*>>() {
 
 object Serialization {
     val serializer = ArrayList<TypeSerializer<out Any>>()
-    private val logger = LoggerFactory.getLogger(this::class.java.simpleName)
+    private val logger = LoggerFactory.getLogger(Serialization::class.java.simpleName)
     init {
         this.loadDefaults()
     }
@@ -168,17 +169,23 @@ object Serialization {
         register(BigDecimalSerializer())
         register(DataClassSerializer())
         register(EnumSerializer())
-        register(ArraySerializer())
+        register(ArraySerializer)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T:Any> deserialize(param : String, paramType : Class<T>, classLoader: ClassLoader? = null) : T? {
         if (paramType == String::class.java) {
             @Suppress("UNCHECKED_CAST")
             return param as T
         }
+
+        // Temporary solution to keep backward campatibility and prevent massive crashes
         if (param.contains(RECORD_SEPARATOR_CHAR) && !paramType.isArray) {
             logger.warn("Multiple parameter values: $param for non array paramType: ${paramType.canonicalName}", RuntimeException())
+            val arrayType = java.lang.reflect.Array.newInstance(paramType, 0).javaClass as Class<Array<*>>
+            return ArraySerializer.deserialize(param, arrayType)?.firstOrNull() as T?
         }
+
         for (deserializer in serializer) {
             if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {
                 @Suppress("UNCHECKED_CAST")
