@@ -21,7 +21,7 @@ class RouteParameters() {
             append(value)
             _map[name] = value
         } else {
-            _map[name] += "$RECORD_SEPARATOR_CHAR$value"
+            _map[name] = "${_map[name]}$RECORD_SEPARATOR_CHAR$value"
         }
     }
 
