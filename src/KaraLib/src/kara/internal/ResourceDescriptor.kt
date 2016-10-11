@@ -63,8 +63,9 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
         }
 
         for (formParameterName in parameterNames) {
-            val value = request.getParameter(formParameterName)!!
-            params[formParameterName] = value
+            request.getParameterValues(formParameterName)?.forEach {
+                params[formParameterName] = it
+            }
         }
 
         return params
