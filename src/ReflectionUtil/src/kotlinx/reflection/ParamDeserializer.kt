@@ -174,16 +174,16 @@ object Serialization {
 
     @Suppress("UNCHECKED_CAST")
     fun <T:Any> deserialize(param : String, paramType : Class<T>, classLoader: ClassLoader? = null) : T? {
+        // Temporary solution to keep backward campatibility and prevent massive crashes
+        if (param.contains(RECORD_SEPARATOR_CHAR) && !paramType.isArray) {
+            logger.error("Multiple parameter values: $param for non array paramType: ${paramType.canonicalName}", RuntimeException())
+            val arrayType = java.lang.reflect.Array.newInstance(paramType, 0).javaClass as Class<Array<*>>
+            return ArraySerializer.deserialize(param, arrayType)?.firstOrNull() as T?
+        }
+
         if (paramType == String::class.java) {
             @Suppress("UNCHECKED_CAST")
             return param as T
-        }
-
-        // Temporary solution to keep backward campatibility and prevent massive crashes
-        if (param.contains(RECORD_SEPARATOR_CHAR) && !paramType.isArray) {
-            logger.warn("Multiple parameter values: $param for non array paramType: ${paramType.canonicalName}", RuntimeException())
-            val arrayType = java.lang.reflect.Array.newInstance(paramType, 0).javaClass as Class<Array<*>>
-            return ArraySerializer.deserialize(param, arrayType)?.firstOrNull() as T?
         }
 
         for (deserializer in serializer) {
