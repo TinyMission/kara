@@ -125,16 +125,13 @@ const val RECORD_SEPARATOR_CHAR = "\u001e"
 object ArraySerializer : TypeSerializer<Array<*>>() {
     override fun deserialize(param: String, paramType: Class<out Array<*>>): Array<*>? {
         val values = param.split(RECORD_SEPARATOR_CHAR)
-        val result = java.lang.reflect.Array.newInstance(paramType.componentType, values.size) as Array<Any?>
-        return result.apply {
-            values.forEachIndexed { indx, e ->
-                this[indx] = if (e != NULL_CHAR) {
-                    Serialization.deserialize(e, paramType.componentType as Class<Any>, paramType.classLoader)
-                } else {
-                    null
-                }
+        return values.map { e ->
+            if (e != NULL_CHAR) {
+                Serialization.deserialize(e, paramType.componentType as Class<Any>, paramType.classLoader)
+            } else {
+                null
             }
-        }
+        }.toTypedArray()
     }
 
     override fun serialize(param: Array<*>): String {
