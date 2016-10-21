@@ -1,9 +1,9 @@
 package kara
 
 import kara.internal.logger
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import javax.servlet.AsyncContext
-import javax.servlet.AsyncEvent
+import javax.servlet.*
 import javax.servlet.AsyncListener
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -35,8 +35,24 @@ class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationCon
     }
 }
 
-private val asyncExecutors by lazy {
-    Executors.newFixedThreadPool(ActionContext.tryGet()?.config?.tryGet("kara.asyncThreads")?.toInt() ?: 4)
+private val asyncExecutors: ExecutorService by lazy {
+    Executors.newFixedThreadPool(ActionContext.tryGet()?.config?.tryGet("kara.asyncThreads")?.toInt() ?: 4, {
+        Executors.defaultThreadFactory().newThread(it).apply {
+            name = "Kara async request executor"
+        }
+    })
+}
+
+@Suppress("unused")
+class AsyncServletContextListener: ServletContextListener {
+
+    override fun contextInitialized(p0: ServletContextEvent?) {
+        //nothing
+    }
+
+    override fun contextDestroyed(p0: ServletContextEvent?) {
+        asyncExecutors.shutdown()
+    }
 }
 
 private fun AsyncResult.execute() {
