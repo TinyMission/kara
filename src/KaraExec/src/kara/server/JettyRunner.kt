@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession
  */
 class JettyRunner(val applicationConfig: ApplicationConfig) {
     val logger = Logger.getLogger(this.javaClass)!!
-    var server: Server? = null
+    lateinit var server: Server
     val resourceHandlers = ArrayList<ResourceHandler>()
 
     val apps = HashMap<String, Application>()
@@ -101,7 +101,7 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
             })
         }
 
-        server?.handler = SessionHandler().apply {
+        server.handler = SessionHandler().apply {
             sessionManager = HashSessionManager().apply {
                 storeDirectory = java.io.File("tmp/sessions")
                 httpOnly = true
@@ -109,28 +109,23 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
             handler = Handler()
         }
 
-        server?.start()
+        server.start()
         logger.info("Server running.")
 
         if (applicationConfig.tryGet("kara.jetty.dontJoinServer") != "true") {
-            server?.join()
+            server.join()
         }
     }
 
     fun stop() {
-        if (server != null) {
-            server?.stop()
-            server = null
-        }
+        server.stop()
     }
 
     fun restart() {
-        this.stop()
-        this.start()
+        stop()
+        start()
     }
-
 }
-
 
 fun Throwable.getStackTraceString(): String {
     val os = ByteArrayOutputStream()
