@@ -226,7 +226,7 @@ class MockHttpServletRequest(method : String, url : String) : HttpServletRequest
         throw UnsupportedOperationException()
     }
     override fun getParameterValues(p0 : String?) : Array<String>? {
-        throw UnsupportedOperationException()
+        return params[p0]?.split(RECORD_SEPARATOR_CHAR)?.toTypedArray()
     }
     override fun getReader() : BufferedReader? {
         throw UnsupportedOperationException()

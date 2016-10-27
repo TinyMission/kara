@@ -75,7 +75,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
         val routeInstance = try {
-            resourceClass.buildBeanInstance(params._map)
+            resourceClass.kotlin.buildBeanInstance(params._map)
         }
         catch(e: RuntimeException) {
             throw e
