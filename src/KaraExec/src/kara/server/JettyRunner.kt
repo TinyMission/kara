@@ -98,6 +98,11 @@ class JettyRunner(val applicationConfig: ApplicationConfig) {
                 isDirectoriesListed = false
                 resourceBase = "./$it"
                 welcomeFiles = arrayOf("index.html")
+                // Prevent Jetty from locking static files on windows  9
+                // see http://www.eclipse.org/jetty/documentation/current/troubleshooting-locked-files-on-windows.html
+                if (System.getProperty("os.name").startsWith("Windows", true)) {
+                    minMemoryMappedContentLength = -1
+                }
             })
         }
 
