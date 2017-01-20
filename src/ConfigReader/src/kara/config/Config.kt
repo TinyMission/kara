@@ -2,6 +2,7 @@ package kara.config
 
 import org.apache.log4j.Logger
 import java.io.File
+import java.lang.RuntimeException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
@@ -117,13 +118,13 @@ open class Config() {
                     else -> {
                         val eq = line.indexOf('=')
                         if (eq <= 0) error("Cannot parse line '$line' in file '${file.absolutePath}'")
-                        config.set(line.substring(0, eq).trim(), evalVars(line.substring(eq + 1).trim(), ::eval))
+                        config[line.substring(0, eq).trim()] = evalVars(line.substring(eq + 1).trim(), ::eval)
                     }
                 }
             }
         }
 
-        val varPattern = Pattern.compile("\\$\\{([^\\}]*)\\}")
+        private val varPattern = Pattern.compile("\\$\\{([^\\}]*)\\}")
         fun evalVars(line: String, eval: (String) -> String) = buildString {
             val matcher = varPattern.matcher(line)
             var lastAppend = 0

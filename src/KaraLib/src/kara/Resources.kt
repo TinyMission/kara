@@ -1,9 +1,8 @@
 package kara
 
-import java.io.InputStream
-import kotlinx.html.*
 import org.apache.commons.io.IOUtils
 import java.io.File
+import java.io.InputStream
 import java.net.URL
 import java.util.*
 
@@ -20,7 +19,7 @@ abstract class DynamicResource() : Resource() {
 }
 
 data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModified: Long?, val appVersion: Int) {
-    val contentHash = Integer.toHexString(Arrays.hashCode(bytes))
+    val contentHash: String = Integer.toHexString(Arrays.hashCode(bytes))
 }
 
 abstract class CachedResource() : DynamicResource() {

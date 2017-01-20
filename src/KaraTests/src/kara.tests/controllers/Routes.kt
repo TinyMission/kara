@@ -4,10 +4,10 @@ import kara.*
 import kara.tests.views.HomeView
 import kara.tests.views.SomeFunView
 import kara.tests.views.view
-import java.net.SocketException
 import kotlinx.html.CssElement
 import kotlinx.html.div
 import kotlinx.html.span
+import java.net.SocketException
 
 @Get("/test/test.css")
 object TestStyles : Stylesheet() {
@@ -44,6 +44,11 @@ object Routes {
     @Get("/emptyStrings")
     class EmptyStrings(val es: String, val esn: String?, val int: Int?) : Request({
         TextResult("es:$es,esn:$esn,int:$int")
+    })
+
+    @Get("/arrayParam")
+    class ArrayParam(val arr: Array<String?>) : Request({
+        TextResult(arr.joinToString())
     })
 
     @Get("/error/:brokenPipe")

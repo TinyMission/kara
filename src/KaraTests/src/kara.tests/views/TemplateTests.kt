@@ -2,10 +2,10 @@ package kara.tests.views
 
 import kara.*
 import kara.tests.mock.mockDispatch
+import kotlinx.html.*
 import org.apache.log4j.BasicConfigurator
 import org.junit.Before
 import org.junit.Test
-import kotlinx.html.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -39,7 +39,7 @@ class MenuTemplate : Template<HtmlBodyTag>() {
         }
         ul {
             each(item) {
-                li() {
+                li {
                     insert(it)
                 }
             }
@@ -75,7 +75,7 @@ class PageTemplate : Template<HTML>() {
         }
     }
 }
-fun view(view: PageTemplate.() -> Unit) = HtmlTemplateView<PageTemplate>(PageTemplate(), view)
+fun view(view: PageTemplate.() -> Unit) = HtmlTemplateView(PageTemplate(), view)
 
 fun SomeFunView() = view {
     menu {

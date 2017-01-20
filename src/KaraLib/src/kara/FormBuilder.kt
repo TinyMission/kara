@@ -7,13 +7,13 @@ import kotlinx.reflection.propertyValue
 import org.apache.log4j.Logger
 
 
-interface FormModel<P> {
+interface FormModel<in P> {
     fun modelName(): String
     fun propertyValue(property: P): String
     fun propertyName(property: P): String
 }
 
-class BeanFormModel<T:Any>(val model: T) : FormModel<String> {
+class BeanFormModel<out T:Any>(val model: T) : FormModel<String> {
     val modelName = model.javaClass.simpleName.toLowerCase()
 
     override fun modelName(): String {
@@ -47,7 +47,7 @@ fun <T:Any>HtmlBodyTag.formForBean(bean: T, action : Link, formMethod : FormMeth
 /**
  * Allows forms to be built based on a model object.
  */
-class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M) : FORM(containingTag) {
+class FormBuilder<in P, out M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M) : FORM(containingTag) {
     val logger = Logger.getLogger(this.javaClass)!!
 
     /** If true, the form will have enctype="multipart/form-data" */
@@ -111,7 +111,7 @@ class FormBuilder<P, M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M)
      * Creates a submit button for the form, with an optional name.
      */
     fun HtmlBodyTag.submitButton(value : String, name : String = "submit", contents : INPUT.() -> Unit = empty_contents) {
-        input() {
+        input {
             this.inputType = InputType.submit
             this.value = value
             this.name = name

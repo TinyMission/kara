@@ -19,7 +19,7 @@ public class CustomClassloaderObjectInputStream extends ObjectInputStream {
 
     @NotNull
     @Override
-    protected Class<?> resolveClass(@NotNull ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+    final protected Class<?> resolveClass(@NotNull ObjectStreamClass desc) throws IOException, ClassNotFoundException {
         try {
             return Class.forName(desc.getName(), true, myClassLoader);
         }

@@ -175,8 +175,14 @@ function fetch(node) {
                 });
             break;
         case "modal":
-            node.on("click", function () {
-                node.next(".modal").modal({ remote: node.attr("data-url") });
+            node.on("click", function (e) {
+                var self = this
+                node.next(".modal")
+                    .one('loaded.bs.modal', function() {
+                        $(this).modal('show', self);
+                    })
+                    .modal({ remote: node.attr("data-url"), show: false });
+
             });
             break;
     }

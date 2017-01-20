@@ -1,102 +1,105 @@
 package kotlinx.reflection
 
+import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
+import kotlin.reflect.KClass
 
 
 /** Base class for object that deserialize parameters to a certain type.
 */
-abstract class TypeSerializer<T:Any?>() {
-    abstract fun deserialize(param : String, paramType: Class<out T>) : T?
-    open fun serialize(param: Any): String = param.toString()
+abstract class TypeSerializer<T:Any>() {
+    abstract fun deserialize(param : String, paramType: KClass<out T>) : T?
+    open fun serialize(param: T): String = param.toString()
 
-    abstract fun isThisType(testType : Class<*>) : Boolean
+    abstract fun isThisType(testType : KClass<*>) : Boolean
 }
 
 /** Deserializer for integers.
 */
 class IntSerializer() : TypeSerializer<Int>() {
-    override fun deserialize(param : String, paramType: Class<out Int>) : Int? {
+    override fun deserialize(param : String, paramType: KClass<out Int>) : Int? {
         if (param.isEmpty()) return null
         return param.toInt()
     }
 
-    override fun isThisType(testType : Class<*>) : Boolean {
-        return testType.toString() == "int" || testType.name == "java.lang.Integer"
+    override fun isThisType(testType : KClass<*>) : Boolean {
+        return testType == Int::class
     }
 }
 
 /** Deserializer for floats.
 */
 class FloatSerializer() : TypeSerializer<Float>() {
-    override fun deserialize(param : String, paramType: Class<out Float>) : Float? {
+    override fun deserialize(param : String, paramType: KClass<out Float>) : Float? {
         if (param.isEmpty()) return null
         return param.toFloat()
     }
 
-    override fun isThisType(testType : Class<*>) : Boolean {
-        return testType.toString() == "float" || testType.name == "java.lang.Float"
+    override fun isThisType(testType : KClass<*>) : Boolean {
+        return testType == Float::class
     }
 }
 
 class BooleanSerializer: TypeSerializer<Boolean>() {
-    override fun deserialize(param: String, paramType: Class<out Boolean>): Boolean? {
-        return !(param.equals("false", true))
+    override fun deserialize(param: String, paramType: KClass<out Boolean>): Boolean? {
+        return param.toBoolean()
     }
 
-    override fun isThisType(testType: Class<*>): Boolean {
-        return testType.name == "boolean" || testType.name == "java.lang.Boolean"
+    override fun isThisType(testType: KClass<*>): Boolean {
+        return testType == Boolean::class
     }
 
-    override fun serialize(param: Any): String {
-        return if (param as Boolean) "true" else "false"
+    override fun serialize(param: Boolean): String {
+        return if (param) "true" else "false"
     }
 }
 
 class LongSerializer: TypeSerializer<Long>() {
-    override fun deserialize(param : String, paramType: Class<out Long>) : Long? {
+    override fun deserialize(param : String, paramType: KClass<out Long>) : Long? {
         if (param.isEmpty()) return null
         return param.toLong()
     }
 
-    override fun isThisType(testType : Class<*>) : Boolean {
-        return testType.toString() == "long" || testType.name == "java.lang.Long"
+    override fun isThisType(testType : KClass<*>) : Boolean {
+        return testType == Long::class
     }
 }
 
 class BigDecimalSerializer: TypeSerializer<BigDecimal>() {
-    override fun deserialize(param : String, paramType: Class<out BigDecimal>) : BigDecimal? {
+    override fun deserialize(param : String, paramType: KClass<out BigDecimal>) : BigDecimal? {
         if (param.isEmpty()) return null
         return BigDecimal(param)
     }
 
-    override fun isThisType(testType : Class<*>) : Boolean {
-        return BigDecimal::class.java.isAssignableFrom(testType)
+    override fun isThisType(testType : KClass<*>) : Boolean {
+        return BigDecimal::class == testType
     }
 }
 
 class EnumSerializer: TypeSerializer<Enum<*>>() {
-    override fun serialize(param: Any): String {
-        return (param as Enum<*>).ordinal.toString()
+    override fun serialize(param: Enum<*>): String {
+        return param.ordinal.toString()
     }
 
-    @Suppress("IMPLICIT_CAST_TO_UNIT_OR_ANY")
-    override fun deserialize(param: String, paramType: Class<out Enum<*>>): Enum<*>? {
+    override fun deserialize(param: String, paramType: KClass<out Enum<*>>): Enum<*>? {
+        val javaType = paramType.java
         return when {
-            paramType.isEnum -> {
-                paramType.enumConstants.safeGet(param.toInt())
+            javaType.isEnum -> {
+                javaType.enumConstants.safeGet(param.toInt())
             }
-            paramType.isEnumClass() -> {
-                paramType.enclosingClass.enumConstants.safeGet(param.toInt()) as Enum<*>
+            javaType.isEnumClass() -> {
+                javaType.enclosingClass.enumConstants.safeGet(param.toInt()) as Enum<*>
             }
             else -> null
         }
     }
 
-    override fun isThisType(testType: Class<*>): Boolean {
-        return testType.isEnum || testType.isEnumClass()
+    override fun isThisType(testType: KClass<*>): Boolean {
+        val javaType = testType.java
+        return javaType.isEnum || javaType.isEnumClass()
     }
 }
 
@@ -104,22 +107,54 @@ class EnumSerializer: TypeSerializer<Enum<*>>() {
 interface DataClass
 
 class DataClassSerializer: TypeSerializer<DataClass>() {
-    override fun serialize(param: Any): String {
+    override fun serialize(param: DataClass): String {
         return param.serialize()
     }
 
-    override fun deserialize(param: String, paramType: Class<out DataClass>): DataClass? {
+    override fun deserialize(param: String, paramType: KClass<out DataClass>): DataClass? {
         return paramType.parse(param)
     }
 
-    override fun isThisType(testType: Class<*>): Boolean {
-        return DataClass::class.java.isAssignableFrom(testType)
+    override fun isThisType(testType: KClass<*>): Boolean {
+        return DataClass::class.java.isAssignableFrom(testType.java)
     }
+}
+
+private const val NULL_CHAR = "\u2400"
+const val RECORD_SEPARATOR_CHAR = "\u001e"
+@Suppress("UNCHECKED_CAST")
+object ArraySerializer : TypeSerializer<Array<*>>() {
+    override fun deserialize(param: String, paramType: KClass<out Array<*>>): Array<*>? {
+        val values = param.split(RECORD_SEPARATOR_CHAR)
+        val arrayType = paramType.java.componentType
+        val result = java.lang.reflect.Array.newInstance(arrayType, values.size) as Array<Any?>
+        return result.apply {
+            values.forEachIndexed { indx, e ->
+                this[indx] = if (e != NULL_CHAR) {
+                    Serialization.deserialize(e, arrayType.kotlin, paramType.java.classLoader)
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
+    override fun serialize(param: Array<*>): String {
+        return param.map {
+            if (it == null)
+                NULL_CHAR
+            else {
+                Serialization.serialize(it)
+            }
+        }.joinToString(separator = RECORD_SEPARATOR_CHAR)
+    }
+
+    override fun isThisType(testType: KClass<*>): Boolean = testType.java.isArray
 }
 
 object Serialization {
     val serializer = ArrayList<TypeSerializer<out Any>>()
-
+    private val logger = LoggerFactory.getLogger(Serialization::class.java.simpleName)
     init {
         this.loadDefaults()
     }
@@ -136,30 +171,42 @@ object Serialization {
         register(BigDecimalSerializer())
         register(DataClassSerializer())
         register(EnumSerializer())
+        register(ArraySerializer)
     }
 
-    fun deserialize(param : String, paramType : Class<Any>, classLoader: ClassLoader? = null) : Any? {
-        if (paramType == String::class.java) {
-            return param
+    @Suppress("UNCHECKED_CAST")
+    fun <T:Any> deserialize(param : String, paramType : KClass<T>, classLoader: ClassLoader? = null) : T? {
+        // Temporary solution to keep backward campatibility and prevent massive crashes
+        if (param.contains(RECORD_SEPARATOR_CHAR) && !paramType.java.isArray) {
+            logger.error("Multiple parameter values: $param for non array paramType: ${paramType.simpleName}", RuntimeException())
+            val arrayType = java.lang.reflect.Array.newInstance(paramType.java, 0).javaClass.kotlin as KClass<Array<out T>>
+            return ArraySerializer.deserialize(param, arrayType)?.firstOrNull() as T?
         }
+
+        if (paramType == String::class) {
+            @Suppress("UNCHECKED_CAST")
+            return param as T
+        }
+
         for (deserializer in serializer) {
             if (deserializer.isThisType(paramType) && classLoader?.let { deserializer.javaClass.classLoader in setOf(it, ClassLoader.getSystemClassLoader())}?:true) {
                 @Suppress("UNCHECKED_CAST")
-                return (deserializer as TypeSerializer<Any>).deserialize(param, paramType)
+                return (deserializer as TypeSerializer<T>).deserialize(param, paramType)
             }
         }
 
         error("Can't deserialize parameter of class $paramType")
     }
 
-    fun serialize(param: Any?): String? {
+    fun <T:Any> serialize(param: T?): String? {
         if (param == null) return null
         if (param is String) return param
 
-        val paramType = param.javaClass
+        val paramType = param.javaClass.kotlin
         for (serializer in serializer) {
             if (serializer.isThisType(paramType)) {
-                return serializer.serialize(param)
+                @Suppress("UNCHECKED_CAST")
+                return (serializer as TypeSerializer<T>).serialize(param)
             }
         }
 
@@ -167,7 +214,7 @@ object Serialization {
     }
 }
 
-fun <T:Any> Class<T>.parse(params: String) : T {
+fun <T:Any> KClass<T>.parse(params: String) : T {
     val map = HashMap<String, String>()
 
     val queryComponents = params.split("&")

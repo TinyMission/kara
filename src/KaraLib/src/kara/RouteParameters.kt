@@ -1,13 +1,15 @@
 package kara
 
 import kotlinx.reflection.MissingArgumentException
+import kotlinx.reflection.RECORD_SEPARATOR_CHAR
 import java.util.*
 
 /** Contains all of the parameters for a matched route. */
 class RouteParameters() {
-    val _map = HashMap<String, String>()
-    val _list = ArrayList<String>()
+    internal val _map = HashMap<String, String>()
+    internal val _list = ArrayList<String>()
 
+    fun parameterNames() = _map.keys.toList()
     /** Gets a named parameter by name */
     operator fun get(name : String) : String? {
         return _map[name]
@@ -15,19 +17,22 @@ class RouteParameters() {
 
     /** Sets a named parameter */
     operator fun set(name : String, value : String) {
-        if (!_map.containsKey(name)) // add it to the unnamed list as well, if it's not already there
+        if (!_map.containsKey(name)) { // add it to the unnamed list as well, if it's not already there
             append(value)
-        _map[name] = value
+            _map[name] = value
+        } else {
+            _map[name] = "${_map[name]}$RECORD_SEPARATOR_CHAR$value"
+        }
     }
 
     /** Gets an unnamed parameter by index */
     operator fun get(i : Int) : String? {
-        return _list.get(i)
+        return _list[i]
     }
 
     /** Sets an unnamed parameter */
     operator fun set(i : Int, value : String) {
-        _list.set(i, value)
+        _list[i] = value
     }
 
     /** Apends an unnamed paramter */
@@ -64,7 +69,7 @@ class RouteParameters() {
 
     fun optIntParam(name: String): Int? {
         try {
-            val text = this[name] ?: return null
+            val text = optStringParam(name) ?: return null
             return text.toInt()
         } catch(e: NumberFormatException) {
             return null
@@ -81,5 +86,9 @@ class RouteParameters() {
 
     fun optStringParam(name: String): String? {
         return this[name]
+    }
+
+    fun optListParam(name: String): List<String>? {
+        return this[name]?.split(RECORD_SEPARATOR_CHAR)
     }
 }

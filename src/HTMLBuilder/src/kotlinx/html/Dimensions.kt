@@ -74,16 +74,16 @@ class BoxDimensions(var top: LinearDimension, var right: LinearDimension, var bo
 }
 
 /** Convenience function for making a BoxDimensions with all dimensions the same. */
-inline fun box(all: LinearDimension): BoxDimensions {
+fun box(all: LinearDimension): BoxDimensions {
     return BoxDimensions(all, all, all, all)
 }
 
 /** Convenience function for making a BoxDimensions with top/bottom and left/right values. */
-inline fun box(topBottom: LinearDimension, leftRight: LinearDimension): BoxDimensions {
+fun box(topBottom: LinearDimension, leftRight: LinearDimension): BoxDimensions {
     return BoxDimensions(topBottom, leftRight, topBottom, leftRight)
 }
 
 /** Convenience function for making a BoxDimensions with all four dimensions. */
-inline fun box(top: LinearDimension, right: LinearDimension, bottom: LinearDimension, left: LinearDimension): BoxDimensions {
+fun box(top: LinearDimension, right: LinearDimension, bottom: LinearDimension, left: LinearDimension): BoxDimensions {
     return BoxDimensions(top, right, bottom, left)
 }

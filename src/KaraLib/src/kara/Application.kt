@@ -105,7 +105,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
             }
         }
 
-        val watcher = FileSystems.getDefault()!!.newWatchService();
+        val watcher = FileSystems.getDefault()!!.newWatchService()
         paths.forEach {
             logger.debug("Watching $it for changes.")
         }
@@ -121,7 +121,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
     }
 
     companion object {
-        val logger = Logger.getLogger(Application::class.java)
+        val logger: Logger = Logger.getLogger(Application::class.java)
 
         fun classLoader(config: ApplicationConfig, appContext: String): ClassLoader {
             val classPath = config.classPath(appContext)

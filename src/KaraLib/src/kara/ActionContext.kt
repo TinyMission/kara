@@ -4,6 +4,7 @@ import kotlinx.html.Link
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
+import java.lang.Exception
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
@@ -125,7 +126,7 @@ class RequestScope<T:Any>(): ReadWriteProperty<Any?, T?> {
     }
 }
 
-class LazyRequestScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, T> {
+class LazyRequestScope<out T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, T> {
     @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = ActionContext.current().data.getOrPut(thisRef to property, { initial() }) as T
 }
@@ -141,7 +142,7 @@ class SessionScope<T:Any>(): ReadWriteProperty<Any?, T?> {
     }
 }
 
-class LazySessionScope<T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, T> {
+class LazySessionScope<out T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, T> {
     private val store = SessionScope<T>()
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {

@@ -58,7 +58,7 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
                 val a = Integer.parseInt(s.substring(7, 9), 16)
                 return Color.fromRgb(r, g, b, a)
             }
-            throw Exception("Invalid color hex string: $s");
+            throw Exception("Invalid color hex string: $s")
         }
 
         /** Creates a color from a set of HSL values. */
@@ -153,22 +153,22 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
                 if(t > 1.0)
                     t -= 1.0
                 if(t < 1.0 / 6.0)
-                    return p + (q - p) * 6.0 * t;
+                    return p + (q - p) * 6.0 * t
                 if(t < 0.5)
-                    return q;
+                    return q
                 if(t < 2.0 / 3.0)
-                    return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
-                return p;
+                    return p + (q - p) * (2.0 / 3.0 - t) * 6.0
+                return p
             }
-            var q: Double
-            if (hsl.lightness < 0.5)
-                q = hsl.lightness * (1 + hsl.saturation)
+            val q = if (hsl.lightness < 0.5)
+                hsl.lightness * (1 + hsl.saturation)
             else
-                q = hsl.lightness + hsl.saturation - hsl.lightness * hsl.saturation
-            var p = 2.0 * hsl.lightness - q;
-            red = hue2rgb(p, q, hsl.hue + 1.0 / 3.0);
-            green = hue2rgb(p, q, hsl.hue);
-            blue = hue2rgb(p, q, hsl.hue - 1.0 / 3.0);
+                hsl.lightness + hsl.saturation - hsl.lightness * hsl.saturation
+
+            val p = 2.0 * hsl.lightness - q
+            red = hue2rgb(p, q, hsl.hue + 1.0 / 3.0)
+            green = hue2rgb(p, q, hsl.hue)
+            blue = hue2rgb(p, q, hsl.hue - 1.0 / 3.0)
         }
     }
 
@@ -214,14 +214,14 @@ class Color(var red: Double, var green: Double, var blue: Double, var alpha: Dou
  *  - a 6 digit hex string for RGB: #FE395A
  *  - a 8 digit hex string for RGBA: #FE395A88
  */
-inline fun color(s: String): Color {
+fun color(s: String): Color {
     if (s.startsWith("#"))
         return Color.fromHex(s)
-    throw Exception("Invalid color string: $s");
+    throw Exception("Invalid color string: $s")
 }
 
 /** Returns true if the string is a valid color literal. */
-inline fun isColor(s: String): Boolean {
+fun isColor(s: String): Boolean {
     return s.startsWith("#") || s.startsWith("rgb")
 }
 

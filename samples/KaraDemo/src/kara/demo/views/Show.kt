@@ -1,11 +1,11 @@
 package kara.demo.views
 
-import kara.*
-import kara.demo.models.*
-import kara.demo.styles.StyleClasses.*
-import kara.demo.styles.StyleClasses
-import kotlinx.html.*
+import kara.HtmlTemplateView
 import kara.demo.models.Post
+import kara.demo.styles.StyleClasses.date
+import kotlinx.html.div
+import kotlinx.html.h3
+import kotlinx.html.label
 
 fun Show(post: Post) = HtmlTemplateView(DetailsTemplate()) {
     caption {

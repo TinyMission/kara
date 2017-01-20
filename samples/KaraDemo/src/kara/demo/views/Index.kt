@@ -1,9 +1,9 @@
 package kara.demo.views
 
-import kara.*
+import kara.HtmlTemplateView
 import kotlinx.html.*
 
-fun Index() = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
+fun Index() = HtmlTemplateView(DefaultTemplate()) {
     content {
         p {
             +"This is the demo site for Kara. Below you'll find all of the html content that can be expressed in Kara views."
@@ -31,7 +31,7 @@ fun Index() = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
                 li { +"List Item 1" }
                 li { +"List Item 2" }
             }
-            fieldset() {
+            fieldset {
                 label { +"Text Input" }
                 input {
                     inputType = InputType.text

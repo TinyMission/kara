@@ -1,4 +1,4 @@
-package kara;
+package kara
 
 import org.lesscss.LessCompiler
 import org.lesscss.LessSource

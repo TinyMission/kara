@@ -45,7 +45,7 @@ class MockHttpSession : HttpSession {
     override fun getValueNames(): Array<String>? {
         val set = attributes.keys
         val iter = set.iterator()
-        return Array<String>(set.size) {
+        return Array(set.size) {
             iter.next()
         }
     }

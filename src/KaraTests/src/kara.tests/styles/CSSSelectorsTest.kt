@@ -13,7 +13,7 @@ enum class SampleClasses : StyleClass {
 }
 
 class SelectorsTest {
-    private var result : String = "";
+    private var result : String = ""
 
     private fun test(expectation: String, selector: CssElement.() -> Selector) {
         assertEquals(expectation, CssElement().selector().toExternalForm())

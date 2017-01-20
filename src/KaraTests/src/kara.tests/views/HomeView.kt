@@ -1,11 +1,12 @@
 package kara.tests.views
 
-import kara.*
-import kotlinx.html.*
+import kara.HtmlTemplateView
+import kotlinx.html.h2
+import kotlinx.html.p
 
 /** Home html view.
  */
-fun HomeView() = HtmlTemplateView<DefaultTemplate>(DefaultTemplate()) {
+fun HomeView() = HtmlTemplateView(DefaultTemplate()) {
     content {
         h2 {
             +"Welcome Home"
