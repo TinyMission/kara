@@ -49,7 +49,8 @@ abstract class CachedResource() : DynamicResource() {
         }
 
         return cache ?: content(context).let {
-            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray((it.data)())!!.minifyResource(context, it.mime), it.lastModified, context.appContext.version) }
+            val fileName = (this@CachedResource as? EmbeddedResource)?.name?.substringAfterLast("/").orEmpty()
+            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray((it.data)())!!.minifyResource(context, it.mime, fileName), it.lastModified, context.appContext.version) }
             cache!!
         }
     }

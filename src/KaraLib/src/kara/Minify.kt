@@ -7,11 +7,11 @@ import jj.org.mozilla.javascript.EvaluatorException
 import org.apache.log4j.Logger
 import java.io.StringWriter
 
-fun ByteArray.minifyResource(context: ActionContext, mime: String): ByteArray {
+fun ByteArray.minifyResource(context: ActionContext, mime: String, fileName: String): ByteArray {
     try {
         return when {
             !context.config.minifyResrouces() -> return this
-            mime == "text/javascript" -> compressJavascript()
+            (mime == "text/javascript" || mime == "application/javascript") && !fileName.endsWith(".min.js") -> compressJavascript()
             mime == "text/css" -> compressCss()
             else -> this
         }
