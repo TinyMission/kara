@@ -3,8 +3,8 @@ package kara
 import kara.internal.logger
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.ThreadPoolExecutor
 import javax.servlet.*
-import javax.servlet.AsyncListener
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -12,7 +12,12 @@ import javax.servlet.http.HttpServletResponse
  * @author max
  */
 class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationContext, val params: RouteParameters, val allowHttpSession: Boolean, val body : ActionContext.() -> ActionResult) : ActionResult {
+    internal val createdAt = System.currentTimeMillis()
+    internal val deadline = createdAt + asyncContext.timeout
+
     var timed_out = false
+
+    fun exired() = deadline < System.currentTimeMillis()
 
     init {
         asyncContext.addListener(object: AsyncListener {
@@ -55,9 +60,13 @@ class AsyncServletContextListener: ServletContextListener {
     }
 }
 
+val karaAsyncExecutorsQueueSize: Int get() = (asyncExecutors as ThreadPoolExecutor).queue.size
+
 private fun AsyncResult.execute() {
     try {
         if (timed_out) return
+
+        checkExpired()
 
         val context = ActionContext(appContext, asyncContext.request as HttpServletRequest, asyncContext.response as HttpServletResponse, params, allowHttpSession)
         context.withContext {
@@ -71,11 +80,18 @@ private fun AsyncResult.execute() {
     }
     finally {
         if (!timed_out) {
+            checkExpired()
             asyncContext.complete()
         }
         else {
             logger.info("Asynchronous task timed out. See Connector's 'asyncTimeout' attribute in server.xml")
         }
+    }
+}
+
+private fun AsyncResult.checkExpired() {
+    if (exired()) {
+        logger.warn("Asynchronous task timed out (${System.currentTimeMillis() - deadline}ms ago), but onTimeout event was not triggered.")
     }
 }
 
