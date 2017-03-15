@@ -17,7 +17,7 @@ fun ByteArray.minifyResource(context: ActionContext, mime: String, fileName: Str
         }
     }
     catch(e: Throwable) {
-        MinifierReporter.log.warn("Minification failed", e)
+        MinifierReporter.log.warn("Minification failed at $fileName will be used unminified version.", e)
         return this
     }
 }
@@ -42,15 +42,15 @@ object MinifierReporter : ErrorReporter {
     val log = Logger.getLogger(this.javaClass)!!
 
     override fun warning(message: String?, sourceName: String?, line: Int, lineSource: String?, lineOffset: Int) {
-        log.warn("Minification warn: $message")
+        log.warn("Minification failed at $line:$lineOffset${lineSource?.let {" at '$it'"}.orEmpty()}: $message")
     }
 
     override fun error(message: String?, sourceName: String?, line: Int, lineSource: String?, lineOffset: Int) {
-        log.error("Minification failed: $message")
+        log.error("Minification failed at $line:$lineOffset${lineSource?.let {" at '$it'"}.orEmpty()}: $message")
     }
 
     override fun runtimeError(message: String?, sourceName: String?, line: Int, lineSource: String?, lineOffset: Int): EvaluatorException? {
-        this.error(message, sourceName, line, lineSource, lineOffset)
+        log.error(message)
         return EvaluatorException(message)
     }
 }
