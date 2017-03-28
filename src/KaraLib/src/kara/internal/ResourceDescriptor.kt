@@ -1,17 +1,29 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package kara.internal
 
 import kara.*
+import kotlinx.reflection.Serialization
+import kotlinx.reflection.boundReceiver
 import kotlinx.reflection.buildBeanInstance
 import kotlinx.reflection.urlDecode
 import org.apache.log4j.Logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.full.findAnnotation
 
 val logger = Logger.getLogger(ResourceDescriptor::class.java)!!
 
+private infix fun <A, B, C> Pair<A, B>.and(c: C) = Triple(first, second, c)
+
 /** Contains all the information necessary to match a route and execute an action.
  */
-class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val resourceClass: Class<out Resource>, val allowCrossOrigin: String?) {
+class ResourceDescriptor(val httpMethod: HttpMethod, val route: String,
+                         val resourceClass: KClass<*>,
+                         val resourceFun: (Map<String, String>) -> Resource,
+                         val allowCrossOrigin: String?) {
 
     private val routeComponents = route.toRouteComponents()
 
@@ -74,17 +86,9 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
     /** Execute the action based on the given request and populate the response. */
     fun exec(context: ApplicationContext, request: HttpServletRequest, response: HttpServletResponse) {
         val params = buildParams(request)
-        val routeInstance = try {
-            resourceClass.kotlin.buildBeanInstance(params._map)
-        }
-        catch(e: RuntimeException) {
-            throw e
-        }
-        catch (e: Exception) {
-            throw RuntimeException("Error processing ${request.method} ${request.requestURI}, parameters={$params}, User agent: ${request.getHeader("User-Agent")}", e)
-        }
 
-        val actionContext = ActionContext(context, request, response, params, resourceClass.isAnnotationPresent(NoSession::class.java).not())
+        val resource = resourceFun(params._map)
+        val actionContext = ActionContext(context, request, response, params, resourceClass.findAnnotation<NoSession>() == null)
 
         actionContext.withContext {
             val actionResult = when {
@@ -94,11 +98,43 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String, val reso
                     if(!allowCrossOrigin.isNullOrEmpty()) {
                         response.addHeader("Access-Control-Allow-Origin", allowCrossOrigin)
                     }
-                    routeInstance.handle(actionContext)
+                    try {
+                        resource.handle(actionContext)
+                    } catch (e : ResultWithCodeException) {
+                        TextResult(Serialization.serialize(e.result).orEmpty(), e.code)
+                    }
                 }
             }
             actionContext.flushSessionCache()
             actionResult.writeResponse(actionContext)
+        }
+    }
+
+    companion object {
+        fun fromResourceClass(clazz : KClass<out Resource>, ann : Annotation) : ResourceDescriptor {
+            val (method, crossOrigin, route) = extractFromAnnotation(ann)
+            val resolvedRoute = clazz.java.enclosingClass?.routePrefix().orEmpty()
+                    .appendPathElement(route.replace("#", clazz.simpleName!!.toLowerCase()))
+            return ResourceDescriptor(method, resolvedRoute, clazz, { clazz.buildBeanInstance(it) }, crossOrigin)
+        }
+
+        fun fromFunction(func : KFunction<Any>, ann: Annotation) : ResourceDescriptor {
+            val (method, crossOrigin, route) = extractFromAnnotation(ann)
+            val resolvedRoute = func.boundReceiver()?.javaClass?.routePrefix().orEmpty()
+                    .appendPathElement(route.replace("#", func::class.simpleName!!.toLowerCase()))
+
+            return ResourceDescriptor(method, resolvedRoute, func::class, { FunctionWrapperResource(func, it) }, crossOrigin)
+        }
+
+        private fun extractFromAnnotation(ann: Annotation): Triple<HttpMethod, String?, String> {
+            return when (ann) {
+                is Get -> HttpMethod.GET to null and ann.route
+                is Post -> HttpMethod.POST to ann.allowCrossOrigin and ann.route
+                is Put -> HttpMethod.PUT to ann.allowCrossOrigin and ann.route
+                is Delete -> HttpMethod.DELETE to ann.allowCrossOrigin and ann.route
+                is Route -> ann.method to ann.allowCrossOrigin and ann.route
+                else -> error("Unsopported aanotation $ann")
+            }
         }
     }
 

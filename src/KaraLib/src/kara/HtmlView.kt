@@ -2,31 +2,20 @@ package kara
 
 import kotlinx.html.HTML
 import kotlinx.html.HtmlBodyTag
-import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpServletResponse.SC_OK
 
 /** Base class for html views.
  */
-abstract class HtmlView(val layout: HtmlLayout? = null) : ActionResult {
-    override fun writeResponse(context: ActionContext): Unit {
-        writeResponse(context.response)
-    }
-
-    fun writeResponse(response: HttpServletResponse) {
-        response.contentType = "text/html"
-        val writer = response.writer!!
-        if (layout == null) {
-            writer.write(renderWithoutLayout())
-        }
-        else {
-            val page = HTML()
-            with(layout) {
-                page.render(this@HtmlView)
+abstract class HtmlView(val layout: HtmlLayout? = null) : BaseActionResult("text/html", SC_OK, {
+    val mainView = this as HtmlView
+    layout?.let {
+        HTML().apply {
+            with(it) {
+                render(mainView)
             }
-            writer.write(page.toString())
-        }
-        writer.flush()
-    }
-
+        }.toString()
+    } ?: mainView.renderWithoutLayout()
+})   {
     fun renderWithoutLayout() = buildString {
         val root = object: HtmlBodyTag(null, "view") {}
         root.render()

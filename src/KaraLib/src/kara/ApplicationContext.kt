@@ -10,14 +10,15 @@ import java.net.SocketException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.reflect.KAnnotatedElement
 
 /** Current application execution context
  */
-class ApplicationContext(val config : ApplicationConfig,
+class ApplicationContext(val config: ApplicationConfig,
                          packages: List<String>,
                          val classLoader: ClassLoader,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
-                         val resourceTypes: List<Class<out Resource>>) {
+                         val resourceTypes: List<KAnnotatedElement>) {
     val logger = Logger.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>()

@@ -27,4 +27,7 @@ Default is / for top level root object or lowercased object name for inner objec
 @Retention(AnnotationRetention.RUNTIME) annotation class Location(val path: String = "")
 
 /** Used to annotate route objects, for which HttpSession should not be used (service calls, non-browser user agents) */
-@Retention(AnnotationRetention.RUNTIME) annotation class NoSession()
+@Retention(AnnotationRetention.RUNTIME) annotation class NoSession
+
+/** Used to annotate route objects, when you want to use nested functions as routes **/
+@Retention(AnnotationRetention.RUNTIME) @Target(AnnotationTarget.CLASS) annotation class Controller(val contentType: String)

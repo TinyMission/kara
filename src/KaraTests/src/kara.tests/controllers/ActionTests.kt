@@ -2,14 +2,15 @@ package kara.tests.controllers
 
 
 import kara.Application
+import kara.href
 import kara.tests.mock.mockDispatch
+import kotlinx.html.htmlEscapeTo
 import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.spi.LoggingEvent
 import org.junit.Before
 import org.junit.Test
 import javax.servlet.http.HttpServletResponse
-import kotlinx.html.htmlEscapeTo
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -88,6 +89,10 @@ class ActionTests() {
         assertEquals("/somepath/test/test.css", TestStyles.href("/somepath"))
         assertEquals("/somepath/foo/bar", Routes.Foo.Bar().href("/somepath"))
         assertEquals("/somepath/foo/compute/42/3.1415", Routes.Foo.Compute(42, 3.1415.toFloat()).href("/somepath"))
+        assertEquals("/fun/bar", Routes.Function::bar.href())
+        assertEquals("/somepath/fun/bar", Routes.Function::bar.href("/somepath"))
+        assertEquals("/somepath/fun/empty", Routes.Function::nothing.href("/somepath"))
+//        assertEquals("/somepath/foo/compute/42/3.1415", Routes.Function.compute(42, 3.1415.toFloat()).href("/somepath"))
     }
 
     @Test fun redirect() {

@@ -66,7 +66,7 @@ class MockHttpServletResponse() : HttpServletResponse {
         throw UnsupportedOperationException()
     }
     override fun setStatus(p0 : Int) {
-        throw UnsupportedOperationException()
+        _status = p0
     }
     override fun containsHeader(p0 : String?) : Boolean {
         throw UnsupportedOperationException()

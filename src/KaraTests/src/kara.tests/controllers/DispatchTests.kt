@@ -3,13 +3,16 @@ package kara.tests.controllers
 import kara.Application
 import kara.ApplicationConfig
 import kara.baseLink
+import kara.href
 import kara.internal.ResourceDispatcher
 import kara.internal.scanObjects
 import kara.tests.mock.mockDispatch
 import kara.tests.mock.mockRequest
+import kotlinx.reflection.Serialization
 import org.apache.log4j.BasicConfigurator
 import org.junit.Before
 import org.junit.Test
+import java.math.BigDecimal
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -34,7 +37,7 @@ class DispatchTests() {
 
         // foo controller
         actionInfo = dispatcher.findDescriptor("GET", "/foo/bar")!!
-        assertEquals(Routes.Foo.Bar().javaClass, actionInfo.resourceClass)
+        assertEquals(Routes.Foo.Bar()::class.simpleName, actionInfo.resourceFun(emptyMap())::class.simpleName)
 
         dispatcher.findDescriptor("GET", "/foo/bar/baz")!! // nested route
 
@@ -55,7 +58,20 @@ class DispatchTests() {
         // crud controller
         request = mockRequest("GET", "/crud?name=value")
         actionInfo = dispatcher.findDescriptor("GET", request.requestURI!!)!! // empty route with parameters
-        assertEquals(Routes.Crud.Index().javaClass, actionInfo.resourceClass)
+        assertEquals(Routes.Crud.Index()::class.simpleName, actionInfo.resourceFun(emptyMap())::class.simpleName)
+        params = actionInfo.buildParams(request)
+        assertEquals("value", params["name"])
+
+        // Param function route execution
+        assertEquals("", mockDispatch("GET", "/fun/empty").stringOutput())
+        val expectedResult = Serialization.serialize(Routes.Function.compute(42, BigDecimal("3.1415")))
+        assertEquals(expectedResult, mockDispatch("GET", "/fun/compute/42/3.1415").stringOutput())
+        assertEquals(expectedResult, mockDispatch("GET", Routes.Function::compute.href(42, BigDecimal("3.1415"))).stringOutput())
+
+
+        // crud controller
+        request = mockRequest("GET", "/fun?name=value")
+        actionInfo = dispatcher.findDescriptor("GET", request.requestURI!!)!! // empty route with parameters
         params = actionInfo.buildParams(request)
         assertEquals("value", params["name"])
 
