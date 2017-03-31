@@ -1,17 +1,18 @@
 package kara
 
+import com.google.javascript.jscomp.*
 import com.yahoo.platform.yui.compressor.CssCompressor
-import com.yahoo.platform.yui.compressor.JavaScriptCompressor
 import jj.org.mozilla.javascript.ErrorReporter
 import jj.org.mozilla.javascript.EvaluatorException
 import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.StringWriter
 
 fun ByteArray.minifyResource(context: ActionContext, mime: String, fileName: String): ByteArray {
     try {
         return when {
             !context.config.minifyResrouces() -> return this
-            (mime == "text/javascript" || mime == "application/javascript") && !fileName.endsWith(".min.js") -> compressJavascript()
+            (mime == "text/javascript" || mime == "application/javascript") && !fileName.endsWith(".min.js") -> ClosureCompiler.compile(this, fileName)
             mime == "text/css" -> compressCss()
             else -> this
         }
@@ -22,13 +23,52 @@ fun ByteArray.minifyResource(context: ActionContext, mime: String, fileName: Str
     }
 }
 
-private fun ByteArray.compressJavascript(): ByteArray {
-    val compressor = JavaScriptCompressor(this.inputStream().reader(), MinifierReporter)
-    val answer = StringWriter()
+object ClosureCompiler {
+    private val externs = CommandLineRunner.getBuiltinExterns(CompilerOptions.Environment.BROWSER)
+    private val options = CompilerOptions().apply {
+        languageIn = CompilerOptions.LanguageMode.ECMASCRIPT5
+        languageOut = CompilerOptions.LanguageMode.ECMASCRIPT5
+        CompilationLevel.SIMPLE_OPTIMIZATIONS.setOptionsForCompilationLevel(this)
+    }
 
-    compressor.compress(answer, 160, true, false, true, false)
+    object LogOnlyErrorManager : ErrorManager {
+        private val logger = LoggerFactory.getLogger(javaClass)
 
-    return answer.toString().toByteArray()
+        override fun report(checkLevel: CheckLevel?, jsError: JSError?) {
+            fun JSError.message () =
+                    "Minification failed at $lineNumber:$charno:${sourceName?.let {" at '$it'"}.orEmpty()}: $description"
+            jsError?.let {
+                when (checkLevel) {
+                    CheckLevel.ERROR -> logger.error(it.message())
+                    CheckLevel.WARNING -> logger.warn(it.message())
+                    else -> logger.warn("Unknown check level $checkLevel with error: ${it.message()}")
+                }
+            }
+        }
+
+        override fun generateReport() { // nothing
+        }
+
+        override fun getWarnings(): Array<JSError> = emptyArray()
+
+        override fun getTypedPercent(): Double = 0.0
+
+        override fun getErrors(): Array<JSError> = emptyArray()
+
+        override fun getErrorCount(): Int = 0
+
+        override fun getWarningCount(): Int = 0
+
+        override fun setTypedPercent(p0: Double) { // nothing
+        }
+    }
+
+    fun compile(content: ByteArray, fileName: String?) : ByteArray {
+        return Compiler(LogOnlyErrorManager).run {
+            compile(externs, listOf(SourceFile.fromCode(fileName ?: "plain javascript", content.toString(Charsets.UTF_8))), options)
+            toSource().toByteArray()
+        }
+    }
 }
 
 private fun ByteArray.compressCss(): ByteArray {
