@@ -4,6 +4,7 @@ import kara.internal.*
 import kotlinx.html.DirectLink
 import kotlinx.html.Link
 import kotlinx.reflection.*
+import java.lang.reflect.InvocationTargetException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -15,6 +16,10 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.primaryConstructor
 
 class ResultWithCodeException(val code: Int, val result: Any?) : Exception()
+
+fun Any.resultWithStatusCode(statusCode: Int) {
+    throw ResultWithCodeException(statusCode, this)
+}
 
 abstract class Resource : Link, KAnnotatedElement {
 
@@ -86,6 +91,13 @@ internal class FunctionWrapperResource(val func: KFunction<Any>, val params: Map
             HttpServletResponse.SC_OK to func.resolveAndCall(params)
         } catch (e : ResultWithCodeException) {
             e.code to e.result
+        } catch (e : InvocationTargetException) {
+            val cause = e.cause
+            if (cause is ResultWithCodeException) {
+                cause.code to cause.result
+            } else {
+                throw e
+            }
         }
         object : BaseActionResult(_contentType, code, {
             if (result !is Unit) result?.let { Serialization.serialize(it) } else null

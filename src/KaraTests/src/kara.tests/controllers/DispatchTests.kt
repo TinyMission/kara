@@ -13,6 +13,8 @@ import org.apache.log4j.BasicConfigurator
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
+import javax.servlet.http.HttpServletResponse.SC_CREATED
+import javax.servlet.http.HttpServletResponse.SC_OK
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -67,6 +69,11 @@ class DispatchTests() {
         val expectedResult = Serialization.serialize(Routes.Function.compute(42, BigDecimal("3.1415")))
         assertEquals(expectedResult, mockDispatch("GET", "/fun/compute/42/3.1415").stringOutput())
         assertEquals(expectedResult, mockDispatch("GET", Routes.Function::compute.href(42, BigDecimal("3.1415"))).stringOutput())
+
+        assertEquals(SC_OK, mockDispatch("GET", Routes.Function::customResultCode.href(SC_OK)).status)
+        assertEquals(SC_OK.toString(), mockDispatch("GET", Routes.Function::customResultCode.href(SC_OK)).stringOutput())
+        assertEquals(SC_CREATED, mockDispatch("GET", Routes.Function::customResultCode.href(SC_CREATED)).status)
+        assertEquals(SC_CREATED.toString(), mockDispatch("GET", Routes.Function::customResultCode.href(SC_CREATED)).stringOutput())
 
 
         // crud controller

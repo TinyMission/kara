@@ -173,6 +173,11 @@ object Routes {
         @Get("compute/:anInt/:aDecimal")
         fun compute(anInt: Int, aDecimal: BigDecimal) = aDecimal * BigDecimal(anInt)
 
+        @Get("custom-result/:code")
+        fun customResultCode(code: Int) {
+            code.resultWithStatusCode(code)
+        }
+
         @Get("empty")
         fun nothing() {}
     }
