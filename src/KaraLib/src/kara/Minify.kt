@@ -25,7 +25,7 @@ fun ByteArray.minifyResource(context: ActionContext, mime: String, fileName: Str
 
 object ClosureCompiler {
     private val externs = CommandLineRunner.getBuiltinExterns(CompilerOptions.Environment.BROWSER)
-    private val options = CompilerOptions().apply {
+    private val options get() = CompilerOptions().apply {
         languageIn = CompilerOptions.LanguageMode.ECMASCRIPT5
         languageOut = CompilerOptions.LanguageMode.ECMASCRIPT5
         CompilationLevel.SIMPLE_OPTIMIZATIONS.setOptionsForCompilationLevel(this)
