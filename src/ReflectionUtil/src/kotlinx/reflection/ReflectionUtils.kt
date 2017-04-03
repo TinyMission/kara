@@ -63,13 +63,13 @@ fun <T:Any, R:Any?> T.propertyValue(property: String): R? {
 class MissingArgumentException(message: String) : RuntimeException(message)
 
 fun <T:Any> KClass<T>.buildBeanInstance(allParams: Map<String, String>): T {
-    return objectInstance ?: primaryConstructor!!.resolveAndCall(allParams)
+    return objectInstance ?: primaryConstructor!!.resolveAndCall(allParams, java.classLoader)
 }
 
 fun KCallable<*>.boundReceiver() = (this as? FunctionReference)?.boundReceiver ?:
         (parameters.find { it.kind == KParameter.Kind.INSTANCE && it.index == 0 }?.type?.classifier as? KClass<*>)?.objectInstance
 
-fun <R:Any> KCallable<R>.resolveAndCall(allParams: Map<String, String>) : R {
+fun <R:Any> KCallable<R>.resolveAndCall(allParams: Map<String, String>, classLoader: ClassLoader? = javaClass.classLoader) : R {
     val args = parameters.map { param ->
         val stringValue = allParams[param.name]
         val kclazz = paramJavaType(param.type.javaType).kotlin
@@ -78,7 +78,7 @@ fun <R:Any> KCallable<R>.resolveAndCall(allParams: Map<String, String>) : R {
             param.kind == KParameter.Kind.INSTANCE -> boundReceiver()!!
             stringValue == "null" && isNullable -> null
             stringValue == "" && kclazz != String::class && isNullable -> null
-            stringValue != null -> Serialization.deserialize(stringValue, kclazz, kclazz.java.classLoader)  ?: throw MissingArgumentException("Bad argument ${param.name}='$stringValue'")
+            stringValue != null -> Serialization.deserialize(stringValue, kclazz, classLoader)  ?: throw MissingArgumentException("Bad argument ${param.name}='$stringValue'")
             param.isOptional -> NullMask
             isNullable -> null
             else -> throw MissingArgumentException("Required argument '${param.name}' is missing, available params: $allParams")
