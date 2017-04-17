@@ -29,6 +29,8 @@ object ClosureCompiler {
         languageIn = CompilerOptions.LanguageMode.ECMASCRIPT5
         languageOut = CompilerOptions.LanguageMode.ECMASCRIPT5
         CompilationLevel.SIMPLE_OPTIMIZATIONS.setOptionsForCompilationLevel(this)
+        this.setWarningLevel(DiagnosticGroups.MISPLACED_TYPE_ANNOTATION, CheckLevel.OFF)
+        this.setWarningLevel(DiagnosticGroups.NON_STANDARD_JSDOC, CheckLevel.OFF)
     }
 
     object LogOnlyErrorManager : ErrorManager {
@@ -36,11 +38,11 @@ object ClosureCompiler {
 
         override fun report(checkLevel: CheckLevel?, jsError: JSError?) {
             fun JSError.message () =
-                    "Minification failed at $lineNumber:$charno:${sourceName?.let {" at '$it'"}.orEmpty()}: $description"
+                    "at $lineNumber:$charno:${sourceName?.let {" at '$it'"}.orEmpty()}: $description"
             jsError?.let {
                 when (checkLevel) {
-                    CheckLevel.ERROR -> logger.error(it.message())
-                    CheckLevel.WARNING -> logger.warn(it.message())
+                    CheckLevel.ERROR -> logger.error("Minification failed " + it.message())
+                    CheckLevel.WARNING -> logger.info("Minified with warning " + it.message())
                     else -> logger.warn("Unknown check level $checkLevel with error: ${it.message()}")
                 }
             }
