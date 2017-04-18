@@ -88,7 +88,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String,
         val params = buildParams(request)
 
         val resource = resourceFun(params._map)
-        val actionContext = ActionContext(context, request, response, params, resourceClass.findAnnotation<NoSession>() != null)
+        val actionContext = ActionContext(context, request, response, params, resourceClass.findAnnotation<NoSession>() == null)
 
         actionContext.withContext {
             val actionResult = when {
