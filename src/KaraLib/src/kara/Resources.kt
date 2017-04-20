@@ -10,7 +10,7 @@ data class ResourceContent(val mime: String, val lastModified: Long?, val length
     constructor(mime: String, bytes: ByteArray) : this(mime, null, bytes.size, { bytes.inputStream() })
 }
 
-abstract class DynamicResource() : Resource() {
+abstract class DynamicResource : Resource() {
     abstract fun content(context: ActionContext): ResourceContent
 
     override fun handle(context: ActionContext): ActionResult {
@@ -22,8 +22,9 @@ data class ResourceCache(val mime: String, val bytes: ByteArray, val lastModifie
     val contentHash: String = Integer.toHexString(Arrays.hashCode(bytes))
 }
 
-abstract class CachedResource() : DynamicResource() {
-    var cache: ResourceCache? = null
+abstract class CachedResource : DynamicResource() {
+    @Volatile
+    private var cache: ResourceCache? = null
 
     override fun href(): String {
         return super.href() + "?v=${versionHash()}"
@@ -48,10 +49,12 @@ abstract class CachedResource() : DynamicResource() {
             }
         }
 
-        return cache ?: content(context).let {
-            val fileName = (this@CachedResource as? EmbeddedResource)?.name?.substringAfterLast("/").orEmpty()
-            cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray((it.data)())!!.minifyResource(context, it.mime, fileName), it.lastModified, context.appContext.version) }
-            cache!!
+        return cache ?: synchronized(this) {
+            cache?: content(context).let {
+                val fileName = (this@CachedResource as? EmbeddedResource)?.name?.substringAfterLast("/").orEmpty()
+                cache = with(context) { ResourceCache(it.mime, IOUtils.toByteArray((it.data)())!!.minifyResource(context, it.mime, fileName), it.lastModified, context.appContext.version) }
+                cache!!
+            }
         }
     }
 }

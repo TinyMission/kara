@@ -67,6 +67,7 @@ object ClosureCompiler {
 
     fun compile(content: ByteArray, fileName: String?) : ByteArray {
         return Compiler(LogOnlyErrorManager).run {
+            disableThreads()
             compile(externs, listOf(SourceFile.fromCode(fileName ?: "plain javascript", content.toString(Charsets.UTF_8))), options)
             toSource().toByteArray()
         }
