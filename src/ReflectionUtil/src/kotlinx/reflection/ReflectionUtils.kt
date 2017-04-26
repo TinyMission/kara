@@ -1,7 +1,6 @@
 package kotlinx.reflection
 
 import java.io.File
-import java.lang.reflect.Modifier
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.net.URL
@@ -9,54 +8,26 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
 import kotlin.jvm.internal.FunctionReference
 import kotlin.reflect.*
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaType
-
-private object ReflectionCache {
-    val objects = ConcurrentHashMap<Class<*>, Any>()
-    val companionObjects = ConcurrentHashMap<Class<*>, Any>()
-    val primaryParameterNames = ConcurrentHashMap<Class<out Any>, List<String>>()
-    val propertyGetters = ConcurrentHashMap<Pair<KClass<out Any>, String>, Any>()
-}
+import kotlin.jvm.internal.Reflection
 
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
 
-@Suppress("UNCHECKED_CAST")
-@Deprecated("use KClass<T>.objectInstance. For backword compatibilibty test only.")
-fun <T:Any> Class<T>.objectInstance0(): T? {
-    return ReflectionCache.objects.getOrPut(this) {
-        try {
-            val field = getDeclaredField("INSTANCE")
-            if (Modifier.isStatic(field.modifiers) && Modifier.isPublic(field.modifiers)) {
-                if (!field.isAccessible) {
-                    field.isAccessible = true
-                }
-                field.get(null)!!
-            }
-            else NullMask
-        }
-        catch (e: NoSuchFieldException) {
-            NullMask
-        }
-    }.unmask() as T
-}
+// can be removed when fixed: KT-17594 consider caching for Class<T>.kotlin
+@Suppress("USELESS_CAST")
+val <T: Any> Class<T>.kotlinCached: KClass<T>
+    get() = Reflection.getOrCreateKotlinClass(this) as KClass<T>
 
-fun Class<*>.companionObjectInstance(): Any? {
-    return ReflectionCache.companionObjects.getOrPut(this) {
-        kotlin.companionObjectInstance ?: NullMask
-    }.unmask()
-}
-
-@Suppress("UNCHECKED_CAST")
-fun <T: Any, R:Any?> KClass<out T>.propertyGetter(property: String): KProperty1<T, R>? {
-    return ReflectionCache.propertyGetters.getOrPut(Pair(this, property),  {
-        memberProperties.firstOrNull { it.name == property } ?: NullMask
-    }).unmask() as KProperty1<T, R>?
-}
-
+private val propertyGetters = ConcurrentHashMap<Pair<KClass<out Any>, String>, Any>()
 
 fun <T:Any, R:Any?> T.propertyValue(property: String): R? {
-    val getter = javaClass.kotlin.propertyGetter<T,R>(property) ?: error("Invalid property $property on type ${javaClass.name}")
+    @Suppress("UNCHECKED_CAST")
+    val getter = propertyGetters.getOrPut(Pair(this::class, property),  {
+        this::class.memberProperties.firstOrNull { it.name == property } ?: NullMask
+    }).unmask() as KProperty1<T, R>? ?: error("Invalid property $property on type ${this::class.simpleName}")
     return getter.get(this)
 }
 
@@ -72,7 +43,7 @@ fun KCallable<*>.boundReceiver() = (this as? FunctionReference)?.boundReceiver ?
 fun <R:Any> KCallable<R>.resolveAndCall(allParams: Map<String, String>, classLoader: ClassLoader? = javaClass.classLoader) : R {
     val args = parameters.map { param ->
         val stringValue = allParams[param.name]
-        val kclazz = paramJavaType(param.type.javaType).kotlin
+        val kclazz = paramJavaType(param.type.javaType).kotlinCached
         val isNullable = param.type.isMarkedNullable
         param to when {
             param.kind == KParameter.Kind.INSTANCE -> boundReceiver()!!
@@ -95,10 +66,6 @@ private fun paramJavaType(javaType: Type): Class<Any> {
         is Class<*> -> javaType as Class<Any>
         else -> error("Unsupported type")
     }
-}
-
-fun Any.primaryParametersNames(): List<String> = ReflectionCache.primaryParameterNames.getOrPut(javaClass) {
-    javaClass.kotlin.primaryConstructor?.parameters.orEmpty().map {it.name!!}
 }
 
 fun Class<*>.isEnumClass(): Boolean = Enum::class.java.isAssignableFrom(this)

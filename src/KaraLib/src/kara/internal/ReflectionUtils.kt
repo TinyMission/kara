@@ -36,7 +36,7 @@ fun KAnnotatedElement.route(): ResourceDescriptor {
 
     return when {
         this is FunctionWrapperResource -> ResourceDescriptor.fromFunction(this.func, annotation())
-        this is Resource -> ResourceDescriptor.fromResourceClass(javaClass.kotlin as KClass<out Resource>, annotation())
+        this is Resource -> ResourceDescriptor.fromResourceClass(this::class as KClass<out Resource>, annotation())
         this is KClass<*> && Resource::class.java.isAssignableFrom(this.java) ->
             ResourceDescriptor.fromResourceClass(this as KClass<out Resource>, annotation())
         this is KFunction<*> -> ResourceDescriptor.fromFunction(this as KFunction<Any>, annotation())

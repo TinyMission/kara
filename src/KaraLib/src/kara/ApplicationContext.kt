@@ -5,6 +5,7 @@ import kara.internal.ResourceDispatcher
 import kotlinx.reflection.MissingArgumentException
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
+import kotlinx.reflection.kotlinCached
 import org.apache.log4j.Logger
 import java.net.SocketException
 import java.util.*
@@ -27,7 +28,7 @@ class ApplicationContext(val config: ApplicationConfig,
 
     init {
         packages.flatMap { scanPackageForMonitors(it) }.map {
-            it.kotlin.objectInstance as? ApplicationContextMonitor ?: it.newInstance()
+            it.kotlinCached.objectInstance as? ApplicationContextMonitor ?: it.newInstance()
         }.sortedBy { it.priority }.forEach { monitor ->
             logger.info("Executing startup sequence on ${monitor.javaClass}")
             monitor.created(this)

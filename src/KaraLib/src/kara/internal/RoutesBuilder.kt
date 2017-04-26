@@ -3,6 +3,7 @@ package kara.internal
 import kara.*
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
+import kotlinx.reflection.kotlinCached
 import java.util.*
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.full.declaredMemberFunctions
@@ -15,9 +16,9 @@ private fun KAnnotatedElement.ok() = annotations.any { a -> karaAnnotations.any 
 fun scanPackageForResources(prefix: String, classloader: ClassLoader, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<KAnnotatedElement> {
     try {
         val classes = classloader.findClasses(prefix, cache)
-        return classes.filterIsAssignable<Resource>().map { it.kotlin }.filter { it.ok() } +
-            classes.filter{ it.isAnnotationPresent(Controller::class.java) && it.kotlin.objectInstance != null }.
-                    flatMap { it.kotlin.declaredMemberFunctions.filter { it.ok() } }
+        return classes.filterIsAssignable<Resource>().map { it.kotlinCached }.filter { it.ok() } +
+            classes.filter{ it.isAnnotationPresent(Controller::class.java) && it.kotlinCached.objectInstance != null }.
+                    flatMap { it.kotlinCached.declaredMemberFunctions.filter { it.ok() } }
     } catch(e: Throwable) {
         e.printStackTrace()
         throw RuntimeException("I'm totally failed to start up. See log :(")
@@ -32,16 +33,16 @@ fun scanObjects(objects : Array<Any>, classloader: ClassLoader? = null) : List<K
     fun scan(routesObject : Any) {
         val newClass = classloader?.loadClass(routesObject.javaClass.name) ?: routesObject.javaClass
         for (innerClass in newClass.declaredClasses) {
-            (innerClass as Class<Any>).kotlin.objectInstance?.let {
+            (innerClass as Class<Any>).kotlinCached.objectInstance?.let {
                 scan(it)
             } ?: run {
                 if (Resource::class.java.isAssignableFrom(innerClass)) {
-                    answer.add(innerClass.kotlin)
+                    answer.add(innerClass.kotlinCached)
                 }
             }
         }
 
-        answer.addAll(newClass.kotlin.declaredMemberFunctions.filter { it.ok() })
+        answer.addAll(newClass.kotlinCached.declaredMemberFunctions.filter { it.ok() })
 
     }
 
