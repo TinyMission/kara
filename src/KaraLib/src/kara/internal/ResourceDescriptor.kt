@@ -133,7 +133,7 @@ class ResourceDescriptor(val httpMethod: HttpMethod, val route: String,
                 is Put -> HttpMethod.PUT to ann.allowCrossOrigin and ann.route
                 is Delete -> HttpMethod.DELETE to ann.allowCrossOrigin and ann.route
                 is Route -> ann.method to ann.allowCrossOrigin and ann.route
-                else -> error("Unsopported aanotation $ann")
+                else -> error("Unsupported annotation $ann")
             }
         }
     }

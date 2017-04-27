@@ -1,6 +1,7 @@
 package kara.internal
 
 import kara.*
+import kotlinx.reflection.annotationClassCached
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
 import kotlinx.reflection.kotlinCached
@@ -8,9 +9,9 @@ import java.util.*
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.full.declaredMemberFunctions
 
-val karaAnnotations = listOf(Get::class.java, Post::class.java, Put::class.java, Delete::class.java, Route::class.java, Location::class.java)
+val karaAnnotations = listOf(Get::class, Post::class, Put::class, Delete::class, Route::class, Location::class)
 
-private fun KAnnotatedElement.ok() = annotations.any { a -> karaAnnotations.any { it.isAssignableFrom(a.javaClass) } }
+private fun KAnnotatedElement.ok() = annotations.any { a -> karaAnnotations.any { a.annotationClassCached == it } }
 
 @Suppress("UNCHECKED_CAST")
 fun scanPackageForResources(prefix: String, classloader: ClassLoader, cache: MutableMap<Pair<Int, String>, List<Class<*>>>) : List<KAnnotatedElement> {

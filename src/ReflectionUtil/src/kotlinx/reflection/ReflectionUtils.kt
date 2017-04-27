@@ -7,11 +7,14 @@ import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
 import kotlin.jvm.internal.FunctionReference
-import kotlin.reflect.*
+import kotlin.jvm.internal.Reflection
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaType
-import kotlin.jvm.internal.Reflection
 
 private object NullMask
 private fun Any.unmask():Any? = if (this == NullMask) null else this
@@ -20,6 +23,10 @@ private fun Any.unmask():Any? = if (this == NullMask) null else this
 @Suppress("USELESS_CAST")
 val <T: Any> Class<T>.kotlinCached: KClass<T>
     get() = Reflection.getOrCreateKotlinClass(this) as KClass<T>
+
+@Suppress("UNCHECKED_CAST")
+val <T : Annotation> T.annotationClassCached: KClass<out T>
+    get() = (this as java.lang.annotation.Annotation).annotationType().kotlinCached as KClass<out T>
 
 private val propertyGetters = ConcurrentHashMap<Pair<KClass<out Any>, String>, Any>()
 

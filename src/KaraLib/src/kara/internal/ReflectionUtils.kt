@@ -3,6 +3,7 @@ package kara.internal
 import kara.FunctionWrapperResource
 import kara.Location
 import kara.Resource
+import kotlinx.reflection.annotationClassCached
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -31,7 +32,7 @@ fun Class<*>.routePrefix(): String {
 
 @Suppress("UNCHECKED_CAST")
 fun KAnnotatedElement.route(): ResourceDescriptor {
-    fun annotation() = annotations.firstOrNull { a -> karaAnnotations.any { it.isAssignableFrom(a.javaClass) } } as? Annotation
+    fun annotation() = annotations.firstOrNull { a -> karaAnnotations.any { a.annotationClassCached == it } }
                     ?: error("No HTTP method annotation found in ${javaClass.name}")
 
     return when {
