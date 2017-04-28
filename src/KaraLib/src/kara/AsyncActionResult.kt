@@ -40,13 +40,19 @@ class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationCon
     }
 }
 
-private val asyncExecutors: ExecutorService by lazy {
-    Executors.newFixedThreadPool(ActionContext.tryGet()?.config?.tryGet("kara.asyncThreads")?.toInt() ?: 4, {
+private val asyncExecutorLazy = lazy {
+    val threadCount = ActionContext.tryGet()?.config?.tryGet("kara.asyncThreads")?.toInt()
+    if (threadCount == null) {
+        logger.error("Async Executor will be initialized with default 4 threads!", RuntimeException())
+    }
+    Executors.newFixedThreadPool(threadCount ?: 4, {
         Executors.defaultThreadFactory().newThread(it).apply {
             name = "Kara async request executor"
         }
     })
 }
+
+private val asyncExecutors: ExecutorService by asyncExecutorLazy
 
 @Suppress("unused")
 class AsyncServletContextListener: ServletContextListener {
@@ -60,7 +66,14 @@ class AsyncServletContextListener: ServletContextListener {
     }
 }
 
-val karaAsyncExecutorsQueueSize: Int get() = (asyncExecutors as ThreadPoolExecutor).queue.size
+val karaAsyncExecutorsQueueSize: Int get() {
+    return if (asyncExecutorLazy.isInitialized()) {
+        (asyncExecutors as ThreadPoolExecutor).queue.size
+    } else {
+        logger.warn("AsyncExecutor wasn't initialized yet")
+        0
+    }
+}
 
 private fun AsyncResult.execute() {
     try {

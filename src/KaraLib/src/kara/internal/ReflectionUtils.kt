@@ -32,15 +32,15 @@ fun Class<*>.routePrefix(): String {
 
 @Suppress("UNCHECKED_CAST")
 fun KAnnotatedElement.route(): ResourceDescriptor {
-    fun annotation() = annotations.firstOrNull { a -> karaAnnotations.any { a.annotationClassCached == it } }
+    val annotation = annotations.firstOrNull { a -> karaAnnotations.any { a.annotationClassCached == it } }
                     ?: error("No HTTP method annotation found in ${javaClass.name}")
 
     return when {
-        this is FunctionWrapperResource -> ResourceDescriptor.fromFunction(this.func, annotation())
-        this is Resource -> ResourceDescriptor.fromResourceClass(this::class as KClass<out Resource>, annotation())
         this is KClass<*> && Resource::class.java.isAssignableFrom(this.java) ->
-            ResourceDescriptor.fromResourceClass(this as KClass<out Resource>, annotation())
-        this is KFunction<*> -> ResourceDescriptor.fromFunction(this as KFunction<Any>, annotation())
+            ResourceDescriptor.fromResourceClass(this as KClass<out Resource>, annotation)
+        this is FunctionWrapperResource -> ResourceDescriptor.fromFunction(this.func, annotation)
+        this is Resource -> ResourceDescriptor.fromResourceClass(this::class as KClass<out Resource>, annotation)
+        this is KFunction<*> -> ResourceDescriptor.fromFunction(this as KFunction<Any>, annotation)
         else -> error("Unsupported type $this")
     }
 }
