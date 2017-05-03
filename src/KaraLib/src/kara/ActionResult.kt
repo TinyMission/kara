@@ -23,11 +23,11 @@ abstract class BaseActionResult(val contentType: String, val code: Int, val cont
         context.response.let  { r ->
             r.status = code
             r.contentType = contentType
-            r.writer.use { out ->
-                content()?.let {
-                    out.print(it)
+            content()?.let {
+                with(r.writer) {
+                    print(it)
+                    flush()
                 }
-                out.flush()
             }
         }
     }
