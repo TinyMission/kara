@@ -1,26 +1,16 @@
 package kara.tests.controllers
 
-
-import kara.Application
 import kara.href
 import kara.tests.mock.mockDispatch
 import kotlinx.html.htmlEscapeTo
-import org.apache.log4j.AppenderSkeleton
-import org.apache.log4j.BasicConfigurator
-import org.apache.log4j.spi.LoggingEvent
-import org.junit.Before
 import org.junit.Test
 import javax.servlet.http.HttpServletResponse
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
 /** Tests for executing actions */
 class ActionTests() {
-    @Before fun setUp() {
-        BasicConfigurator.configure()
-    }
 
     @Test fun basicHtmlLayout() {
         val response = mockDispatch("GET", "/")
@@ -28,8 +18,8 @@ class ActionTests() {
         assertEquals("text/html", response._contentType, "Content type should be html")
 
         assertTrue(output?.contains("Default Layout") as Boolean, "Home view contains layout")
-        assertTrue(output?.contains("Welcome Home") as Boolean, "Home view contains view")
-        assertTrue(output?.contains("&lt;h2&gt;MakeSureThisIsEscaped&lt;/h2&gt;") as Boolean, "Proper escaping not applied : $output")
+        assertTrue(output.contains("Welcome Home"), "Home view contains view")
+        assertTrue(output.contains("&lt;h2&gt;MakeSureThisIsEscaped&lt;/h2&gt;"), "Proper escaping not applied : $output")
     }
 
     @Test fun runActionTests() {
@@ -115,41 +105,17 @@ class ActionTests() {
     }
 
     @Test fun errorLogged() {
-        TestAppender.register()
         val response = mockDispatch("GET", Routes.Error(false).href())
-        assertTrue(TestAppender.smthWasLogged)
         assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response._status)
     }
 
     @Test fun socketErrorNotLogged() {
-        TestAppender.register()
         val response = mockDispatch("GET", Routes.Error(true).href())
-        assertFalse(TestAppender.smthWasLogged)
         assertEquals(HttpServletResponse.SC_OK, response._status)
     }
 
     fun assertResponse(expected : String, url : String) {
         val response = mockDispatch("GET", url)
         assertEquals(expected, response.stringOutput())
-    }
-
-    object TestAppender : AppenderSkeleton() {
-
-        var smthWasLogged: Boolean = false
-
-        override fun close() {
-            Application.logger.removeAppender(this)
-        }
-
-        override fun requiresLayout(): Boolean = false
-
-        override fun append(p0: LoggingEvent?) {
-            smthWasLogged = true
-        }
-
-        fun register() {
-            smthWasLogged = false
-            Application.logger.addAppender(this)
-        }
     }
 }

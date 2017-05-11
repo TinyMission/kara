@@ -4,7 +4,6 @@ import com.google.javascript.jscomp.*
 import com.yahoo.platform.yui.compressor.CssCompressor
 import jj.org.mozilla.javascript.ErrorReporter
 import jj.org.mozilla.javascript.EvaluatorException
-import org.apache.log4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.StringWriter
 
@@ -82,7 +81,7 @@ private fun ByteArray.compressCss(): ByteArray {
 }
 
 object MinifierReporter : ErrorReporter {
-    val log = Logger.getLogger(this.javaClass)!!
+    val log = LoggerFactory.getLogger(this.javaClass)!!
 
     override fun warning(message: String?, sourceName: String?, line: Int, lineSource: String?, lineOffset: Int) {
         log.warn("Minification failed at $line:$lineOffset${lineSource?.let {" at '$it'"}.orEmpty()}: $message")

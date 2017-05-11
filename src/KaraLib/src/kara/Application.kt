@@ -2,7 +2,8 @@ package kara
 
 import kara.internal.scanPackageForResources
 import kotlinx.reflection.urlDecode
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URLClassLoader
 import java.nio.file.*
@@ -122,7 +123,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
     }
 
     companion object {
-        val logger: Logger = Logger.getLogger(Application::class.java)
+        val logger: Logger = LoggerFactory.getLogger(Application::class.java)
 
         fun classLoader(config: ApplicationConfig, appContext: String): ClassLoader {
             val classPath = config.classPath(appContext)

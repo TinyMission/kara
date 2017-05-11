@@ -1,6 +1,6 @@
 package kara.config
 
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.lang.RuntimeException
 import java.util.*
@@ -70,7 +70,7 @@ open class Config() {
     }
 
     companion object {
-        val logger = Logger.getLogger(Config::class.java)!!
+        val logger = LoggerFactory.getLogger(Config::class.java)!!
 
         fun readConfig(config: Config, path: String, classloader: ClassLoader, baseFile: File? = null) {
             fun eval(name: String): String {

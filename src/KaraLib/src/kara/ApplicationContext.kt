@@ -6,7 +6,7 @@ import kotlinx.reflection.MissingArgumentException
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
 import kotlinx.reflection.kotlinCached
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import java.net.SocketException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -20,7 +20,7 @@ class ApplicationContext(val config: ApplicationConfig,
                          val classLoader: ClassLoader,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
                          val resourceTypes: List<KAnnotatedElement>) {
-    val logger = Logger.getLogger(this.javaClass)!!
+    val logger = LoggerFactory.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>()
 

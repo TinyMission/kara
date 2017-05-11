@@ -7,14 +7,14 @@ import kotlinx.reflection.Serialization
 import kotlinx.reflection.boundReceiver
 import kotlinx.reflection.buildBeanInstance
 import kotlinx.reflection.urlDecode
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 
-val logger = Logger.getLogger(ResourceDescriptor::class.java)!!
+val logger = LoggerFactory.getLogger(ResourceDescriptor::class.java)!!
 
 private infix fun <A, B, C> Pair<A, B>.and(c: C) = Triple(first, second, c)
 

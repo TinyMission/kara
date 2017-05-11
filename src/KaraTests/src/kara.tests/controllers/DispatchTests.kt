@@ -9,8 +9,6 @@ import kara.internal.scanObjects
 import kara.tests.mock.mockDispatch
 import kara.tests.mock.mockRequest
 import kotlinx.reflection.Serialization
-import org.apache.log4j.BasicConfigurator
-import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
 import javax.servlet.http.HttpServletResponse.SC_CREATED
@@ -21,9 +19,6 @@ import kotlin.test.assertNull
 
 /** Tests for dispatching routes to get action info. */
 class DispatchTests() {
-    @Before fun setUp() {
-        BasicConfigurator.configure()
-    }
 
     @Test fun runDispatchTests() {
         val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")

@@ -3,16 +3,11 @@ package kara.tests.views
 import kara.*
 import kara.tests.mock.mockDispatch
 import kotlinx.html.*
-import org.apache.log4j.BasicConfigurator
-import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TemplateTests() {
-    @Before fun setUp() {
-        BasicConfigurator.configure()
-    }
 
     @Test fun inlineTemplate() {
         val response = mockDispatch("GET", "/template/1")
@@ -24,8 +19,8 @@ class TemplateTests() {
         val output = response.stringOutput()
         assertEquals("text/html", response._contentType, "Content type should be html")
         assertTrue(output?.contains("header/div") as Boolean, "View contains header placeholder")
-        assertTrue(output?.contains("content/left/span") as Boolean, "View contains content/left placeholder")
-        assertTrue(output?.contains("content/right/span") as Boolean, "View contains content/right placeholder")
+        assertTrue(output.contains("content/left/span"), "View contains content/left placeholder")
+        assertTrue(output.contains("content/right/span"), "View contains content/right placeholder")
     }
 }
 

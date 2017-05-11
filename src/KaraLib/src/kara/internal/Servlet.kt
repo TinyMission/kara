@@ -2,13 +2,13 @@ package kara.internal
 
 import kara.Application
 import kara.ApplicationConfig
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-open class Servlet() : HttpServlet() {
-    val logger = Logger.getLogger(Servlet::class.java)!!
+open class Servlet : HttpServlet() {
+    val logger = LoggerFactory.getLogger(Servlet::class.java)!!
 
     val application: Application by lazy {
         val servletContext = servletContext!!
