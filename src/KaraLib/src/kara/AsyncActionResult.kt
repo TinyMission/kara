@@ -1,8 +1,8 @@
 package kara
 
 import kara.internal.logger
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import java.util.concurrent.ThreadPoolExecutor
 import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
@@ -40,39 +40,42 @@ class AsyncResult(val asyncContext: AsyncContext, val appContext: ApplicationCon
     }
 }
 
-private val asyncExecutorLazy = lazy {
-    val threadCount = ActionContext.tryGet()?.config?.tryGet("kara.asyncThreads")?.toInt()
-    if (threadCount == null) {
-        logger.error("Async Executor will be initialized with default 4 threads!", RuntimeException())
-    }
-    Executors.newFixedThreadPool(threadCount ?: 4, {
-        Executors.defaultThreadFactory().newThread(it).apply {
-            name = "Kara async request executor"
+object KaraAsyncExecutor {
+
+    private val DEFAULT_THREADS_COUNT = 4
+
+    private lateinit var executor: ThreadPoolExecutor
+    @Volatile
+    private var initialized = false
+
+    @Synchronized
+    fun initialize(config: ApplicationConfig) {
+        if (initialized) return
+
+        var idx = 1
+        val threadCount = config.tryGet("kara.asyncThreads")?.toInt()
+        if (threadCount == null) {
+            logger.error("Async Executor will be initialized with default $DEFAULT_THREADS_COUNT threads!")
         }
-    })
-}
-
-private val asyncExecutors: ExecutorService by asyncExecutorLazy
-
-@Suppress("unused")
-class AsyncServletContextListener: ServletContextListener {
-
-    override fun contextInitialized(p0: ServletContextEvent?) {
-        //nothing
+        executor = Executors.newFixedThreadPool(threadCount ?: DEFAULT_THREADS_COUNT, {
+            Executors.defaultThreadFactory().newThread(it).apply {
+                name = "Kara async request executor - ${idx++}"
+            }
+        }) as ThreadPoolExecutor
+        executor.prestartAllCoreThreads()
+        initialized = true
     }
 
-    override fun contextDestroyed(p0: ServletContextEvent?) {
-        asyncExecutors.shutdown()
+    fun shutdown() {
+        if (initialized) executor.shutdown()
     }
-}
 
-val karaAsyncExecutorsQueueSize: Int get() {
-    return if (asyncExecutorLazy.isInitialized()) {
-        (asyncExecutors as ThreadPoolExecutor).queue.size
-    } else {
-        logger.warn("AsyncExecutor wasn't initialized yet")
-        0
+    fun submit(task: ()->Unit): Future<*>? {
+        if (!initialized) error("Async Executor is not initialized yet")
+        return executor.submit(task)
     }
+
+    val queueSize: Int get() = if (initialized) executor.queue.size else 0
 }
 
 private fun AsyncResult.execute() {
@@ -112,7 +115,7 @@ fun ActionContext.async(body: ActionContext.() -> ActionResult): ActionResult {
     val asyncContext = request.startAsync(request, response)
     val asyncResult = AsyncResult(asyncContext, appContext, params, allowHttpSession, body)
 
-    asyncExecutors.submit {
+    KaraAsyncExecutor.submit {
         asyncResult.execute()
     }
 
