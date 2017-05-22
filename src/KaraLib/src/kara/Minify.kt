@@ -7,9 +7,8 @@ import jj.org.mozilla.javascript.EvaluatorException
 import org.slf4j.LoggerFactory
 import java.io.StringWriter
 
-fun ByteArray.minifyResource(context: ActionContext, mime: String, resource: CachedResource): ByteArray {
-    val resourceName = (resource as? EmbeddedResource)?.name
-    val fileName = resourceName?.substringAfterLast("/").orEmpty()
+fun ByteArray.minifyResource(context: ActionContext, mime: String, resourceName: String): ByteArray {
+    val fileName = resourceName.substringAfterLast("/")
 
     try {
         return when {

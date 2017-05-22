@@ -95,13 +95,13 @@ open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
         return urls.toTypedArray()
     }
 
-    fun isMinifcationAllowed(string: String?): Boolean {
+    fun isMinifcationAllowed(resourceName: String): Boolean {
         val isMinifyResources = when (tryGet("kara.minifyResources")) {
             "true", "yes" -> true
             "false", "no" -> false
             else -> isProduction()
         }
 
-        return isMinifyResources && ignoreMinificationPrefixes.none { string?.startsWith(it) ?: false }
+        return isMinifyResources && ignoreMinificationPrefixes.none { resourceName.startsWith(it) }
     }
 }
