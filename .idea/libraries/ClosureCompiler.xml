@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="ClosureCompiler">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/closure-compiler-v20170218.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/closure-compiler-externs-v20170218.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/closure-compiler-v20170423.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/closure-compiler-externs-v20170423.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
