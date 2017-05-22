@@ -7,10 +7,13 @@ import jj.org.mozilla.javascript.EvaluatorException
 import org.slf4j.LoggerFactory
 import java.io.StringWriter
 
-fun ByteArray.minifyResource(context: ActionContext, mime: String, fileName: String): ByteArray {
+fun ByteArray.minifyResource(context: ActionContext, mime: String, resource: CachedResource): ByteArray {
+    val resourceName = (resource as? EmbeddedResource)?.name
+    val fileName = resourceName?.substringAfterLast("/").orEmpty()
+
     try {
         return when {
-            !context.config.minifyResrouces() -> return this
+            !context.config.isMinifcationAllowed(resourceName) -> return this
             (mime == "text/javascript" || mime == "application/javascript") && !fileName.endsWith(".min.js") -> ClosureCompiler.compile(this, fileName)
             mime == "text/css" -> compressCss()
             else -> this

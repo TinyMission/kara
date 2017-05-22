@@ -30,6 +30,10 @@ open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
     val applicationPackageName: String
         get() = this["kara.appPackage"]
 
+    private val ignoreMinificationPrefixes by lazy {
+        tryGet("kara.ignoreMinificationPrefixes")?.split(',')?.filterNot { it.isNullOrBlank() }.orEmpty()
+    }
+
     private val _publicDirectories by lazy {
         readPublicDirProperty().map {
             val dirPath = it.trim()
@@ -91,9 +95,13 @@ open class ApplicationConfig(val appClassloader: ClassLoader) : Config() {
         return urls.toTypedArray()
     }
 
-    fun minifyResrouces(): Boolean = when (tryGet("kara.minifyResources")) {
-        "true", "yes" -> true
-        "false", "no" -> false
-        else -> isProduction()
+    fun isMinifcationAllowed(string: String?): Boolean {
+        val isMinifyResources = when (tryGet("kara.minifyResources")) {
+            "true", "yes" -> true
+            "false", "no" -> false
+            else -> isProduction()
+        }
+
+        return isMinifyResources && ignoreMinificationPrefixes.none { string?.startsWith(it) ?: false }
     }
 }
