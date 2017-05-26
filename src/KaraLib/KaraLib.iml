@@ -29,5 +29,6 @@
     <orderEntry type="library" name="YuiCompressor" level="project" />
     <orderEntry type="library" name="LessCompiler" level="project" />
     <orderEntry type="library" name="Rhino" level="project" />
+    <orderEntry type="library" name="ClosureCompiler" level="project" />
   </component>
 </module>

@@ -3,13 +3,13 @@ package kara.server
 import kara.Application
 import kara.ApplicationConfig
 import kara.getDescription
-import org.apache.log4j.Logger
 import org.eclipse.jetty.server.Request
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.handler.AbstractHandler
 import org.eclipse.jetty.server.handler.ResourceHandler
 import org.eclipse.jetty.server.session.HashSessionManager
 import org.eclipse.jetty.server.session.SessionHandler
+import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.util.*
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession
 /** A Runnable responsible for managing a Jetty server instance.
  */
 class JettyRunner(val applicationConfig: ApplicationConfig) {
-    val logger = Logger.getLogger(this.javaClass)!!
+    val logger = LoggerFactory.getLogger(this.javaClass)!!
     lateinit var server: Server
     val resourceHandlers = ArrayList<ResourceHandler>()
 

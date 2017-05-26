@@ -7,6 +7,7 @@ import kara.tests.views.view
 import kotlinx.html.CssElement
 import kotlinx.html.div
 import kotlinx.html.span
+import java.math.BigDecimal
 import java.net.SocketException
 
 @Get("/test/test.css")
@@ -18,13 +19,13 @@ object TestStyles : Stylesheet() {
 
 object Routes {
     @Get("/")
-    class Index() : Request({ HomeView() })
+    class Index : Request({ HomeView() })
 
     @Get("/test")
-    class Test() : Request({ TextResult("This is a test action") })
+    class Test : Request({ TextResult("This is a test action") })
 
     @Post("/update")
-    class Update() : Request({ TextResult("Something's been updated!") })
+    class Update : Request({ TextResult("Something's been updated!") })
 
     @Get("/optional/?p")
     class Optional(val p: String?) : Request({
@@ -88,27 +89,27 @@ object Routes {
 
     object Foo {
         @Get("#")
-        class Blank() : Request({
+        class Blank : Request({
             TextResult("blank")
         })
 
         @Get("bar")
-        class Bar() : Request({
+        class Bar : Request({
             TextResult("bar")
         })
 
         @Get("bar/baz")
-        class Barbaz() : Request({
+        class Barbaz : Request({
             TextResult("bar/baz")
         })
 
         @Get("#")
-        class Foobar() : Request({
+        class Foobar : Request({
             TextResult("foobar")
         })
 
         @Get("*/list")
-        class List() : Request({
+        class List : Request({
             TextResult("list: ${params[0]}")
         })
 
@@ -118,7 +119,7 @@ object Routes {
         })
 
         @Get("redirect")
-        class Redirect() : Request({
+        class Redirect : Request({
             redirect("/foo/bar")
         })
 
@@ -135,7 +136,7 @@ object Routes {
 
     object Crud {
         @Get("")
-        class Index() : Request({
+        class Index : Request({
             TextResult("index")
         })
 
@@ -145,7 +146,7 @@ object Routes {
         })
 
         @Post("")
-        class Create() : Request({
+        class Create : Request({
             TextResult("create")
         })
 
@@ -158,5 +159,53 @@ object Routes {
         class _Delete(val id: String) : Request({
             TextResult("delete $id")
         })
+    }
+
+    @Controller("text/plain")
+    @Location("/fun")
+    object Function {
+        @Get("")
+        fun index() = "index"
+
+        @Get("bar")
+        fun bar() = "bar"
+
+        @Get("compute/:anInt/:aDecimal")
+        fun compute(anInt: Int, aDecimal: BigDecimal) = aDecimal * BigDecimal(anInt)
+
+        @Get("custom-result/:code")
+        fun customResultCode(code: Int) {
+            code.resultWithStatusCode(code)
+        }
+
+        @Get("empty")
+        fun nothing() {}
+    }
+
+    object InterfaceControllerTest {
+        @InterfaceController
+        @Get("/Action")
+        open class SomeInterfaceController( handler: ActionContext.() -> ActionResult = { TextResult("It's interface") })
+            : Request(handler)
+
+        class ImplInterfaceController() : SomeInterfaceController({ TextResult("It's implementation") })
+    }
+
+    object InterfaceNotFinalControllerTest {
+        @InterfaceController
+        @Get("/Action")
+        open class SomeInterfaceController( handler: ActionContext.() -> ActionResult = { TextResult("It's interface") })
+            : Request(handler)
+
+        open class ImplInterfaceController() : SomeInterfaceController({ TextResult("It's implementation") })
+    }
+
+    object InterfaceParamControllerTest {
+        @InterfaceController
+        @Get("/Action")
+        open class SomeInterfaceController(val code: String, handler: ActionContext.() -> ActionResult = { TextResult("It's interface") })
+            : Request(handler)
+
+        class ImplInterfaceController(code: String) : SomeInterfaceController(code, { TextResult("It's implementation with param $code") })
     }
 }

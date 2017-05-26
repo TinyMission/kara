@@ -154,7 +154,7 @@ class LazySessionScope<out T:Any>(val initial: () -> T): ReadOnlyProperty<Any?, 
     }
 }
 
-class ContextException(msg : String) : Exception(msg) {}
+class ContextException(msg : String) : Exception(msg)
 
 fun <T> ActionContext.withContext(body: () -> T): T {
     try {

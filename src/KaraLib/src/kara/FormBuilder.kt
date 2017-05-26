@@ -4,7 +4,7 @@ import kara.internal.decamel
 import kotlinx.html.*
 import kotlinx.html.InputType.*
 import kotlinx.reflection.propertyValue
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 
 
 interface FormModel<in P> {
@@ -48,7 +48,7 @@ fun <T:Any>HtmlBodyTag.formForBean(bean: T, action : Link, formMethod : FormMeth
  * Allows forms to be built based on a model object.
  */
 class FormBuilder<in P, out M:FormModel<P>>(containingTag : HtmlBodyTag, val model : M) : FORM(containingTag) {
-    val logger = Logger.getLogger(this.javaClass)!!
+    val logger = LoggerFactory.getLogger(this.javaClass)!!
 
     /** If true, the form will have enctype="multipart/form-data" */
     var hasFiles : Boolean = false

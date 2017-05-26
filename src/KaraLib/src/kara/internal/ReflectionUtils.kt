@@ -1,10 +1,13 @@
 package kara.internal
 
-import kara.*
+import kara.FunctionWrapperResource
+import kara.Location
+import kara.Resource
+import kotlin.reflect.KAnnotatedElement
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 
-fun String?.asNotEmpty(): String? = if (this == null) null else if (!isEmpty()) this else null
-
-fun String.appendPathElement(part : String) = buildString {
+fun String.appendPathElement(part: String) = buildString {
     append(this@appendPathElement)
     if (!this.endsWith("/")) {
         append("/")
@@ -12,8 +15,7 @@ fun String.appendPathElement(part : String) = buildString {
 
     if (part.startsWith('/')) {
         append(part.substring(1))
-    }
-    else {
+    } else {
         append(part)
     }
 }
@@ -21,23 +23,27 @@ fun String.appendPathElement(part : String) = buildString {
 fun Class<*>.routePrefix(): String {
     val owner = enclosingClass
     val defaultPart = if (owner == null) "" else simpleName.toLowerCase()
-    val part = getAnnotation(Location::class.java)?.path.asNotEmpty() ?: defaultPart
+    val part = getAnnotation(Location::class.java)?.path?.takeIf(String::isNotEmpty) ?: defaultPart
 
-    val base = if (owner == null) "" else owner.routePrefix()
+    val base = owner?.routePrefix().orEmpty()
     return base.appendPathElement(part)
 }
 
-fun Class<out Resource>.route(): ResourceDescriptor {
-    fun p(part: String) = (enclosingClass?.routePrefix()?:"").appendPathElement(part.replace("#", simpleName.toLowerCase()))
-    for (ann in annotations) {
-        when (ann) {
-            is Get -> return ResourceDescriptor(HttpMethod.GET, p(ann.route), this, null)
-            is Post -> return ResourceDescriptor(HttpMethod.POST, p(ann.route), this, ann.allowCrossOrigin)
-            is Put -> return ResourceDescriptor(HttpMethod.PUT, p(ann.route), this, ann.allowCrossOrigin)
-            is Delete -> return ResourceDescriptor(HttpMethod.DELETE, p(ann.route), this, ann.allowCrossOrigin)
-            is Route -> return ResourceDescriptor(ann.method, p(ann.route), this, ann.allowCrossOrigin)
-        }
-    }
+@Suppress("UNCHECKED_CAST")
+fun KAnnotatedElement.route(): ResourceDescriptor {
+    val karaAnnotation = this.getKaraAnnotation() ?: (this as? KClass<*>)?.getKaraAnnotationFromSuper()
+            ?: error("No HTTP method annotation found in ${javaClass.name}")
+    return route(karaAnnotation)
+}
 
-    throw RuntimeException("No HTTP method annotation found in $name")
+@Suppress("UNCHECKED_CAST")
+fun KAnnotatedElement.route(annotation: Annotation): ResourceDescriptor {
+    return when {
+        this is KClass<*> && Resource::class.java.isAssignableFrom(this.java) ->
+            ResourceDescriptor.fromResourceClass(this as KClass<out Resource>, annotation)
+        this is FunctionWrapperResource -> ResourceDescriptor.fromFunction(this.func, annotation)
+        this is Resource -> ResourceDescriptor.fromResourceClass(this::class as KClass<out Resource>, annotation)
+        this is KFunction<*> -> ResourceDescriptor.fromFunction(this as KFunction<Any>, annotation)
+        else -> error("Unsupported type $this")
+    }
 }

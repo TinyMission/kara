@@ -6,6 +6,7 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
 import kotlin.reflect.KClass
+import kotlin.reflect.full.primaryConstructor
 
 
 /** Base class for object that deserialize parameters to a certain type.
@@ -131,7 +132,7 @@ object ArraySerializer : TypeSerializer<Array<*>>() {
         return result.apply {
             values.forEachIndexed { indx, e ->
                 this[indx] = if (e != NULL_CHAR) {
-                    Serialization.deserialize(e, arrayType.kotlin, paramType.java.classLoader)
+                    Serialization.deserialize(e, arrayType.kotlinCached, paramType.java.classLoader)
                 } else {
                     null
                 }
@@ -179,7 +180,7 @@ object Serialization {
         // Temporary solution to keep backward campatibility and prevent massive crashes
         if (param.contains(RECORD_SEPARATOR_CHAR) && !paramType.java.isArray) {
             logger.error("Multiple parameter values: $param for non array paramType: ${paramType.simpleName}", RuntimeException())
-            val arrayType = java.lang.reflect.Array.newInstance(paramType.java, 0).javaClass.kotlin as KClass<Array<out T>>
+            val arrayType = java.lang.reflect.Array.newInstance(paramType.java, 0)::class as KClass<Array<out T>>
             return ArraySerializer.deserialize(param, arrayType)?.firstOrNull() as T?
         }
 
@@ -202,7 +203,7 @@ object Serialization {
         if (param == null) return null
         if (param is String) return param
 
-        val paramType = param.javaClass.kotlin
+        val paramType = param::class
         for (serializer in serializer) {
             if (serializer.isThisType(paramType)) {
                 @Suppress("UNCHECKED_CAST")
@@ -230,7 +231,7 @@ fun <T:Any> KClass<T>.parse(params: String) : T {
 }
 
 fun <T:Any> T.serialize(): String {
-    return primaryParametersNames().map { it to propertyValue<T,Any>(it) }.
+    return this::class.primaryConstructor!!.parameters.map { it.name to propertyValue<T,Any>(it.name!!) }.
             filter {it.second != null}.
             map { "${it.first}=${urlEncode(Serialization.serialize(it.second)!!)}"}.
             joinToString("&")

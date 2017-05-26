@@ -5,20 +5,22 @@ import kara.internal.ResourceDispatcher
 import kotlinx.reflection.MissingArgumentException
 import kotlinx.reflection.filterIsAssignable
 import kotlinx.reflection.findClasses
-import org.apache.log4j.Logger
+import kotlinx.reflection.kotlinCached
+import org.slf4j.LoggerFactory
 import java.net.SocketException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.reflect.KAnnotatedElement
 
 /** Current application execution context
  */
-class ApplicationContext(val config : ApplicationConfig,
+class ApplicationContext(val config: ApplicationConfig,
                          packages: List<String>,
                          val classLoader: ClassLoader,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
-                         val resourceTypes: List<Class<out Resource>>) {
-    val logger = Logger.getLogger(this.javaClass)!!
+                         val resourceTypes: List<Pair<KAnnotatedElement, ResourceDescriptor>>) {
+    val logger = LoggerFactory.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>()
 
@@ -26,7 +28,7 @@ class ApplicationContext(val config : ApplicationConfig,
 
     init {
         packages.flatMap { scanPackageForMonitors(it) }.map {
-            it.kotlin.objectInstance as? ApplicationContextMonitor ?: it.newInstance()
+            it.kotlinCached.objectInstance as? ApplicationContextMonitor ?: it.newInstance()
         }.sortedBy { it.priority }.forEach { monitor ->
             logger.info("Executing startup sequence on ${monitor.javaClass}")
             monitor.created(this)

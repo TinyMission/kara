@@ -1,12 +1,12 @@
 package kotlinx.html.bootstrap
 
-import kara.ActionContext
 import kara.ActionResult
+import kara.BaseActionResult
 import kara.link
-import javax.servlet.http.HttpServletResponse
 import kotlinx.html.*
+import javax.servlet.http.HttpServletResponse.SC_OK
 
-class ModalBuilder() {
+class ModalBuilder {
     var button: (A.() -> Unit)? = null
     var h: highlight = highlight.default
     var c: caliber = caliber.default
@@ -240,26 +240,15 @@ fun dialogForm(action: Link, formMethod: FormMethod = FormMethod.post, enctype: 
     }
 }
 
-class ModalResult(val content: HtmlBodyTag.() -> Unit) : ActionResult {
-    fun sendHtml(html: String, response: HttpServletResponse) {
-        response.contentType = "text/html"
-        val writer = response.writer!!
-        writer.write(html)
-        writer.flush()
-    }
-
-    override fun writeResponse(context: ActionContext) {
-        val modal = MODAL()
-        with(modal) {
-            addClass("modal-dialog")
-            attribute("tabindex", "-1")
-            attribute("role", "dialog")
-            attribute("aria-hidden", "true")
-            content()
-        }
-        sendHtml(modal.toString(), context.response)
-    }
-}
+class ModalResult(val modalContent: HtmlBodyTag.() -> Unit) : BaseActionResult("text/html", SC_OK, {
+    MODAL().apply {
+        addClass("modal-dialog")
+        attribute("tabindex", "-1")
+        attribute("role", "dialog")
+        attribute("aria-hidden", "true")
+        modalContent()
+    }.toString()
+})
 
 fun HtmlBodyTag.sampleModalDialog() {
     modal {

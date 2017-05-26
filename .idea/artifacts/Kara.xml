@@ -39,6 +39,7 @@
       <element id="library" level="project" name="YuiCompressor" />
       <element id="library" level="project" name="LessCompiler" />
       <element id="library" level="project" name="Rhino" />
+      <element id="library" level="project" name="ClosureCompiler" />
     </root>
   </artifact>
 </component>

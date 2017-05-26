@@ -1,14 +1,17 @@
 package kara
 
+import kara.internal.ResourceDescriptor
 import kara.internal.scanPackageForResources
 import kotlinx.reflection.urlDecode
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URLClassLoader
 import java.nio.file.*
 import java.nio.file.StandardWatchEventKinds.*
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.*
+import kotlin.reflect.KAnnotatedElement
 
 /** The base Kara application class.
  */
@@ -21,13 +24,13 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
         get() = synchronized(contextLock) {
             if (config.isDevelopment()) {
                 val changes = watchKeys.flatMap { it.pollEvents()!! }
-                if (changes.size > 0) {
+                if (changes.isNotEmpty()) {
                     logger.info("Changes in application detected.")
                     var count = changes.size
                     while (true) {
                         Thread.sleep(200)
                         val moreChanges = watchKeys.flatMap { it.pollEvents()!! }
-                        if (moreChanges.size == 0)
+                        if (moreChanges.isEmpty())
                             break
                         logger.info("Waiting for more changes.")
                         count += moreChanges.size
@@ -75,7 +78,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
         watchKeys.clear()
     }
 
-    fun watchUrls(resourceTypes: List<Class<out Resource>>) {
+    fun watchUrls(resourceTypes: List<Pair<KAnnotatedElement, ResourceDescriptor>>) {
         val paths = HashSet<Path>()
         val visitor = object : SimpleFileVisitor<Path?>() {
             override fun preVisitDirectory(dir: Path?, attrs: BasicFileAttributes): FileVisitResult {
@@ -89,7 +92,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
                 return FileVisitResult.CONTINUE
             }
         }
-        val loaders = resourceTypes.map { it.classLoader }.toSet()
+        val loaders = resourceTypes.map { it.first.javaClass.classLoader }.toSet()
         for (loader in loaders) {
             if (loader is URLClassLoader) {
                 val loaderUrls = loader.urLs
@@ -121,7 +124,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
     }
 
     companion object {
-        val logger: Logger = Logger.getLogger(Application::class.java)
+        val logger: Logger = LoggerFactory.getLogger(Application::class.java)
 
         fun classLoader(config: ApplicationConfig, appContext: String): ClassLoader {
             val classPath = config.classPath(appContext)

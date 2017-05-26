@@ -1,8 +1,7 @@
 package kara.cli
 
-import kara.*
+import kara.ApplicationConfig
 import kara.server.JettyRunner
-import org.apache.log4j.*
 
 fun server(appConfig : ApplicationConfig) {
     val jettyRunner = JettyRunner(appConfig)
@@ -14,16 +13,7 @@ fun config(appConfig: ApplicationConfig) {
 }
 
 fun main(args: Array<String>) {
-    val appConfig = ApplicationConfig.loadFrom(if (args.size > 0) args[0] else "development.conf")
-
-    val logPath = appConfig.tryGet("kara.logPropertiesPath")
-
-    if (logPath != null) {
-        PropertyConfigurator.configureAndWatch(logPath, 5000)
-    } else if (LogManager.getRootLogger()?.allAppenders?.hasMoreElements()?.not()?:true) {
-        BasicConfigurator.configure()
-        LogManager.getRootLogger()?.level = Level.INFO
-    }
+    val appConfig = ApplicationConfig.loadFrom(if (args.isNotEmpty()) args[0] else "development.conf")
 
     config(appConfig)
     server(appConfig)

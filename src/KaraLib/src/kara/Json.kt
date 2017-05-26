@@ -3,24 +3,18 @@ package kara
 import java.io.StringWriter
 import java.io.Writer
 import java.util.*
+import javax.servlet.http.HttpServletResponse.SC_OK
 
 /** JSON Action Result.
  */
-class JsonResult(val json: JsonElement) : ActionResult {
-    override fun writeResponse(context: ActionContext) {
-        context.response.contentType = "application/json"
-        val jsonpCallback = context.params.optStringParam("callback")
-        val result = buildString {
-            if (jsonpCallback != null) append(jsonpCallback).append("(")
-            json.build(this)
-            if (jsonpCallback != null) append(")")
-        }
-
-        val out = context.response.writer
-        out.print(result)
-        out.flush()
+class JsonResult(val json: JsonElement, code: Int = SC_OK) : BaseActionResult("application/json", code, {
+    val jsonpCallback = ActionContext.current().params.optStringParam("callback")
+    buildString {
+        if (jsonpCallback != null) append(jsonpCallback).append("(")
+        json.build(this)
+        if (jsonpCallback != null) append(")")
     }
-}
+})
 
 /**
  * **Implementation notes:**
