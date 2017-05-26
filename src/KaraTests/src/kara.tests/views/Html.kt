@@ -2,6 +2,7 @@ package kara.tests.views
 
 
 import kara.link
+import kara.tests.controllers.Routes
 import org.junit.Test
 import kotlinx.html.a
 import kotlinx.html.html
@@ -22,6 +23,28 @@ class HtmlBuilderTest {
         }
 
         assertEquals("<p>This is text</p><a href=\"xxx\">Name</a>", html)
+    }
+
+    @Test fun hrefInterfaceController() {
+        val html = html {
+            a {
+                +"Name"
+                href= Routes.InterfaceControllerTest.SomeInterfaceController()
+            }
+        }
+
+        assertEquals("<a href=\"/interfacecontrollertest/Action\">Name</a>", html)
+    }
+
+    @Test fun hrefParamInterfaceController() {
+        val html = html {
+            a {
+                +"Name"
+                href= Routes.InterfaceParamControllerTest.SomeInterfaceController("1234")
+            }
+        }
+
+        assertEquals("<a href=\"/interfaceparamcontrollertest/Action?code=1234\">Name</a>", html)
     }
 }
 //fun testHtml(args : Array<String>) =

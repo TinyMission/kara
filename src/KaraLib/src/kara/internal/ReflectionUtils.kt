@@ -3,12 +3,11 @@ package kara.internal
 import kara.FunctionWrapperResource
 import kara.Location
 import kara.Resource
-import kotlinx.reflection.annotationClassCached
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
-fun String.appendPathElement(part : String) = buildString {
+fun String.appendPathElement(part: String) = buildString {
     append(this@appendPathElement)
     if (!this.endsWith("/")) {
         append("/")
@@ -18,7 +17,7 @@ fun String.appendPathElement(part : String) = buildString {
         append(part.substring(1))
     } else {
         append(part)
-    }                                                                                                                                               
+    }
 }
 
 fun Class<*>.routePrefix(): String {
@@ -32,9 +31,13 @@ fun Class<*>.routePrefix(): String {
 
 @Suppress("UNCHECKED_CAST")
 fun KAnnotatedElement.route(): ResourceDescriptor {
-    val annotation = annotations.firstOrNull { a -> karaAnnotations.any { a.annotationClassCached == it } }
-                    ?: error("No HTTP method annotation found in ${javaClass.name}")
+    val karaAnnotation = this.getKaraAnnotation() ?: (this as? KClass<*>)?.getKaraAnnotationFromSuper()
+            ?: error("No HTTP method annotation found in ${javaClass.name}")
+    return route(karaAnnotation)
+}
 
+@Suppress("UNCHECKED_CAST")
+fun KAnnotatedElement.route(annotation: Annotation): ResourceDescriptor {
     return when {
         this is KClass<*> && Resource::class.java.isAssignableFrom(this.java) ->
             ResourceDescriptor.fromResourceClass(this as KClass<out Resource>, annotation)

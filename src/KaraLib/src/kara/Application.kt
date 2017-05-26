@@ -1,5 +1,6 @@
 package kara
 
+import kara.internal.ResourceDescriptor
 import kara.internal.scanPackageForResources
 import kotlinx.reflection.urlDecode
 import org.slf4j.Logger
@@ -77,7 +78,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
         watchKeys.clear()
     }
 
-    fun watchUrls(resourceTypes: List<KAnnotatedElement>) {
+    fun watchUrls(resourceTypes: List<Pair<KAnnotatedElement, ResourceDescriptor>>) {
         val paths = HashSet<Path>()
         val visitor = object : SimpleFileVisitor<Path?>() {
             override fun preVisitDirectory(dir: Path?, attrs: BasicFileAttributes): FileVisitResult {
@@ -91,7 +92,7 @@ open class Application(val config: ApplicationConfig, val appContext: String = "
                 return FileVisitResult.CONTINUE
             }
         }
-        val loaders = resourceTypes.map { it.javaClass.classLoader }.toSet()
+        val loaders = resourceTypes.map { it.first.javaClass.classLoader }.toSet()
         for (loader in loaders) {
             if (loader is URLClassLoader) {
                 val loaderUrls = loader.urLs

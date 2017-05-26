@@ -20,7 +20,8 @@ import kotlin.test.assertNull
 /** Tests for dispatching routes to get action info. */
 class DispatchTests() {
 
-    @Test fun runDispatchTests() {
+    @Test
+    fun runDispatchTests() {
         val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")
 
         val app = object : Application(appConfig) {}
@@ -101,5 +102,55 @@ class DispatchTests() {
 
         val arrayWithNullsURL = Routes.ArrayParam(arrayOf("foo", null, "bar")).href()
         assertEquals("foo, null, bar", mockDispatch("GET", arrayWithNullsURL).stringOutput())
+    }
+
+    @Test
+    fun runInterfaceDispatchTests() {
+        val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")
+
+        val app = object : Application(appConfig) {}
+
+        val dispatcher = ResourceDispatcher(app.context, scanObjects(arrayOf(Routes)))
+
+        val actionInfo = dispatcher.findDescriptor("GET", "interfacecontrollertest/Action")!!
+        assertNotNull(actionInfo)
+
+        val stringController = mockDispatch("GET", "interfacecontrollertest/Action").stringOutput()
+        assertEquals("It's implementation", stringController)
+
+        val link = Routes.InterfaceControllerTest.SomeInterfaceController::class.baseLink().href()
+        assertEquals(link, "/interfacecontrollertest/Action")
+
+    }
+
+    @Test
+    fun runInterfaceNotFinalDispatchTests() {
+        val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")
+
+        val app = object : Application(appConfig) {}
+
+        val dispatcher = ResourceDispatcher(app.context, scanObjects(arrayOf(Routes)))
+
+        val actionInfo = dispatcher.findDescriptor("GET", "interfacenotfinalcontrollertest/Action")
+        assertNull(actionInfo)
+    }
+
+    @Test
+    fun runInterfaceParamDispatchTests() {
+        val appConfig = ApplicationConfig.loadFrom("src/KaraTests/src/kara.tests/test.conf")
+
+        val app = object : Application(appConfig) {}
+
+        val dispatcher = ResourceDispatcher(app.context, scanObjects(arrayOf(Routes)))
+
+        val actionInfo = dispatcher.findDescriptor("GET", "interfaceparamcontrollertest/Action")!!
+        assertNotNull(actionInfo)
+
+        val stringController = mockDispatch("GET", "interfaceparamcontrollertest/Action?code=1234").stringOutput()
+        assertEquals("It's implementation with param 1234", stringController)
+
+        val link = Routes.InterfaceParamControllerTest.SomeInterfaceController::class.baseLink().href()
+        assertEquals(link, "/interfaceparamcontrollertest/Action")
+
     }
 }

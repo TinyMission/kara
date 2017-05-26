@@ -19,7 +19,7 @@ class ApplicationContext(val config: ApplicationConfig,
                          packages: List<String>,
                          val classLoader: ClassLoader,
                          val reflectionCache: MutableMap<Pair<Int, String>, List<Class<*>>>,
-                         val resourceTypes: List<KAnnotatedElement>) {
+                         val resourceTypes: List<Pair<KAnnotatedElement, ResourceDescriptor>>) {
     val logger = LoggerFactory.getLogger(this.javaClass)!!
     private val interceptors = ArrayList<(HttpServletRequest, HttpServletResponse, ResourceDescriptor?, (HttpServletRequest, HttpServletResponse, ResourceDescriptor?) -> Boolean) -> Boolean>()
     private val monitorInstances = ArrayList<ApplicationContextMonitor>()

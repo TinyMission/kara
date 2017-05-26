@@ -31,3 +31,10 @@ Default is / for top level root object or lowercased object name for inner objec
 
 /** Used to annotate route objects, when you want to use nested functions as routes **/
 @Retention(AnnotationRetention.RUNTIME) @Target(AnnotationTarget.CLASS) annotation class Controller(val contentType: String)
+
+/**
+ * Used to annotate route objects, when you want to use implementations of class as routes.
+ * Only final classes will be treated as implementations of interface controller.
+ * You must not have more than one implementation of every annotated interface controller.
+ **/
+@Retention(AnnotationRetention.RUNTIME) @Target(AnnotationTarget.CLASS) annotation class InterfaceController

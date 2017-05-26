@@ -8,12 +8,8 @@ import java.lang.reflect.InvocationTargetException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.reflect.KAnnotatedElement
-import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.*
+import kotlin.reflect.full.*
 
 class ResultWithCodeException(val code: Int, val result: Any?) : Exception()
 
@@ -31,8 +27,10 @@ abstract class Resource : Link, KAnnotatedElement {
     override val annotations: List<Annotation> get() = this::class.annotations
 
     protected open val properties : Map<String, Any?>
-        get() = this::class.primaryConstructor?.parameters.orEmpty().
-                associate { it.name!! to propertyValue<Resource, Any?>(it.name!!) }
+        get() = this::class.primaryConstructor?.parameters.orEmpty().filterNot {
+            //Do not treat functions as parameters of URL
+            (it.type.classifier as? KClass<*>)?.isSubclassOf(Function::class) ?: false
+        }.associate { it.name!! to propertyValue<Resource, Any?>(it.name!!) }
 
     fun href(context: String) = buildString {
         val url = requestParts(context)

@@ -11,16 +11,15 @@ import kotlin.reflect.KAnnotatedElement
 
 /** Used by the server to dispatch requests to their appropriate actions.
  */
-class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<KAnnotatedElement>) {
+class ResourceDispatcher(val context: ApplicationContext, resourceTypes: List<Pair<KAnnotatedElement, ResourceDescriptor>>) {
     private val httpMethods = Array(HttpMethod.values().size) {
         ArrayList<ResourceDescriptor>()
     }
     private val resources = HashMap<KAnnotatedElement, ResourceDescriptor>()
 
     init {
-        for (routeType in resourceTypes) {
-            val descriptor = routeType.route()
-            resources[routeType] = descriptor
+        for ((first, descriptor) in resourceTypes) {
+            resources[first] = descriptor
             httpMethods[descriptor.httpMethod.ordinal].add(descriptor)
         }
     }

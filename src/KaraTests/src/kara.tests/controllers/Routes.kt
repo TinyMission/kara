@@ -181,4 +181,31 @@ object Routes {
         @Get("empty")
         fun nothing() {}
     }
+
+    object InterfaceControllerTest {
+        @InterfaceController
+        @Get("/Action")
+        open class SomeInterfaceController( handler: ActionContext.() -> ActionResult = { TextResult("It's interface") })
+            : Request(handler)
+
+        class ImplInterfaceController() : SomeInterfaceController({ TextResult("It's implementation") })
+    }
+
+    object InterfaceNotFinalControllerTest {
+        @InterfaceController
+        @Get("/Action")
+        open class SomeInterfaceController( handler: ActionContext.() -> ActionResult = { TextResult("It's interface") })
+            : Request(handler)
+
+        open class ImplInterfaceController() : SomeInterfaceController({ TextResult("It's implementation") })
+    }
+
+    object InterfaceParamControllerTest {
+        @InterfaceController
+        @Get("/Action")
+        open class SomeInterfaceController(val code: String, handler: ActionContext.() -> ActionResult = { TextResult("It's interface") })
+            : Request(handler)
+
+        class ImplInterfaceController(code: String) : SomeInterfaceController(code, { TextResult("It's implementation with param $code") })
+    }
 }
